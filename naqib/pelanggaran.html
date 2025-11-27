@@ -56,7 +56,8 @@
     }
     button:hover { background: #1d4ed8; }
     .btn-secondary { background: #6b7280; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .btn-secondary:hover { background:#4b5563; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     th { background: #f3f4f6; }
   </style>
@@ -81,12 +82,11 @@
   <label>Nama Santri:</label>
   <select id="namaSantri"></select>
 
+  <label>Nama Pelanggaran:</label>
+  <select id="namaPelanggaran"></select>
+
   <label>Kategori Pelanggaran:</label>
-  <select id="kategori">
-    <option>Ringan</option>
-    <option>Sedang</option>
-    <option>Berat</option>
-  </select>
+  <select id="kategori" disabled></select>
 
   <label>Keterangan Pelanggaran:</label>
   <textarea id="keterangan" placeholder="Tuliskan kronologi singkat pelanggaran..."></textarea>
@@ -106,6 +106,7 @@
         <th>No</th>
         <th>Tanggal</th>
         <th>Santri</th>
+        <th>Pelanggaran</th>
         <th>Kategori</th>
         <th>Keterangan</th>
         <th>Tindak Lanjut</th>
@@ -136,16 +137,82 @@
   const db = getDatabase(app);
   const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
-  // === Data Santri ===
+  // === Data Santri (lengkapkan/ubah sesuai kebutuhan) ===
   const dataSantri = {
-    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT"],
-    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH"],
-    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN"],
-    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ"],
-    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM"],
-    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI"],
-    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ"]
+    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT" ],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH" ],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN" ],
+    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ" ],
+    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM" ],
+    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI" ],
+    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ" ]
   };
+
+  // === Data Pelanggaran (No, Nama, Kategori) ===
+  const daftarPelanggaran = [
+    { no:1,  nama:"Terlambat bangun tidur setelah bel/alarm.", kategori:"Ringan" },
+    { no:2,  nama:"Terlambat mengikuti shalat berjamaah/kegiatan wajib.", kategori:"Ringan" },
+    { no:3,  nama:"Berbicara tidak menggunakan bahasa wajib (Arab/Inggris/Indonesia).", kategori:"Ringan" },
+    { no:4,  nama:"Berpakaian tidak rapi saat keluar kamar.", kategori:"Ringan" },
+    { no:5,  nama:"Menggantung pakaian basah atau kotor di kamar/asrama.", kategori:"Ringan" },
+    { no:6,  nama:"Meletakkan sepatu atau sandal tidak pada raknya.", kategori:"Ringan" },
+    { no:7,  nama:"Meninggalkan barang-barang pribadi berserakan di tempat umum.", kategori:"Ringan" },
+    { no:8,  nama:"Lalai dalam tugas piket kebersihan umum.", kategori:"Ringan" },
+    { no:9,  nama:"Membuang sampah kecil tidak pada tempatnya.", kategori:"Ringan" },
+    { no:10, nama:"Berisik atau ribut di asrama saat jam istirahat atau belajar.", kategori:"Ringan" },
+    { no:11, nama:"Tidur saat jam pelajaran sekolah atau pengajian.", kategori:"Ringan" },
+    { no:12, nama:"Mencoret-coret buku atau peralatan belajar milik sendiri.", kategori:"Ringan" },
+    { no:13, nama:"Membaca majalah/komik yang tidak mendidik.", kategori:"Ringan" },
+    { no:14, nama:"Berada di kamar pada jam-jam kegiatan wajib di luar kamar.", kategori:"Ringan" },
+    { no:15, nama:"Tidak membawa perlengkapan shalat saat pergi ke masjid/mushalla.", kategori:"Ringan" },
+    { no:16, nama:"Memotong rambut tanpa izin atau tidak sesuai model.", kategori:"Ringan" },
+    { no:17, nama:"Memakai pakaian yang terlalu ketat atau mencolok.", kategori:"Ringan" },
+    { no:18, nama:"Tidak mencuci piring/alat makan setelah selesai makan.", kategori:"Ringan" },
+    { no:19, nama:"Membiarkan tempat tidur tidak dirapikan setelah bangun.", kategori:"Ringan" },
+    { no:20, nama:"Mengunjungi kamar/asrama lawan jenis di luar waktu yang diizinkan.", kategori:"Ringan" },
+
+    { no:21, nama:"Keluar dari lingkungan pondok tanpa izin tertulis (Bolos Harian).", kategori:"Sedang" },
+    { no:22, nama:"Merokok atau membawa segala jenis produk tembakau/rokok elektrik.", kategori:"Sedang" },
+    { no:23, nama:"Membawa dan menggunakan ponsel pintar (smartphone) atau elektronik terlarang.", kategori:"Sedang" },
+    { no:24, nama:"Mencorat-coret, merusak ringan, atau mengotori fasilitas umum pondok.", kategori:"Sedang" },
+    { no:25, nama:"Terlibat dalam perkelahian ringan atau cekcok fisik/verbal.", kategori:"Sedang" },
+    { no:26, nama:"Berbohong atau memberikan keterangan palsu kepada pengurus/guru.", kategori:"Sedang" },
+    { no:27, nama:"Membaca, menonton, atau menyimpan konten asusila/pornografi.", kategori:"Sedang" },
+    { no:28, nama:"Mengganggu santri lain secara fisik (menjahili hingga menangis).", kategori:"Sedang" },
+    { no:29, nama:"Membawa uang saku berlebihan melebihi batas yang ditentukan.", kategori:"Sedang" },
+    { no:30, nama:"Tidak mengikuti ujian atau kegiatan belajar wajib tanpa alasan yang jelas (alpa).", kategori:"Sedang" },
+    { no:31, nama:"Mencukur rambut gondrong atau tidak rapi (melebihi batas yang ditentukan).", kategori:"Sedang" },
+    { no:32, nama:"Membawa atau menggunakan kosmetik berlebihan/tidak pantas (bagi putri).", kategori:"Sedang" },
+    { no:33, nama:"Membawa alat masak, pemanas air, atau barang bahaya api.", kategori:"Sedang" },
+    { no:34, nama:"Melakukan perundungan verbal (mengejek, menghina).", kategori:"Sedang" },
+    { no:35, nama:"Memalsukan tanda tangan surat izin atau pengumuman.", kategori:"Sedang" },
+    { no:36, nama:"Berada di luar asrama/lingkungan pondok setelah jam malam.", kategori:"Sedang" },
+    { no:37, nama:"Melakukan aktivitas yang membahayakan diri sendiri/orang lain.", kategori:"Sedang" },
+    { no:38, nama:"Menyebarkan isu atau gosip yang menyebabkan kegaduhan di pondok.", kategori:"Sedang" },
+    { no:39, nama:"Menggunakan media sosial tanpa izin (jika dilarang).", kategori:"Sedang" },
+    { no:40, nama:"Melakukan pelanggaran ringan berulang kali (tiga kali atau lebih) setelah diberi peringatan.", kategori:"Sedang" },
+
+    { no:41, nama:"Mencuri atau mengambil barang berharga milik orang lain/pondok.", kategori:"Berat" },
+    { no:42, nama:"Menggunakan, membawa, atau mengedarkan narkotika dan obat-obatan terlarang.", kategori:"Berat" },
+    { no:43, nama:"Melakukan perbuatan zina, hubungan seks, atau tindakan asusila berat.", kategori:"Berat" },
+    { no:44, nama:"Membawa, membuat, atau mengonsumsi minuman keras/beralkohol.", kategori:"Berat" },
+    { no:45, nama:"Terlibat dalam perjudian atau taruhan dalam bentuk apapun.", kategori:"Berat" },
+    { no:46, nama:"Melakukan perkelahian berat yang mengakibatkan cedera serius.", kategori:"Berat" },
+    { no:47, nama:"Membawa, menyimpan, atau menggunakan senjata tajam atau senjata api.", kategori:"Berat" },
+    { no:48, nama:"Melarikan diri dari pondok dalam jangka waktu lama tanpa kabar.", kategori:"Berat" },
+    { no:49, nama:"Melakukan perundungan atau kekerasan yang bersifat sistematis (Bullying berat).", kategori:"Berat" },
+    { no:50, nama:"Melawan, mengancam, atau bertindak fisik terhadap Guru, Kiai, atau Pengurus.", kategori:"Berat" },
+    { no:51, nama:"Merusak fasilitas pondok secara sengaja dengan kerusakan parah dan besar.", kategori:"Berat" },
+    { no:52, nama:"Terlibat dalam demonstrasi atau gerakan yang merusak nama baik pondok di luar.", kategori:"Berat" },
+    { no:53, nama:"Membawa atau menyebarkan ajaran/paham yang bertentangan (Radikalisme).", kategori:"Berat" },
+    { no:54, nama:"Membujuk santri lain untuk melakukan tindakan kriminal atau pelanggaran berat.", kategori:"Berat" },
+    { no:55, nama:"Melakukan pemerasan atau pengancaman untuk meminta uang/barang.", kategori:"Berat" },
+    { no:56, nama:"Menipu orang tua atau pihak pondok untuk mendapatkan izin pulang/uang saku.", kategori:"Berat" },
+    { no:57, nama:"Memalsukan surat-surat penting (rapor atau surat keterangan dokter).", kategori:"Berat" },
+    { no:58, nama:"Melakukan hubungan sejenis (homoseksual) di lingkungan pondok.", kategori:"Berat" },
+    { no:59, nama:"Menghasut atau memimpin pemberontakan yang mengganggu ketertiban umum pondok.", kategori:"Berat" },
+    { no:60, nama:"Melakukan pelanggaran sedang berulang kali (setelah Skorsing/Pemanggilan Ortu).", kategori:"Berat" }
+  ];
 
   // === Inisialisasi ===
   function init() {
@@ -155,8 +222,13 @@
       return;
     }
     document.getElementById('naqibTitle').textContent = user.label || 'Naqib';
+    document.getElementById('naqibInfo').textContent = `Naqib: ${user.naqibName || '-'}`;
     document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+
     isiSantri(user.naqibName);
+    isiPelanggaran();
+
+    document.getElementById('namaPelanggaran').addEventListener('change', onPelanggaranChange);
     document.getElementById('btnSimpan').addEventListener('click', simpan);
   }
 
@@ -164,6 +236,12 @@
     const list = dataSantri[naqibName] || [];
     const select = document.getElementById('namaSantri');
     select.innerHTML = '';
+
+    const optDefault = document.createElement('option');
+    optDefault.value = '';
+    optDefault.textContent = '-- pilih santri --';
+    select.appendChild(optDefault);
+
     list.forEach(nama => {
       const opt = document.createElement('option');
       opt.textContent = nama;
@@ -172,23 +250,61 @@
     });
   }
 
+  function isiPelanggaran() {
+    const select = document.getElementById('namaPelanggaran');
+    const kategoriSelect = document.getElementById('kategori');
+    select.innerHTML = '';
+
+    const optDefault = document.createElement('option');
+    optDefault.value = '';
+    optDefault.textContent = '-- pilih pelanggaran --';
+    select.appendChild(optDefault);
+
+    daftarPelanggaran.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.nama;
+      opt.textContent = `${p.no}. ${p.nama}`;
+      opt.dataset.kategori = p.kategori;
+      select.appendChild(opt);
+    });
+
+    kategoriSelect.innerHTML = '';
+    ['Ringan','Sedang','Berat'].forEach(k => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      kategoriSelect.appendChild(o);
+    });
+    kategoriSelect.value = '';
+  }
+
+  function onPelanggaranChange() {
+    const select = document.getElementById('namaPelanggaran');
+    const kategoriSelect = document.getElementById('kategori');
+    const selected = select.options[select.selectedIndex];
+    const kat = selected.dataset.kategori || '';
+    kategoriSelect.value = kat;
+  }
+
   // === Simpan ke Firebase ===
   function simpan() {
     const tanggal = document.getElementById('tanggal').value;
     const santri = document.getElementById('namaSantri').value;
+    const namaPelanggaran = document.getElementById('namaPelanggaran').value;
     const kategori = document.getElementById('kategori').value;
     const ket = document.getElementById('keterangan').value.trim();
     const tindakLanjut = document.getElementById('tindakLanjut').value.trim();
     const konsekuensi = document.getElementById('konsekuensi').value.trim();
 
-    if (!santri || !kategori) {
-      alert('Lengkapi data pelanggaran.');
+    if (!santri || !namaPelanggaran || !kategori) {
+      alert('Lengkapi: santri, nama pelanggaran, dan kategori.');
       return;
     }
 
     const entry = {
       tanggal,
       santri,
+      namaPelanggaran,
       kategori,
       keterangan: ket,
       tindakLanjut,
@@ -202,7 +318,6 @@
       .then(() => {
         alert(`✅ Laporan pelanggaran tersimpan untuk ${santri}.`);
         tampilkan(entry);
-        // Reset form
         document.getElementById('keterangan').value = '';
         document.getElementById('tindakLanjut').value = '';
         document.getElementById('konsekuensi').value = '';
@@ -212,7 +327,7 @@
       });
   }
 
-  // === Tampilkan pada tabel lokal (client side) ===
+  // === Tampilkan pada tabel lokal ===
   function tampilkan(entry) {
     const tbody = document.querySelector('#tabelPelanggaran tbody');
     const tr = document.createElement('tr');
@@ -221,6 +336,7 @@
       <td>${no}</td>
       <td>${entry.tanggal}</td>
       <td>${entry.santri}</td>
+      <td>${entry.namaPelanggaran}</td>
       <td>${entry.kategori}</td>
       <td>${entry.keterangan}</td>
       <td>${entry.tindakLanjut}</td>
@@ -229,14 +345,9 @@
     tbody.appendChild(tr);
   }
 
-  // === Navigasi (DIPINDAH KELUAR agar global) ===
+  // === Navigasi (global) ===
   window.goBack = function() {
-    try {
-      window.location.href = 'dashboard.html';
-    } catch (err) {
-      console.error('Navigasi gagal:', err);
-      alert('Tidak dapat membuka Dashboard.');
-    }
+    window.location.href = 'dashboard.html';
   };
 
   window.logout = function() {
