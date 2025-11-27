@@ -103,12 +103,13 @@
   <table id="tabelPelanggaran">
     <thead>
       <tr>
-        <td>${i+1}</td>
-        <td>${p.tanggal}</td>
-        <td>${p.kategori}</td>
-        <td>${p.keterangan || p.ket || "-"}</td>
-        <td>${p.tindakLanjut}</td>
-        <td>${p.konsekuensi}</td>
+        <th>No</th>
+        <th>Tanggal</th>
+        <th>Santri</th>
+        <th>Kategori</th>
+        <th>Keterangan</th>
+        <th>Tindak Lanjut</th>
+        <th>Konsekuensi</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -215,17 +216,18 @@
   // === Tampilkan pada tabel lokal (client side) ===
   function tampilkan(entry) {
     const tbody = document.querySelector('#tabelPelanggaran tbody');
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${entry.tanggal}</td>
-      <td>${entry.santri}</td>
-      <td>${entry.kategori}</td>
-      <td>${entry.keterangan}</td>
-      <td>${entry.tindakLanjut}</td>
-      <td>${entry.konsekuensi}</td>
-    `;
-    tbody.appendChild(tr);
-  }
+const tr = document.createElement('tr');
+const no = tbody.children.length + 1;
+tr.innerHTML = `
+  <td>${no}</td>
+  <td>${entry.tanggal}</td>
+  <td>${entry.santri}</td>
+  <td>${entry.kategori}</td>
+  <td>${entry.keterangan}</td>
+  <td>${entry.tindakLanjut}</td>
+  <td>${entry.konsekuensi}</td>
+`;
+tbody.appendChild(tr);
 
   // === Navigasi ===
   function goBack() { window.location.href = 'dashboard.html'; }
@@ -236,4 +238,5 @@
 
 </body>
 </html>
+
 
