@@ -341,23 +341,7 @@ function buatLaporanSantri(ctx) {
   }`;
 
   // === Nilai Ujian ===
-  const nilaiUjian = ujian
-  .filter(
-    (u) =>
-      (u.santri || "").toLowerCase() === nama.toLowerCase() &&
-      isSameMonthYear(u.tanggal, bulan, tahun)
-  )
-  .filter(
-    (u, i, self) =>
-      i ===
-      self.findIndex(
-        (x) =>
-          x.santri === u.santri &&
-          x.mapel === u.mapel &&
-          x.materi === u.materi &&
-          x.tanggal === u.tanggal
-      )
-  );
+  const nilaiUjian = ujian.filter(u => u.santri === nama && isSameMonthYear(u.tanggal, bulan, tahun));
 
 let rataUjian = 0;
 if (nilaiUjian.length) {
@@ -522,6 +506,7 @@ function goDashboard(){
 </script>
 </body>
 </html>
+
 
 
 
