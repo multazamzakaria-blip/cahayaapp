@@ -103,12 +103,12 @@
   <table id="tabelPelanggaran">
     <thead>
       <tr>
-        <th>Tanggal</th>
-        <th>Santri</th>
-        <th>Kategori</th>
-        <th>Keterangan</th>
-        <th>Tindak Lanjut</th>
-        <th>Konsekuensi</th>
+        <td>${i+1}</td>
+        <td>${p.tanggal}</td>
+        <td>${p.kategori}</td>
+        <td>${p.keterangan || p.ket || "-"}</td>
+        <td>${p.tindakLanjut}</td>
+        <td>${p.konsekuensi}</td>
       </tr>
     </thead>
     <tbody></tbody>
@@ -236,3 +236,4 @@
 
 </body>
 </html>
+
