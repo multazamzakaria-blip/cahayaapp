@@ -429,37 +429,45 @@ if (nilaiUjian.length) {
     ` : `<p class='muted'>Belum ada setoran tahfiz.</p>`
   }`;
 
-  // === Pelanggaran ===
-  const pelanggaran = pelanggaranAll
-    .filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
+  // === Pelanggaran (sinkron dengan format baru) ===
+const pelanggaran = pelanggaranAll
+  .filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
 
-  wrapper.innerHTML += `
-  <div class="section-title">⚠️ Laporan Pelanggaran</div>
-  ${
-    pelanggaran.length ? `
-    <table>
-      <thead>
-        <tr>
-          <th>No</th><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${
-          pelanggaran.map((p,i)=>`
-            <tr>
-              <td>${i+1}</td>
-              <td>${p.tanggal}</td>
-              <td>${p.kategori}</td>
-              <td>${(p.keterangan ?? p.ket ?? "-") || "-"}</td>
-              <td>${p.tindakLanjut}</td>
-              <td>${p.konsekuensi}</td>
-            </tr>
-          `).join("")
-        }
-      </tbody>
-    </table>
-    ` : `<p class='muted'>Tidak ada pelanggaran.</p>`
-  }`;
+wrapper.innerHTML += `
+<div class="section-title">⚠️ Laporan Pelanggaran</div>
+${
+  pelanggaran.length ? `
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Tanggal</th>
+        <th>Nama Pelanggaran</th>
+        <th>Kategori</th>
+        <th>Keterangan / Kronologi</th>
+        <th>Tindak Lanjut</th>
+        <th>Konsekuensi</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${
+        pelanggaran.map((p,i)=>`
+          <tr>
+            <td>${i+1}</td>
+            <td>${p.tanggal || "-"}</td>
+            <td>${p.namaPelanggaran || "-"}</td>
+            <td>${p.kategori || "-"}</td>
+            <td>${p.keterangan || p.ket || "-"}</td>
+            <td>${p.tindakLanjut || "-"}</td>
+            <td>${p.konsekuensi || "-"}</td>
+          </tr>
+        `).join("")
+      }
+    </tbody>
+  </table>
+  ` : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
+}
+`;
 
   // === tombol export ===
   wrapper.innerHTML += `
@@ -522,6 +530,7 @@ function goDashboard(){
 </script>
 </body>
 </html>
+
 
 
 
