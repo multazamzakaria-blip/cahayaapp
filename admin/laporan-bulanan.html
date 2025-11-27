@@ -450,7 +450,7 @@ if (nilaiUjian.length) {
               <td>${i+1}</td>
               <td>${p.tanggal}</td>
               <td>${p.kategori}</td>
-              <td>${p.ket}</td>
+              <td>${(p.keterangan ?? p.ket ?? "-") || "-"}</td>
               <td>${p.tindakLanjut}</td>
               <td>${p.konsekuensi}</td>
             </tr>
@@ -522,6 +522,7 @@ function goDashboard(){
 </script>
 </body>
 </html>
+
 
 
 
