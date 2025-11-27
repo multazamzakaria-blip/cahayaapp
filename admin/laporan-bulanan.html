@@ -127,7 +127,8 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  window.db = getDatabase(app);
+  const db = getDatabase(app);
+  window.dbRef = ref(db); // ✅ penting: referensi global
 </script>
 
 <script>
@@ -169,23 +170,22 @@ async function generateReports() {
 
   try {
     const [
-  assesGuruSnap,
-  assesNaqibSnap,
-  absNaqibSnap,
-  absKbmSnap,
-  ujianSnap,
-  tahfizSnap,
-  pelanggaranSnap
-] = await Promise.all([
-  get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
-  get(child(dbRef, "assesmentCahayaNaqib")),
-  get(child(dbRef, "absensiProgramHarian")),
-  get(child(dbRef, "absensiKehadiranPembelajaran")),
-  get(child(dbRef, "nilaiUjianLogs")),
-  get(child(dbRef, "setoranTahfiz")),
-  get(child(dbRef, "pelanggaranLogs")),
-]);
-
+      assesGuruSnap,
+      assesNaqibSnap,
+      absNaqibSnap,
+      absKbmSnap,
+      ujianSnap,
+      tahfizSnap,
+      pelanggaranSnap
+    ] = await Promise.all([
+      get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
+      get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
+      get(child(dbRef, "cahaya_app/absensi_program_harian")),
+      get(child(dbRef, "cahaya_app/absensi_kehadiran_pembelajaran")),
+      get(child(dbRef, "cahaya_app/nilai_ujian_logs")),
+      get(child(dbRef, "cahaya_app/setoran_tahfiz")),
+      get(child(dbRef, "cahaya_app/pelanggaran_logs")),
+    ]);
 
     const assesmentGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
     const assesmentNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
@@ -231,7 +231,6 @@ async function generateReports() {
     container.innerHTML = "<p class='muted'>Gagal mengambil data dari Firebase.</p>";
   }
 }
-
 function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) {
   const kehadiran = {};
   function tambah(prog, status) {
@@ -335,6 +334,8 @@ function buatLaporanSantri(ctx) {
     <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiIntellectual}</p></div>
     <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiFis}</p></div>
   `;
+
+  // === Kehadiran ===
   const hadir = hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiKbm);
   wrapper.innerHTML += `
   <div class="section-title">🗓️ Laporan Kehadiran</div>
@@ -343,6 +344,7 @@ function buatLaporanSantri(ctx) {
     <tbody>${hadir.map(r=>`<tr><td>${r.no}</td><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}</tbody></table>
   ` : `<p class='muted'>Belum ada data kehadiran.</p>`}`;
 
+  // === Nilai Ujian ===
   const nilaiUjian = ujian.filter(u => u.santri === nama && isSameMonthYear(u.tanggal, bulan, tahun));
   let rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s,u)=>s+(+u.nilai||0),0)/nilaiUjian.length) : 0;
   wrapper.innerHTML += `
@@ -353,6 +355,7 @@ function buatLaporanSantri(ctx) {
   <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr></tbody></table>
   ` : `<p class='muted'>Belum ada data ujian.</p>`}`;
 
+  // === Tahfiz ===
   const dataTahfiz = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).flatMap(t => t.data || []).filter(d => d.nama === nama);
   wrapper.innerHTML += `
   <div class="section-title">📖 Laporan Setoran Tahfiz</div>
@@ -361,6 +364,7 @@ function buatLaporanSantri(ctx) {
   ${dataTahfiz.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||d.setoran||"-"}</td><td>${d.kesalahan||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>`).join("")}
   </tbody></table>`:`<p class='muted'>Belum ada setoran tahfiz.</p>`}`;
 
+  // === Pelanggaran ===
   const pelanggaran = pelanggaranAll.filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
   wrapper.innerHTML += `
   <div class="section-title">⚠️ Laporan Pelanggaran</div>
@@ -373,6 +377,7 @@ function buatLaporanSantri(ctx) {
   return wrapper;
 }
 
+// === EXPORT PDF ===
 async function exportPDF(nama){
   const el = document.querySelector(`.laporan-card[data-santri="${nama}"]`);
   if (!el) return alert("Laporan tidak ditemukan.");
@@ -389,10 +394,14 @@ async function exportPDF(nama){
   pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
 }
 
+// === EXPORT SEMUA PDF ===
 async function exportAllPDF(){
   const cards = document.querySelectorAll(".laporan-card");
   if (!cards.length) return alert("Tidak ada laporan.");
-  for(let i=0;i<cards.length;i++){await exportPDF(cards[i].dataset.santri);await new Promise(r=>setTimeout(r,700));}
+  for(let i=0;i<cards.length;i++){
+    await exportPDF(cards[i].dataset.santri);
+    await new Promise(r=>setTimeout(r,700));
+  }
   alert("✅ Semua laporan berhasil diekspor!");
 }
 
@@ -401,4 +410,3 @@ function goDashboard(){window.location.href="index.html";}
 </script>
 </body>
 </html>
-
