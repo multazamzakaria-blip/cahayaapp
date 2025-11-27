@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Absensi Program Harian</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#eef2ff;
+      margin:0;
+      padding:20px;
+      color:#1f2933;
+    }
+    header{
+      background:#2563eb;
+      color:white;
+      padding:12px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-radius:10px;
+    }
+    header h1{margin:0;font-size:1.2rem;}
+    main{
+      background:#fff;
+      margin-top:20px;
+      border-radius:12px;
+      padding:20px;
+      box-shadow:0 5px 15px rgba(15,23,42,0.15);
+      max-width:1100px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    h2,h3{margin-top:0}
+    label{font-weight:bold;display:block;margin-top:10px;}
+    input,select{
+      padding:8px;
+      border-radius:6px;
+      border:1px solid #d1d5db;
+      width:100%;
+      margin-top:4px;
+      box-sizing:border-box;
+    }
+    .row{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;}
+    .col{flex:1;min-width:200px;}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:15px;
+      font-size:0.9rem;
+    }
+    th,td{
+      border:1px solid #e5e7eb;
+      padding:8px;
+      text-align:center;
+      background:#fff;
+    }
+    th{background:#e5edff;}
+    button{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:8px 14px;
+      border-radius:8px;
+      cursor:pointer;
+      margin-top:10px;
+      font-weight:bold;
+      font-size:0.9rem;
+    }
+    button:hover{background:#1d4ed8;}
+    .btn-secondary{background:#6b7280;}
+    .info{font-size:0.85rem;color:#4b5563;}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CAHAYA APP – Absensi Program Harian</h1>
+  <div>
+    <button class="btn-secondary" onclick="goBack()">⬅️ Dashboard</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <h2 id="naqibTitle">Absensi Program Harian</h2>
+  <p id="naqibInfo" class="info"></p>
+
+  <div class="row">
+    <div class="col">
+      <label>Tanggal:</label>
+      <input type="date" id="tanggal">
+    </div>
+    <div class="col">
+      <label>Program:</label>
+      <select id="program"></select>
+      <p class="info">Pastikan program telah sesuai!</p>
+    </div>
+  </div>
+
+  <h3>Daftar Santri</h3>
+  <button type="button" onclick="markAll()">✅ Tandai Semua Hadir</button>
+
+  <table id="tabelSantri">
+    <thead>
+      <tr>
+        <th>Nama Santri</th>
+        <th>Hadir</th>
+        <th>Izin</th>
+        <th>Sakit</th>
+        <th>Alfa</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button type="button" onclick="simpan()">💾 Simpan Absensi</button>
+</main>
+
+<!-- === FIREBASE MODULE === -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  // Konfigurasi Firebase (sama dengan semua modul CAHAYA APP)
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ===============================================
+  // 1. Data user
+  // ===============================================
+  const currentUser = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+    } catch (e) {
+      return null;
+    }
+  })();
+
+  // ===============================================
+  // 2. Program Harian & Pekanan
+  // ===============================================
+  const programHarian = [
+    "Shalat Tahajjud","Shalat Subuh","Joging Pagi","Sarapan","Apel Pagi",
+    "Makan Siang","Shalat Zuhur","Qailulah","Shalat Ashar",
+    "Piket Kebersihan","Makan Sore","Shalat Maghrib","Shalat Isya","Pengecekan Jurnal"
+  ];
+  const programPekanan = ["Puasa Kamis","Jemur Kasur"];
+
+  // ===============================================
+  // 3. Data santri per naqib
+  // ===============================================
+  const dataSantri = {
+    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
+    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
+    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD RAYYAN HAFIZ","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
+    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
+    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
+  };
+
+  // ===============================================
+  // 4. Inisialisasi tampilan
+  // ===============================================
+  window.init = function() {
+    if (!currentUser || currentUser.role !== 'naqib') {
+      alert('Silakan login sebagai Naqib via portal utama.');
+      window.location.href = '../index.html';
+      return;
+    }
+
+    document.getElementById('naqibTitle').textContent = currentUser.label || 'Absensi Program Harian';
+    const today = new Date();
+    document.getElementById('tanggal').value = today.toISOString().split('T')[0];
+    isiProgram();
+    renderSantri(currentUser.naqibName);
+  };
+
+  function isiProgram() {
+    const select = document.getElementById('program');
+    select.innerHTML = '';
+    const harianGroup = document.createElement('optgroup');
+    harianGroup.label = 'Program Harian';
+    programHarian.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      harianGroup.appendChild(opt);
+    });
+    select.appendChild(harianGroup);
+    const pekananGroup = document.createElement('optgroup');
+    pekananGroup.label = 'Program Pekanan';
+    programPekanan.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      pekananGroup.appendChild(opt);
+    });
+    select.appendChild(pekananGroup);
+    select.value = programHarian[0];
+  }
+
+  function renderSantri(naqibName) {
+    const list = dataSantri[naqibName] || [];
+    const tbody = document.querySelector('#tabelSantri tbody');
+    tbody.innerHTML = '';
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="5">Belum ada data santri untuk naqib ini.</td></tr>';
+      return;
+    }
+    list.forEach((nama, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="text-align:left;">${nama}</td>
+        <td><input type="radio" name="s_${i}" value="Hadir" checked></td>
+        <td><input type="radio" name="s_${i}" value="Izin"></td>
+        <td><input type="radio" name="s_${i}" value="Sakit"></td>
+        <td><input type="radio" name="s_${i}" value="Alfa"></td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.markAll = function() {
+    document.querySelectorAll('input[value="Hadir"]').forEach(r => r.checked = true);
+  };
+
+  // ===============================================
+  // 5. Simpan ke Firebase
+  // ===============================================
+  window.simpan = function() {
+    const tanggal = document.getElementById('tanggal').value;
+    const program = document.getElementById('program').value;
+    if (!tanggal || !program) {
+      alert('Mohon pilih tanggal dan program terlebih dahulu.');
+      return;
+    }
+
+    const hasil = [];
+    document.querySelectorAll('#tabelSantri tbody tr').forEach((tr, i) => {
+      const nama = tr.children[0].textContent;
+      const status = document.querySelector(`input[name="s_${i}"]:checked`).value;
+      hasil.push({ nama, status });
+    });
+
+    const log = {
+      tanggal,
+      program,
+      naqib: currentUser.naqibName,
+      data: hasil,
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const absensiRef = ref(db, 'cahaya_app/absensi_program_harian');
+    push(absensiRef, log)
+      .then(() => {
+        alert(`✅ Absensi ${program} (${tanggal}) berhasil disimpan ke Firebase untuk ${currentUser.naqibName}.`);
+      })
+      .catch(err => {
+        console.error(err);
+        alert('❌ Gagal menyimpan ke Firebase: ' + err.message);
+      });
+  };
+
+  // ===============================================
+  // 6. Navigasi
+  // ===============================================
+  window.goBack = function() { window.location.href = 'dashboard.html'; };
+  window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

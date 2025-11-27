@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Form Pelanggaran Santri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      margin: 0;
+      padding: 20px;
+      color: #1f2933;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+    }
+    header h1 { margin: 0; font-size: 1.2rem; }
+    main {
+      background: #fff;
+      margin-top: 20px;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(15,23,42,0.15);
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 { margin-top: 0; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      box-sizing: border-box;
+    }
+    textarea { resize: vertical; min-height: 70px; }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    button:hover { background: #1d4ed8; }
+    .btn-secondary { background: #6b7280; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f3f4f6; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CAHAYA APP – Form Pelanggaran Santri</h1>
+  <div>
+    <button class="btn-secondary" onclick="goBack()">⬅️ Dashboard</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <h2 id="naqibTitle">Form Pelanggaran Santri</h2>
+  <p id="naqibInfo"></p>
+
+  <label>Tanggal Kejadian:</label>
+  <input type="date" id="tanggal">
+
+  <label>Nama Santri:</label>
+  <select id="namaSantri"></select>
+
+  <label>Kategori Pelanggaran:</label>
+  <select id="kategori">
+    <option>Ringan</option>
+    <option>Sedang</option>
+    <option>Berat</option>
+  </select>
+
+  <label>Keterangan Pelanggaran:</label>
+  <textarea id="keterangan" placeholder="Tuliskan kronologi singkat pelanggaran..."></textarea>
+
+  <label>Tindak Lanjut Naqib:</label>
+  <textarea id="tindakLanjut" placeholder="Tuliskan tindakan Naqib dalam menangani pelanggaran..."></textarea>
+
+  <label>Konsekuensi yang diberikan:</label>
+  <textarea id="konsekuensi" placeholder="Misalnya: Push Up 20x, skorsing, tidak ada konsekuensi, dll..."></textarea>
+
+  <button id="btnSimpan">💾 Simpan Laporan Pelanggaran</button>
+
+  <h3>📋 Riwayat Pelanggaran Hari Ini</h3>
+  <table id="tabelPelanggaran">
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Santri</th>
+        <th>Kategori</th>
+        <th>Keterangan</th>
+        <th>Tindak Lanjut</th>
+        <th>Konsekuensi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<!-- === FIREBASE MODULE === -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  // Konfigurasi Firebase (sama dengan seluruh sistem CAHAYA APP)
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+
+  // === Data Santri ===
+  const dataSantri = {
+    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT"],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH"],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN"],
+    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ"],
+    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM"],
+    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI"],
+    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ"]
+  };
+
+  // === Inisialisasi ===
+  function init() {
+    if (!user || user.role !== 'naqib') {
+      alert('Silakan login sebagai Naqib terlebih dahulu.');
+      window.location.href = '../index.html';
+      return;
+    }
+    document.getElementById('naqibTitle').textContent = user.label || 'Naqib';
+    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+    isiSantri(user.naqibName);
+    document.getElementById('btnSimpan').addEventListener('click', simpan);
+  }
+
+  function isiSantri(naqibName) {
+    const list = dataSantri[naqibName] || [];
+    const select = document.getElementById('namaSantri');
+    select.innerHTML = '';
+    list.forEach(nama => {
+      const opt = document.createElement('option');
+      opt.textContent = nama;
+      opt.value = nama;
+      select.appendChild(opt);
+    });
+  }
+
+  // === Simpan ke Firebase ===
+  function simpan() {
+    const tanggal = document.getElementById('tanggal').value;
+    const santri = document.getElementById('namaSantri').value;
+    const kategori = document.getElementById('kategori').value;
+    const ket = document.getElementById('keterangan').value.trim();
+    const tindakLanjut = document.getElementById('tindakLanjut').value.trim();
+    const konsekuensi = document.getElementById('konsekuensi').value.trim();
+
+    if (!santri || !kategori) {
+      alert('Lengkapi data pelanggaran.');
+      return;
+    }
+
+    const entry = {
+      tanggal,
+      santri,
+      kategori,
+      keterangan: ket,
+      tindakLanjut,
+      konsekuensi,
+      naqib: user.naqibName,
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const pelanggaranRef = ref(db, 'cahaya_app/pelanggaran_santri');
+    push(pelanggaranRef, entry)
+      .then(() => {
+        alert(`✅ Laporan pelanggaran tersimpan untuk ${santri}.`);
+        tampilkan(entry);
+        // Reset form
+        document.getElementById('keterangan').value = '';
+        document.getElementById('tindakLanjut').value = '';
+        document.getElementById('konsekuensi').value = '';
+      })
+      .catch(err => {
+        alert('❌ Gagal menyimpan ke Firebase: ' + err.message);
+      });
+  }
+
+  // === Tampilkan pada tabel lokal (client side) ===
+  function tampilkan(entry) {
+    const tbody = document.querySelector('#tabelPelanggaran tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${entry.tanggal}</td>
+      <td>${entry.santri}</td>
+      <td>${entry.kategori}</td>
+      <td>${entry.keterangan}</td>
+      <td>${entry.tindakLanjut}</td>
+      <td>${entry.konsekuensi}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  // === Navigasi ===
+  function goBack() { window.location.href = 'dashboard.html'; }
+  function logout() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

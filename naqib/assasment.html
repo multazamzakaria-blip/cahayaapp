@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Perkembangan Dimensi CAHAYA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {font-family: Arial, sans-serif; background: #eef2ff; margin: 0; padding: 20px; color: #1f2933;}
+    header {background: #2563eb; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 10px;}
+    header h1 {margin: 0; font-size: 1.2rem;}
+    main {background: #fff; margin-top: 20px; border-radius: 12px; padding: 20px; box-shadow: 0 5px 15px rgba(15, 23, 42, 0.15); max-width: 1100px; margin-left: auto; margin-right: auto;}
+    h2, h3, h4 {margin-top: 16px; margin-bottom: 6px;}
+    label {font-weight: bold; display: block; margin-top: 10px;}
+    input, select, textarea {padding: 8px; border-radius: 6px; border: 1px solid #d1d5db; width: 100%; box-sizing: border-box; margin-top: 4px;}
+    textarea {resize: vertical; min-height: 60px; background: #f9fafb;}
+    table {width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.9rem;}
+    th, td {border: 1px solid #e5e7eb; padding: 6px 8px; text-align: center; background: #fff;}
+    th {background: #f3f4f6;}
+    .note {font-size: 0.85rem; color: #4b5563; margin-top: 6px;}
+    .sep {margin: 18px 0; border: none; border-top: 1px solid #e5e7eb;}
+    button {background: #2563eb; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 0.9rem;}
+    button:hover {background: #1d4ed8;}
+    .btn-secondary {background: #6b7280;}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CAHAYA APP – Perkembangan Dimensi CAHAYA</h1>
+  <div>
+    <button class="btn-secondary" onclick="goBack()">⬅️ Dashboard</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <h2>Perkembangan Dimensi CAHAYA — <span id="naqibLabelPerk"></span></h2>
+  <p class="note">Gunakan asesmen ini untuk merefleksikan perkembangan santri secara lembut dan inspiratif.</p>
+
+  <div class="row">
+    <div class="col">
+      <label>Tanggal Asesmen:</label>
+      <input type="date" id="perkTanggal">
+    </div>
+    <div class="col">
+      <label>Nama Santri:</label>
+      <select id="perkSantri"><option value="">-- Pilih Santri --</option></select>
+    </div>
+  </div>
+
+  <p class="note">Skala: 0 = Belum nampak, 1 = Kadang, 2 = Sering, 3 = Konsisten.</p>
+  <hr class="sep">
+
+  <h3>II. Akhlak Mulia (Relational / SMILE+)</h3>
+  <div id="akhlakTables"></div>
+  <p><b>Rata-rata:</b> <span id="perkAkhlakAvg">0.00</span> | 
+  <b>Predikat:</b> <span id="perkAkhlakPredikatLabel">-</span></p>
+  <label>Catatan Perkembangan Akhlak Mulia:</label>
+  <textarea id="perkAkhlakCatatan"></textarea>
+
+  <hr class="sep">
+
+  <h3>III. Hati Bersih (Emotional)</h3>
+  <div id="hatiTables"></div>
+  <p><b>Rata-rata:</b> <span id="perkHatiAvg">0.00</span> | 
+  <b>Predikat:</b> <span id="perkHatiPredikatLabel">-</span></p>
+  <label>Catatan Perkembangan Hati Bersih:</label>
+  <textarea id="perkHatiCatatan"></textarea>
+
+  <hr class="sep">
+
+  <h3>V. Fisik Berdaya (Physical)</h3>
+  <div id="fisikTables"></div>
+  <p><b>Rata-rata:</b> <span id="perkFisikAvg">0.00</span> | 
+  <b>Predikat:</b> <span id="perkFisikPredikatLabel">-</span></p>
+  <label>Catatan Perkembangan Fisik Berdaya:</label>
+  <textarea id="perkFisikCatatan"></textarea>
+
+  <hr class="sep">
+
+  <label>Rekomendasi Tindak Lanjut Naqib:</label>
+  <textarea id="perkRekomendasi" placeholder="Contoh: dilatih adab berbicara, diberi amanah kecil, dibuat checklist kebersihan."></textarea>
+
+  <br><br>
+  <button id="btnSimpan">💾 Simpan Perkembangan</button>
+</main>
+
+<!-- === FIREBASE MODULE === -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // === DATA SANTRI BERDASARKAN NAQIB ===
+  const dataSantri = {
+      "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
+    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
+    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD RAYYAN HAFIZ","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
+    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
+    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
+  };
+
+  const akhlakData = {
+    "A. Self Love": ["Butterfly Hug"],
+    "B. Meaningful Communication": ["Mengucap Terima kasih","Mengucap Maaf","Salam & Senyum"],
+    "C. Intentional Giving": ["Memberi sedekah / hadiah"],
+    "D. Living Together": ["Makan bareng usrah","Olahraga bareng usrah"],
+    "E. Empathy": ["Kamu bercerita, aku mendengar"]
+  };
+  const hatiData = {
+    "A. Rilis Emosi Negatif": ["Cuci hati sebelum tidur","Journaling"],
+    "B. Booster Emosi Positif": ["Meditasi syukur","Gratitude luck diary"]
+  };
+  const fisikData = {
+    "A. Kebiasaan Harian": ["Daily Exercises","Qailulah","Mandi pagi","Mandi sore"],
+    "B. Kebiasaan Pekanan": ["Puasa Kamis","PBB","Merapikan kuku","Menjemur kasur, bantal, selimut"]
+  };
+
+  function isiTabel(id, data, dim) {
+    const div = document.getElementById(id);
+    div.innerHTML = "";
+    Object.entries(data).forEach(([judul, list]) => {
+      let html = `<h4>${judul}</h4><table><thead><tr><th>Indikator</th><th>Skor (0–3)</th></tr></thead><tbody>`;
+      list.forEach(item => {
+        html += `<tr><td style="text-align:left">${item}</td><td><select class="perk-skor" data-dim="${dim}">
+        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></td></tr>`;
+      });
+      html += `</tbody></table>`;
+      div.innerHTML += html;
+    });
+  }
+
+  // 🔹 hanya tampilkan santri sesuai naqib login
+  function isiSantriByNaqib(naqibName) {
+    const select = document.getElementById('perkSantri');
+    select.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    const santriList = dataSantri[naqibName] || [];
+    santriList.forEach(n => {
+      const opt = document.createElement('option');
+      opt.value = n; opt.textContent = n;
+      select.appendChild(opt);
+    });
+  }
+
+  function hitung(dim) {
+    const list = document.querySelectorAll(`.perk-skor[data-dim="${dim}"]`);
+    let total = 0, count = 0;
+    list.forEach(s => { total += parseInt(s.value) || 0; count++; });
+    const avg = count ? total / count : 0;
+    const label = avg < 1.5 ? "Kadang" : avg < 2.5 ? "Sering" : "Konsisten";
+    document.getElementById(`perk${capitalize(dim)}Avg`).textContent = avg.toFixed(2);
+    document.getElementById(`perk${capitalize(dim)}PredikatLabel`).textContent = label;
+    return { avg, label };
+  }
+
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function buatNarasi(dimensi, els) {
+    const fokusMap = {
+      "Akhlak Mulia": "meningkatkan komunikasi lembut dan empati dalam kebersamaan.",
+      "Hati Bersih": "melatih kesadaran emosi, syukur, dan keikhlasan dalam menerima takdir.",
+      "Fisik Berdaya": "menjaga kebersihan, disiplin, dan kekuatan tubuh sebagai amanah Allah."
+    };
+    const data = [];
+    els.forEach(e => {
+      const row = e.closest("tr");
+      if (row) data.push({ label: row.children[0].innerText, skor: parseInt(e.value) || 0 });
+    });
+    if (!data.length) return `Belum ada penilaian dimensi ${dimensi}.`;
+    const total = data.reduce((a, b) => a + b.skor, 0);
+    const avg = total / data.length;
+    const max = data.reduce((a, b) => a.skor > b.skor ? a : b);
+    const min = data.reduce((a, b) => a.skor < b.skor ? a : b);
+    const desk = avg < 0.75 ? "masih tahap awal dan perlu pendampingan" :
+                 avg < 1.5 ? "mulai berkembang dan kadang tampak" :
+                 avg < 2.5 ? "cukup stabil dan menunjukkan kemajuan" :
+                 "sudah kuat dan menjadi teladan";
+    return `Dalam dimensi ${dimensi}, Ananda menunjukkan perkembangan yang ${desk}.
+Fokus latihan saat ini adalah ${fokusMap[dimensi]}
+Alhamdulillah, perilaku seperti "${max.label}" mulai menampakkan buah kebaikan yang layak disyukuri.
+Sementara "${min.label}" masih perlu dilatih dengan kesungguhan dan penuh harapan agar semakin sempurna.`;
+  }
+
+  function simpanPerkembanganCahaya() {
+    const santri = document.getElementById('perkSantri').value;
+    if (!santri) { alert('Pilih nama santri terlebih dahulu.'); return; }
+
+    hitung('akhlak'); hitung('hati'); hitung('fisik');
+    const akhlakText = buatNarasi("Akhlak Mulia", document.querySelectorAll('.perk-skor[data-dim="akhlak"]'));
+    const hatiText = buatNarasi("Hati Bersih", document.querySelectorAll('.perk-skor[data-dim="hati"]'));
+    const fisikText = buatNarasi("Fisik Berdaya", document.querySelectorAll('.perk-skor[data-dim="fisik"]'));
+
+    document.getElementById('perkAkhlakCatatan').value = akhlakText;
+    document.getElementById('perkHatiCatatan').value = hatiText;
+    document.getElementById('perkFisikCatatan').value = fisikText;
+
+    const tgl = document.getElementById('perkTanggal').value || new Date().toISOString().split('T')[0];
+    const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{}');
+    const naqibName = user.username || user.naqibName || "Naqib";
+
+    const data = {
+      tanggal: tgl,
+      namaSantri: santri,
+      naqibName: naqibName,
+      narasiRelational: akhlakText,
+      narasiEmotional: hatiText,
+      narasiPhysical: fisikText,
+      rekomendasi: document.getElementById('perkRekomendasi').value.trim(),
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const refPath = ref(db, 'cahaya_app/assesment_cahaya_naqib');
+    push(refPath, data)
+      .then(() => alert(`✅ Asesmen ${santri} oleh ${naqibName} tersimpan ke Firebase dengan narasi lengkap.`))
+      .catch(err => alert(`❌ Gagal menyimpan: ${err.message}`));
+  }
+
+  function init() {
+    const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{"username":"Naqib"}');
+    const naqibName = user.username || "Naqib";
+    document.getElementById('naqibLabelPerk').textContent = naqibName;
+    document.getElementById('perkTanggal').value = new Date().toISOString().split('T')[0];
+    isiSantriByNaqib(naqibName);
+    isiTabel("akhlakTables", akhlakData, "akhlak");
+    isiTabel("hatiTables", hatiData, "hati");
+    isiTabel("fisikTables", fisikData, "fisik");
+    document.getElementById('btnSimpan').addEventListener('click', simpanPerkembanganCahaya);
+  }
+
+  function goBack() { window.location.href = 'dashboard.html'; }
+  function logout() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

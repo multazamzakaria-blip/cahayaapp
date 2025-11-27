@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Naqib</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; background: #eef2ff; margin: 0; color: #1f2933; }
+    header {
+      background: #2563eb; color: white; padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    main { padding: 20px; max-width: 1100px; margin: auto; }
+    .card {
+      background: white; border-radius: 16px; padding: 18px;
+      box-shadow: 0 5px 20px rgba(15,23,42,0.12); margin-bottom: 20px;
+    }
+    button {
+      background: #2563eb; color: white; border: none;
+      border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: bold;
+      font-size: 13px;
+    }
+    button:hover { background: #1d4ed8; }
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .small { font-size: 12px; color:#4b5563; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>CAHAYA APP – Naqib</h1>
+  <div class="btn-group">
+    <button onclick="backToPortal()">⬅️ Portal</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <h2 id="naqibTitle">Dashboard Naqib</h2>
+    <p class="small" id="naqibInfo"></p>
+
+      <div class="btn-group">
+      <button onclick="goAbsensi()">🧍 Absensi Program Harian</button>
+<button onclick="goPelanggaran()">📋 Form Pelanggaran Santri</button>
+<button onclick="goCahaya()">💚 CAHAYA Assessment</button>
+
+      
+    </div>
+
+    <p class="small" style="margin-top:12px;">
+      Selalu isi dengan <b>Teliti dan Objektif</b>.
+    </p>
+  </div>
+</main>
+
+<script>
+  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+
+  (function init(){
+    const title = document.getElementById('naqibTitle');
+    const info = document.getElementById('naqibInfo');
+    if (!user || user.role !== 'naqib') {
+      title.textContent = 'Dashboard Naqib (Belum Login)';
+      info.textContent = 'Silakan login dari portal utama.';
+      return;
+    }
+    title.textContent = user.label || 'Dashboard Naqib';
+    })();
+
+  function backToPortal(){
+    window.location.href = '../index.html';
+  }
+  function logout(){
+    localStorage.removeItem('cahayaCurrentUser');
+    window.location.href = '../index.html';
+  }
+  function goAbsensi(){
+    window.location.href = 'absensi.html';
+  }
+function goPelanggaran() {
+  window.location.href = 'pelanggaran.html';
+}
+
+function goCahaya() {
+  window.location.href = 'assasment.html';
+}
+</script>
+</body>
+</html>
