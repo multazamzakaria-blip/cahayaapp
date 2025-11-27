@@ -341,7 +341,30 @@ function buatLaporanSantri(ctx) {
   }`;
 
   // === Nilai Ujian ===
-  const nilaiUjian = ujian.filter(u => u.santri === nama && isSameMonthYear(u.tanggal, bulan, tahun));
+  const nilaiUjian = ujian
+  .filter(
+    (u) =>
+      (u.santri || "").toLowerCase() === nama.toLowerCase() &&
+      isSameMonthYear(u.tanggal, bulan, tahun)
+  )
+  .filter(
+    (u, i, self) =>
+      i ===
+      self.findIndex(
+        (x) =>
+          x.santri === u.santri &&
+          x.mapel === u.mapel &&
+          x.materi === u.materi &&
+          x.tanggal === u.tanggal
+      )
+  );
+
+let rataUjian = 0;
+if (nilaiUjian.length) {
+  rataUjian = Math.round(
+    nilaiUjian.reduce((s, u) => s + (+u.nilai || 0), 0) / nilaiUjian.length
+  );
+}
   let rataUjian = 0;
   if (nilaiUjian.length) {
     rataUjian = Math.round(
@@ -505,4 +528,5 @@ function goDashboard(){
 </script>
 </body>
 </html>
+
 
