@@ -50,9 +50,7 @@
       font-size: 13px;
       outline: none;
     }
-    input::placeholder {
-      color: #9ca3af;
-    }
+    input::placeholder { color: #9ca3af; }
     button {
       background: #f9fafb;
       color: #0f766e;
@@ -65,9 +63,7 @@
       width: 100%;
       margin-top: 4px;
     }
-    button:hover {
-      background: #e5e7eb;
-    }
+    button:hover { background: #e5e7eb; }
     .hint {
       font-size: 11px;
       color: #cbd5e1;
@@ -96,7 +92,7 @@
 
       <div class="hint">
         Baca Bismillah sebelum masuk<br>
-        </div>
+      </div>
     </div>
   </div>
 
@@ -105,26 +101,52 @@
   </footer>
 
   <script>
-    const akun = [
-      // Guru demo
-      { username: 'guru1', password: '12345', role: 'guru', label: 'Guru Demo' },
+    // ===============================
+    // 🔐 DATA USER SUNGGUHAN CAHAYA APP
+    // ===============================
 
-      // Naqib – disesuaikan dengan DISIPOL lama
-      { username: 'Regen',   password: 'REGEN111',   role: 'naqib', label: 'Naqib Regen',   naqibName:'Regen' },
-      { username: 'Kamal',   password: 'KAMAL111',   role: 'naqib', label: 'Naqib Kamal',   naqibName:'Kamal' },
-      { username: 'Favian',  password: 'FAVIAN111',  role: 'naqib', label: 'Naqib Favian',  naqibName:'Favian' },
-      { username: 'Dimas',   password: 'DIMAS111',   role: 'naqib', label: 'Naqib Dimas',   naqibName:'Dimas' },
-      { username: 'Shafwan', password: 'SHAFWAN111', role: 'naqib', label: 'Naqib Shafwan', naqibName:'Shafwan' },
-      { username: 'Fatimah', password: 'FATIMAH111', role: 'naqib', label: 'Naqibah Fatimah', naqibName:'Fatimah' },
-      { username: 'Evita',   password: 'EVITA111',   role: 'naqib', label: 'Naqibah Evita', naqibName:'Evita' },
-
-      // Supervisor & Admin
-      { username: 'supervisor1', password: 'admin123', role: 'supervisor', label:'Supervisor' },
-      { username: 'admin',       password: 'admin123', role: 'admin',      label:'Admin' }
+    // NAQIB (tiap naqib hanya bisa akses santri kelompoknya)
+    const naqibUsers = [
+      { username: "kamal",   password: "kamal123",   role: "naqib", label: "Naqib Kamal",   naqibName: "Kamal" },
+      { username: "regen",   password: "regen123",   role: "naqib", label: "Naqib Regen",   naqibName: "Regen" },
+      { username: "dimas",   password: "dimas123",   role: "naqib", label: "Naqib Dimas",   naqibName: "Dimas" },
+      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
+      { username: "favian",  password: "favian123",  role: "naqib", label: "Naqib Favian",  naqibName: "Favian" },
+      { username: "evita",   password: "evita123",   role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
+      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" }
     ];
 
+    // GURU (akses penuh semua fitur guru)
+    const guruUsers = [
+      { username: "multazam", password: "guru123", role: "guru", label: "Ustadz Multazam" },
+      { username: "alvin",    password: "guru123", role: "guru", label: "Ustadz Alvin" },
+      { username: "alzam",    password: "guru123", role: "guru", label: "Ustadz Alzam" },
+      { username: "haidar",   password: "guru123", role: "guru", label: "Ustadz Haidar" },
+      { username: "shafwan",  password: "guru123", role: "guru", label: "Ustadz Shafwan" },
+      { username: "fahmi",    password: "guru123", role: "guru", label: "Ustadz Fahmi" },
+      { username: "khaizuran",password: "guru123", role: "guru", label: "Ustadz Khaizuran" },
+      { username: "mulia",    password: "guru123", role: "guru", label: "Ustadz Mulia" },
+      { username: "faiq",     password: "guru123", role: "guru", label: "Ustadz Faiq" },
+      { username: "favian",   password: "guru123", role: "guru", label: "Ustadz Favian" },
+      { username: "kamal",    password: "guru123", role: "guru", label: "Ustadz Kamal" },
+      { username: "meilisa",  password: "guru123", role: "guru", label: "Ustadzah Meilisa" },
+      { username: "fatimah",  password: "guru123", role: "guru", label: "Ustadzah Fatimah" },
+      { username: "evita",    password: "guru123", role: "guru", label: "Ustadzah Evita" }
+    ];
+
+    // ADMIN
+    const adminUsers = [
+      { username: "admin", password: "cahaya2025", role: "admin", label: "Admin Pesantren" }
+    ];
+
+    // GABUNG SEMUA
+    const akun = [...naqibUsers, ...guruUsers, ...adminUsers];
+
+    // ===============================
+    // 🔑 LOGIN FUNCTION
+    // ===============================
     function login() {
-      const user = document.getElementById('username').value.trim();
+      const user = document.getElementById('username').value.trim().toLowerCase();
       const pass = document.getElementById('password').value.trim();
       const found = akun.find(a => a.username === user && a.password === pass);
 
@@ -133,17 +155,16 @@
         return;
       }
 
-      // simpan info user ke localStorage
       localStorage.setItem('cahayaCurrentUser', JSON.stringify(found));
 
       if (found.role === 'guru') {
-        window.location.href = 'guru/fitur.html';
+        window.location.href = 'guru/dashboard.html';
       } else if (found.role === 'naqib') {
         window.location.href = 'naqib/dashboard.html';
-      } else if (found.role === 'supervisor') {
-        window.location.href = 'supervisor/index.html';
       } else if (found.role === 'admin') {
-        window.location.href = 'admin/index.html';
+        window.location.href = 'admin/dashboard.html';
+      } else {
+        alert('Role tidak dikenali!');
       }
     }
   </script>
