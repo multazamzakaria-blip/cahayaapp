@@ -168,24 +168,24 @@ async function generateReports() {
   }
 
   try {
-    const dbRef = ref(window.db);
     const [
-      assesGuruSnap,
-      assesNaqibSnap,
-      absNaqibSnap,
-      absKbmSnap,
-      ujianSnap,
-      tahfizSnap,
-      pelanggaranSnap
-    ] = await Promise.all([
-      get(child(dbRef, "assesmentCahayaSantri")),
-      get(child(dbRef, "assesmentCahayaNaqib")),
-      get(child(dbRef, "absensiProgramHarian")),
-      get(child(dbRef, "absensiKehadiranPembelajaran")),
-      get(child(dbRef, "nilaiUjianLogs")),
-      get(child(dbRef, "setoranTahfiz")),
-      get(child(dbRef, "pelanggaranLogs")),
-    ]);
+  assesGuruSnap,
+  assesNaqibSnap,
+  absNaqibSnap,
+  absKbmSnap,
+  ujianSnap,
+  tahfizSnap,
+  pelanggaranSnap
+] = await Promise.all([
+  get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
+  get(child(dbRef, "assesmentCahayaNaqib")),
+  get(child(dbRef, "absensiProgramHarian")),
+  get(child(dbRef, "absensiKehadiranPembelajaran")),
+  get(child(dbRef, "nilaiUjianLogs")),
+  get(child(dbRef, "setoranTahfiz")),
+  get(child(dbRef, "pelanggaranLogs")),
+]);
+
 
     const assesmentGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
     const assesmentNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
@@ -401,3 +401,4 @@ function goDashboard(){window.location.href="index.html";}
 </script>
 </body>
 </html>
+
