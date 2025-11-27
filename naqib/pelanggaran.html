@@ -230,14 +230,7 @@ tr.innerHTML = `
 tbody.appendChild(tr);
 
   // === Navigasi ===
-  function goBack() {
-  try {
-    window.location.href = './dashboard.html';
-  } catch (err) {
-    console.error('Gagal kembali ke dashboard:', err);
-    alert('Tidak dapat membuka Dashboard.');
-  }
-}
+  window.goBack = function() { window.location.href = 'dashboard.html'; };
   function logout() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; }
 
   document.addEventListener('DOMContentLoaded', init);
@@ -245,6 +238,7 @@ tbody.appendChild(tr);
 
 </body>
 </html>
+
 
 
 
