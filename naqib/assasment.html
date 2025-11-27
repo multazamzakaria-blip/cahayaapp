@@ -2,32 +2,109 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP - Perkembangan Dimensi CAHAYA</title>
+  <title>CAHAYA APP - Asesmen Naqib</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {font-family: Arial, sans-serif; background: #eef2ff; margin: 0; padding: 20px; color: #1f2933;}
-    header {background: #2563eb; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 10px;}
-    header h1 {margin: 0; font-size: 1.2rem;}
-    main {background: #fff; margin-top: 20px; border-radius: 12px; padding: 20px; box-shadow: 0 5px 15px rgba(15, 23, 42, 0.15); max-width: 1100px; margin-left: auto; margin-right: auto;}
-    h2, h3, h4 {margin-top: 16px; margin-bottom: 6px;}
-    label {font-weight: bold; display: block; margin-top: 10px;}
-    input, select, textarea {padding: 8px; border-radius: 6px; border: 1px solid #d1d5db; width: 100%; box-sizing: border-box; margin-top: 4px;}
-    textarea {resize: vertical; min-height: 60px; background: #f9fafb;}
-    table {width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.9rem;}
-    th, td {border: 1px solid #e5e7eb; padding: 6px 8px; text-align: center; background: #fff;}
-    th {background: #f3f4f6;}
-    .note {font-size: 0.85rem; color: #4b5563; margin-top: 6px;}
-    .sep {margin: 18px 0; border: none; border-top: 1px solid #e5e7eb;}
-    button {background: #2563eb; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 0.9rem;}
-    button:hover {background: #1d4ed8;}
-    .btn-secondary {background: #6b7280;}
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+      margin: 0;
+      padding: 20px;
+      color: #1f2933;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+
+    header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+    button:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-secondary { background: #6b7280; }
+    .btn-secondary:hover { background: #4b5563; }
+
+    main {
+      background: white;
+      margin-top: 20px;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h2 { margin-top: 0; color: #1e3a8a; }
+    h3 { margin-top: 24px; font-size: 1.1rem; }
+    label { font-weight: 600; margin-top: 10px; display: block; }
+
+    select, input, textarea {
+      padding: 9px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 0.95rem;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+
+    textarea { resize: vertical; background: #f9fafb; min-height: 60px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* 🌿 Akhlak Mulia */
+    .relational th { background: linear-gradient(90deg, #bbf7d0, #86efac); }
+    .relational tr:nth-child(even) { background: #f0fdf4; }
+    .relational tr:hover { background: #dcfce7; }
+
+    /* 💜 Hati Bersih */
+    .emotional th { background: linear-gradient(90deg, #e9d5ff, #c084fc); }
+    .emotional tr:nth-child(even) { background: #f5f3ff; }
+    .emotional tr:hover { background: #ede9fe; }
+
+    /* 💪 Fisik Berdaya */
+    .physical th { background: linear-gradient(90deg, #bfdbfe, #93c5fd); }
+    .physical tr:nth-child(even) { background: #eff6ff; }
+    .physical tr:hover { background: #dbeafe; }
+
+    hr.sep { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
+    .note { font-size: 0.85rem; color: #475569; margin-bottom: 10px; }
   </style>
 </head>
-<body>
 
+<body>
 <header>
-  <h1>CAHAYA APP – Perkembangan Dimensi CAHAYA</h1>
-  <div>
+  <h1>CAHAYA APP – Asesmen Perkembangan Santri</h1>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
     <button class="btn-secondary" onclick="goBack()">⬅️ Dashboard</button>
     <button onclick="logout()">Keluar</button>
   </div>
@@ -35,57 +112,53 @@
 
 <main>
   <h2>Perkembangan Dimensi CAHAYA — <span id="naqibLabelPerk"></span></h2>
-  <p class="note">Gunakan asesmen ini untuk merefleksikan perkembangan santri secara lembut dan inspiratif.</p>
+  <p class="note">Gunakan asesmen ini untuk menilai perkembangan santri dengan kelembutan hati dan pandangan positif.</p>
 
-  <div class="row">
-    <div class="col">
-      <label>Tanggal Asesmen:</label>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+    <div style="flex:1;min-width:180px">
+      <label>Tanggal Asesmen</label>
       <input type="date" id="perkTanggal">
     </div>
-    <div class="col">
-      <label>Nama Santri:</label>
+    <div style="flex:1;min-width:220px">
+      <label>Nama Santri</label>
       <select id="perkSantri"><option value="">-- Pilih Santri --</option></select>
     </div>
   </div>
 
   <p class="note">Skala: 0 = Belum nampak, 1 = Kadang, 2 = Sering, 3 = Konsisten.</p>
-  <hr class="sep">
 
-  <h3>II. Akhlak Mulia (Relational / SMILE+)</h3>
-  <div id="akhlakTables"></div>
-  <p><b>Rata-rata:</b> <span id="perkAkhlakAvg">0.00</span> | 
+  <!-- 🌿 Akhlak Mulia -->
+  <hr class="sep">
+  <h3>🤝 Akhlak Mulia (Relational)</h3>
+  <div id="akhlakTables" class="relational"></div>
+  <p><b>Rata-rata:</b> <span id="perkAkhlakAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkAkhlakPredikatLabel">-</span></p>
-  <label>Catatan Perkembangan Akhlak Mulia:</label>
-  <textarea id="perkAkhlakCatatan"></textarea>
+  <textarea id="perkAkhlakCatatan" placeholder="Catatan perkembangan Akhlak Mulia..."></textarea>
 
+  <!-- 💜 Hati Bersih -->
   <hr class="sep">
-
-  <h3>III. Hati Bersih (Emotional)</h3>
-  <div id="hatiTables"></div>
-  <p><b>Rata-rata:</b> <span id="perkHatiAvg">0.00</span> | 
+  <h3>💜 Hati Bersih (Emotional)</h3>
+  <div id="hatiTables" class="emotional"></div>
+  <p><b>Rata-rata:</b> <span id="perkHatiAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkHatiPredikatLabel">-</span></p>
-  <label>Catatan Perkembangan Hati Bersih:</label>
-  <textarea id="perkHatiCatatan"></textarea>
+  <textarea id="perkHatiCatatan" placeholder="Catatan perkembangan Hati Bersih..."></textarea>
 
+  <!-- 💪 Fisik Berdaya -->
   <hr class="sep">
-
-  <h3>V. Fisik Berdaya (Physical)</h3>
-  <div id="fisikTables"></div>
-  <p><b>Rata-rata:</b> <span id="perkFisikAvg">0.00</span> | 
+  <h3>💪 Fisik Berdaya (Physical)</h3>
+  <div id="fisikTables" class="physical"></div>
+  <p><b>Rata-rata:</b> <span id="perkFisikAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkFisikPredikatLabel">-</span></p>
-  <label>Catatan Perkembangan Fisik Berdaya:</label>
-  <textarea id="perkFisikCatatan"></textarea>
+  <textarea id="perkFisikCatatan" placeholder="Catatan perkembangan Fisik Berdaya..."></textarea>
 
   <hr class="sep">
-
-  <label>Rekomendasi Tindak Lanjut Naqib:</label>
-  <textarea id="perkRekomendasi" placeholder="Contoh: dilatih adab berbicara, diberi amanah kecil, dibuat checklist kebersihan."></textarea>
+  <label>Rekomendasi Tindak Lanjut:</label>
+  <textarea id="perkRekomendasi" placeholder="Contoh: latihan adab berbicara, diberi amanah kecil, dibuat checklist kebersihan."></textarea>
 
   <br><br>
-  <button id="btnSimpan">💾 Simpan Perkembangan</button>
+  <button id="btnSimpan">💾 Simpan Asesmen</button>
 </main>
 
-<!-- === FIREBASE MODULE === -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -103,31 +176,23 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // === DATA SANTRI BERDASARKAN NAQIB ===
   const dataSantri = {
-    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT"],
-    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH"],
-    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN"],
-    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ"],
-    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM"],
-    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI"],
-    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ"]
+    "Regen": ["AHMAD MAULANA", "JUANDA NUR ILHAM"],
+    "Kamal": ["ADITYA PUTRA IBRAHIM", "AIRLANGGA AZKA ABQORI"],
+    "Fatimah": ["NILAM CAHYA", "QELZA RAMADHANI"]
   };
 
   const akhlakData = {
     "A. Self Love": ["Butterfly Hug"],
-    "B. Meaningful Communication": ["Mengucap Terima kasih","Mengucap Maaf","Salam & Senyum"],
-    "C. Intentional Giving": ["Memberi sedekah / hadiah"],
-    "D. Living Together": ["Makan bareng usrah","Olahraga bareng usrah"],
-    "E. Empathy": ["Kamu bercerita, aku mendengar"]
+    "B. Communication": ["Terima kasih", "Maaf", "Senyum & Salam"]
   };
   const hatiData = {
-    "A. Rilis Emosi Negatif": ["Cuci hati sebelum tidur","Journaling"],
-    "B. Booster Emosi Positif": ["Meditasi syukur","Gratitude luck diary"]
+    "A. Emosi Negatif": ["Cuci hati sebelum tidur"],
+    "B. Emosi Positif": ["Meditasi syukur"]
   };
   const fisikData = {
-    "A. Kebiasaan Harian": ["Daily Exercises","Qailulah","Mandi pagi","Mandi sore"],
-    "B. Kebiasaan Pekanan": ["Puasa Kamis","PBB","Merapikan kuku","Menjemur kasur, bantal, selimut"]
+    "A. Harian": ["Qailulah", "Mandi pagi"],
+    "B. Pekanan": ["Puasa Kamis"]
   };
 
   function isiTabel(id, data, dim) {
@@ -136,8 +201,10 @@
     Object.entries(data).forEach(([judul, list]) => {
       let html = `<h4>${judul}</h4><table><thead><tr><th>Indikator</th><th>Skor (0–3)</th></tr></thead><tbody>`;
       list.forEach(item => {
-        html += `<tr><td style="text-align:left">${item}</td><td><select class="perk-skor" data-dim="${dim}">
-        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></td></tr>`;
+        html += `<tr><td style="text-align:left">${item}</td>
+        <td><select class="perk-skor" data-dim="${dim}">
+        <option value="0">0</option><option value="1">1</option>
+        <option value="2">2</option><option value="3">3</option></select></td></tr>`;
       });
       html += `</tbody></table>`;
       div.innerHTML += html;
@@ -147,113 +214,60 @@
   function isiSantriByNaqib(naqibName) {
     const select = document.getElementById('perkSantri');
     select.innerHTML = '<option value="">-- Pilih Santri --</option>';
-    const santriList = dataSantri[naqibName] || [];
-    santriList.forEach(n => {
+    const list = dataSantri[naqibName] || [];
+    list.forEach(n => {
       const opt = document.createElement('option');
       opt.value = n; opt.textContent = n;
       select.appendChild(opt);
     });
   }
 
-  function hitung(dim) {
-    const list = document.querySelectorAll(`.perk-skor[data-dim="${dim}"]`);
-    let total = 0, count = 0;
-    list.forEach(s => { total += parseInt(s.value) || 0; count++; });
-    const avg = count ? total / count : 0;
-    const label = avg < 1.5 ? "Kadang" : avg < 2.5 ? "Sering" : "Konsisten";
-    document.getElementById(`perk${capitalize(dim)}Avg`).textContent = avg.toFixed(2);
-    document.getElementById(`perk${capitalize(dim)}PredikatLabel`).textContent = label;
-    return { avg, label };
+  function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+  function hitung(dim){
+    const list=document.querySelectorAll(`.perk-skor[data-dim="${dim}"]`);
+    let total=0,count=0; list.forEach(s=>{total+=parseInt(s.value)||0;count++;});
+    const avg=count?total/count:0;
+    const label=avg<1.5?"Kadang":avg<2.5?"Sering":"Konsisten";
+    document.getElementById(`perk${capitalize(dim)}Avg`).textContent=avg.toFixed(2);
+    document.getElementById(`perk${capitalize(dim)}PredikatLabel`).textContent=label;
   }
 
-  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-  function buatNarasi(dimensi, els) {
-    const fokusMap = {
-      "Akhlak Mulia": "meningkatkan komunikasi lembut dan empati dalam kebersamaan.",
-      "Hati Bersih": "melatih kesadaran emosi, syukur, dan keikhlasan dalam menerima takdir.",
-      "Fisik Berdaya": "menjaga kebersihan, disiplin, dan kekuatan tubuh sebagai amanah Allah."
-    };
-    const data = [];
-    els.forEach(e => {
-      const row = e.closest("tr");
-      if (row) data.push({ label: row.children[0].innerText, skor: parseInt(e.value) || 0 });
-    });
-    if (!data.length) return `Belum ada penilaian dimensi ${dimensi}.`;
-    const total = data.reduce((a, b) => a + b.skor, 0);
-    const avg = total / data.length;
-    const max = data.reduce((a, b) => a.skor > b.skor ? a : b);
-    const min = data.reduce((a, b) => a.skor < b.skor ? a : b);
-    const desk = avg < 0.75 ? "masih tahap awal dan perlu pendampingan" :
-                 avg < 1.5 ? "mulai berkembang dan kadang tampak" :
-                 avg < 2.5 ? "cukup stabil dan menunjukkan kemajuan" :
-                 "sudah kuat dan menjadi teladan";
-    return `Dalam dimensi ${dimensi}, Ananda menunjukkan perkembangan yang ${desk}.
-Fokus latihan saat ini adalah ${fokusMap[dimensi]}
-Alhamdulillah, perilaku seperti "${max.label}" mulai menampakkan buah kebaikan yang layak disyukuri.
-Sementara "${min.label}" masih perlu dilatih dengan kesungguhan dan penuh harapan agar semakin sempurna.`;
+  function simpanPerkembanganCahaya(){
+    const santri=document.getElementById('perkSantri').value;
+    if(!santri){alert('Pilih nama santri dahulu.');return;}
+    const tgl=document.getElementById('perkTanggal').value;
+    const user=JSON.parse(localStorage.getItem('cahayaCurrentUser')||'{}');
+    const naqibName=user.username||user.label||user.name||"Naqib";
+    hitung('akhlak');hitung('hati');hitung('fisik');
+    const data={tanggal:tgl,namaSantri:santri,naqibName,
+      narasiRelational:document.getElementById('perkAkhlakCatatan').value,
+      narasiEmotional:document.getElementById('perkHatiCatatan').value,
+      narasiPhysical:document.getElementById('perkFisikCatatan').value,
+      rekomendasi:document.getElementById('perkRekomendasi').value,
+      waktuSimpan:new Date().toISOString()};
+    push(ref(db,'cahaya_app/assesment_cahaya_naqib'),data)
+    .then(()=>alert(`✅ Asesmen ${santri} oleh ${naqibName} tersimpan.`))
+    .catch(e=>alert('❌ Gagal: '+e.message));
   }
 
-  function simpanPerkembanganCahaya() {
-    const santri = document.getElementById('perkSantri').value;
-    if (!santri) { alert('Pilih nama santri terlebih dahulu.'); return; }
-
-    hitung('akhlak'); hitung('hati'); hitung('fisik');
-    const akhlakText = buatNarasi("Akhlak Mulia", document.querySelectorAll('.perk-skor[data-dim="akhlak"]'));
-    const hatiText = buatNarasi("Hati Bersih", document.querySelectorAll('.perk-skor[data-dim="hati"]'));
-    const fisikText = buatNarasi("Fisik Berdaya", document.querySelectorAll('.perk-skor[data-dim="fisik"]'));
-
-    document.getElementById('perkAkhlakCatatan').value = akhlakText;
-    document.getElementById('perkHatiCatatan').value = hatiText;
-    document.getElementById('perkFisikCatatan').value = fisikText;
-
-    const tgl = document.getElementById('perkTanggal').value || new Date().toISOString().split('T')[0];
-    const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{}');
-    const naqibName = user.username || user.naqibName || "Naqib";
-
-    const data = {
-      tanggal: tgl,
-      namaSantri: santri,
-      naqibName: naqibName,
-      narasiRelational: akhlakText,
-      narasiEmotional: hatiText,
-      narasiPhysical: fisikText,
-      rekomendasi: document.getElementById('perkRekomendasi').value.trim(),
-      waktuSimpan: new Date().toISOString()
-    };
-
-    const refPath = ref(db, 'cahaya_app/assesment_cahaya_naqib');
-    push(refPath, data)
-      .then(() => alert(`✅ Asesmen ${santri} oleh ${naqibName} tersimpan ke Firebase dengan narasi lengkap.`))
-      .catch(err => alert(`❌ Gagal menyimpan: ${err.message}`));
-  }
-
-  function init() {
-    const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{"username":"Naqib"}');
-    const naqibName = user.username || "Naqib";
-    document.getElementById('naqibLabelPerk').textContent = naqibName;
-    document.getElementById('perkTanggal').value = new Date().toISOString().split('T')[0];
+  function init(){
+    const user=JSON.parse(localStorage.getItem('cahayaCurrentUser')||'{}');
+    const naqibName=user.username||user.label||user.name||"Naqib";
+    document.getElementById('naqibLabelPerk').textContent=naqibName;
     isiSantriByNaqib(naqibName);
-    isiTabel("akhlakTables", akhlakData, "akhlak");
-    isiTabel("hatiTables", hatiData, "hati");
-    isiTabel("fisikTables", fisikData, "fisik");
-    document.getElementById('btnSimpan').addEventListener('click', simpanPerkembanganCahaya);
+    isiTabel("akhlakTables",akhlakData,"akhlak");
+    isiTabel("hatiTables",hatiData,"hati");
+    isiTabel("fisikTables",fisikData,"fisik");
+    document.getElementById('perkTanggal').value=new Date().toISOString().split('T')[0];
+    document.getElementById('btnSimpan').addEventListener('click',simpanPerkembanganCahaya);
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded',init);
 </script>
 
-<!-- 🧭 Fungsi tombol global -->
 <script>
-  function goBack() {
-    window.location.href = 'dashboard.html';
-  }
-
-  function logout() {
-    localStorage.removeItem('cahayaCurrentUser');
-    window.location.href = '../index.html';
-  }
+  function goBack(){window.location.href='dashboard.html';}
+  function logout(){localStorage.removeItem('cahayaCurrentUser');window.location.href='../index.html';}
 </script>
-
 </body>
 </html>
