@@ -5,11 +5,9 @@
   <title>CAHAYA APP – Absensi Program Harian</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* === Gaya Modern CAHAYA APP === */
     :root {
       --primary: #2563eb;
       --primary-dark: #1e40af;
-      --gray-bg: #f1f5f9;
       --border: #e2e8f0;
     }
 
@@ -107,29 +105,43 @@
       min-width: 200px;
     }
 
+    /* === TABEL MODERN === */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
       font-size: 0.9rem;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      min-width: 500px;
     }
 
     th, td {
       border: 1px solid var(--border);
       padding: 10px;
       text-align: center;
+      white-space: nowrap;
     }
 
     th {
-      background: linear-gradient(90deg, #93c5fd, #60a5fa);
+      background: linear-gradient(90deg, #7ab6ff, #5ea1ff);
       color: white;
       font-weight: 600;
     }
 
     tr:nth-child(even) { background: #f9fafb; }
+    tr:hover { background: #eff6ff; transition: 0.2s; }
+    tr.active-row { background: #dbeafe; }
+
+    input[type="radio"] {
+      accent-color: var(--primary);
+      transform: scale(1.1);
+      cursor: pointer;
+    }
 
     button.primary {
       background: var(--primary);
@@ -169,27 +181,13 @@
       margin-top: 4px;
     }
 
-    /* RESPONSIVE TABLE */
+    /* === RESPONSIVE === */
     @media (max-width: 700px) {
-      table, thead, tbody, th, td, tr { display: block; }
-      thead { display: none; }
-      tr {
-        background: #f9fafb;
-        margin-bottom: 12px;
-        border-radius: 10px;
-        padding: 10px;
-      }
-      td {
-        display: flex;
-        justify-content: space-between;
-        border: none;
-        padding: 8px;
-      }
-      td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: #1f2937;
-      }
+      main { padding: 16px; }
+      th, td { padding: 8px; }
+      header h1 { font-size: 1rem; }
+      table { font-size: 0.85rem; }
+      .table-container { overflow-x: scroll; }
     }
   </style>
 </head>
@@ -222,18 +220,20 @@
   <h3>Daftar Santri</h3>
   <button type="button" class="secondary" onclick="markAll()">✅ Tandai Semua Hadir</button>
 
-  <table id="tabelSantri">
-    <thead>
-      <tr>
-        <th>Nama Santri</th>
-        <th>Hadir</th>
-        <th>Izin</th>
-        <th>Sakit</th>
-        <th>Alfa</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-container">
+    <table id="tabelSantri">
+      <thead>
+        <tr>
+          <th>Nama Santri</th>
+          <th>Hadir</th>
+          <th>Izin</th>
+          <th>Sakit</th>
+          <th>Alfa</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <button type="button" class="primary" onclick="simpan()">💾 Simpan Absensi</button>
 </main>
@@ -266,13 +266,9 @@
   const programPekanan = ["Puasa Kamis","Jemur Kasur"];
 
   const dataSantri = {
-    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
-    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
-    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
-    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
-    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD RAYYAN HAFIZ","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
-    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
-    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
+    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM" ],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH" ],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN" ]
   };
 
   window.init = function() {
@@ -326,12 +322,20 @@
     list.forEach((nama, i) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td data-label="Nama">${nama}</td>
-        <td data-label="Hadir"><input type="radio" name="s_${i}" value="Hadir" checked></td>
-        <td data-label="Izin"><input type="radio" name="s_${i}" value="Izin"></td>
-        <td data-label="Sakit"><input type="radio" name="s_${i}" value="Sakit"></td>
-        <td data-label="Alfa"><input type="radio" name="s_${i}" value="Alfa"></td>`;
+        <td>${nama}</td>
+        <td><input type="radio" name="s_${i}" value="Hadir" checked></td>
+        <td><input type="radio" name="s_${i}" value="Izin"></td>
+        <td><input type="radio" name="s_${i}" value="Sakit"></td>
+        <td><input type="radio" name="s_${i}" value="Alfa"></td>`;
       tbody.appendChild(tr);
+
+      // efek baris aktif
+      tr.querySelectorAll('input').forEach(r => {
+        r.addEventListener('change', () => {
+          document.querySelectorAll('tr').forEach(row => row.classList.remove('active-row'));
+          tr.classList.add('active-row');
+        });
+      });
     });
   }
 
@@ -375,4 +379,3 @@
 </script>
 </body>
 </html>
-
