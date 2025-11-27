@@ -149,7 +149,7 @@
 
   <!-- 🌿 Akhlak Mulia -->
   <hr class="sep">
-  <h3>🤝 Akhlak Mulia (Relational / SMILE+)</h3>
+  <h3>II. 🤝 Akhlak Mulia (SMILE+)</h3>
   <div id="akhlakTables" class="relational"></div>
   <p><b>Rata-rata:</b> <span id="perkAkhlakAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkAkhlakPredikatLabel">-</span></p>
@@ -157,7 +157,7 @@
 
   <!-- 💜 Hati Bersih -->
   <hr class="sep">
-  <h3>💜 Hati Bersih (Emotional)</h3>
+  <h3>III. 💜 Hati Bersih (Emotional)</h3>
   <div id="hatiTables" class="emotional"></div>
   <p><b>Rata-rata:</b> <span id="perkHatiAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkHatiPredikatLabel">-</span></p>
@@ -165,7 +165,7 @@
 
   <!-- 💪 Fisik Berdaya -->
   <hr class="sep">
-  <h3>💪 Fisik Berdaya (Physical)</h3>
+  <h3>V. 💪 Fisik Berdaya (Physical)</h3>
   <div id="fisikTables" class="physical"></div>
   <p><b>Rata-rata:</b> <span id="perkFisikAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkFisikPredikatLabel">-</span></p>
@@ -207,102 +207,121 @@
     "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
   };
 
-  // === INDIKATOR LENGKAP ===
-  const akhlakData = {
-    "A. Self Love": [
-      "Menyayangi diri tanpa merendahkan orang lain",
-      "Berbicara lembut kepada diri sendiri",
-      "Menerima kelebihan dan kekurangan diri",
-      "Menenangkan diri saat kecewa"
-    ],
-    "B. Meaningful Communication": [
-      "Menyapa dengan senyum dan salam",
-      "Mengucapkan kata maaf dengan tulus",
-      "Mengucapkan terima kasih",
-      "Tidak memotong pembicaraan orang lain",
-      "Mendengarkan teman dengan penuh perhatian"
-    ],
-    "C. Intentional Giving": [
-      "Suka membantu teman yang kesulitan",
-      "Berbagi makanan atau barang kecil",
-      "Memberikan dukungan saat teman sedih",
-      "Membantu kegiatan kebersihan tanpa diminta"
-    ],
-    "D. Living Together": [
-      "Menjaga kebersihan kamar dan lingkungan bersama",
-      "Makan bersama dengan adab yang baik",
-      "Terlibat aktif dalam kegiatan kelompok/usrah",
-      "Menghargai perbedaan kebiasaan teman"
-    ],
-    "E. Empathy": [
-      "Peka saat ada teman yang sedang sedih/tertekan",
-      "Tidak menertawakan kekurangan atau kesalahan teman",
-      "Menguatkan teman yang gagal atau jatuh",
-      "Mau mendengarkan curhat tanpa menghakimi"
-    ]
-  };
+  // === STRUKTUR GRUP & INDIKATOR SESUAI FORMAT ASLI ===
+  const akhlakGroups = [
+    {
+      key: "self_love",
+      label: "Self Love",
+      items: [
+        "Butterfly Hug"
+      ]
+    },
+    {
+      key: "meaningful_comm",
+      label: "Meaningful Communication",
+      items: [
+        "Terimakasih",
+        "Maaf",
+        "Minta tolong",
+        "Permisi",
+        "Salam Senyum",
+        "Memuji teman",
+        "Melayani teman",
+        "Memijit teman",
+        "Mendoakan teman",
+        "Mendoakan orang tua",
+        "Mendoakan guru",
+        "Mendoakan Naqib"
+      ]
+    },
+    {
+      key: "intentional_giving",
+      label: "Intentional Giving",
+      items: [
+        "Memberi Sedekah/hadiah"
+      ]
+    },
+    {
+      key: "living_together",
+      label: "Living Together",
+      items: [
+        "Khidmat usrah",
+        "Makan bareng usrah",
+        "Olahraga bareng usrah",
+        "Ngelakar bareng teman usrah"
+      ]
+    },
+    {
+      key: "empathy",
+      label: "Empathy",
+      items: [
+        "Kamu bercerita aku mendengar"
+      ]
+    },
+    {
+      key: "akhlak_alam",
+      label: "Akhlak Pada Alam",
+      items: [
+        "Memungut sampah berserak tanpa disuruh",
+        "Merapikan yang berantakan tanpa disuruh",
+        "Memutar sendal setiap kali masuk kamar/masjid",
+        "Menjaga dan merapikan barang-barang pribadi"
+      ]
+    }
+  ];
 
-  const hatiData = {
-    "A. Rilis Emosi Negatif": [
-      "Tidak mudah meledak marah",
-      "Mau meminta maaf setelah berbuat salah",
-      "Mampu menenangkan diri saat kecewa",
-      "Tidak menyimpan dendam"
-    ],
-    "B. Booster Emosi Positif": [
-      "Sering mengucap hamdalah atas nikmat kecil",
-      "Memandang masalah sebagai peluang belajar",
-      "Menunjukkan wajah cerah dan ramah",
-      "Mampu menemukan sisi baik dalam kejadian sulit"
-    ],
-    "C. Kesadaran Diri": [
-      "Mengenali emosi yang sedang dirasakan",
-      "Mampu menyadari pemicu marah atau sedih",
-      "Melakukan muhasabah sebelum tidur",
-      "Mengakui kesalahan tanpa menyalahkan orang lain"
-    ],
-    "D. Keteguhan Hati": [
-      "Tetap berusaha meski pernah gagal",
-      "Tidak mudah putus asa saat diingatkan",
-      "Sabar ketika mendapat tugas yang tidak disukai",
-      "Mampu menunda kesenangan demi kebaikan jangka panjang"
-    ]
-  };
+  const hatiGroups = [
+    {
+      key: "rilis_emosi",
+      label: "Rilis Emosi Negatif",
+      items: [
+        "Cuci Hati Sebelum Tidur",
+        "Journaling"
+      ]
+    },
+    {
+      key: "booster_emosi",
+      label: "Booster Emosi Positif",
+      items: [
+        "Meditasi Syukur",
+        "Gratitude Luck Diary"
+      ]
+    }
+  ];
 
-  const fisikData = {
-    "A. Kebiasaan Harian": [
-      "Shalat lima waktu tepat waktu",
-      "Bangun pagi tanpa banyak ditunda",
-      "Melakukan aktivitas fisik/olahraga ringan",
-      "Tidak banyak mengeluh lelah dalam kegiatan harian"
-    ],
-    "B. Kebersihan Diri & Lingkungan": [
-      "Mandi teratur (minimal 2x sehari)",
-      "Menyikat gigi secara rutin",
-      "Memotong kuku ketika mulai panjang",
-      "Menjaga kerapian tempat tidur dan lemari"
-    ],
-    "C. Kedisiplinan Aktivitas": [
-      "Datang tepat waktu ke kegiatan wajib",
-      "Mematuhi jadwal tidur dan bangun",
-      "Tidak sering izin tanpa alasan yang jelas",
-      "Menjaga adab fisik saat berinteraksi (tidak kasar)"
-    ],
-    "D. Kesehatan & Energi": [
-      "Makan dengan adab dan tidak berlebihan",
-      "Minum air putih yang cukup",
-      "Menjaga tubuh agar tetap segar saat belajar",
-      "Tetap bersemangat mengikuti kegiatan pondok"
-    ]
-  };
+  const fisikGroups = [
+    {
+      key: "harian",
+      label: "Harian",
+      items: [
+        "Daily Exercises",
+        "Qailulah",
+        "Mandi Pagi",
+        "Mandi Sore",
+        "Sikat Gigi Sebelum Tidur",
+        "Sikat Gigi Setelah Sarapan",
+        "Cuci Tangan Sebelum dan Sesudah Makan"
+      ]
+    },
+    {
+      key: "pekanan",
+      label: "Pekanan",
+      items: [
+        "Puasa Kamis",
+        "PBB",
+        "Merapikan kuku",
+        "Menjemur Kasur, Bantal dan Selimut"
+      ]
+    }
+  ];
 
-  // === BANGUN TABEL DINAMIS ===
-  function isiTabel(containerId, data, dim) {
+  // === BANGUN TABEL DINAMIS + SUBTOTAL & TOTAL ===
+  function isiTabel(containerId, groups, dimKey, dimLabel) {
     const div = document.getElementById(containerId);
     div.innerHTML = "";
-    Object.entries(data).forEach(([judul, list]) => {
+    groups.forEach(group => {
       let html = `
-        <h4>${judul}</h4>
+        <h4>${group.label}</h4>
         <table>
           <thead>
             <tr>
@@ -312,12 +331,12 @@
           </thead>
           <tbody>
       `;
-      list.forEach(item => {
+      group.items.forEach(item => {
         html += `
           <tr>
             <td style="text-align:left">${item}</td>
             <td class="score-cell">
-              <select class="perk-skor" data-dim="${dim}">
+              <select class="perk-skor" data-dim="${dimKey}" data-group="${group.key}">
                 <option value="0">0 - Belum nampak</option>
                 <option value="1">1 - Kadang</option>
                 <option value="2">2 - Sering</option>
@@ -327,9 +346,28 @@
           </tr>
         `;
       });
+      // Sub Total per grup
+      html += `
+        <tr class="subtotal-row">
+          <td style="text-align:left"><b>Sub Total ${group.label}</b></td>
+          <td><span class="subtotal-value" data-dim="${dimKey}" data-group="${group.key}">0.00</span></td>
+        </tr>
+      `;
       html += `</tbody></table>`;
       div.innerHTML += html;
     });
+
+    // TOTAL dimensi
+    div.innerHTML += `
+      <table>
+        <tbody>
+          <tr class="total-row">
+            <td style="text-align:left"><b>TOTAL ${dimLabel}</b></td>
+            <td><span class="dim-total-value" data-dim="${dimKey}">0.00</span></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
   }
 
   // === WARNA OTOMATIS SEL SKOR ===
@@ -385,18 +423,85 @@
 
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  // === HITUNG RATA-RATA & PREDIKAT PER DIMENSI ===
+  // === HITUNG RATA-RATA, SUBTOTAL & TOTAL PER DIMENSI ===
   function hitung(dim) {
-    const list = document.querySelectorAll(`.perk-skor[data-dim="${dim}"]`);
+    const selects = document.querySelectorAll(`.perk-skor[data-dim="${dim}"]`);
     let total = 0, count = 0;
-    list.forEach(s => {
-      total += parseInt(s.value, 10) || 0;
+    const groupAgg = {};
+
+    selects.forEach(sel => {
+      const v = parseInt(sel.value, 10) || 0;
+      const g = sel.dataset.group || "default";
+      total += v;
       count++;
+      if (!groupAgg[g]) groupAgg[g] = { total: 0, count: 0 };
+      groupAgg[g].total += v;
+      groupAgg[g].count++;
     });
+
     const avg = count ? total / count : 0;
     const label = avg < 1.5 ? "Kadang" : avg < 2.5 ? "Sering" : "Konsisten";
+
+    // set teks rata-rata & predikat (di atas)
     document.getElementById(`perk${capitalize(dim)}Avg`).textContent = avg.toFixed(2);
     document.getElementById(`perk${capitalize(dim)}PredikatLabel`).textContent = label;
+
+    // set TOTAL dimensi
+    const totalSpan = document.querySelector(`.dim-total-value[data-dim="${dim}"]`);
+    if (totalSpan) totalSpan.textContent = avg.toFixed(2);
+
+    // set SUBTOTAL per grup
+    Object.entries(groupAgg).forEach(([g, val]) => {
+      const subSpan = document.querySelector(`.subtotal-value[data-dim="${dim}"][data-group="${g}"]`);
+      if (subSpan) {
+        const subAvg = val.count ? val.total / val.count : 0;
+        subSpan.textContent = subAvg.toFixed(2);
+      }
+    });
+  }
+
+  // === NARASI OTOMATIS FORMAL (MENYEBUT NAMA SANTRI) ===
+  function buatNarasi(dimLabel, dimKey, namaSantri) {
+    const selects = document.querySelectorAll(`.perk-skor[data-dim="${dimKey}"]`);
+    if (!selects.length) {
+      return `Belum terdapat asesmen pada dimensi ${dimLabel} untuk Ananda ${namaSantri}.`;
+    }
+
+    const data = [];
+    selects.forEach(sel => {
+      const row = sel.closest("tr");
+      if (!row) return;
+      const indikator = row.children[0].innerText.trim();
+      const skor = parseInt(sel.value, 10) || 0;
+      data.push({ indikator, skor });
+    });
+
+    if (!data.length) {
+      return `Belum terdapat asesmen pada dimensi ${dimLabel} untuk Ananda ${namaSantri}.`;
+    }
+
+    const total = data.reduce((s, x) => s + x.skor, 0);
+    const avg = total / data.length;
+
+    let tingkat;
+    if (avg < 0.75) {
+      tingkat = "masih rendah dan memerlukan pendampingan intensif";
+    } else if (avg < 1.5) {
+      tingkat = "pada kategori berkembang awal";
+    } else if (avg < 2.5) {
+      tingkat = "pada kategori berkembang baik";
+    } else {
+      tingkat = "pada kategori sangat baik dan relatif konsisten";
+    }
+
+    let maxItem = data[0];
+    let minItem = data[0];
+    data.forEach(it => {
+      if (it.skor > maxItem.skor) maxItem = it;
+      if (it.skor < minItem.skor) minItem = it;
+    });
+
+    return `Pada dimensi ${dimLabel}, Ananda ${namaSantri} menunjukkan tingkat perkembangan ${tingkat} dengan rata-rata skor ${avg.toFixed(2)}. Indikator yang relatif sudah kuat adalah "${maxItem.indikator}", sedangkan indikator yang masih perlu mendapat perhatian khusus adalah "${minItem.indikator}". Secara keseluruhan, konsistensi perilaku Ananda ${namaSantri} masih perlu dijaga melalui pembiasaan yang terstruktur, umpan balik yang jelas, dan kolaborasi antara Naqib, guru, serta orang tua.`;
   }
 
   // === SIMPAN KE FIREBASE ===
@@ -410,18 +515,31 @@
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
     const naqibName = user.naqibName || user.username || user.label || user.name || "Naqib";
 
-    // update rata-rata dulu
+    // hitung rata-rata & subtotal per dimensi
     hitung("akhlak");
     hitung("hati");
     hitung("fisik");
+
+    // narasi otomatis (hanya isi jika textarea masih kosong, supaya bisa diedit)
+    const akhlakTextAuto = buatNarasi("Akhlak Mulia (SMILE+)", "akhlak", santri);
+    const hatiTextAuto   = buatNarasi("Hati Bersih (Emotional)", "hati", santri);
+    const fisikTextAuto  = buatNarasi("Fisik Berdaya (Physical)", "fisik", santri);
+
+    const akhlakArea = document.getElementById("perkAkhlakCatatan");
+    const hatiArea   = document.getElementById("perkHatiCatatan");
+    const fisikArea  = document.getElementById("perkFisikCatatan");
+
+    if (!akhlakArea.value.trim()) akhlakArea.value = akhlakTextAuto;
+    if (!hatiArea.value.trim())   hatiArea.value   = hatiTextAuto;
+    if (!fisikArea.value.trim())  fisikArea.value  = fisikTextAuto;
 
     const data = {
       tanggal: tgl,
       namaSantri: santri,
       naqibName: naqibName,
-      narasiRelational: document.getElementById("perkAkhlakCatatan").value.trim(),
-      narasiEmotional: document.getElementById("perkHatiCatatan").value.trim(),
-      narasiPhysical: document.getElementById("perkFisikCatatan").value.trim(),
+      narasiRelational: akhlakArea.value.trim(),
+      narasiEmotional: hatiArea.value.trim(),
+      narasiPhysical: fisikArea.value.trim(),
       rekomendasi: document.getElementById("perkRekomendasi").value.trim(),
       waktuSimpan: new Date().toISOString()
     };
@@ -429,7 +547,7 @@
     const refPath = ref(db, "cahaya_app/assesment_cahaya_naqib");
     push(refPath, data)
       .then(() => {
-        alert(`✅ Asesmen ${santri} oleh ${naqibName} tersimpan ke Firebase.`);
+        alert(`✅ Asesmen Ananda ${santri} oleh ${naqibName} tersimpan ke Firebase.`);
       })
       .catch(err => {
         alert("❌ Gagal menyimpan: " + err.message);
@@ -445,16 +563,16 @@
       return;
     }
 
-    const naqibKey = user.naqibName || user.username || user.label || user.name || "Naqib";
+    const naqibKey = user.naqibName || user.username || "Naqib";
     const displayName = user.label || ("Naqib " + naqibKey);
     document.getElementById("naqibLabelPerk").textContent = displayName;
 
     document.getElementById("perkTanggal").value = new Date().toISOString().split("T")[0];
 
     isiSantriByNaqib(naqibKey);
-    isiTabel("akhlakTables", akhlakData, "akhlak");
-    isiTabel("hatiTables", hatiData, "hati");
-    isiTabel("fisikTables", fisikData, "fisik");
+    isiTabel("akhlakTables", akhlakGroups, "akhlak", "Akhlak Mulia");
+    isiTabel("hatiTables",   hatiGroups,   "hati",   "Hati Bersih");
+    isiTabel("fisikTables",  fisikGroups,  "fisik",  "Fisik Berdaya");
     setupSkorListeners();
 
     document.getElementById("btnSimpan").addEventListener("click", simpanPerkembanganCahaya);
@@ -475,4 +593,3 @@
 
 </body>
 </html>
-
