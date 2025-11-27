@@ -9,11 +9,11 @@
       --primary: #0f766e;
       --primary-dark: #0c524d;
       --white: #ffffff;
-      --bg: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      --bg: linear-gradient(135deg, #0f766e, #134e4a);
     }
 
     body {
-      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: "Poppins", system-ui, sans-serif;
       background: var(--bg);
       margin: 0;
       color: var(--white);
@@ -21,23 +21,55 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 16px;
+      overflow: hidden;
     }
 
+    /* === SPLASH SCREEN === */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeOut 1.2s ease 1.4s forwards;
+    }
+
+    .splash img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 50%;
+      animation: popIn 1.2s ease;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* === LOGIN CARD === */
     .login-card {
-      width: 100%;
-      max-width: 360px;
       background: rgba(255,255,255,0.12);
+      padding: 36px 30px;
       border-radius: 20px;
-      padding: 32px 28px;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 40px rgba(0,0,0,0.25);
       text-align: center;
-      animation: fadeIn 0.7s ease;
+      width: 90%;
+      max-width: 360px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: showLogin 1s ease 1.6s forwards;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes showLogin {
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -45,16 +77,15 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      margin-bottom: 12px;
       object-fit: contain;
       background: rgba(255,255,255,0.2);
       padding: 6px;
+      margin-bottom: 12px;
     }
 
     h1 {
       font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 6px;
+      margin: 0;
     }
 
     p {
@@ -70,9 +101,9 @@
       border: none;
       border-radius: 10px;
       font-size: 14px;
-      outline: none;
       background: rgba(255,255,255,0.95);
       color: #111;
+      outline: none;
       transition: box-shadow 0.2s ease;
     }
 
@@ -107,7 +138,7 @@
 
     footer {
       position: fixed;
-      bottom: 8px;
+      bottom: 10px;
       width: 100%;
       text-align: center;
       font-size: 11px;
@@ -115,15 +146,21 @@
     }
 
     @media (max-width: 480px) {
-      .login-card { padding: 26px 20px; }
+      .login-card { padding: 28px 22px; }
       h1 { font-size: 22px; }
     }
   </style>
 </head>
 
 <body>
+  <!-- Splash Screen -->
+  <div class="splash">
+    <img src="logo-pesantren.png" alt="Logo Pesantren">
+  </div>
+
+  <!-- Login Card -->
   <div class="login-card">
-    <img src="logofi.png" alt="Logo Pesantren Cahaya Fajrul Islam" class="logo">
+    <img src="logo-pesantren.png" alt="Logo Pesantren Cahaya Fajrul Islam" class="logo">
     <h1>🌅 CAHAYA APP</h1>
     <p>Portal Administrasi Santri<br>Pesantren Cahaya Fajrul Islam</p>
 
@@ -134,9 +171,7 @@
     <div class="hint">💡 Baca Bismillah sebelum masuk</div>
   </div>
 
-  <footer>
-    © 2025 Pesantren Cahaya Fajrul Islam
-  </footer>
+  <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
 
   <script>
     // ===============================
@@ -176,11 +211,11 @@
     const akun = [...naqibUsers, ...guruUsers, ...adminUsers];
 
     // ===============================
-    // ⚡ AUTO LOGIN SYSTEM
+    // ⚡ AUTO LOGIN + SPLASH REDIRECT
     // ===============================
     const savedUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
     if (savedUser) {
-      redirectByRole(savedUser.role);
+      setTimeout(() => redirectByRole(savedUser.role), 1500);
     }
 
     // ===============================
@@ -201,16 +236,12 @@
     }
 
     // ===============================
-    // 🚀 REDIRECT FUNCTION
+    // 🚀 REDIRECT BY ROLE
     // ===============================
     function redirectByRole(role) {
-      if (role === 'guru') {
-        window.location.href = 'guru/fitur.html';
-      } else if (role === 'naqib') {
-        window.location.href = 'naqib/dashboard.html';
-      } else if (role === 'admin') {
-        window.location.href = 'admin/index.html';
-      }
+      if (role === 'guru') window.location.href = 'guru/fitur.html';
+      else if (role === 'naqib') window.location.href = 'naqib/dashboard.html';
+      else if (role === 'admin') window.location.href = 'admin/index.html';
     }
   </script>
 </body>
