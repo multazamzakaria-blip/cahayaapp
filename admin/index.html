@@ -79,40 +79,58 @@
     <h2>📊 Dashboard Admin</h2>
     <div class="menu-grid">
       <div class="menu-card" onclick="go('laporan-bulanan.html')">
-        <div class="menu-icon">🗓️</div><div class="menu-title">Laporan Bulanan Santri</div></div>
+        <div class="menu-icon">🗓️</div>
+        <div class="menu-title">Laporan Bulanan Santri</div>
+      </div>
       <div class="menu-card" onclick="go('laporan-kpi-guru.html')">
-        <div class="menu-icon">👨‍🏫</div><div class="menu-title">Laporan KPI Guru</div></div>
+        <div class="menu-icon">👨‍🏫</div>
+        <div class="menu-title">Laporan KPI Guru</div>
+      </div>
       <div class="menu-card" onclick="go('laporan-kpi-naqib.html')">
-        <div class="menu-icon">🧑‍🤝‍🧑</div><div class="menu-title">Laporan KPI Naqib</div></div>
+        <div class="menu-icon">🧑‍🤝‍🧑</div>
+        <div class="menu-title">Laporan KPI Naqib</div>
+      </div>
       <div class="menu-card" onclick="go('audit-kebersihan.html')">
-        <div class="menu-icon">🧹</div><div class="menu-title">Input Audit Kebersihan</div></div>
+        <div class="menu-icon">🧹</div>
+        <div class="menu-title">Input Audit Kebersihan</div>
+      </div>
       <div class="menu-card" onclick="go('temuan-sampah.html')">
-        <div class="menu-icon">🗑️</div><div class="menu-title">Input Temuan Sampah</div></div>
+        <div class="menu-icon">🗑️</div>
+        <div class="menu-title">Input Temuan Sampah & Barang Terlantar</div>
+      </div>
       <div class="menu-card" onclick="go('bullying-pelanggaran.html')">
-        <div class="menu-icon">🚨</div><div class="menu-title">Input Pelanggaran Santri</div></div>
+        <div class="menu-icon">🚨</div>
+        <div class="menu-title">Input Bullying & Pelanggaran Berat</div>
+      </div>
     </div>
   </main>
 
-  <!-- 🔹 Modal Konfirmasi Hapus -->
-  <div id="deleteModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
+  <!-- 🔹 Dialog / Modal Hapus Database -->
+  <div id="deleteModal"
+       style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+              background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
     <div style="background:white;padding:28px;border-radius:14px;width:420px;text-align:center;">
-      <h2 style="margin-top:0;">🗑️ Hapus Data Firebase</h2>
-      <p>Pilih jenis data & rentang waktu yang akan dihapus:</p>
+      <h2 style="margin-top:0;">🗑️ Hapus Data</h2>
+      <p>Pilih jenis data & rentang waktu yang akan dihapus dari Firebase:</p>
 
-      <select id="databaseSelect" style="width:100%;padding:10px;border-radius:8px;margin-bottom:12px;">
+      <!-- Pilih database -->
+      <select id="databaseSelect"
+              style="width:100%;padding:10px;border-radius:8px;margin-bottom:12px;">
         <option value="semua">🧹 Semua Database</option>
         <option value="assesment_cahaya_santri">📘 Asesmen CAHAYA (Guru)</option>
         <option value="assesment_cahaya_naqib">🧑‍🤝‍🧑 Asesmen CAHAYA (Naqib)</option>
         <option value="absensi_pembelajaran">📚 Absensi Pembelajaran</option>
         <option value="absensi_kehadiran_pembelajaran">📖 Absensi Kehadiran Pembelajaran</option>
-        <option value="absensi_program_harian">📆 Absensi Program Harian</option>
+        <option value="absensi_program_harian">📆 Absensi Program Harian / Deep Learning</option>
         <option value="setoran_tahfiz">📜 Setoran Tahfiz</option>
         <option value="nilai_ujian">🧾 Nilai Ujian</option>
         <option value="pelanggaran_santri">🚨 Pelanggaran Santri</option>
       </select>
 
-      <select id="rangeSelect" onchange="toggleDateInputs()" style="width:100%;padding:10px;border-radius:8px;margin-bottom:12px;">
+      <!-- Pilih rentang waktu -->
+      <select id="rangeSelect"
+              onchange="toggleDateInputs()"
+              style="width:100%;padding:10px;border-radius:8px;margin-bottom:12px;">
         <option value="hari">Hari Ini</option>
         <option value="pekan">Pekan Ini</option>
         <option value="bulan">Bulan Ini</option>
@@ -121,25 +139,34 @@
 
       <div id="dateInputs" style="display:none;margin-bottom:12px;text-align:left;">
         <label for="startDate">Dari:</label><br>
-        <input type="date" id="startDate" style="padding:8px;width:100%;margin-bottom:8px;">
+        <input type="date" id="startDate"
+               style="padding:8px;width:100%;margin-bottom:8px;">
         <label for="endDate">Sampai:</label><br>
-        <input type="date" id="endDate" style="padding:8px;width:100%;">
+        <input type="date" id="endDate"
+               style="padding:8px;width:100%;">
       </div>
 
-      <div id="progressText" style="margin-top:10px;color:#374151;font-size:0.9rem;min-height:1.2em;"></div>
+      <div id="progressText"
+           style="margin-top:10px;color:#374151;font-size:0.9rem;min-height:1.2em;"></div>
 
       <div style="margin-top:16px;">
-        <button onclick="confirmDelete()" style="background:#dc2626;color:white;padding:10px 18px;border:none;border-radius:8px;font-weight:bold;">Hapus</button>
-        <button onclick="closeDeleteDialog()" style="background:#e5e7eb;padding:10px 18px;border:none;border-radius:8px;margin-left:8px;">Batal</button>
+        <button onclick="confirmDelete()"
+                style="background:#dc2626;color:white;padding:10px 18px;border:none;border-radius:8px;font-weight:bold;">
+          Hapus
+        </button>
+        <button onclick="closeDeleteDialog()"
+                style="background:#e5e7eb;padding:10px 18px;border:none;border-radius:8px;margin-left:8px;">
+          Batal
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Script Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, remove, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // 🔥 KONFIGURASI FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
       authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -153,17 +180,14 @@
     const app = initializeApp(firebaseConfig);
     const db  = getDatabase(app);
 
-    // Navigasi & Modal
-    window.go = page => window.location.href = page;
-    window.logout = () => { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
-    window.openDeleteDialog = () => { document.getElementById("deleteModal").style.display = "flex"; };
-    window.closeDeleteDialog = () => { document.getElementById("deleteModal").style.display = "none"; document.getElementById("progressText").textContent = ""; };
-    window.toggleDateInputs = () => {
-      const val = document.getElementById("rangeSelect").value;
-      document.getElementById("dateInputs").style.display = val === "rentang" ? "block" : "none";
-    };
+    // ========= NAVIGASI & MODAL =========
+    window.go = function(page){ window.location.href = page; };
+    window.logout = function(){ localStorage.removeItem('cahayaCurrentUser'); window.location.href='../index.html'; };
+    window.openDeleteDialog = function(){ document.getElementById("deleteModal").style.display = "flex"; };
+    window.closeDeleteDialog = function(){ document.getElementById("deleteModal").style.display = "none"; document.getElementById("progressText").textContent = ""; };
+    window.toggleDateInputs = function(){ const val = document.getElementById("rangeSelect").value; document.getElementById("dateInputs").style.display = val === "rentang" ? "block" : "none"; };
 
-    // Semua path Firebase yang dikenali
+    // ========= PETA DATASET FIREBASE & LOCALSTORAGE =========
     const FIREBASE_PATHS = {
       "assesment_cahaya_santri": "assesment_cahaya_santri",
       "assesment_cahaya_naqib": "assesment_cahaya_naqib",
@@ -175,7 +199,6 @@
       "pelanggaran_santri": "pelanggaran_santri"
     };
 
-    // Key LocalStorage yang mungkin digunakan
     const LOCAL_KEYS = {
       "assesment_cahaya_santri": ["assesmentCahayaSantri"],
       "assesment_cahaya_naqib": ["assesmentCahayaNaqib"],
@@ -187,8 +210,8 @@
       "pelanggaran_santri": ["pelanggaranLogs"]
     };
 
-    // Rentang tanggal
-    function getRangeDates(mode) {
+    // ========= RENTANG TANGGAL =========
+    function getRangeDates(mode){
       const now = new Date();
       let start, end;
       if (mode === "hari") {
@@ -205,51 +228,53 @@
         const s = document.getElementById("startDate").value;
         const e = document.getElementById("endDate").value;
         if (!s || !e) { alert("Lengkapi tanggal mulai dan akhir."); return null; }
-        start = new Date(s);
-        end   = new Date(e + "T23:59:59");
+        start = new Date(s); end = new Date(e + "T23:59:59");
       }
       return { start, end };
     }
 
-    // Hapus Database
-    window.confirmDelete = async function() {
+    // ========= FUNGSI HAPUS =========
+    window.confirmDelete = async function(){
       const dbChoice = document.getElementById("databaseSelect").value;
-      const mode = document.getElementById("rangeSelect").value;
+      const mode     = document.getElementById("rangeSelect").value;
       const progress = document.getElementById("progressText");
       const range = getRangeDates(mode);
       if (!range) return;
       const { start, end } = range;
 
-      if (!confirm("Yakin ingin menghapus data dalam rentang ini dari Firebase?")) return;
+      if (!confirm("Yakin ingin menghapus data yang terpilih dari Firebase?")) return;
 
       progress.textContent = "🔄 Menghapus data dari Firebase... Mohon tunggu.";
       const paths = dbChoice === "semua" ? Object.values(FIREBASE_PATHS) : [FIREBASE_PATHS[dbChoice]];
       let totalDeleted = 0;
 
       for (const pathName of paths) {
-        const snap = await get(child(ref(db), "cahaya_app/" + pathName));
+        if (!pathName) continue;
+        const rootRef = ref(db);
+        const snap = await get(child(rootRef, "cahaya_app/" + pathName));
         if (!snap.exists()) continue;
 
         const data = snap.val();
         for (const [key, val] of Object.entries(data)) {
-          const t = new Date(val.tanggal || val.tgl || val.waktuSimpan || 0);
-          if (!isNaN(t) && t >= start && t <= end) {
+          const tRaw = val.tanggal || val.tgl || val.waktuSimpan || null;
+          const t = tRaw ? new Date(tRaw) : null;
+          if (!t || isNaN(t)) continue;
+          if (t >= start && t <= end) {
             await remove(ref(db, `cahaya_app/${pathName}/${key}`));
             totalDeleted++;
           }
         }
 
-        // Bersihkan localStorage
-        for (const [logicalKey, keys] of Object.entries(LOCAL_KEYS)) {
-          if (logicalKey === pathName && Array.isArray(keys)) {
-            keys.forEach(k => localStorage.removeItem(k));
+        for (const [logicalKey, lsKeys] of Object.entries(LOCAL_KEYS)) {
+          if (logicalKey === pathName && Array.isArray(lsKeys)) {
+            lsKeys.forEach(k => localStorage.removeItem(k));
           }
         }
       }
 
       progress.textContent = "";
       closeDeleteDialog();
-      alert(`✅ ${totalDeleted} data berhasil dihapus dari Firebase.`);
+      alert(`✅ ${totalDeleted} data berhasil dihapus dari Firebase dalam rentang waktu terpilih.`);
     };
   </script>
 </body>
