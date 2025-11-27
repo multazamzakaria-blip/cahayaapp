@@ -161,7 +161,6 @@
     }
   </style>
 </head>
-
 <body>
 <header>
   <h1>📘 CAHAYA APP – Guru</h1>
@@ -172,7 +171,7 @@
 </header>
 
 <main>
-  <!-- DASHBOARD -->
+  <!-- Dashboard -->
   <div id="dashboard" class="card">
     <h2>Dashboard Guru</h2>
     <div class="dashboard-buttons">
@@ -184,7 +183,7 @@
     </div>
   </div>
 
-  <!-- INPUT NILAI UJIAN -->
+  <!-- Input Nilai Ujian -->
   <div id="inputNilaiPage" class="card hidden">
     <h3>📘 Input Nilai Ujian</h3>
     <p>Isi nilai ujian santri berdasarkan jenis kelas, subprogram, kelompok, dan mata pelajaran.</p>
@@ -261,7 +260,7 @@
   </div>
 </main>
 
-<!-- ======== FIREBASE MODULE DAN SCRIPT ======== -->
+<!-- ======== FIREBASE MODULE DAN SCRIPT UTAMA ======== -->
 <script src="./dataSantri.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -282,6 +281,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 getAuth(app);
 
+/* === Navigasi === */
 window.showSection = function(id){
   document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
@@ -293,6 +293,131 @@ window.goBack = function(){
 window.logout = function(){
   localStorage.removeItem('cahayaCurrentUser');
   window.location.href = '../index.html';
+}
+
+/* === Update kelompok & mapel === */
+window.updateKelompokNilai = function(){
+  const kelas = document.getElementById('nilaiKelas').value;
+  const kelompokSelect = document.getElementById('nilaiKelompok');
+  const subProgramWrapper = document.getElementById('subProgramWrapper');
+  const mapelSelect = document.getElementById('nilaiMapel');
+
+  kelompokSelect.innerHTML = '<option value="">-- pilih kelompok --</option>';
+  subProgramWrapper.classList.add('hidden');
+  mapelSelect.innerHTML = '<option value="">-- pilih mapel --</option>';
+
+  let jenisKey='', kelompokList=[], mapelList=[];
+  if(kelas==='Keilmuan Islam & Umum'){
+    jenisKey='Keilmuan Islam & Umum';
+    kelompokList=Object.keys(dataSantri[jenisKey]);
+    mapelList=['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran'];
+  } else if(kelas==='Bahasa Internasional'){
+    jenisKey='Bahasa Internasional';
+    kelompokList=Object.keys(dataSantri[jenisKey]);
+    mapelList=['Bahasa Arab','Bahasa Inggris'];
+  } else if(kelas==="Tahsin & Tahfiz Al-Qur'an"){
+    jenisKey="Tahsin & Tahfiz Al-Qur'an";
+    subProgramWrapper.classList.remove('hidden');
+    const allKeys=Object.keys(dataSantri[jenisKey]);
+    const kelompokSet=new Set();
+    allKeys.forEach(k=>{
+      const parts=k.split(' ');
+      if(parts.length>=3){
+        const kelompok=parts.slice(-2).join(' ');
+        kelompokSet.add(kelompok);
+      }
+    });
+    kelompokList=Array.from(kelompokSet);
+    mapelList=['Tahsin','Tahfiz'];
+  }
+  kelompokList.forEach(k=>{
+    const opt=document.createElement('option');
+    opt.textContent=k;
+    kelompokSelect.appendChild(opt);
+  });
+  mapelList.forEach(m=>{
+    const opt=document.createElement('option');
+    opt.textContent=m;
+    mapelSelect.appendChild(opt);
+  });
+}
+
+/* === Load santri === */
+window.loadSantriUjian = function(){
+  const kelas=document.getElementById('nilaiKelas').value;
+  const subProgram=document.getElementById('nilaiSubProgram').value;
+  const kelompok=document.getElementById('nilaiKelompok').value;
+  const tbody=document.getElementById('nilaiSantriBody');
+  tbody.innerHTML='';
+
+  if(!kelas||!kelompok){
+    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#777">Lengkapi pilihan kelas dan kelompok.</td></tr>';
+    return;
+  }
+
+  let list=[];
+  if(kelas==="Tahsin & Tahfiz Al-Qur'an"){
+    const key=`${subProgram} ${kelompok}`;
+    const kategori=dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    list=kategori[key]||[];
+  } else {
+    const kategori=dataSantri[kelas];
+    list=kategori && kategori[kelompok]?kategori[kelompok]:[];
+  }
+
+  if(list.length===0){
+    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#777">Tidak ada santri di kelompok ini.</td></tr>';
+    return;
+  }
+
+  list.forEach((nama,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${nama}</td><td><input type="number" min="0" max="100" value="0" data-nama="${nama}"></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* === Simpan Nilai ke Firebase === */
+window.simpanNilaiUjian = async function(){
+  const kelas=document.getElementById('nilaiKelas').value;
+  const subProgram=document.getElementById('nilaiSubProgram').value;
+  const kelompok=document.getElementById('nilaiKelompok').value;
+  const mapel=document.getElementById('nilaiMapel').value.trim();
+  const bulan=parseInt(document.getElementById('nilaiBulan').value,10);
+  const materi=document.getElementById('nilaiMateri').value.trim();
+  const tanggal=document.getElementById('nilaiTanggal').value;
+
+  if(!kelas||!kelompok||!mapel||isNaN(bulan)||!materi||!tanggal||
+    (kelas==="Tahsin & Tahfiz Al-Qur'an"&&!subProgram)){
+    alert("⚠️ Lengkapi semua kolom terlebih dahulu!");
+    return;
+  }
+
+  const inputs=document.querySelectorAll('#tabelNilaiSantri input[type=number]');
+  const nilaiRef=ref(db,'cahaya_app/nilai_ujian');
+
+  let count=0;
+  for(const inp of inputs){
+    const nama=inp.dataset.nama;
+    const nilai=parseInt(inp.value||"0");
+    const data={
+      santri:nama,
+      kelas,
+      subProgram:subProgram||'-',
+      kelompok,
+      mapel,
+      bulan,
+      materi,
+      tanggal,
+      nilai,
+      timestamp:Date.now()
+    };
+    await push(nilaiRef,data);
+    count++;
+  }
+
+  alert(`✅ ${count} nilai ujian berhasil disimpan ke Firebase!`);
+  goBack();
 }
 </script>
 </body>
