@@ -5,81 +5,74 @@
   <title>CAHAYA APP - Portal Utama</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* ======== VARIABEL WARNA ======== */
     :root {
       --primary: #0f766e;
-      --primary-dark: #134e4a;
+      --primary-dark: #0c524d;
       --white: #ffffff;
-      --light: #e5e7eb;
+      --bg: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
     }
 
-    /* ======== STYLE DASAR ======== */
     body {
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
       margin: 0;
       color: var(--white);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      flex-direction: column;
-      text-align: center;
+      padding: 16px;
     }
 
-    .card {
-      background: rgba(255,255,255,0.15);
-      padding: 36px 32px;
+    .login-card {
+      width: 100%;
+      max-width: 360px;
+      background: rgba(255,255,255,0.12);
       border-radius: 20px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-      width: 90%;
-      max-width: 400px;
-      animation: fadeIn 0.9s ease;
+      padding: 32px 28px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+      text-align: center;
+      animation: fadeIn 0.7s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ======== LOGO ======== */
     .logo {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      margin-bottom: 10px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
+      margin-bottom: 12px;
+      object-fit: contain;
       background: rgba(255,255,255,0.2);
-      padding: 8px;
+      padding: 6px;
     }
 
     h1 {
-      margin: 0;
-      font-size: 26px;
-      letter-spacing: 0.06em;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
     }
 
-    h2 {
-      font-weight: 400;
-      font-size: 14px;
-      margin-top: 4px;
-      margin-bottom: 24px;
-      color: var(--light);
-      line-height: 1.6;
+    p {
+      font-size: 13px;
+      color: #e5e7eb;
+      margin-bottom: 18px;
     }
 
-    /* ======== INPUT & BUTTON ======== */
     input {
       width: 100%;
       padding: 10px 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 14px;
       outline: none;
-      background: rgba(255,255,255,0.9);
-      color: #222;
+      background: rgba(255,255,255,0.95);
+      color: #111;
       transition: box-shadow 0.2s ease;
     }
 
@@ -88,62 +81,57 @@
     }
 
     button {
+      width: 100%;
+      padding: 10px;
       background: var(--white);
       color: var(--primary-dark);
       border: none;
-      padding: 11px 20px;
       border-radius: 999px;
-      cursor: pointer;
       font-weight: 600;
       font-size: 14px;
-      width: 100%;
-      margin-top: 4px;
-      transition: all 0.3s ease;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: all 0.25s ease;
     }
 
     button:hover {
-      background: var(--light);
-      transform: scale(1.02);
+      background: #f3f4f6;
+      transform: translateY(-2px);
     }
 
     .hint {
       font-size: 11px;
       color: #cbd5e1;
       margin-top: 8px;
-      text-align: center;
     }
 
     footer {
+      position: fixed;
+      bottom: 8px;
+      width: 100%;
       text-align: center;
-      margin-top: 18px;
       font-size: 11px;
       color: #cbd5e1;
-      letter-spacing: 0.02em;
     }
 
-    /* ======== RESPONSIVE ======== */
-    @media (max-width: 500px) {
-      .card {
-        padding: 28px 22px;
-      }
+    @media (max-width: 480px) {
+      .login-card { padding: 26px 20px; }
       h1 { font-size: 22px; }
-      h2 { font-size: 13px; }
     }
   </style>
 </head>
-<body>
-  <div class="card">
-    <!-- 🔰 LOGO PESANTREN -->
-    <img src="logofi.png" alt="Logo Pesantren Cahaya Fajrul Islam" class="logo" />
 
+<body>
+  <div class="login-card">
+    <img src="logofi.png" alt="Logo Pesantren Cahaya Fajrul Islam" class="logo">
     <h1>🌅 CAHAYA APP</h1>
-    <h2>Administrasi Pengasuhan & Pengajaran<br>Pesantren Cahaya Fajrul Islam</h2>
+    <p>Portal Administrasi Santri<br>Pesantren Cahaya Fajrul Islam</p>
 
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Masuk</button>
 
-    <div class="hint">Baca Bismillah sebelum masuk 🌙</div>
+    <div class="hint">💡 Baca Bismillah sebelum masuk</div>
   </div>
 
   <footer>
@@ -152,33 +140,33 @@
 
   <script>
     // ===============================
-    // 🔐 DATA USER SUNGGUHAN CAHAYA APP
+    // 🔐 DATA USER
     // ===============================
     const naqibUsers = [
-      { username: "kamal",   password: "kamal123",   role: "naqib", label: "Naqib Kamal",   naqibName: "Kamal" },
-      { username: "regen",   password: "regen123",   role: "naqib", label: "Naqib Regen",   naqibName: "Regen" },
-      { username: "dimas",   password: "dimas123",   role: "naqib", label: "Naqib Dimas",   naqibName: "Dimas" },
+      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal", naqibName: "Kamal" },
+      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen", naqibName: "Regen" },
+      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas", naqibName: "Dimas" },
       { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
-      { username: "favian",  password: "favian123",  role: "naqib", label: "Naqib Favian",  naqibName: "Favian" },
-      { username: "evita",   password: "evita123",   role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
+      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian", naqibName: "Favian" },
+      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
       { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" }
     ];
 
     const guruUsers = [
       { username: "multazam", password: "guru123", role: "guru", label: "Ustadz Multazam" },
-      { username: "alvin",    password: "guru123", role: "guru", label: "Ustadz Alvin" },
-      { username: "alzam",    password: "guru123", role: "guru", label: "Ustadz Alzam" },
-      { username: "haidar",   password: "guru123", role: "guru", label: "Ustadz Haidar" },
-      { username: "shafwan",  password: "guru123", role: "guru", label: "Ustadz Shafwan" },
-      { username: "fahmi",    password: "guru123", role: "guru", label: "Ustadz Fahmi" },
-      { username: "khaizuran",password: "guru123", role: "guru", label: "Ustadz Khaizuran" },
-      { username: "mulia",    password: "guru123", role: "guru", label: "Ustadz Mulia" },
-      { username: "faiq",     password: "guru123", role: "guru", label: "Ustadz Faiq" },
-      { username: "favian",   password: "guru123", role: "guru", label: "Ustadz Favian" },
-      { username: "kamal",    password: "guru123", role: "guru", label: "Ustadz Kamal" },
-      { username: "meilisa",  password: "guru123", role: "guru", label: "Ustadzah Meilisa" },
-      { username: "fatimah",  password: "guru123", role: "guru", label: "Ustadzah Fatimah" },
-      { username: "evita",    password: "guru123", role: "guru", label: "Ustadzah Evita" }
+      { username: "alvin", password: "guru123", role: "guru", label: "Ustadz Alvin" },
+      { username: "alzam", password: "guru123", role: "guru", label: "Ustadz Alzam" },
+      { username: "haidar", password: "guru123", role: "guru", label: "Ustadz Haidar" },
+      { username: "shafwan", password: "guru123", role: "guru", label: "Ustadz Shafwan" },
+      { username: "fahmi", password: "guru123", role: "guru", label: "Ustadz Fahmi" },
+      { username: "khaizuran", password: "guru123", role: "guru", label: "Ustadz Khaizuran" },
+      { username: "mulia", password: "guru123", role: "guru", label: "Ustadz Mulia" },
+      { username: "faiq", password: "guru123", role: "guru", label: "Ustadz Faiq" },
+      { username: "favian", password: "guru123", role: "guru", label: "Ustadz Favian" },
+      { username: "kamal", password: "guru123", role: "guru", label: "Ustadz Kamal" },
+      { username: "meilisa", password: "guru123", role: "guru", label: "Ustadzah Meilisa" },
+      { username: "fatimah", password: "guru123", role: "guru", label: "Ustadzah Fatimah" },
+      { username: "evita", password: "guru123", role: "guru", label: "Ustadzah Evita" }
     ];
 
     const adminUsers = [
@@ -186,6 +174,14 @@
     ];
 
     const akun = [...naqibUsers, ...guruUsers, ...adminUsers];
+
+    // ===============================
+    // ⚡ AUTO LOGIN SYSTEM
+    // ===============================
+    const savedUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+    if (savedUser) {
+      redirectByRole(savedUser.role);
+    }
 
     // ===============================
     // 🔑 LOGIN FUNCTION
@@ -201,15 +197,19 @@
       }
 
       localStorage.setItem('cahayaCurrentUser', JSON.stringify(found));
+      redirectByRole(found.role);
+    }
 
-      if (found.role === 'guru') {
+    // ===============================
+    // 🚀 REDIRECT FUNCTION
+    // ===============================
+    function redirectByRole(role) {
+      if (role === 'guru') {
         window.location.href = 'guru/fitur.html';
-      } else if (found.role === 'naqib') {
+      } else if (role === 'naqib') {
         window.location.href = 'naqib/dashboard.html';
-      } else if (found.role === 'admin') {
+      } else if (role === 'admin') {
         window.location.href = 'admin/index.html';
-      } else {
-        alert('Role tidak dikenali!');
       }
     }
   </script>
