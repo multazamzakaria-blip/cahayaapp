@@ -140,7 +140,8 @@ window.addEventListener("load", () => {
   const tahunSekarang = new Date().getFullYear();
   for (let t = tahunSekarang - 2; t <= tahunSekarang + 1; t++) {
     const opt = document.createElement("option");
-    opt.value = t; opt.textContent = t;
+    opt.value = t;
+    opt.textContent = t;
     if (t === tahunSekarang) opt.selected = true;
     tahunSelect.appendChild(opt);
   }
@@ -151,6 +152,7 @@ function parseDate(str) {
   const p = str.split("-");
   return new Date(+p[0], +p[1] - 1, +p[2]);
 }
+
 function isSameMonthYear(tgl, bulan, tahun) {
   const d = parseDate(tgl);
   return d && d.getMonth() === bulan && d.getFullYear() === tahun;
@@ -169,41 +171,69 @@ async function generateReports() {
   }
 
   try {
+    const dbRef = ref(window.db);
+
     const [
       assesGuruSnap,
       assesNaqibSnap,
       absNaqibSnap,
-      absKbmSnap,
+      absPembSnap,
+      absDeepSnap,
       ujianSnap,
       tahfizSnap,
       pelanggaranSnap
     ] = await Promise.all([
+      // 🔁 SINKRON DENGAN SEMUA HTML LAIN
       get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
       get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
       get(child(dbRef, "cahaya_app/absensi_program_harian")),
-      get(child(dbRef, "cahaya_app/absensi_kehadiran_pembelajaran")),
-      get(child(dbRef, "cahaya_app/nilai_ujian_logs")),
+      get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
+      get(child(dbRef, "cahaya_app/absensi_deep_learning")),
+      get(child(dbRef, "cahaya_app/nilai_ujian")),
       get(child(dbRef, "cahaya_app/setoran_tahfiz")),
-      get(child(dbRef, "cahaya_app/pelanggaran_logs")),
+      get(child(dbRef, "cahaya_app/pelanggaran_santri"))
     ]);
 
-    const assesmentGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
-    const assesmentNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
-    const absensiNaqib = absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [];
-    const absensiKbm = absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [];
-    const ujian = ujianSnap.exists() ? Object.values(ujianSnap.val()) : [];
-    const tahfiz = tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [];
+    const assesmentGuru  = assesGuruSnap.exists()   ? Object.values(assesGuruSnap.val())   : [];
+    const assesmentNaqib = assesNaqibSnap.exists()  ? Object.values(assesNaqibSnap.val())  : [];
+    const absensiNaqib   = absNaqibSnap.exists()    ? Object.values(absNaqibSnap.val())    : [];
+    const absensiPemb    = absPembSnap.exists()     ? Object.values(absPembSnap.val())     : [];
+    const absensiDeep    = absDeepSnap.exists()     ? Object.values(absDeepSnap.val())     : [];
+    const absensiKbm     = [...absensiPemb, ...absensiDeep];
+    const ujian          = ujianSnap.exists()       ? Object.values(ujianSnap.val())       : [];
+    const tahfiz         = tahfizSnap.exists()      ? Object.values(tahfizSnap.val())      : [];
     const pelanggaranAll = pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [];
 
-    const namaSet = new Set([
-      ...assesmentGuru.map(a=>a.namaSantri),
-      ...assesmentNaqib.map(a=>a.namaSantri),
-      ...absensiNaqib.flatMap(a=>(a.data||[]).map(d=>d.nama)),
-      ...absensiKbm.flatMap(a=>(a.data||[]).map(d=>d.nama)),
-      ...ujian.map(u=>u.santri),
-      ...tahfiz.flatMap(t=>(t.data||[]).map(d=>d.nama)),
-      ...pelanggaranAll.map(p=>p.santri)
-    ].filter(Boolean));
+    // 🔧 KUMPULKAN SEMUA NAMA SANTRI TANPA SYNTAX ERROR
+    const namaSet = new Set();
+
+    assesmentGuru.forEach(a => {
+      if (a.namaSantri) namaSet.add(a.namaSantri);
+    });
+    assesmentNaqib.forEach(a => {
+      if (a.namaSantri) namaSet.add(a.namaSantri);
+    });
+    absensiNaqib.forEach(log => {
+      (log.data || []).forEach(d => {
+        if (d.nama) namaSet.add(d.nama);
+      });
+    });
+    absensiKbm.forEach(log => {
+      (log.data || []).forEach(d => {
+        if (d.nama) namaSet.add(d.nama);
+      });
+    });
+    ujian.forEach(u => {
+      if (u.santri) namaSet.add(u.santri);
+    });
+    tahfiz.forEach(t => {
+      (t.data || []).forEach(d => {
+        if (d.nama) namaSet.add(d.nama);
+      });
+    });
+    pelanggaranAll.forEach(p => {
+      if (p.santri) namaSet.add(p.santri);
+    });
 
     if (!namaSet.size) {
       container.innerHTML = "<p class='muted'>Belum ada data.</p>";
@@ -231,10 +261,14 @@ async function generateReports() {
     container.innerHTML = "<p class='muted'>Gagal mengambil data dari Firebase.</p>";
   }
 }
+
 function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) {
   const kehadiran = {};
+
   function tambah(prog, status) {
-    if (!kehadiran[prog]) kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+    if (!kehadiran[prog]) {
+      kehadiran[prog] = { hadir: 0, izin: 0, sakit: 0, alfa: 0, total: 0 };
+    }
     const s = (status || "").toLowerCase();
     if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
     kehadiran[prog].total++;
@@ -254,10 +288,10 @@ function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) 
     });
   });
 
-  const result = Object.entries(kehadiran).map(([prog,v],i)=>{
+  const result = Object.entries(kehadiran).map(([prog, v], i) => {
     const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
     return {
-      no: i+1,
+      no: i + 1,
       program: prog,
       hadir: toP(v.hadir),
       izin: toP(v.izin),
@@ -267,7 +301,7 @@ function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) 
   });
 
   if (result.length) {
-    const avg = x => Math.round(result.reduce((s,r)=>s + r[x],0) / result.length);
+    const avg = x => Math.round(result.reduce((s, r) => s + r[x], 0) / result.length);
     result.push({
       no: "",
       program: "<b>Rata-rata</b>",
@@ -277,6 +311,7 @@ function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) 
       alfa: avg("alfa")
     });
   }
+
   return result;
 }
 
@@ -291,7 +326,7 @@ function buatLaporanSantri(ctx) {
     absensiKbm,
     ujian,
     tahfiz,
-    pelanggaranAll,
+    pelanggaranAll
   } = ctx;
 
   const namaUpper = (nama || "").toUpperCase();
@@ -300,15 +335,19 @@ function buatLaporanSantri(ctx) {
     "Juli","Agustus","September","Oktober","November","Desember"
   ][bulan];
 
-  const asesGuru = assesmentGuru.filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)).at(-1) || {};
-  const asesNaqib = assesmentNaqib.filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)).at(-1) || {};
+  const asesGuru = assesmentGuru
+    .filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun))
+    .at(-1) || {};
+  const asesNaqib = assesmentNaqib
+    .filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun))
+    .at(-1) || {};
 
-  const narasiSpiritual = asesGuru.narasiSpiritual || asesGuru.catatanSpiritual || "Belum ada catatan asesmen Cinta Allah (Spiritual) bulan ini.";
-  const narasiIntellectual = asesGuru.narasiIntellectual || asesGuru.catatanAkal || "Belum ada catatan asesmen Akal Cerdas (Intellectual) bulan ini.";
-  const narasiRel = asesNaqib.narasiRelational || asesNaqib.catatanRelasi || "Belum ada catatan dimensi Akhlak Mulia (Relational) bulan ini.";
-  const narasiEmo = asesNaqib.narasiEmotional || asesNaqib.catatanHati || "Belum ada catatan dimensi Hati Bersih (Emotional) bulan ini.";
-  const narasiFis = asesNaqib.narasiPhysical || asesNaqib.catatanFisik || "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
-  const namaNaqib = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
+  const narasiSpiritual   = asesGuru.narasiSpiritual   || asesGuru.catatanSpiritual || "Belum ada catatan asesmen Cinta Allah (Spiritual) bulan ini.";
+  const narasiIntellectual= asesGuru.narasiIntellectual|| asesGuru.catatanAkal      || "Belum ada catatan asesmen Akal Cerdas (Intellectual) bulan ini.";
+  const narasiRel         = asesNaqib.narasiRelational || asesNaqib.catatanRelasi   || "Belum ada catatan dimensi Akhlak Mulia (Relational) bulan ini.";
+  const narasiEmo         = asesNaqib.narasiEmotional  || asesNaqib.catatanHati     || "Belum ada catatan dimensi Hati Bersih (Emotional) bulan ini.";
+  const narasiFis         = asesNaqib.narasiPhysical   || asesNaqib.catatanFisik    || "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
+  const namaNaqib         = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
 
   const wrapper = document.createElement("div");
   wrapper.className = "laporan-card";
@@ -335,78 +374,106 @@ function buatLaporanSantri(ctx) {
     <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiFis}</p></div>
   `;
 
-  // === Kehadiran ===
   const hadir = hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiKbm);
   wrapper.innerHTML += `
-  <div class="section-title">🗓️ Laporan Kehadiran</div>
-  ${hadir.length ? `
-    <table><thead><tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead>
-    <tbody>${hadir.map(r=>`<tr><td>${r.no}</td><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}</tbody></table>
-  ` : `<p class='muted'>Belum ada data kehadiran.</p>`}`;
+    <div class="section-title">🗓️ Laporan Kehadiran</div>
+    ${
+      hadir.length
+        ? `<table><thead><tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead>
+           <tbody>${hadir.map(r => `<tr><td>${r.no}</td><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}</tbody></table>`
+        : `<p class='muted'>Belum ada data kehadiran.</p>`
+    }`;
 
-  // === Nilai Ujian ===
   const nilaiUjian = ujian.filter(u => u.santri === nama && isSameMonthYear(u.tanggal, bulan, tahun));
-  let rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s,u)=>s+(+u.nilai||0),0)/nilaiUjian.length) : 0;
-  wrapper.innerHTML += `
-  <div class="section-title">🧾 Laporan Nilai Ujian</div>
-  ${nilaiUjian.length ? `
-  <table><thead><tr><th>No</th><th>Mata Pelajaran</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
-  ${nilaiUjian.map((u,i)=>`<tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>`).join("")}
-  <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr></tbody></table>
-  ` : `<p class='muted'>Belum ada data ujian.</p>`}`;
+  const rataUjian = nilaiUjian.length
+    ? Math.round(nilaiUjian.reduce((s, u) => s + (+u.nilai || 0), 0) / nilaiUjian.length)
+    : 0;
 
-  // === Tahfiz ===
-  const dataTahfiz = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).flatMap(t => t.data || []).filter(d => d.nama === nama);
   wrapper.innerHTML += `
-  <div class="section-title">📖 Laporan Setoran Tahfiz</div>
-  ${dataTahfiz.length ? `
-  <table><thead><tr><th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
-  ${dataTahfiz.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||d.setoran||"-"}</td><td>${d.kesalahan||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>`).join("")}
-  </tbody></table>`:`<p class='muted'>Belum ada setoran tahfiz.</p>`}`;
+    <div class="section-title">🧾 Laporan Nilai Ujian</div>
+    ${
+      nilaiUjian.length
+        ? `<table><thead><tr><th>No</th><th>Mata Pelajaran</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
+           ${nilaiUjian.map((u, i) => `<tr><td>${i + 1}</td><td>${u.mapel || "-"}</td><td>${u.materi || "-"}</td><td>${u.nilai || "-"}</td><td>${u.nilai >= 75 ? "✅ Tuntas" : "❌ Belum Tuntas"}</td></tr>`).join("")}
+           <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr></tbody></table>`
+        : `<p class='muted'>Belum ada data ujian.</p>`
+    }`;
 
-  // === Pelanggaran ===
-  const pelanggaran = pelanggaranAll.filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
+  const dataTahfiz = tahfiz
+    .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
+    .flatMap(t => t.data || [])
+    .filter(d => d.nama === nama);
+
   wrapper.innerHTML += `
-  <div class="section-title">⚠️ Laporan Pelanggaran</div>
-  ${pelanggaran.length ? `
-  <table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr></thead><tbody>
-  ${pelanggaran.map((p,i)=>`<tr><td>${i+1}</td><td>${p.tanggal}</td><td>${p.kategori}</td><td>${p.ket}</td><td>${p.tindakLanjut}</td><td>${p.konsekuensi}</td></tr>`).join("")}</tbody></table>
-  ` : `<p class='muted'>Tidak ada pelanggaran.</p>`}`;
+    <div class="section-title">📖 Laporan Setoran Tahfiz</div>
+    ${
+      dataTahfiz.length
+        ? `<table><thead><tr><th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
+           ${dataTahfiz.map((d, i) => `<tr><td>${i + 1}</td><td>${d.surat || d.setoran || "-"}</td><td>${d.kesalahan || "-"}</td><td>${d.nilai || "-"}</td><td>${d.ket || d.keterangan || "-"}</td></tr>`).join("")}
+           </tbody></table>`
+        : `<p class='muted'>Belum ada setoran tahfiz.</p>`
+    }`;
 
-  wrapper.innerHTML += `<div class="export-buttons"><button onclick="exportPDF('${nama.replace(/'/g,"\\'")}')">⬇️ Export PDF Santri Ini</button></div>`;
+  const pelanggaran = pelanggaranAll
+    .filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
+
+  wrapper.innerHTML += `
+    <div class="section-title">⚠️ Laporan Pelanggaran</div>
+    ${
+      pelanggaran.length
+        ? `<table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr></thead><tbody>
+           ${pelanggaran.map((p, i) => `<tr><td>${i + 1}</td><td>${p.tanggal}</td><td>${p.kategori}</td><td>${p.keterangan || p.ket || "-"}</td><td>${p.tindakLanjut || "-"}</td><td>${p.konsekuensi || "-"}</td></tr>`).join("")}
+           </tbody></table>`
+        : `<p class='muted'>Tidak ada pelanggaran.</p>`
+    }`;
+
+  wrapper.innerHTML += `<div class="export-buttons"><button onclick="exportPDF('${nama.replace(/'/g, "\\'")}')">⬇️ Export PDF Santri Ini</button></div>`;
+
   return wrapper;
 }
 
-// === EXPORT PDF ===
-async function exportPDF(nama){
+async function exportPDF(nama) {
   const el = document.querySelector(`.laporan-card[data-santri="${nama}"]`);
-  if (!el) return alert("Laporan tidak ditemukan.");
+  if (!el) {
+    alert("Laporan tidak ditemukan.");
+    return;
+  }
   const bulan = el.dataset.bulan || "";
   const tahun = el.dataset.tahun || "";
-  const canvas = await html2canvas(el,{scale:2,useCORS:true,scrollY:0});
+  const canvas = await html2canvas(el, { scale: 2, useCORS: true, scrollY: 0 });
   const imgData = canvas.toDataURL("image/png");
-  const pdf = new jsPDFLib("p","mm","a4");
+  const pdf = new jsPDFLib("p", "mm", "a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
   const imgWidth = pageWidth - 20;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  pdf.addImage(imgData,"PNG",10,10,imgWidth,imgHeight);
-  const cleanName = nama.toUpperCase().replace(/\s+/g,"_");
+  pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+  const cleanName = nama.toUpperCase().replace(/\s+/g, "_");
   pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
 }
 
-// === EXPORT SEMUA PDF ===
-async function exportAllPDF(){
+async function exportAllPDF() {
   const cards = document.querySelectorAll(".laporan-card");
-  if (!cards.length) return alert("Tidak ada laporan.");
-  for(let i=0;i<cards.length;i++){
-    await exportPDF(cards[i].dataset.santri);
-    await new Promise(r=>setTimeout(r,700));
+  if (!cards.length) {
+    alert("Tidak ada laporan.");
+    return;
+  }
+  for (let i = 0; i < cards.length; i++) {
+    const nama = cards[i].dataset.santri;
+    await exportPDF(nama);
+    await new Promise(r => setTimeout(r, 700));
   }
   alert("✅ Semua laporan berhasil diekspor!");
 }
 
-function logout(){localStorage.removeItem("cahayaCurrentUser");window.location.href="index.html";}
-function goDashboard(){window.location.href="index.html";}
+function logout() {
+  localStorage.removeItem("cahayaCurrentUser");
+  window.location.href = "index.html";
+}
+
+function goDashboard() {
+  window.location.href = "index.html";
+}
 </script>
 </body>
 </html>
+
