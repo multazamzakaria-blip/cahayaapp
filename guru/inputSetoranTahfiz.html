@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Input Setoran Tahfiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      margin: 0;
+      padding: 20px;
+      color: #1f2937;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+    }
+    header h1 { margin: 0; font-size: 1.2rem; }
+    main {
+      background: white;
+      margin-top: 20px;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(15,23,42,0.15);
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 { margin-top: 0; color: #1e3a8a; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    select, input, textarea {
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; }
+    th { background: #f1f5f9; }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    button:hover { background: #1d4ed8; }
+    .btn-secondary { background: #6b7280; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CAHAYA APP – Input Setoran Tahfiz</h1>
+  <div>
+    <button class="btn-secondary" onclick="goBack()">⬅️ Kembali</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <h2>Input Setoran Tahfiz Santri</h2>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+    <div style="flex:1;min-width:180px">
+      <label>Tanggal Setoran</label>
+      <input type="date" id="tfzTanggal">
+    </div>
+    <div style="flex:1;min-width:200px">
+      <label>Program</label>
+      <select id="tfzProgram" onchange="updateKelompok()">
+        <option value="">-- Pilih Program --</option>
+        <option value="Tahsin">Tahsin</option>
+        <option value="Tahfiz">Tahfiz</option>
+      </select>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <label>Kelompok</label>
+      <select id="tfzKelompok" onchange="tampilkanSantri()">
+        <option value="">-- Pilih Kelompok --</option>
+      </select>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama Santri</th>
+        <th>Setoran Hari Ini</th>
+        <th>Jumlah Ayat</th>
+        <th>Kesalahan</th>
+        <th>Nilai</th>
+        <th>Keterangan</th>
+      </tr>
+    </thead>
+    <tbody id="tfzBody">
+      <tr><td colspan="7" style="text-align:center;color:#6b7280">Pilih program & kelompok untuk menampilkan daftar santri.</td></tr>
+    </tbody>
+  </table>
+
+  <button onclick="simpanSetoran()">💾 Simpan Setoran</button>
+</main>
+
+<script src="dataSantri.js"></script>
+
+<!-- === FIREBASE MODULE === -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+
+  window.init = function() {
+    if (!user || user.role !== 'guru') {
+      alert('Silakan login sebagai Guru terlebih dahulu.');
+      window.location.href = '../index.html';
+      return;
+    }
+    document.getElementById('tfzTanggal').value = new Date().toISOString().split('T')[0];
+  };
+
+  window.updateKelompok = function() {
+    const program = document.getElementById('tfzProgram').value;
+    const kelompokSelect = document.getElementById('tfzKelompok');
+    const tbody = document.getElementById('tfzBody');
+    kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#6b7280">Silakan pilih kelompok...</td></tr>';
+
+    if (!program) return;
+    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    if (!kategori) return;
+
+    const kelompokList = Object.keys(kategori)
+      .filter(k => k.startsWith(program + ' '))
+      .map(k => k.replace(program + ' ', ''));
+
+    if (kelompokList.length === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = 'Belum ada kelompok';
+      kelompokSelect.appendChild(opt);
+      return;
+    }
+
+    kelompokList.forEach(k => {
+      const opt = document.createElement('option');
+      opt.textContent = k;
+      kelompokSelect.appendChild(opt);
+    });
+  };
+
+  window.tampilkanSantri = function() {
+    const program = document.getElementById('tfzProgram').value;
+    const kelompok = document.getElementById('tfzKelompok').value;
+    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    const key = `${program} ${kelompok}`;
+    const list = kategori[key] || [];
+    const tbody = document.getElementById('tfzBody');
+    tbody.innerHTML = '';
+
+    if (!program || !kelompok) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#6b7280">Lengkapi program & kelompok.</td></tr>';
+      return;
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#6b7280">Tidak ada data santri untuk pilihan ini.</td></tr>`;
+      return;
+    }
+
+    list.forEach((nama, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td style="text-align:left">${nama}</td>
+        <td><input type="text" placeholder="Contoh: QS Al-Baqarah 1-10" /></td>
+        <td><input type="number" min="1" max="286" value="0" style="width:80px"/></td>
+        <td><input type="number" min="0" value="0" style="width:70px" oninput="hitungNilai(this)"/></td>
+        <td><input type="text" readonly placeholder="Mumtaz / Jayyid Jiddan / Jayyid / Maqbul" /></td>
+        <td><input type="text" placeholder="Keterangan..." /></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  };
+
+  window.hitungNilai = function(inputKesalahan) {
+    const row = inputKesalahan.closest('tr');
+    const nilaiInput = row.cells[5].querySelector('input');
+    let salah = parseInt(inputKesalahan.value, 10);
+    if (isNaN(salah) || salah < 0) salah = 0;
+
+    let predikat = '';
+    if (salah === 0) predikat = 'Mumtaz';
+    else if (salah <= 3) predikat = 'Jayyid Jiddan';
+    else if (salah <= 6) predikat = 'Jayyid';
+    else if (salah <= 9) predikat = 'Maqbul';
+    else predikat = 'Perlu Bimbingan';
+
+    nilaiInput.value = predikat;
+  };
+
+  window.simpanSetoran = function() {
+    const tanggal = document.getElementById('tfzTanggal').value;
+    const program = document.getElementById('tfzProgram').value;
+    const kelompok = document.getElementById('tfzKelompok').value;
+
+    if (!tanggal || !program || !kelompok) {
+      alert('Lengkapi semua pilihan terlebih dahulu.');
+      return;
+    }
+
+    const rows = document.querySelectorAll('#tfzBody tr');
+    const data = [];
+
+    rows.forEach(row => {
+      const nama = row.cells[1].innerText;
+      const setoran = row.cells[2].querySelector('input').value.trim();
+      const ayat = row.cells[3].querySelector('input').value;
+      const kesalahan = row.cells[4].querySelector('input').value;
+      const nilai = row.cells[5].querySelector('input').value.trim();
+      const ket = row.cells[6].querySelector('input').value.trim();
+
+      if (setoran !== '') {
+        data.push({ nama, setoran, ayat, kesalahan, nilai, ket });
+      }
+    });
+
+    if (data.length === 0) {
+      alert('Belum ada data setoran yang diisi.');
+      return;
+    }
+
+    const log = {
+      tanggal,
+      program,
+      kelompok,
+      guru: user.username,
+      data,
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const setoranRef = ref(db, 'cahaya_app/setoran_tahfiz');
+    push(setoranRef, log)
+      .then(() => {
+        alert('✅ Data setoran tahfiz tersimpan ke Firebase!');
+      })
+      .catch(err => {
+        console.error(err);
+        alert('❌ Gagal menyimpan ke Firebase: ' + err.message);
+      });
+  };
+
+  window.goBack = function() { window.location.href = 'fitur.html'; };
+  window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Absensi Deep Learning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      margin: 0;
+      padding: 20px;
+      color: #1f2937;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+    }
+    header h1 { margin: 0; font-size: 1.2rem; }
+    main {
+      background: white;
+      margin-top: 20px;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(15,23,42,0.15);
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 { margin-top: 0; color: #1e3a8a; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    select, input, textarea {
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; }
+    th { background: #f1f5f9; }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    button:hover { background: #1d4ed8; }
+    .btn-secondary { background: #6b7280; }
+    .status-btn {
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      background: #f8fafc;
+    }
+    .status-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CAHAYA APP – Absensi Deep Learning</h1>
+  <div>
+    <button class="btn-secondary" onclick="goBack()">⬅️ Kembali</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <h2>Absensi Deep Learning Santri</h2>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+    <div style="flex:1;min-width:180px">
+      <label>Tanggal</label>
+      <input type="date" id="dlTanggal">
+    </div>
+    <div style="flex:1;min-width:200px">
+      <label>Jenis Kelas</label>
+      <select id="dlJenisKelas" onchange="updatePilihan()">
+        <option value="">-- Pilih Jenis Kelas --</option>
+        <option value="keilmuan">Keilmuan Islam & Umum</option>
+        <option value="bahasa">Bahasa Internasional</option>
+        <option value="tahfiz">Tahsin & Tahfiz Al-Qur'an</option>
+      </select>
+    </div>
+    <div style="flex:1;min-width:200px" id="opsiKhusus"></div>
+    <div style="flex:1;min-width:200px">
+      <label>Mata Pelajaran</label>
+      <select id="dlMapel">
+        <option value="">-- Pilih Mapel --</option>
+      </select>
+    </div>
+  </div>
+
+  <table id="dlTable">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama Santri</th>
+        <th>Hadir</th>
+        <th>Izin</th>
+        <th>Sakit</th>
+        <th>Alfa</th>
+      </tr>
+    </thead>
+    <tbody id="dlBody">
+      <tr><td colspan="6" style="text-align:center;color:#6b7280">Pilih jenis kelas terlebih dahulu.</td></tr>
+    </tbody>
+  </table>
+
+  <label style="margin-top:20px">Catatan / Materi Hari Ini:</label>
+  <textarea id="dlCatatan" rows="3" placeholder="Tuliskan materi, refleksi pembelajaran, atau catatan penting..."></textarea>
+
+  <button onclick="simpanAbsensi()">💾 Simpan Absensi</button>
+</main>
+
+<script src="dataSantri.js"></script>
+
+<!-- === FIREBASE MODULE === -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+
+  // === Inisialisasi ===
+  window.init = function() {
+    if (!user || user.role !== 'guru') {
+      alert('Silakan login sebagai Guru terlebih dahulu.');
+      window.location.href = '../index.html';
+      return;
+    }
+    document.getElementById('dlTanggal').value = new Date().toISOString().split('T')[0];
+  };
+
+  // === Update pilihan kelas dan mapel ===
+  window.updatePilihan = function() {
+    const jenis = document.getElementById('dlJenisKelas').value;
+    const container = document.getElementById('opsiKhusus');
+    const tbody = document.getElementById('dlBody');
+    const mapelSelect = document.getElementById('dlMapel');
+
+    container.innerHTML = '';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7280">Menunggu pilihan detail kelas...</td></tr>';
+    mapelSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
+
+    if (!jenis) return;
+
+    let jenisKey = '';
+    let mapelList = [];
+    if (jenis === 'keilmuan') {
+      jenisKey = 'Keilmuan Islam & Umum';
+      mapelList = ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran'];
+    } else if (jenis === 'bahasa') {
+      jenisKey = 'Bahasa Internasional';
+      mapelList = ['Bahasa Arab','Bahasa Inggris'];
+    } else if (jenis === 'tahfiz') {
+      jenisKey = 'Tahsin & Tahfiz Al-Qur\'an';
+      mapelList = ['Tahsin','Tahfiz'];
+    }
+
+    mapelList.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m;
+      mapelSelect.appendChild(opt);
+    });
+
+    const kategori = dataSantri[jenisKey];
+    if (!kategori) return;
+
+    if (jenis === 'keilmuan' || jenis === 'bahasa') {
+      container.innerHTML = `
+        <label>${jenis === 'keilmuan' ? 'Kelas' : 'Kelompok'}</label>
+        <select id="subPilihan" onchange="tampilkanSantri('${jenis}')">
+          <option value="">-- Pilih ${jenis === 'keilmuan' ? 'Kelas' : 'Kelompok'} --</option>
+          ${Object.keys(kategori).map(k => `<option>${k}</option>`).join('')}
+        </select>`;
+    } else if (jenis === 'tahfiz') {
+      container.innerHTML = `
+        <label>Program & Kelompok</label>
+        <div style="display:flex;gap:8px">
+          <select id="programTahfiz">
+            <option value="Tahsin">Tahsin</option>
+            <option value="Tahfiz">Tahfiz</option>
+          </select>
+          <select id="subPilihan" onchange="tampilkanSantri('${jenis}')">
+            <option value="">-- Pilih Kelompok --</option>
+            ${Object.keys(kategori).map(k => `<option>${k}</option>`).join('')}
+          </select>
+        </div>`;
+    }
+  };
+
+  // === Tampilkan daftar santri ===
+  window.tampilkanSantri = function(jenis) {
+    const tbody = document.getElementById('dlBody');
+    tbody.innerHTML = '';
+    const jenisKey = jenis === 'keilmuan' ? 'Keilmuan Islam & Umum' :
+                     jenis === 'bahasa' ? 'Bahasa Internasional' :
+                     'Tahsin & Tahfiz Al-Qur\'an';
+    const kategori = dataSantri[jenisKey];
+    if (!kategori) return;
+
+    const sub = document.getElementById('subPilihan').value;
+    let list = [];
+
+    if (jenis === 'tahfiz') {
+      const program = document.getElementById('programTahfiz').value;
+      if (kategori[`${program} ${sub}`]) list = kategori[`${program} ${sub}`];
+      else if (kategori[sub]) list = kategori[sub];
+    } else {
+      list = kategori[sub] || [];
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#6b7280">Belum ada data santri untuk pilihan ini.</td></tr>`;
+      return;
+    }
+
+    list.forEach((nama, i) => {
+      const tr = document.createElement('tr');
+      tr.dataset.nama = nama;
+      tr.dataset.status = 'Hadir';
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td style="text-align:left">${nama}</td>
+        <td><button class="status-btn active" onclick="setStatus(this,'Hadir')">✔️</button></td>
+        <td><button class="status-btn" onclick="setStatus(this,'Izin')">I</button></td>
+        <td><button class="status-btn" onclick="setStatus(this,'Sakit')">S</button></td>
+        <td><button class="status-btn" onclick="setStatus(this,'Alfa')">A</button></td>`;
+      tbody.appendChild(tr);
+    });
+  };
+
+  // === Set status ===
+  window.setStatus = function(btn, status) {
+    const row = btn.closest('tr');
+    row.dataset.status = status;
+    row.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+
+  // === Simpan ke Firebase ===
+  window.simpanAbsensi = function() {
+    const tanggal = document.getElementById('dlTanggal').value;
+    const jenis = document.getElementById('dlJenisKelas').value;
+    const mapel = document.getElementById('dlMapel').value;
+    const sub = document.getElementById('subPilihan')?.value || '';
+    const program = document.getElementById('programTahfiz')?.value || '';
+    const catatan = document.getElementById('dlCatatan').value.trim();
+
+    if (!tanggal || !jenis || !sub || !mapel) {
+      alert('Lengkapi semua pilihan absensi.');
+      return;
+    }
+
+    const rows = document.querySelectorAll('#dlBody tr');
+    const data = [];
+    rows.forEach(r => data.push({ nama: r.dataset.nama, status: r.dataset.status }));
+
+    const log = {
+      tanggal,
+      jenis,
+      sub,
+      mapel,
+      program,
+      catatan,
+      guru: user.username,
+      data,
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const absensiRef = ref(db, 'cahaya_app/absensi_deep_learning');
+    push(absensiRef, log)
+      .then(() => alert('✅ Absensi Deep Learning tersimpan ke Firebase!'))
+      .catch(err => {
+        console.error(err);
+        alert('❌ Gagal menyimpan ke Firebase: ' + err.message);
+      });
+  };
+
+  // === Navigasi ===
+  window.goBack = function() { window.location.href = 'fitur.html'; };
+  window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

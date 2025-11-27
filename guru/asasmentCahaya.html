@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>CAHAYA APP - Asesmen CAHAYA Santri</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {font-family:Arial, sans-serif;background:#eef2ff;margin:0;padding:20px;color:#1f2937;}
+  header {background:#1e40af;color:white;padding:12px 20px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;}
+  header h1{margin:0;font-size:1.2rem}
+  main{background:white;margin-top:20px;border-radius:12px;padding:20px;box-shadow:0 5px 15px rgba(15,23,42,0.15);max-width:1100px;margin-left:auto;margin-right:auto;}
+  h2{color:#1e3a8a;margin-top:0}
+  label{font-weight:bold;margin-top:10px;display:block}
+  select,input,textarea{padding:8px;border:1px solid #cbd5e1;border-radius:6px;width:100%;margin-top:4px;box-sizing:border-box}
+  table{width:100%;border-collapse:collapse;margin-top:15px;font-size:0.9rem}
+  th,td{border:1px solid #e5e7eb;padding:8px;text-align:center}
+  th{background:#f8fafc}
+  button{background:#2563eb;color:white;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:bold}
+  button:hover{background:#1d4ed8}
+  .btn-secondary{background:#6b7280}
+  .hidden{display:none}
+  .riyadhah-box{background:#f9fafb;padding:10px;border-radius:8px;margin-top:10px}
+  .riyadhah-focus{font-style:italic;margin-bottom:6px;color:#4b5563}
+  .row{display:flex;flex-wrap:wrap;gap:12px}
+  .col{flex:1;min-width:220px}
+  textarea {background:#f9fafb;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CAHAYA APP – Asesmen CAHAYA Santri</h1>
+  <div>
+    <button class="btn-secondary" onclick="goBack()">⬅️ Kembali</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <!-- IDENTITAS -->
+  <div class="row">
+    <div class="col">
+      <label>Tanggal Asesmen</label>
+      <input type="date" id="tglAsesmen">
+    </div>
+    <div class="col">
+      <label>Nama Santri</label>
+      <select id="namaSantri">
+        <option value="">-- Pilih Santri --</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- SPIRITUAL -->
+  <h2 style="margin-top:24px">🕋 Dimensi Cinta Allah (Spiritual)</h2>
+
+  <div class="row">
+    <div class="col">
+      <label>Level Kesadaran Hawkins</label>
+      <select id="level" onchange="tampilkanRiyadhah()">
+        <option value="">-- Pilih Level --</option>
+      </select>
+    </div>
+    <div class="col">
+      <label>Nafsu dalam Islam</label>
+      <input type="text" id="nafsLabel" readonly>
+    </div>
+  </div>
+
+  <div id="riyadhahBox" class="riyadhah-box hidden"></div>
+
+  <label style="margin-top:20px">Narasi & Rekomendasi Spiritual:</label>
+  <textarea id="catatanSpiritual" rows="5"
+    placeholder="Klik 'Simpan Asesmen' untuk menghasilkan narasi otomatis."></textarea>
+
+  <hr style="margin:25px 0">
+
+  <!-- INTELLECTUAL -->
+  <h2>🧠 Dimensi Akal Cerdas (Intellectual)</h2>
+  <p>Skala penilaian: 0 = Belum nampak, 1 = Kadang, 2 = Sering, 3 = Konsisten.</p>
+
+  <table>
+    <thead><tr><th>Kegiatan</th><th>Skor</th></tr></thead>
+    <tbody>
+      <tr><td style="text-align:left">Discovery Learning (Meringkas Syarah)</td>
+        <td><select class="skorInt" id="disc"><option>0</option><option>1</option><option>2</option><option>3</option></select></td></tr>
+      <tr><td style="text-align:left">Mind Map (Tasyjir)</td>
+        <td><select class="skorInt" id="mind"><option>0</option><option>1</option><option>2</option><option>3</option></select></td></tr>
+      <tr><td style="text-align:left">Peer Teaching (Ta'lim)</td>
+        <td><select class="skorInt" id="peer"><option>0</option><option>1</option><option>2</option><option>3</option></select></td></tr>
+    </tbody>
+  </table>
+
+  <label style="margin-top:20px">Narasi & Rekomendasi Intelektual:</label>
+  <textarea id="catatanInt" rows="5"
+    placeholder="Klik 'Simpan Asesmen' untuk menghasilkan narasi otomatis."></textarea>
+
+  <button onclick="simpanAsesmen()">💾 Simpan Asesmen</button>
+</main>
+
+<!-- data struktur santri -->
+<script src="dataSantri.js"></script>
+
+<!-- ================= FIREBASE MODULE ================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // fungsi global yang dipakai script non-module
+  window.cahayaFirebase = {
+    saveAsesmenSantri(newData) {
+      const asesmenRef = ref(db, "cahaya_app/assesment_cahaya_santri");
+      return push(asesmenRef, newData);
+    }
+  };
+</script>
+
+<script>
+/* === DATA LEVEL SPIRITUAL (1–17) === */
+const levelData = {
+  1:{label:"Level 1 – SHAME (20) → GUILT (30)",focus:"Mengambil kepemilikan dan mengatasi self-hatred.",riyadhah:["Pengakuan Kecil","Ambil Tanggung Jawab","Afirmasi Nilai Diri","Istighfar","Salat Taubat"]},
+  2:{label:"Level 2 – GUILT (30) → APATHY (50)",focus:"Menerima diri, meredam kecemasan, dan berhenti menghukum diri.",riyadhah:["Minta Maaf","Berhenti Menyalahkan","Tasbih","Salat Taubat","Butterfly Hug"]},
+  3:{label:"Level 3 – APATHY (50) → GRIEF (75)",focus:"Mengaktifkan energi dan menghidupkan semangat hidup.",riyadhah:["Tugas Wajib","Ubah Pola Harian","Dzikir Yaa Hayyu","Salat Fajar","Mandi Taubat"]},
+  4:{label:"Level 4 – GRIEF (75) → FEAR (100)",focus:"Mengganti kesedihan dengan syukur dan harapan.",riyadhah:["Jurnal Masa Depan","Aksi Kontrol Kecil","Syukur Realistis","Hamdalah","Jalan Hening"]},
+  5:{label:"Level 5 – FEAR (100) → DESIRE (125)",focus:"Menumbuhkan rasa aman batin dan keberanian mengambil keputusan.",riyadhah:["Latihan Otonomi","Metode Baru","Dzikir Hasbunallah","Doakan Orang Lain"]},
+  6:{label:"Level 6 – DESIRE (125) → ANGER (150)",focus:"Mengendalikan keinginan dan memurnikan niat dari pamrih.",riyadhah:["Penundaan Kepuasan","Tugas Tanpa Pamrih","Dzikir Tauhid","La Hawla"]},
+  7:{label:"Level 7 – ANGER (150) → PRIDE (175)",focus:"Mengubah reaksi emosional menjadi rasional dan sabar.",riyadhah:["Pause & Analysis","Dzikir Ta'awudz","Ya Halim","Menulis Surat Cinta Orang Lain"]},
+  8:{label:"Level 8 – PRIDE (175) → COURAGE (200)",focus:"Melepaskan ilusi keunggulan dan mengambil tanggung jawab penuh.",riyadhah:["Runtuhkan Ilusi Superioritas","Ambil Tanggung Jawab","Dzikir Subhana Rabbi al-Adzim"]},
+  9:{label:"Level 9 – COURAGE (200) → NEUTRALITY (250)",focus:"Melepaskan perjuangan batin dan menstabilkan energi diri.",riyadhah:["Latihan Letting Go","Menghargai Kebebasan","Dzikir Salamun Qawlan"]},
+  10:{label:"Level 10 – NEUTRALITY (250) → WILLINGNESS (310)",focus:"Mengubah netralitas menjadi kemauan aktif dan antusiasme.",riyadhah:["Sukarela Extra Mile","Salat Dhuha","Dzikir Yaa Muqallib al-Qulub"]},
+  11:{label:"Level 11 – WILLINGNESS (310) → ACCEPTANCE (350)",focus:"Menumbuhkan keridhaan dan menerima takdir Allah dengan lapang dada.",riyadhah:["Memaafkan","Fokus Solusi","Dzikir Radhitu billahi rabba"]},
+  12:{label:"Level 12 – ACCEPTANCE (350) → REASON (400)",focus:"Melebur penerimaan menjadi pemahaman dan kebijaksanaan.",riyadhah:["Sistematika Emosi","Penelitian Metode","Salat Hajat"]},
+  13:{label:"Level 13 – REASON (400) → LOVE (500)",focus:"Melebur logika ke dalam kasih sayang dan rahmat Allah.",riyadhah:["Pengampunan Tak Logis","Meditasi Rahmat","Selawat Nabi","Ya Wadud"]},
+  14:{label:"Level 14 – LOVE (500) → JOY (540)",focus:"Menjadikan cinta yang serius menjadi sukacita dan ringan.",riyadhah:["Tawa & Ringan","Syukur Spontan","Dzikir Tasbih & Takbir"]},
+  15:{label:"Level 15 – JOY (540) → PEACE (600)",focus:"Menstabilkan kegembiraan menjadi kedamaian (sakinah).",riyadhah:["Latihan Diam","Dzikir Ismu Dzat","Jalan Hening"]},
+  16:{label:"Level 16 – PEACE (600) → ENLIGHTENMENT (700+)",focus:"Menstabilkan kedamaian menuju kelembutan total dan fana.",riyadhah:["Dzikir Laa ilaaha illa Huwa","Hening Total","Khidmah Umat"]},
+  17:{label:"Level 17 – ENLIGHTENMENT (700+) – Pendalaman",focus:"Peleburan ego dan hidup dalam kesadaran rahmat Allah secara terus-menerus.",riyadhah:["Dzikir Tanpa Tujuan","Muroqabah","Khidmah Sepanjang Hayat"]}
+};
+
+function getNafs(level){
+  if(level>=1 && level<=8) return "Nafsu Ammarah";
+  if(level===9) return "Nafsu Lawwamah";
+  if(level===10 || level===11) return "Nafsu Mulhamah";
+  if(level===12 || level===13) return "Nafsu Muthmainnah";
+  if(level>=14 && level<=16) return "Nafsu Radhiyah";
+  if(level===17) return "Nafsu Mardhiyyah";
+  return "";
+}
+
+function tampilkanRiyadhah(){
+  const val = parseInt(document.getElementById("level").value,10);
+  const box = document.getElementById("riyadhahBox");
+  const nafs = getNafs(val);
+  document.getElementById("nafsLabel").value = nafs || "";
+  if(!val || !levelData[val]){ box.classList.add("hidden"); box.innerHTML=""; return; }
+
+  const data = levelData[val];
+  const rows = data.riyadhah.map(r=>`
+    <tr><td style="text-align:left">${r}</td>
+    <td><select class="skorAllah"><option>0</option><option>1</option><option>2</option><option>3</option></select></td></tr>`).join("");
+  box.innerHTML = `<div class="riyadhah-focus">${data.focus}</div>
+    <table><thead><tr><th>Riyadhah</th><th>Skor (0–3)</th></tr></thead><tbody>${rows}</tbody></table>`;
+  box.classList.remove("hidden");
+}
+
+function kategoriNarasi(avg){
+  if(avg < 0.75) return "masih pada tahap awal dan perlu pendampingan";
+  if(avg < 1.5)  return "mulai berkembang dan sesekali tampak";
+  if(avg < 2.5)  return "cukup stabil dan menunjukkan kemajuan";
+  return "sangat kuat dan menjadi teladan";
+}
+
+function panggilanSantri(){
+  const nama = document.getElementById("namaSantri").value.trim();
+  return nama ? `Ananda ${nama}` : "Ananda";
+}
+
+function simpanAsesmen(){
+  const levelVal = parseInt(document.getElementById("level").value,10);
+  if(!levelVal || !levelData[levelVal]){ alert("Pilih level Cinta Allah terlebih dahulu."); return; }
+
+  const namaSantri = document.getElementById("namaSantri").value;
+  if(!namaSantri){ alert("Pilih nama santri terlebih dahulu."); return; }
+
+  const namaPanggil = panggilanSantri();
+  const nafs = getNafs(levelVal);
+  const data = levelData[levelVal];
+  const levelLabel = data.label;
+  const fokus = data.focus;
+  const riy = data.riyadhah;
+  const skorAllahEls = document.querySelectorAll(".skorAllah");
+
+  let totalS=0; const skorArray=[];
+  skorAllahEls.forEach((s,i)=> {
+    const val = parseInt(s.value,10)||0;
+    totalS += val;
+    skorArray.push({nama:riy[i], skor:val});
+  });
+  const avgS = skorAllahEls.length ? totalS/skorAllahEls.length : 0;
+  const deskS = kategoriNarasi(avgS);
+  const minS = skorArray.reduce((a,b)=> a.skor<b.skor?a:b, skorArray[0]);
+  const maxS = skorArray.reduce((a,b)=> a.skor>b.skor?a:b, skorArray[0]);
+
+  // Intelektual
+  const disc = parseInt(document.getElementById("disc").value)||0;
+  const mind = parseInt(document.getElementById("mind").value)||0;
+  const peer = parseInt(document.getElementById("peer").value)||0;
+  const avgI = (disc+mind+peer)/3;
+  const deskI = kategoriNarasi(avgI);
+
+  const kekuatanInt=[], kelemahanInt=[];
+  if(disc>=2) kekuatanInt.push("Meringkas syarah");
+  else kelemahanInt.push("Meringkas syarah");
+  if(mind>=2) kekuatanInt.push("Membuat mind map");
+  else kelemahanInt.push("Menata ide visual (mind map)");
+  if(peer>=2) kekuatanInt.push("Peer teaching");
+  else kelemahanInt.push("Menjelaskan pelajaran kepada teman");
+
+  const narasiSpiritual = 
+`${namaPanggil} kini berada pada ${levelLabel}, termasuk dalam kategori ${nafs}.
+Fokus latihan pada level ini adalah: ${fokus}
+Rata-rata praktik riyadhah ${deskS}.
+Alhamdulillah, latihan seperti "${maxS.nama}" mulai menumbuhkan kelembutan hati dan kedekatan kepada Allah.
+Adapun "${minS.nama}" masih memerlukan perhatian dengan kesungguhan agar menjadi jalan bertambahnya rahmat dan ketenangan batin.`;
+
+  const narasiIntelektual = 
+`Dalam dimensi Akal Cerdas, ${namaPanggil} menunjukkan perkembangan yang ${deskI}.
+Alhamdulillah, kekuatan yang menonjol ialah ${kekuatanInt.join(", ") || "belum tampak jelas"} — sebuah nikmat ilmu yang patut disyukuri.
+Sementara bagian yang masih perlu dilatih dengan sabar adalah ${kelemahanInt.join(", ") || "sudah cukup seimbang"}.
+Teruslah belajar dengan niat ibadah, agar setiap pengetahuan menjadi cahaya yang menuntun hati.`;
+
+  document.getElementById("catatanSpiritual").value = narasiSpiritual;
+  document.getElementById("catatanInt").value = narasiIntelektual;
+
+  const tgl = document.getElementById("tglAsesmen").value || new Date().toISOString().split("T")[0];
+
+  const newData = {
+    tanggal: tgl,
+    namaSantri: namaSantri,
+    level: levelVal,
+    levelLabel: levelLabel,
+    nafs: nafs,
+    fokus: fokus,
+    skorRiyadhah: skorArray,
+    disc, mind, peer,
+    narasiSpiritual: narasiSpiritual,
+    narasiIntellectual: narasiIntelektual,
+    waktuSimpan: new Date().toISOString()
+  };
+
+  // simpan ke localStorage (agar laporan lama masih bisa membaca)
+  try {
+    const legacy = JSON.parse(localStorage.getItem('assesmentCahayaSantri') || '[]');
+    legacy.push({
+      tgl: tgl,
+      namaSantri: namaSantri,
+      narasiSpiritual: narasiSpiritual,
+      narasiIntellectual: narasiIntelektual
+    });
+    localStorage.setItem('assesmentCahayaSantri', JSON.stringify(legacy));
+  } catch(e) {
+    console.warn('Gagal simpan ke localStorage (boleh diabaikan jika hanya pakai Firebase).', e);
+  }
+
+  // simpan ke Firebase
+  if (window.cahayaFirebase && window.cahayaFirebase.saveAsesmenSantri) {
+    window.cahayaFirebase.saveAsesmenSantri(newData)
+      .then(()=>{
+        alert("✅ Asesmen tersimpan ke Firebase dan narasi otomatis dibuat.");
+      })
+      .catch(err=>{
+        console.error(err);
+        alert("❌ Gagal menyimpan ke Firebase: " + err.message);
+      });
+  } else {
+    alert("⚠️ Firebase belum terinisialisasi. Data hanya tersimpan secara lokal.");
+  }
+}
+
+function goBack(){ window.location.href='fitur.html'; }
+function logout(){ localStorage.removeItem('cahayaCurrentUser'); window.location.href='../index.html'; }
+
+document.addEventListener("DOMContentLoaded", () => {
+  // isi tanggal hari ini
+  document.getElementById("tglAsesmen").value = new Date().toISOString().split("T")[0];
+
+  // isi dropdown nama santri dari dataSantri.js
+  const select = document.getElementById("namaSantri");
+  if (typeof dataSantri === 'object') {
+    for (const kategori in dataSantri) {
+      for (const sub in dataSantri[kategori]) {
+        dataSantri[kategori][sub].forEach(nama => {
+          const opt = document.createElement("option");
+          opt.value = nama;
+          opt.textContent = nama + " (" + sub + ")";
+          select.appendChild(opt);
+        });
+      }
+    }
+  }
+
+  // isi dropdown level Hawkins
+  const levelSelect = document.getElementById("level");
+  Object.keys(levelData).forEach(k=>{
+    const opt = document.createElement("option");
+    opt.value = k;
+    opt.textContent = levelData[k].label;
+    levelSelect.appendChild(opt);
+  });
+});
+</script>
+
+</body>
+</html>

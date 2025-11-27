@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Guru</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7f9; margin: 0; color: #333; }
+    header {
+      background: #0f766e; color: white; padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    main { padding: 20px; max-width: 1000px; margin: auto; }
+    .card {
+      background: white; border-radius: 16px; padding: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 20px;
+    }
+    select, input, textarea {
+      width: 100%; padding: 8px; margin-bottom: 10px;
+      border-radius: 6px; border: 1px solid #ccc;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    th { background: #f9fafb; }
+    button {
+      background: #0f766e; color: white; border: none;
+      border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: bold;
+      font-size: 13px;
+    }
+    button:hover { background: #115e59; }
+    .hidden { display: none; }
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>CAHAYA APP – Guru</h1>
+  <div class="btn-group">
+    <button onclick="goBack()">⬅️ Kembali</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <!-- Dashboard -->
+  <div id="dashboard" class="card">
+    <h2>Dashboard Guru</h2>
+    <div class="btn-group">
+      <button onclick="window.location.href='absensiPembelajaran.html'">📋 Absensi Kehadiran Santri</button>
+      <button onclick="window.location.href='absensiDeep.html'">📋 Absensi Deep Learning</button>
+      <button onclick="window.location.href='inputSetoranTahfiz.html'">📖 Input Setoran Tahfiz</button>
+      <button onclick="window.location.href='asasmentCahaya.html'">📖 Assasment Cahaya</button>
+      <button onclick="showSection('inputNilaiPage')">🧾 Input Nilai Ujian</button>
+    </div>
+  </div>
+
+  <!-- Input Nilai Ujian -->
+  <div id="inputNilaiPage" class="card hidden">
+    <h3>📘 Input Nilai Ujian</h3>
+    <p>Isi nilai ujian santri berdasarkan jenis kelas, subprogram, kelompok, dan mata pelajaran.</p>
+
+    <label>Jenis Kelas:</label>
+    <select id="nilaiKelas" onchange="updateKelompokNilai()">
+      <option value="">-- pilih kelas --</option>
+      <option>Keilmuan Islam & Umum</option>
+      <option>Bahasa Internasional</option>
+      <option>Tahsin & Tahfiz Al-Qur'an</option>
+    </select>
+
+    <div id="subProgramWrapper" class="hidden">
+      <label>Sub Program (Khusus Tahsin/Tahfiz):</label>
+      <select id="nilaiSubProgram" onchange="loadSantriUjian()">
+        <option value="">-- pilih program --</option>
+        <option value="Tahsin">Tahsin</option>
+        <option value="Tahfiz">Tahfiz</option>
+      </select>
+    </div>
+
+    <label>Kelompok:</label>
+    <select id="nilaiKelompok" onchange="loadSantriUjian()">
+      <option value="">-- pilih kelompok --</option>
+    </select>
+
+    <label>Mapel:</label>
+    <select id="nilaiMapel">
+      <option value="">-- pilih mapel --</option>
+      <option>Fiqih</option>
+      <option>Nahwu</option>
+      <option>Tahfiz</option>
+      <option>Tahsin</option>
+    </select>
+
+    <label>Bulan:</label>
+    <select id="nilaiBulan">
+      <option value="">-- Pilih Bulan --</option>
+      <option value="0">Januari</option>
+      <option value="1">Februari</option>
+      <option value="2">Maret</option>
+      <option value="3">April</option>
+      <option value="4">Mei</option>
+      <option value="5">Juni</option>
+      <option value="6">Juli</option>
+      <option value="7">Agustus</option>
+      <option value="8">September</option>
+      <option value="9">Oktober</option>
+      <option value="10">November</option>
+      <option value="11">Desember</option>
+    </select>
+
+    <label>Materi Ujian:</label>
+    <input type="text" id="nilaiMateri" placeholder="Contoh: Bab Shalat / Bab Nahwu">
+
+    <label>Tanggal Ujian:</label>
+    <input type="date" id="nilaiTanggal">
+
+    <h4>Daftar Santri</h4>
+    <table id="tabelNilaiSantri">
+      <thead>
+        <tr><th>No</th><th>Nama Santri</th><th>Nilai</th></tr>
+      </thead>
+      <tbody id="nilaiSantriBody">
+        <tr><td colspan="3" style="text-align:center;color:#777">Pilih kelas & kelompok untuk menampilkan santri.</td></tr>
+      </tbody>
+    </table>
+
+    <br>
+    <button onclick="simpanNilaiUjian()">💾 Simpan Nilai</button>
+    <button onclick="goBack()" style="background:#777">Kembali</button>
+  </div>
+</main>
+
+<!-- ======== FIREBASE MODULE DAN SCRIPT UTAMA ======== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import "./dataSantri.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId: "absensi-santri-fajrul-islam",
+  storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+  messagingSenderId: "739928369926",
+  appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+getAuth(app);
+
+/* === Navigasi === */
+window.showSection = function(id){
+  document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+window.goBack = function(){
+  document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+  document.getElementById('dashboard').classList.remove('hidden');
+}
+window.logout = function(){
+  localStorage.removeItem('cahayaCurrentUser');
+  window.location.href = '../index.html';
+}
+
+/* === Update kelompok & mapel === */
+window.updateKelompokNilai = function(){
+  const kelas = document.getElementById('nilaiKelas').value;
+  const kelompokSelect = document.getElementById('nilaiKelompok');
+  const subProgramWrapper = document.getElementById('subProgramWrapper');
+  const mapelSelect = document.getElementById('nilaiMapel');
+
+  kelompokSelect.innerHTML = '<option value="">-- pilih kelompok --</option>';
+  subProgramWrapper.classList.add('hidden');
+  mapelSelect.innerHTML = '<option value="">-- pilih mapel --</option>';
+
+  let jenisKey='', kelompokList=[], mapelList=[];
+  if(kelas==='Keilmuan Islam & Umum'){
+    jenisKey='Keilmuan Islam & Umum';
+    kelompokList=Object.keys(dataSantri[jenisKey]);
+    mapelList=['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran'];
+  } else if(kelas==='Bahasa Internasional'){
+    jenisKey='Bahasa Internasional';
+    kelompokList=Object.keys(dataSantri[jenisKey]);
+    mapelList=['Bahasa Arab','Bahasa Inggris'];
+  } else if(kelas==="Tahsin & Tahfiz Al-Qur'an"){
+    jenisKey="Tahsin & Tahfiz Al-Qur'an";
+    subProgramWrapper.classList.remove('hidden');
+    const allKeys=Object.keys(dataSantri[jenisKey]);
+    const kelompokSet=new Set();
+    allKeys.forEach(k=>{
+      const parts=k.split(' ');
+      if(parts.length>=3){
+        const kelompok=parts.slice(-2).join(' ');
+        kelompokSet.add(kelompok);
+      }
+    });
+    kelompokList=Array.from(kelompokSet);
+    mapelList=['Tahsin','Tahfiz'];
+  }
+  kelompokList.forEach(k=>{
+    const opt=document.createElement('option');
+    opt.textContent=k;
+    kelompokSelect.appendChild(opt);
+  });
+  mapelList.forEach(m=>{
+    const opt=document.createElement('option');
+    opt.textContent=m;
+    mapelSelect.appendChild(opt);
+  });
+}
+
+/* === Load santri === */
+window.loadSantriUjian = function(){
+  const kelas=document.getElementById('nilaiKelas').value;
+  const subProgram=document.getElementById('nilaiSubProgram').value;
+  const kelompok=document.getElementById('nilaiKelompok').value;
+  const tbody=document.getElementById('nilaiSantriBody');
+  tbody.innerHTML='';
+
+  if(!kelas||!kelompok){
+    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#777">Lengkapi pilihan kelas dan kelompok.</td></tr>';
+    return;
+  }
+
+  let list=[];
+  if(kelas==="Tahsin & Tahfiz Al-Qur'an"){
+    const key=`${subProgram} ${kelompok}`;
+    const kategori=dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    list=kategori[key]||[];
+  } else {
+    const kategori=dataSantri[kelas];
+    list=kategori && kategori[kelompok]?kategori[kelompok]:[];
+  }
+
+  if(list.length===0){
+    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#777">Tidak ada santri di kelompok ini.</td></tr>';
+    return;
+  }
+
+  list.forEach((nama,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${nama}</td><td><input type="number" min="0" max="100" value="0" data-nama="${nama}"></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* === Simpan Nilai ke Firebase === */
+window.simpanNilaiUjian = async function(){
+  const kelas=document.getElementById('nilaiKelas').value;
+  const subProgram=document.getElementById('nilaiSubProgram').value;
+  const kelompok=document.getElementById('nilaiKelompok').value;
+  const mapel=document.getElementById('nilaiMapel').value.trim();
+  const bulan=parseInt(document.getElementById('nilaiBulan').value,10);
+  const materi=document.getElementById('nilaiMateri').value.trim();
+  const tanggal=document.getElementById('nilaiTanggal').value;
+
+  if(!kelas||!kelompok||!mapel||isNaN(bulan)||!materi||!tanggal||
+    (kelas==="Tahsin & Tahfiz Al-Qur'an"&&!subProgram)){
+    alert("⚠️ Lengkapi semua kolom terlebih dahulu!");
+    return;
+  }
+
+  const inputs=document.querySelectorAll('#tabelNilaiSantri input[type=number]');
+  const nilaiRef=ref(db,'cahaya_app/nilai_ujian');
+
+  let count=0;
+  for(const inp of inputs){
+    const nama=inp.dataset.nama;
+    const nilai=parseInt(inp.value||"0");
+    const data={
+      santri:nama,
+      kelas,
+      subProgram:subProgram||'-',
+      kelompok,
+      mapel,
+      bulan,
+      materi,
+      tanggal,
+      nilai,
+      timestamp:Date.now()
+    };
+    await push(nilaiRef,data);
+    count++;
+  }
+
+  alert(`✅ ${count} nilai ujian berhasil disimpan ke Firebase!`);
+  goBack();
+}
+</script>
+</body>
+</html>
