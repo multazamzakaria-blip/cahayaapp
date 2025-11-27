@@ -8,94 +8,51 @@
     body {
       font-family: "Poppins", Arial, sans-serif;
       background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-      margin: 0;
-      padding: 20px;
-      color: #1f2933;
+      margin: 0; padding: 20px; color: #1f2937;
     }
-
     header {
-      background: #2563eb;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      background: #2563eb; color: white;
+      padding: 14px 20px; border-radius: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     }
-
-    header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
     button {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.9rem;
-      transition: 0.2s;
+      background: #2563eb; color: white; border: none;
+      padding: 8px 14px; border-radius: 8px; cursor: pointer;
+      font-weight: bold; transition: 0.2s;
     }
     button:hover { background: #1d4ed8; transform: translateY(-1px); }
     .btn-secondary { background: #6b7280; }
-    .btn-secondary:hover { background: #4b5563; }
-
     main {
-      background: white;
-      margin-top: 20px;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      max-width: 1100px;
-      margin-left: auto;
-      margin-right: auto;
+      background: white; margin-top: 20px; border-radius: 14px;
+      padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 1100px; margin-left: auto; margin-right: auto;
     }
-
     h2 { margin-top: 0; color: #1e3a8a; }
     h3 { margin-top: 24px; font-size: 1.1rem; }
     label { font-weight: 600; margin-top: 10px; display: block; }
-
     select, input, textarea {
-      padding: 9px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      width: 100%;
-      font-size: 0.95rem;
-      margin-top: 4px;
-      box-sizing: border-box;
+      padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px;
+      width: 100%; font-size: 0.95rem; margin-top: 4px;
     }
-
     textarea { resize: vertical; background: #f9fafb; min-height: 60px; }
-
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 0.9rem;
+      width: 100%; border-collapse: collapse; margin-top: 10px;
+      font-size: 0.9rem; border-radius: 10px; overflow: hidden;
     }
-
     th, td {
-      padding: 8px;
-      text-align: center;
-      border: 1px solid #e5e7eb;
+      padding: 8px; text-align: center; border: 1px solid #e5e7eb;
     }
-
     /* 🌿 Akhlak Mulia */
     .relational th { background: linear-gradient(90deg, #bbf7d0, #86efac); }
     .relational tr:nth-child(even) { background: #f0fdf4; }
-    .relational tr:hover { background: #dcfce7; }
-
     /* 💜 Hati Bersih */
     .emotional th { background: linear-gradient(90deg, #e9d5ff, #c084fc); }
     .emotional tr:nth-child(even) { background: #f5f3ff; }
-    .emotional tr:hover { background: #ede9fe; }
-
     /* 💪 Fisik Berdaya */
     .physical th { background: linear-gradient(90deg, #bfdbfe, #93c5fd); }
     .physical tr:nth-child(even) { background: #eff6ff; }
-    .physical tr:hover { background: #dbeafe; }
-
     hr.sep { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
     .note { font-size: 0.85rem; color: #475569; margin-bottom: 10px; }
   </style>
@@ -112,7 +69,6 @@
 
 <main>
   <h2>Perkembangan Dimensi CAHAYA — <span id="naqibLabelPerk"></span></h2>
-  <p class="note">Gunakan asesmen ini untuk menilai perkembangan santri dengan kelembutan hati dan pandangan positif.</p>
 
   <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px">
     <div style="flex:1;min-width:180px">
@@ -129,7 +85,7 @@
 
   <!-- 🌿 Akhlak Mulia -->
   <hr class="sep">
-  <h3>🤝 Akhlak Mulia (Relational)</h3>
+  <h3>🤝 Akhlak Mulia (Relational / SMILE+)</h3>
   <div id="akhlakTables" class="relational"></div>
   <p><b>Rata-rata:</b> <span id="perkAkhlakAvg">0.00</span> |
   <b>Predikat:</b> <span id="perkAkhlakPredikatLabel">-</span></p>
@@ -163,61 +119,72 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
-    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
-    projectId: "absensi-santri-fajrul-islam",
-    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
-    messagingSenderId: "739928369926",
-    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
-  };
-
-  const app = initializeApp(firebaseConfig);
+  const app = initializeApp({
+    apiKey:"AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain:"absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL:"https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId:"absensi-santri-fajrul-islam",
+    storageBucket:"absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId:"739928369926",
+    appId:"1:739928369926:web:7e95375c3ddba0f584cdd07"
+  });
   const db = getDatabase(app);
 
   const dataSantri = {
-    "Regen": ["AHMAD MAULANA", "JUANDA NUR ILHAM"],
-    "Kamal": ["ADITYA PUTRA IBRAHIM", "AIRLANGGA AZKA ABQORI"],
-    "Fatimah": ["NILAM CAHYA", "QELZA RAMADHANI"]
+    "Regen":["AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII","NIZAM KABISAT"],
+    "Kamal":["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH"],
+    "Fatimah":["NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI"]
   };
 
   const akhlakData = {
-    "A. Self Love": ["Butterfly Hug"],
-    "B. Communication": ["Terima kasih", "Maaf", "Senyum & Salam"]
-  };
-  const hatiData = {
-    "A. Emosi Negatif": ["Cuci hati sebelum tidur"],
-    "B. Emosi Positif": ["Meditasi syukur"]
-  };
-  const fisikData = {
-    "A. Harian": ["Qailulah", "Mandi pagi"],
-    "B. Pekanan": ["Puasa Kamis"]
+    "Self Love": ["Menyayangi diri sendiri","Berbicara lembut","Menenangkan diri"],
+    "Meaningful Communication": ["Senyum & salam","Mengucap maaf & terima kasih","Mendengar dengan empati"],
+    "Intentional Giving": ["Menolong teman","Berbagi makanan","Memberi hadiah kecil"],
+    "Living Together": ["Menjaga kebersihan bersama","Makan & shalat jamaah","Kerja tim usrah"],
+    "Empathy": ["Peka pada perasaan teman","Menenangkan yang sedih"]
   };
 
-  function isiTabel(id, data, dim) {
-    const div = document.getElementById(id);
-    div.innerHTML = "";
-    Object.entries(data).forEach(([judul, list]) => {
-      let html = `<h4>${judul}</h4><table><thead><tr><th>Indikator</th><th>Skor (0–3)</th></tr></thead><tbody>`;
-      list.forEach(item => {
-        html += `<tr><td style="text-align:left">${item}</td>
+  const hatiData = {
+    "Rilis Emosi Negatif": ["Tidak mudah marah","Memaafkan","Menarik napas dan sabar"],
+    "Booster Emosi Positif": ["Bersyukur","Berprasangka baik","Menikmati hal kecil"],
+    "Kesadaran Diri": ["Menyadari perasaan","Evaluasi sebelum tidur"],
+    "Keteguhan Hati": ["Tenang saat diuji","Sabar & optimis"]
+  };
+
+  const fisikData = {
+    "Kebiasaan Harian": ["Shalat tepat waktu","Olahraga ringan","Tidur cukup","Mandi pagi & sore"],
+    "Kebersihan Diri": ["Menyikat gigi","Potong kuku","Rapikan kamar","Cuci pakaian sendiri"],
+    "Kedisiplinan": ["Datang tepat waktu","Taat jadwal pondok"],
+    "Kesehatan": ["Makan sehat","Minum air cukup","Semangat kegiatan"]
+  };
+
+  function isiTabel(id,data,dim){
+    const div=document.getElementById(id);
+    div.innerHTML="";
+    Object.entries(data).forEach(([judul,list])=>{
+      let html=`<h4>${judul}</h4><table><thead><tr><th>Indikator</th><th>Skor (0–3)</th></tr></thead><tbody>`;
+      list.forEach(item=>{
+        html+=`<tr><td style="text-align:left">${item}</td>
         <td><select class="perk-skor" data-dim="${dim}">
-        <option value="0">0</option><option value="1">1</option>
-        <option value="2">2</option><option value="3">3</option></select></td></tr>`;
+        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        </select></td></tr>`;
       });
-      html += `</tbody></table>`;
-      div.innerHTML += html;
+      html+=`</tbody></table>`;
+      div.innerHTML+=html;
     });
   }
 
-  function isiSantriByNaqib(naqibName) {
-    const select = document.getElementById('perkSantri');
-    select.innerHTML = '<option value="">-- Pilih Santri --</option>';
-    const list = dataSantri[naqibName] || [];
-    list.forEach(n => {
-      const opt = document.createElement('option');
-      opt.value = n; opt.textContent = n;
+  function isiSantriByNaqib(naqibName){
+    const select=document.getElementById('perkSantri');
+    select.innerHTML='<option value="">-- Pilih Santri --</option>';
+    const list=dataSantri[naqibName]||[];
+    if(!list.length){
+      const opt=document.createElement('option');
+      opt.textContent='(Belum ada santri untuk '+naqibName+')';
+      select.appendChild(opt);
+    } else list.forEach(n=>{
+      const opt=document.createElement('option');
+      opt.value=n; opt.textContent=n;
       select.appendChild(opt);
     });
   }
@@ -225,7 +192,7 @@
   function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
   function hitung(dim){
     const list=document.querySelectorAll(`.perk-skor[data-dim="${dim}"]`);
-    let total=0,count=0; list.forEach(s=>{total+=parseInt(s.value)||0;count++;});
+    let total=0,count=0;list.forEach(s=>{total+=parseInt(s.value)||0;count++;});
     const avg=count?total/count:0;
     const label=avg<1.5?"Kadang":avg<2.5?"Sering":"Konsisten";
     document.getElementById(`perk${capitalize(dim)}Avg`).textContent=avg.toFixed(2);
@@ -234,17 +201,19 @@
 
   function simpanPerkembanganCahaya(){
     const santri=document.getElementById('perkSantri').value;
-    if(!santri){alert('Pilih nama santri dahulu.');return;}
+    if(!santri)return alert('Pilih santri terlebih dahulu.');
     const tgl=document.getElementById('perkTanggal').value;
     const user=JSON.parse(localStorage.getItem('cahayaCurrentUser')||'{}');
-    const naqibName=user.username||user.label||user.name||"Naqib";
+    const naqibName=user.naqibName||user.username||user.name||user.label||"Naqib";
     hitung('akhlak');hitung('hati');hitung('fisik');
-    const data={tanggal:tgl,namaSantri:santri,naqibName,
+    const data={
+      tanggal:tgl,namaSantri:santri,naqibName,
       narasiRelational:document.getElementById('perkAkhlakCatatan').value,
       narasiEmotional:document.getElementById('perkHatiCatatan').value,
       narasiPhysical:document.getElementById('perkFisikCatatan').value,
       rekomendasi:document.getElementById('perkRekomendasi').value,
-      waktuSimpan:new Date().toISOString()};
+      waktuSimpan:new Date().toISOString()
+    };
     push(ref(db,'cahaya_app/assesment_cahaya_naqib'),data)
     .then(()=>alert(`✅ Asesmen ${santri} oleh ${naqibName} tersimpan.`))
     .catch(e=>alert('❌ Gagal: '+e.message));
@@ -252,7 +221,7 @@
 
   function init(){
     const user=JSON.parse(localStorage.getItem('cahayaCurrentUser')||'{}');
-    const naqibName=user.username||user.label||user.name||"Naqib";
+    const naqibName=user.naqibName||user.username||user.name||user.label||"Naqib";
     document.getElementById('naqibLabelPerk').textContent=naqibName;
     isiSantriByNaqib(naqibName);
     isiTabel("akhlakTables",akhlakData,"akhlak");
@@ -261,7 +230,6 @@
     document.getElementById('perkTanggal').value=new Date().toISOString().split('T')[0];
     document.getElementById('btnSimpan').addEventListener('click',simpanPerkembanganCahaya);
   }
-
   document.addEventListener('DOMContentLoaded',init);
 </script>
 
