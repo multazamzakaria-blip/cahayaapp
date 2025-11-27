@@ -121,7 +121,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  // Konfigurasi Firebase (sama dengan seluruh sistem CAHAYA APP)
+  // Konfigurasi Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
     authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -134,7 +134,6 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-
   const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
   // === Data Santri ===
@@ -216,29 +215,37 @@
   // === Tampilkan pada tabel lokal (client side) ===
   function tampilkan(entry) {
     const tbody = document.querySelector('#tabelPelanggaran tbody');
-const tr = document.createElement('tr');
-const no = tbody.children.length + 1;
-tr.innerHTML = `
-  <td>${no}</td>
-  <td>${entry.tanggal}</td>
-  <td>${entry.santri}</td>
-  <td>${entry.kategori}</td>
-  <td>${entry.keterangan}</td>
-  <td>${entry.tindakLanjut}</td>
-  <td>${entry.konsekuensi}</td>
-`;
-tbody.appendChild(tr);
+    const tr = document.createElement('tr');
+    const no = tbody.children.length + 1;
+    tr.innerHTML = `
+      <td>${no}</td>
+      <td>${entry.tanggal}</td>
+      <td>${entry.santri}</td>
+      <td>${entry.kategori}</td>
+      <td>${entry.keterangan}</td>
+      <td>${entry.tindakLanjut}</td>
+      <td>${entry.konsekuensi}</td>
+    `;
+    tbody.appendChild(tr);
+  }
 
-  // === Navigasi ===
-  window.goBack = function() { window.location.href = 'dashboard.html'; };
-  function logout() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; }
+  // === Navigasi (DIPINDAH KELUAR agar global) ===
+  window.goBack = function() {
+    try {
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      console.error('Navigasi gagal:', err);
+      alert('Tidak dapat membuka Dashboard.');
+    }
+  };
+
+  window.logout = function() {
+    localStorage.removeItem('cahayaCurrentUser');
+    window.location.href = '../index.html';
+  };
 
   document.addEventListener('DOMContentLoaded', init);
 </script>
 
 </body>
 </html>
-
-
-
-
