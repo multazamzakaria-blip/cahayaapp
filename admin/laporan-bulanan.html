@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin CAHAYA APP - Laporan Bulanan Santri</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      color: #1f2937;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+    }
+    header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+    main { padding: 30px; max-width: 1200px; margin: auto; }
+    .card {
+      background: white; padding: 28px; border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); margin-bottom: 30px;
+    }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+    select, button {
+      padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;
+      font-size: 18px;
+    }
+    button {
+      background: #0f766e; color: white; cursor: pointer;
+      font-weight: bold; border: none; transition: 0.2s;
+    }
+    button:hover { background: #115e59; transform: translateY(-1px); }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-secondary:hover { background: #d1d5db; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 17px; }
+    th, td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+    th { background: #f3f4f6; font-weight: 700; }
+    .laporan-card {
+      border: 1px solid #e5e7eb; border-radius: 16px;
+      padding: 28px; margin-bottom: 30px; background: white;
+    }
+    .laporan-header {
+      text-align: center; margin-bottom: 20px;
+      border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;
+    }
+    .laporan-header h1 { font-size: 28px; color: #1e3a8a; margin: 0; font-weight: 800; }
+    .laporan-header h2 { font-size: 22px; color: #1e3a8a; margin: 6px 0 12px 0; font-weight: 700; }
+    .laporan-header h3 { font-size: 20px; color: #111827; margin: 6px 0 16px 0; font-weight: 700; }
+    .identitas-grid {
+      display: flex; justify-content: space-between; max-width: 650px; margin: 0 auto; font-size: 18px;
+    }
+    .section-title {
+      margin-top: 28px; margin-bottom: 8px; font-weight: bold;
+      color: #0f766e; display: flex; align-items: center; gap: 8px; font-size: 20px;
+    }
+    .dim-card {
+      border-radius: 12px; padding: 14px 16px; background: #f9fafb;
+      border: 1px solid #e5e7eb; font-size: 18px; margin-bottom: 12px;
+    }
+    .dim-card h4 { margin: 0 0 6px; font-size: 18px; color: #0f172a; }
+    .dim-card p { margin: 0; white-space: pre-line; font-size: 18px; }
+    .muted { color: #6b7280; font-size: 17px; }
+    .export-buttons { text-align: right; margin-top: 16px; }
+    .export-buttons button {
+      background: #2563eb; margin-left: 8px; padding: 12px 18px; font-size: 17px;
+    }
+    .export-buttons button:hover { background: #1e40af; }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>CAHAYA APP – Admin Panel</h1>
+  <div>
+    <button class="btn-secondary" onclick="goDashboard()">⬅️ Kembali</button>
+    <button onclick="exportAllPDF()">⬇️ Download Massal PDF</button>
+    <button class="btn-secondary" onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>📊 Laporan Bulanan Santri</h2>
+    <div class="controls">
+      <select id="bulanSelect">
+        <option value="">-- Pilih Bulan --</option>
+        <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+        <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+        <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+        <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+      </select>
+      <select id="tahunSelect"></select>
+      <button onclick="generateReports()">Tampilkan Laporan</button>
+    </div>
+    <div id="laporanContainer">
+      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan.</p>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- 🔥 INISIALISASI FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  window.db = getDatabase(app);
+</script>
+
+<script>
+let jsPDFLib;
+
+window.addEventListener("load", () => {
+  if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
+  const tahunSelect = document.getElementById("tahunSelect");
+  const tahunSekarang = new Date().getFullYear();
+  for (let t = tahunSekarang - 2; t <= tahunSekarang + 1; t++) {
+    const opt = document.createElement("option");
+    opt.value = t; opt.textContent = t;
+    if (t === tahunSekarang) opt.selected = true;
+    tahunSelect.appendChild(opt);
+  }
+});
+
+function parseDate(str) {
+  if (!str) return null;
+  const p = str.split("-");
+  return new Date(+p[0], +p[1] - 1, +p[2]);
+}
+function isSameMonthYear(tgl, bulan, tahun) {
+  const d = parseDate(tgl);
+  return d && d.getMonth() === bulan && d.getFullYear() === tahun;
+}
+
+// === AMBIL DATA DARI FIREBASE DAN TAMPILKAN LAPORAN ===
+async function generateReports() {
+  const bulan = parseInt(document.getElementById("bulanSelect").value, 10);
+  const tahun = parseInt(document.getElementById("tahunSelect").value, 10);
+  const container = document.getElementById("laporanContainer");
+  container.innerHTML = "";
+
+  if (isNaN(bulan) || isNaN(tahun)) {
+    container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>";
+    return;
+  }
+
+  try {
+    const dbRef = ref(window.db);
+    const [
+      assesGuruSnap,
+      assesNaqibSnap,
+      absNaqibSnap,
+      absKbmSnap,
+      ujianSnap,
+      tahfizSnap,
+      pelanggaranSnap
+    ] = await Promise.all([
+      get(child(dbRef, "assesmentCahayaSantri")),
+      get(child(dbRef, "assesmentCahayaNaqib")),
+      get(child(dbRef, "absensiProgramHarian")),
+      get(child(dbRef, "absensiKehadiranPembelajaran")),
+      get(child(dbRef, "nilaiUjianLogs")),
+      get(child(dbRef, "setoranTahfiz")),
+      get(child(dbRef, "pelanggaranLogs")),
+    ]);
+
+    const assesmentGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
+    const assesmentNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
+    const absensiNaqib = absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [];
+    const absensiKbm = absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [];
+    const ujian = ujianSnap.exists() ? Object.values(ujianSnap.val()) : [];
+    const tahfiz = tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [];
+    const pelanggaranAll = pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [];
+
+    const namaSet = new Set([
+      ...assesmentGuru.map(a=>a.namaSantri),
+      ...assesmentNaqib.map(a=>a.namaSantri),
+      ...absensiNaqib.flatMap(a=>(a.data||[]).map(d=>d.nama)),
+      ...absensiKbm.flatMap(a=>(a.data||[]).map(d=>d.nama)),
+      ...ujian.map(u=>u.santri),
+      ...tahfiz.flatMap(t=>(t.data||[]).map(d=>d.nama)),
+      ...pelanggaranAll.map(p=>p.santri)
+    ].filter(Boolean));
+
+    if (!namaSet.size) {
+      container.innerHTML = "<p class='muted'>Belum ada data.</p>";
+      return;
+    }
+
+    namaSet.forEach(nama => {
+      container.appendChild(
+        buatLaporanSantri({
+          nama,
+          bulan,
+          tahun,
+          assesmentGuru,
+          assesmentNaqib,
+          absensiNaqib,
+          absensiKbm,
+          ujian,
+          tahfiz,
+          pelanggaranAll
+        })
+      );
+    });
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = "<p class='muted'>Gagal mengambil data dari Firebase.</p>";
+  }
+}
+
+function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) {
+  const kehadiran = {};
+  function tambah(prog, status) {
+    if (!kehadiran[prog]) kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+    const s = (status || "").toLowerCase();
+    if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
+    kehadiran[prog].total++;
+  }
+
+  absensiNaqib.forEach(log => {
+    if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+    (log.data || []).forEach(d => {
+      if (d.nama === nama) tambah(log.program || "Program Harian", d.status);
+    });
+  });
+
+  absensiGuru.forEach(log => {
+    if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+    (log.data || []).forEach(d => {
+      if (d.nama === nama) tambah(log.mapel || "KBM", d.status);
+    });
+  });
+
+  const result = Object.entries(kehadiran).map(([prog,v],i)=>{
+    const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
+    return {
+      no: i+1,
+      program: prog,
+      hadir: toP(v.hadir),
+      izin: toP(v.izin),
+      sakit: toP(v.sakit),
+      alfa: toP(v.alfa)
+    };
+  });
+
+  if (result.length) {
+    const avg = x => Math.round(result.reduce((s,r)=>s + r[x],0) / result.length);
+    result.push({
+      no: "",
+      program: "<b>Rata-rata</b>",
+      hadir: avg("hadir"),
+      izin: avg("izin"),
+      sakit: avg("sakit"),
+      alfa: avg("alfa")
+    });
+  }
+  return result;
+}
+
+function buatLaporanSantri(ctx) {
+  const {
+    nama,
+    bulan,
+    tahun,
+    assesmentGuru,
+    assesmentNaqib,
+    absensiNaqib,
+    absensiKbm,
+    ujian,
+    tahfiz,
+    pelanggaranAll,
+  } = ctx;
+
+  const namaUpper = (nama || "").toUpperCase();
+  const namaBulan = [
+    "Januari","Februari","Maret","April","Mei","Juni",
+    "Juli","Agustus","September","Oktober","November","Desember"
+  ][bulan];
+
+  const asesGuru = assesmentGuru.filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)).at(-1) || {};
+  const asesNaqib = assesmentNaqib.filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)).at(-1) || {};
+
+  const narasiSpiritual = asesGuru.narasiSpiritual || asesGuru.catatanSpiritual || "Belum ada catatan asesmen Cinta Allah (Spiritual) bulan ini.";
+  const narasiIntellectual = asesGuru.narasiIntellectual || asesGuru.catatanAkal || "Belum ada catatan asesmen Akal Cerdas (Intellectual) bulan ini.";
+  const narasiRel = asesNaqib.narasiRelational || asesNaqib.catatanRelasi || "Belum ada catatan dimensi Akhlak Mulia (Relational) bulan ini.";
+  const narasiEmo = asesNaqib.narasiEmotional || asesNaqib.catatanHati || "Belum ada catatan dimensi Hati Bersih (Emotional) bulan ini.";
+  const narasiFis = asesNaqib.narasiPhysical || asesNaqib.catatanFisik || "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
+  const namaNaqib = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "laporan-card";
+  wrapper.dataset.santri = nama;
+  wrapper.dataset.bulan = namaBulan;
+  wrapper.dataset.tahun = tahun;
+
+  wrapper.innerHTML = `
+    <div class="laporan-header">
+      <h1>📋 LAPORAN BULANAN SANTRI</h1>
+      <h2>PESANTREN CAHAYA FAJRUL ISLAM</h2>
+      <h3>${namaUpper}</h3>
+      <div class="identitas-grid">
+        <div><b>Nama Naqib:</b> ${namaNaqib}</div>
+        <div><b>Bulan/Tahun:</b> ${namaBulan} ${tahun}</div>
+      </div>
+    </div>
+
+    <div class="section-title">🌈 Dimensi CAHAYA</div>
+    <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiSpiritual}</p></div>
+    <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiRel}</p></div>
+    <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiEmo}</p></div>
+    <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiIntellectual}</p></div>
+    <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiFis}</p></div>
+  `;
+  const hadir = hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiKbm);
+  wrapper.innerHTML += `
+  <div class="section-title">🗓️ Laporan Kehadiran</div>
+  ${hadir.length ? `
+    <table><thead><tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead>
+    <tbody>${hadir.map(r=>`<tr><td>${r.no}</td><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}</tbody></table>
+  ` : `<p class='muted'>Belum ada data kehadiran.</p>`}`;
+
+  const nilaiUjian = ujian.filter(u => u.santri === nama && isSameMonthYear(u.tanggal, bulan, tahun));
+  let rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s,u)=>s+(+u.nilai||0),0)/nilaiUjian.length) : 0;
+  wrapper.innerHTML += `
+  <div class="section-title">🧾 Laporan Nilai Ujian</div>
+  ${nilaiUjian.length ? `
+  <table><thead><tr><th>No</th><th>Mata Pelajaran</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
+  ${nilaiUjian.map((u,i)=>`<tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>`).join("")}
+  <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr></tbody></table>
+  ` : `<p class='muted'>Belum ada data ujian.</p>`}`;
+
+  const dataTahfiz = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).flatMap(t => t.data || []).filter(d => d.nama === nama);
+  wrapper.innerHTML += `
+  <div class="section-title">📖 Laporan Setoran Tahfiz</div>
+  ${dataTahfiz.length ? `
+  <table><thead><tr><th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
+  ${dataTahfiz.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||d.setoran||"-"}</td><td>${d.kesalahan||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>`).join("")}
+  </tbody></table>`:`<p class='muted'>Belum ada setoran tahfiz.</p>`}`;
+
+  const pelanggaran = pelanggaranAll.filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
+  wrapper.innerHTML += `
+  <div class="section-title">⚠️ Laporan Pelanggaran</div>
+  ${pelanggaran.length ? `
+  <table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr></thead><tbody>
+  ${pelanggaran.map((p,i)=>`<tr><td>${i+1}</td><td>${p.tanggal}</td><td>${p.kategori}</td><td>${p.ket}</td><td>${p.tindakLanjut}</td><td>${p.konsekuensi}</td></tr>`).join("")}</tbody></table>
+  ` : `<p class='muted'>Tidak ada pelanggaran.</p>`}`;
+
+  wrapper.innerHTML += `<div class="export-buttons"><button onclick="exportPDF('${nama.replace(/'/g,"\\'")}')">⬇️ Export PDF Santri Ini</button></div>`;
+  return wrapper;
+}
+
+async function exportPDF(nama){
+  const el = document.querySelector(`.laporan-card[data-santri="${nama}"]`);
+  if (!el) return alert("Laporan tidak ditemukan.");
+  const bulan = el.dataset.bulan || "";
+  const tahun = el.dataset.tahun || "";
+  const canvas = await html2canvas(el,{scale:2,useCORS:true,scrollY:0});
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDFLib("p","mm","a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgWidth = pageWidth - 20;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  pdf.addImage(imgData,"PNG",10,10,imgWidth,imgHeight);
+  const cleanName = nama.toUpperCase().replace(/\s+/g,"_");
+  pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
+}
+
+async function exportAllPDF(){
+  const cards = document.querySelectorAll(".laporan-card");
+  if (!cards.length) return alert("Tidak ada laporan.");
+  for(let i=0;i<cards.length;i++){await exportPDF(cards[i].dataset.santri);await new Promise(r=>setTimeout(r,700));}
+  alert("✅ Semua laporan berhasil diekspor!");
+}
+
+function logout(){localStorage.removeItem("cahayaCurrentUser");window.location.href="index.html";}
+function goDashboard(){window.location.href="index.html";}
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAHAYA APP – Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      color: #1f2937;
+    }
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    main {
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      color: #0f766e;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+    .menu-card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .menu-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    .menu-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .menu-title {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #1e293b;
+      margin-top: 4px;
+    }
+    button {
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #115e59;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CAHAYA APP – Admin Panel</h1>
+    <button onclick="logout()">Keluar</button>
+    <button style="background:#dc2626" onclick="openDeleteDialog()">🗑️ Hapus Database</button>
+  </header>
+
+  <main>
+    <h2>📊 Dashboard Admin</h2>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="go('laporan-bulanan.html')">
+        <div class="menu-icon">🗓️</div>
+        <div class="menu-title">Laporan Bulanan Santri</div>
+      </div>
+
+      <div class="menu-card" onclick="go('laporan-kpi-guru.html')">
+        <div class="menu-icon">👨‍🏫</div>
+        <div class="menu-title">Laporan KPI Guru</div>
+      </div>
+
+      <div class="menu-card" onclick="go('laporan-kpi-naqib.html')">
+        <div class="menu-icon">🧑‍🤝‍🧑</div>
+        <div class="menu-title">Laporan KPI Naqib</div>
+      </div>
+
+      <div class="menu-card" onclick="go('audit-kebersihan.html')">
+        <div class="menu-icon">🧹</div>
+        <div class="menu-title">Input Audit Kebersihan</div>
+      </div>
+
+      <div class="menu-card" onclick="go('temuan-sampah.html')">
+        <div class="menu-icon">🗑️</div>
+        <div class="menu-title">Input Temuan Sampah & Barang Terlantar</div>
+      </div>
+
+      <div class="menu-card" onclick="go('bullying-pelanggaran.html')">
+        <div class="menu-icon">🚨</div>
+        <div class="menu-title">Input Bullying & Pelanggaran Berat</div>
+      </div>
+    </div>
+<!-- Dialog Hapus Database -->
+<div id="deleteModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
+  <div style="background:white;padding:28px;border-radius:14px;width:400px;text-align:center;">
+    <h2 style="margin-top:0;">🗑️ Hapus Database</h2>
+    <p>Pilih rentang waktu data yang akan dihapus:</p>
+
+    <select id="rangeSelect" onchange="toggleDateInputs()" style="width:100%;padding:10px;border-radius:8px;margin-bottom:12px;">
+      <option value="hari">Hari Ini</option>
+      <option value="pekan">Pekan Ini</option>
+      <option value="bulan">Bulan Ini</option>
+      <option value="rentang">Rentang Tanggal</option>
+    </select>
+
+    <div id="dateInputs" style="display:none;margin-bottom:12px;">
+      <label>Dari:</label><br>
+      <input type="date" id="startDate" style="padding:8px;width:100%;margin-bottom:8px;">
+      <label>Sampai:</label><br>
+      <input type="date" id="endDate" style="padding:8px;width:100%;">
+    </div>
+
+    <div style="margin-top:16px;">
+      <button onclick="confirmDelete()" style="background:#dc2626;color:white;padding:10px 18px;border:none;border-radius:8px;font-weight:bold;">Hapus</button>
+      <button onclick="closeDeleteDialog()" style="background:#e5e7eb;padding:10px 18px;border:none;border-radius:8px;margin-left:8px;">Batal</button>
+    </div>
+  </div>
+</div>
+  </main>
+
+  <script>
+    function go(page){
+      window.location.href = page;
+    }
+    function logout(){
+      localStorage.removeItem('cahayaCurrentUser');
+      window.location.href='../index.html';
+    }
+function openDeleteDialog() {
+  document.getElementById("deleteModal").style.display = "flex";
+}
+
+function closeDeleteDialog() {
+  document.getElementById("deleteModal").style.display = "none";
+}
+
+function toggleDateInputs() {
+  const val = document.getElementById("rangeSelect").value;
+  document.getElementById("dateInputs").style.display = val === "rentang" ? "block" : "none";
+}
+
+function confirmDelete() {
+  const mode = document.getElementById("rangeSelect").value;
+  let start, end;
+  const now = new Date();
+
+  if (mode === "hari") {
+    start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+  } else if (mode === "pekan") {
+    const first = now.getDate() - now.getDay();
+    start = new Date(now.getFullYear(), now.getMonth(), first);
+    end = new Date(now.getFullYear(), now.getMonth(), first + 6, 23, 59, 59);
+  } else if (mode === "bulan") {
+    start = new Date(now.getFullYear(), now.getMonth(), 1);
+    end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  } else if (mode === "rentang") {
+    const s = document.getElementById("startDate").value;
+    const e = document.getElementById("endDate").value;
+    if (!s || !e) return alert("Lengkapi tanggal mulai dan akhir.");
+    start = new Date(s);
+    end = new Date(e + "T23:59:59");
+  }
+
+  if (!confirm("Yakin ingin menghapus data dalam rentang terpilih?")) return;
+  hapusDatabaseDalamRentang(start, end);
+  closeDeleteDialog();
+}
+
+function hapusDatabaseDalamRentang(start, end) {
+  const keys = [
+    "assesmentCahayaSantri",
+    "assesmentCahayaNaqib",
+    "absensiProgramHarian",
+    "absensiKehadiranPembelajaran",
+    "nilaiUjianLogs",
+    "setoranTahfiz",
+    "pelanggaranLogs"
+  ];
+
+  let totalHapus = 0;
+  for (const key of keys) {
+    const data = JSON.parse(localStorage.getItem(key) || "[]");
+    const baru = data.filter(item => {
+      const t = new Date(item.tanggal || item.tgl);
+      return isNaN(t) || t < start || t > end;
+    });
+    totalHapus += data.length - baru.length;
+    localStorage.setItem(key, JSON.stringify(baru));
+  }
+
+  alert(`✅ ${totalHapus} data dihapus dari database.`);
+}
+  </script>
+</body>
+</html>
