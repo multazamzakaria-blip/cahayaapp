@@ -9,6 +9,10 @@
       --primary: #2563eb;
       --primary-dark: #1e40af;
       --border: #e2e8f0;
+      --green: #dcfce7;
+      --blue: #dbeafe;
+      --yellow: #fef9c3;
+      --red: #fee2e2;
     }
 
     body {
@@ -22,7 +26,7 @@
     header {
       background: var(--primary);
       color: white;
-      padding: 16px 20px;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -33,7 +37,7 @@
 
     header h1 {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 600;
     }
 
@@ -41,11 +45,12 @@
       border: none;
       background: rgba(255,255,255,0.15);
       color: white;
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
       transition: 0.25s;
+      font-size: 0.9rem;
     }
 
     header button:hover {
@@ -55,20 +60,21 @@
 
     main {
       background: white;
-      margin: 20px auto;
-      padding: 24px;
+      margin: 15px auto;
+      padding: 16px;
       border-radius: 16px;
-      max-width: 1100px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      max-width: 900px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     h2 {
       color: var(--primary-dark);
       font-weight: 700;
       margin-top: 0;
+      font-size: 1.1rem;
     }
 
-    h3 { margin-top: 24px; color: #1f2937; }
+    h3 { margin-top: 18px; color: #1f2937; font-size: 1rem; }
 
     label {
       display: block;
@@ -79,12 +85,12 @@
 
     input, select {
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
       border: 1px solid var(--border);
       margin-top: 4px;
       box-sizing: border-box;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     input:focus, select:focus {
@@ -96,67 +102,71 @@
     .row {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 8px;
+      gap: 10px;
+      margin-top: 6px;
     }
 
     .col {
       flex: 1;
-      min-width: 200px;
+      min-width: 180px;
     }
 
-    /* === TABEL MODERN === */
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    .info {
+      font-size: 0.8rem;
+      color: #475569;
     }
 
+    /* === TABEL === */
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
-      min-width: 500px;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
     }
 
     th, td {
       border: 1px solid var(--border);
-      padding: 10px;
+      padding: 6px;
       text-align: center;
-      white-space: nowrap;
     }
 
     th {
       background: linear-gradient(90deg, #7ab6ff, #5ea1ff);
       color: white;
       font-weight: 600;
+      font-size: 0.9rem;
     }
 
-    tr:nth-child(even) { background: #f9fafb; }
-    tr:hover { background: #eff6ff; transition: 0.2s; }
+    td:first-child {
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
 
-    /* Warna status baris */
-    tr.status-hadir  { background: #dcfce7 !important; } /* hijau muda */
-    tr.status-izin   { background: #dbeafe !important; } /* biru muda */
-    tr.status-sakit  { background: #fef9c3 !important; } /* kuning lembut */
-    tr.status-alfa   { background: #fee2e2 !important; } /* merah muda */
+    /* Warna status */
+    tr.status-hadir  { background: var(--green) !important; }
+    tr.status-izin   { background: var(--blue) !important; }
+    tr.status-sakit  { background: var(--yellow) !important; }
+    tr.status-alfa   { background: var(--red) !important; }
 
     input[type="radio"] {
       accent-color: var(--primary);
-      transform: scale(1.1);
+      transform: scale(1);
       cursor: pointer;
     }
 
+    /* Tombol */
     button.primary {
       background: var(--primary);
       color: white;
       border: none;
       border-radius: 10px;
-      padding: 12px 20px;
+      padding: 10px 16px;
       font-weight: 600;
-      font-size: 1rem;
-      margin-top: 20px;
+      font-size: 0.95rem;
+      margin-top: 16px;
       cursor: pointer;
       width: 100%;
       transition: 0.3s;
@@ -164,7 +174,7 @@
 
     button.primary:hover {
       background: var(--primary-dark);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
 
     button.secondary {
@@ -172,32 +182,38 @@
       color: white;
       border: none;
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 6px 10px;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       cursor: pointer;
+      font-size: 0.85rem;
     }
 
     button.secondary:hover { background: #4b5563; }
 
-    .info {
-      font-size: 0.85rem;
-      color: #475569;
-      margin-top: 4px;
-    }
+    /* === RESPONSIVE KHUSUS HP === */
+    @media (max-width: 600px) {
+      th, td {
+        padding: 4px;
+        font-size: 0.8rem;
+      }
 
-    @media (max-width: 700px) {
-      main { padding: 16px; }
-      table { font-size: 0.85rem; }
-      th, td { padding: 8px; }
-      .table-container { overflow-x: scroll; }
+      table {
+        table-layout: fixed;
+      }
+
+      th:nth-child(1), td:nth-child(1) { width: 40%; }
+      th:nth-child(2), td:nth-child(2),
+      th:nth-child(3), td:nth-child(3),
+      th:nth-child(4), td:nth-child(4),
+      th:nth-child(5), td:nth-child(5) { width: 15%; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>📋 CAHAYA APP – Absensi Program Harian</h1>
+  <h1>📋 CAHAYA APP – Absensi Harian</h1>
   <div>
     <button class="secondary" onclick="goBack()">⬅️ Dashboard</button>
     <button onclick="logout()">Keluar</button>
@@ -206,7 +222,6 @@
 
 <main>
   <h2 id="naqibTitle">Absensi Program Harian</h2>
-  <p id="naqibInfo" class="info"></p>
 
   <div class="row">
     <div class="col">
@@ -223,25 +238,23 @@
   <h3>Daftar Santri</h3>
   <button type="button" class="secondary" onclick="markAll()">✅ Tandai Semua Hadir</button>
 
-  <div class="table-container">
-    <table id="tabelSantri">
-      <thead>
-        <tr>
-          <th>Nama Santri</th>
-          <th>Hadir</th>
-          <th>Izin</th>
-          <th>Sakit</th>
-          <th>Alfa</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <table id="tabelSantri">
+    <thead>
+      <tr>
+        <th>Nama Santri</th>
+        <th>H</th>
+        <th>I</th>
+        <th>S</th>
+        <th>A</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <button type="button" class="primary" onclick="simpan()">💾 Simpan Absensi</button>
 </main>
 
-<!-- === FIREBASE MODULE === -->
+<!-- === FIREBASE === -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -268,9 +281,13 @@
   const programPekanan = ["Puasa Kamis","Jemur Kasur"];
 
   const dataSantri = {
-    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM" ],
-    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH" ],
-    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN" ]
+    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
+    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
+    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD RAYYAN HAFIZ","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
+    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
+    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
   };
 
   window.init = function() {
@@ -330,7 +347,7 @@
         <td><input type="radio" name="s_${i}" value="Sakit"></td>
         <td><input type="radio" name="s_${i}" value="Alfa"></td>`;
       tbody.appendChild(tr);
-      tr.classList.add('status-hadir'); // default
+      tr.classList.add('status-hadir'); // default warna
 
       tr.querySelectorAll('input').forEach(r => {
         r.addEventListener('change', () => {
