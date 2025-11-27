@@ -365,13 +365,7 @@ if (nilaiUjian.length) {
     nilaiUjian.reduce((s, u) => s + (+u.nilai || 0), 0) / nilaiUjian.length
   );
 }
-  let rataUjian = 0;
-  if (nilaiUjian.length) {
-    rataUjian = Math.round(
-      nilaiUjian.reduce((s,u)=>s + (+u.nilai || 0), 0) / nilaiUjian.length
-    );
-  }
-  wrapper.innerHTML += `
+    wrapper.innerHTML += `
   <div class="section-title">🧾 Laporan Nilai Ujian</div>
   ${
     nilaiUjian.length ? `
@@ -528,6 +522,7 @@ function goDashboard(){
 </script>
 </body>
 </html>
+
 
 
 
