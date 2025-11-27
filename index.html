@@ -158,11 +158,11 @@
       localStorage.setItem('cahayaCurrentUser', JSON.stringify(found));
 
       if (found.role === 'guru') {
-        window.location.href = 'guru/dashboard.html';
+        window.location.href = 'guru/fitur.html';
       } else if (found.role === 'naqib') {
         window.location.href = 'naqib/dashboard.html';
       } else if (found.role === 'admin') {
-        window.location.href = 'admin/dashboard.html';
+        window.location.href = 'admin/index.html';
       } else {
         alert('Role tidak dikenali!');
       }
