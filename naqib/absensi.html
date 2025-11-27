@@ -135,7 +135,12 @@
 
     tr:nth-child(even) { background: #f9fafb; }
     tr:hover { background: #eff6ff; transition: 0.2s; }
-    tr.active-row { background: #dbeafe; }
+
+    /* Warna status baris */
+    tr.status-hadir  { background: #dcfce7 !important; } /* hijau muda */
+    tr.status-izin   { background: #dbeafe !important; } /* biru muda */
+    tr.status-sakit  { background: #fef9c3 !important; } /* kuning lembut */
+    tr.status-alfa   { background: #fee2e2 !important; } /* merah muda */
 
     input[type="radio"] {
       accent-color: var(--primary);
@@ -181,12 +186,10 @@
       margin-top: 4px;
     }
 
-    /* === RESPONSIVE === */
     @media (max-width: 700px) {
       main { padding: 16px; }
-      th, td { padding: 8px; }
-      header h1 { font-size: 1rem; }
       table { font-size: 0.85rem; }
+      th, td { padding: 8px; }
       .table-container { overflow-x: scroll; }
     }
   </style>
@@ -255,7 +258,6 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-
   const currentUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
   const programHarian = [
@@ -328,19 +330,27 @@
         <td><input type="radio" name="s_${i}" value="Sakit"></td>
         <td><input type="radio" name="s_${i}" value="Alfa"></td>`;
       tbody.appendChild(tr);
+      tr.classList.add('status-hadir'); // default
 
-      // efek baris aktif
       tr.querySelectorAll('input').forEach(r => {
         r.addEventListener('change', () => {
-          document.querySelectorAll('tr').forEach(row => row.classList.remove('active-row'));
-          tr.classList.add('active-row');
+          tr.classList.remove('status-hadir','status-izin','status-sakit','status-alfa');
+          if (r.value === "Hadir") tr.classList.add('status-hadir');
+          if (r.value === "Izin") tr.classList.add('status-izin');
+          if (r.value === "Sakit") tr.classList.add('status-sakit');
+          if (r.value === "Alfa") tr.classList.add('status-alfa');
         });
       });
     });
   }
 
   window.markAll = function() {
-    document.querySelectorAll('input[value="Hadir"]').forEach(r => r.checked = true);
+    document.querySelectorAll('input[value="Hadir"]').forEach(r => {
+      r.checked = true;
+      const tr = r.closest('tr');
+      tr.classList.remove('status-izin','status-sakit','status-alfa');
+      tr.classList.add('status-hadir');
+    });
   };
 
   window.simpan = function() {
