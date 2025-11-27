@@ -460,49 +460,39 @@
     });
   }
 
-  // === NARASI OTOMATIS FORMAL (MENYEBUT NAMA SANTRI) ===
-  function buatNarasi(dimLabel, dimKey, namaSantri) {
-    const selects = document.querySelectorAll(`.perk-skor[data-dim="${dimKey}"]`);
-    if (!selects.length) {
-      return `Belum terdapat asesmen pada dimensi ${dimLabel} untuk Ananda ${namaSantri}.`;
-    }
-
-    const data = [];
-    selects.forEach(sel => {
-      const row = sel.closest("tr");
-      if (!row) return;
-      const indikator = row.children[0].innerText.trim();
-      const skor = parseInt(sel.value, 10) || 0;
-      data.push({ indikator, skor });
-    });
-
-    if (!data.length) {
-      return `Belum terdapat asesmen pada dimensi ${dimLabel} untuk Ananda ${namaSantri}.`;
-    }
-
-    const total = data.reduce((s, x) => s + x.skor, 0);
-    const avg = total / data.length;
-
-    let tingkat;
-    if (avg < 0.75) {
-      tingkat = "masih rendah dan memerlukan pendampingan intensif";
-    } else if (avg < 1.5) {
-      tingkat = "pada kategori berkembang awal";
-    } else if (avg < 2.5) {
-      tingkat = "pada kategori berkembang baik";
-    } else {
-      tingkat = "pada kategori sangat baik dan relatif konsisten";
-    }
-
-    let maxItem = data[0];
-    let minItem = data[0];
-    data.forEach(it => {
-      if (it.skor > maxItem.skor) maxItem = it;
-      if (it.skor < minItem.skor) minItem = it;
-    });
-
-    return `Pada dimensi ${dimLabel}, Ananda ${namaSantri} menunjukkan tingkat perkembangan ${tingkat} dengan rata-rata skor ${avg.toFixed(2)}. Indikator yang relatif sudah kuat adalah "${maxItem.indikator}", sedangkan indikator yang masih perlu mendapat perhatian khusus adalah "${minItem.indikator}". Secara keseluruhan, konsistensi perilaku Ananda ${namaSantri} masih perlu dijaga melalui pembiasaan yang terstruktur, umpan balik yang jelas, dan kolaborasi antara Naqib, guru, serta orang tua.`;
+  // === NARASI OTOMATIS EMPATIK & EVALUATIF (tanpa skor rata-rata) ===
+function buatNarasi(dimLabel, dimKey, namaSantri) {
+  const selects = document.querySelectorAll(`.perk-skor[data-dim="${dimKey}"]`);
+  if (!selects.length) {
+    return `Belum terdapat asesmen pada dimensi ${dimLabel} untuk Ananda ${namaSantri}.`;
   }
+
+  const data = [];
+  selects.forEach(sel => {
+    const row = sel.closest("tr");
+    if (!row) return;
+    const indikator = row.children[0].innerText.trim();
+    const skor = parseInt(sel.value, 10) || 0;
+    data.push({ indikator, skor });
+  });
+
+  if (!data.length) {
+    return `Belum terdapat asesmen pada dimensi ${dimLabel} untuk Ananda ${namaSantri}.`;
+  }
+
+  // Ambil indikator terkuat dan terlemah
+  const maxItem = data.reduce((a, b) => (a.skor > b.skor ? a : b));
+  const minItem = data.reduce((a, b) => (a.skor < b.skor ? a : b));
+
+  // Tentukan kalimat evaluatif utama
+  let pembuka = `Pada dimensi ${dimLabel}, Ananda ${namaSantri} menunjukkan perkembangan yang mulai tampak dalam perilaku sehari-hari. `;
+  let pujian = `Aspek "${maxItem.indikator}" sudah terlihat berkembang dan menjadi kekuatan yang patut dipertahankan. `;
+  let perbaikan = `Sementara itu, indikator "${minItem.indikator}" masih memerlukan perhatian lebih agar menjadi kebiasaan yang konsisten. `;
+  let penutup = `Diharapkan Ananda ${namaSantri} terus mengasah kebiasaan positif tersebut melalui pembiasaan terarah, keteladanan, dan tanggung jawab pribadi.`;
+
+  return pembuka + pujian + perbaikan + penutup;
+}
+
 
   // === SIMPAN KE FIREBASE ===
   function simpanPerkembanganCahaya() {
@@ -593,3 +583,4 @@
 
 </body>
 </html>
+
