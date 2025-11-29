@@ -5,79 +5,191 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CAHAYA APP - Portal Utama</title>
   <link rel="icon" type="image/png" href="logofi.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --green-dark: #134e4a;
+      --green-light: #0f766e;
+      --yellow: #facc15;
+    }
     body {
       font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #0f766e, #134e4a);
-      display: flex; justify-content: center; align-items: center;
-      height: 100vh; margin: 0; color: white;
+      background: linear-gradient(135deg, var(--green-light), var(--green-dark));
+      color: white;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
-    .login-box {
-      background: rgba(255,255,255,0.1);
-      padding: 40px 36px;
-      border-radius: 20px;
+
+    /* === SPLASH SCREEN === */
+    #splash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--green-dark);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 10;
+      animation: fadeOut 2s ease forwards;
+      animation-delay: 2.3s;
+    }
+    #splash img {
+      width: 100px;
+      animation: zoomIn 1.5s ease;
+    }
+    #splash h1 {
+      margin: 10px 0 4px;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+    #splash p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    @keyframes zoomIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* === HEADER LOGO === */
+    .logo-area {
       text-align: center;
-      width: 90%; max-width: 380px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      backdrop-filter: blur(10px);
+      margin-bottom: 16px;
     }
-    img { width: 90px; margin-bottom: 12px; }
-    h2 { margin: 10px 0 5px; }
-    p { font-size: 0.9rem; opacity: 0.8; margin-bottom: 16px; }
-    input {
-      width: 100%; padding: 10px; margin-bottom: 12px;
-      border: none; border-radius: 10px;
-      font-size: 14px; background: rgba(255,255,255,0.95); color: #111;
+    .logo-area img {
+      width: 70px;
+      margin-bottom: 10px;
     }
-    button {
-      background: #facc15; color: #1f2937; border: none; border-radius: 10px;
-      width: 100%; padding: 10px; font-weight: bold; cursor: pointer; transition: 0.2s;
+    .logo-area h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
     }
-    button:hover { background: #fde68a; }
-    footer { text-align: center; margin-top: 20px; font-size: 0.8rem; opacity: 0.8; }
+    .logo-area p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    /* === LOGIN BOX === */
+    .login-box {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+      animation: slideUp 0.8s ease 2.2s both;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #111;
+    }
+
+    .login-box button {
+      background: var(--yellow);
+      color: #1f2937;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      padding: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .login-box button:hover {
+      background: #fde68a;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .logo-area h1 { font-size: 1.3rem; }
+      .logo-area p { font-size: 0.85rem; }
+    }
   </style>
 </head>
 
 <body>
-  <div class="login-box">
-    <img src="logofi.png" alt="Logo Pesantren" />
-    <h2>CAHAYA APP</h2>
+  <!-- SPLASH LOGO -->
+  <div id="splash">
+    <img src="logofi.png" alt="Logo Cahaya App">
+    <h1>CAHAYA APP</h1>
     <p>Pesantren Cahaya Fajrul Islam</p>
+  </div>
 
+  <!-- HEADER -->
+  <div class="logo-area">
+    <img src="logofi.png" alt="Logo">
+    <h1>CAHAYA APP</h1>
+    <p>Pesantren Cahaya Fajrul Islam</p>
+  </div>
+
+  <!-- LOGIN BOX -->
+  <div class="login-box">
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Masuk</button>
-
-    <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
 
+  <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
+
   <script>
-    /* =======================
-       DATA LOGIN PETUGAS
-    ======================= */
+    /* === PETUGAS === */
     const users = [
-      // === GURU ===
       { username: "multazam", password: "guru123", role: "guru", label: "Abah Multazam Zakaria" },
       { username: "alvin", password: "guru123", role: "guru", label: "Mu'allim Alvin Dwianto" },
+      { username: "alzam", password: "guru123", role: "guru", label: "Mu'alim Alzam Abdullah" },
       { username: "haidar", password: "guru123", role: "guru", label: "Mu'allim Haidar" },
-      { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
-      { username: "kamal", password: "guru123", role: "guru", label: "Mu'allim Kamal" },
       { username: "faiq", password: "guru123", role: "guru", label: "Mu'allim Faiq" },
+      { username: "shafwan", password: "guru123", role: "guru", label: "Mu'allim Shafwan" },
+      { username: "favian", password: "guru123", role: "guru", label: "Mu'allim Favian" },
+      { username: "khaizuran", password: "guru123", role: "guru", label: "Mu'allim Khaizuran" },
+      { username: "mulia", password: "guru123", role: "guru", label: "Mu'allim Mulia" },
+      { username: "fahmi", password: "guru123", role: "guru", label: "Mu'allim Fahmi" },
+      { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
       { username: "fatimah", password: "guru123", role: "guru", label: "Mu'allimah Fatimah" },
+      { username: "kamal", password: "guru123", role: "guru", label: "Mu'allim Kamal" },
+      { username: "evita", password: "guru123", role: "guru", label: "Mrs Evita" },
 
-      // === NAQIB ===
       { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas Bayu Aditya", naqibName: "Dimas" },
       { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen Prayitno", naqibName: "Regen" },
-      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
+      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian", naqibName: "Favian" },
       { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
+      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal", naqibName: "Kamal" },
+      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
+      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" },
 
-      // === ADMIN ===
-      { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" },
+      { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
     ];
 
-    /* =======================
-       DATA LOGIN WALISANTRI
-    ======================= */
+    /* === WALISANTRI === */
     const waliList = [
       {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
       {nama:"Juanda Nur Ilham",username:"juanda491",password:"Cahaya@1049"},
@@ -204,9 +316,6 @@
       {nama:"Fitrah Kirana",username:"fitrah607",password:"Cahaya@7839"}
     ];
 
-    /* =======================
-       LOGIN FUNCTION
-    ======================= */
     function login() {
       const u = username.value.trim().toLowerCase();
       const p = password.value.trim();
@@ -231,9 +340,7 @@
       }
     }
 
-    /* =======================
-       AUTO LOGIN
-    ======================= */
+    // AUTO LOGIN — hanya aktif jika belum logout
     (function autoLogin() {
       const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
       if (!user) return;
