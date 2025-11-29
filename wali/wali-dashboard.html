@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Wali Santri - CAHAYA APP</title>
-
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -18,7 +17,7 @@
     .welcome-slide {
       background: linear-gradient(90deg, #0d9488, #0f766e);
       color: white;
-      padding: 16px 18px;
+      padding: 12px 18px;
       border-radius: 12px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       margin-bottom: 15px;
@@ -32,28 +31,13 @@
       flex-wrap: wrap;
     }
     .logo-slide {
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       object-fit: contain;
       border-radius: 50%;
       background: white;
       padding: 4px;
     }
-    .slide-text h2 {
-      margin: 0;
-      line-height: 1.3;
-      font-size: 1.4rem;
-    }
-    .slide-text b {
-      font-size: 1.6rem;
-      display: block;
-    }
-    .slide-text p {
-      margin-top: 4px;
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
-
     .dashboard {
       max-width: 900px;
       margin: auto;
@@ -70,11 +54,6 @@
     #greeting {
       font-size: 1rem;
       margin-bottom: 12px;
-      line-height: 1.4;
-    }
-    #greeting b {
-      display: block;
-      font-size: 1.1rem;
     }
 
     /* === MENU === */
@@ -118,8 +97,10 @@
       margin-bottom: 12px;
       text-align: center;
     }
-    .toolbar input,
-    .toolbar select {
+    .toolbar label {
+      font-weight: 500;
+    }
+    .toolbar input {
       background: rgba(255, 255, 255, 0.2);
       border: none;
       border-radius: 6px;
@@ -143,7 +124,7 @@
       background: #115e59;
     }
 
-    /* === CARD & TABLE (HARIAN) === */
+    /* === CARD & TABLE === */
     .card {
       border-radius: 12px;
       padding: 16px;
@@ -151,22 +132,15 @@
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
       overflow-x: auto;
     }
-    .card.green  { background: rgba(34, 197, 94, 0.15); }
-    .card.blue   { background: rgba(59, 130, 246, 0.15); }
+    .card.green { background: rgba(34, 197, 94, 0.15); }
+    .card.blue { background: rgba(59, 130, 246, 0.15); }
     .card.purple { background: rgba(147, 51, 234, 0.15); }
-    .card.red    { background: rgba(239, 68, 68, 0.15); }
-
-    .card h2 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 1rem;
-    }
+    .card.red { background: rgba(239, 68, 68, 0.15); }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
-      table-layout: fixed;
     }
     th, td {
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -178,109 +152,20 @@
       background: rgba(255, 255, 255, 0.15);
     }
 
-    /* === STATUS BOX (HARIAN) === */
+    /* === STATUS BADGE === */
     .status-box {
       display: inline-block;
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.8rem;
       color: white;
       text-align: center;
       min-width: 60px;
     }
-    .status-hadir { background: #16a34a; }
-    .status-izin  { background: #0ea5e9; }
-    .status-sakit { background: #eab308; color: #111827; }
-    .status-alfa  { background: #dc2626; }
-
-    /* === LAPORAN BULANAN (PUTIH) === */
-    .laporan-wrapper {
-      max-width: 900px;
-      margin: 10px auto 0;
-      background: #f9fafb;
-      color: #111827;
-      border-radius: 16px;
-      padding: 20px 18px 24px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-    }
-    .laporan-header {
-      text-align: center;
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 10px;
-      margin-bottom: 16px;
-    }
-    .laporan-header h1 {
-      margin: 0;
-      font-size: 1.15rem;
-      letter-spacing: 0.03em;
-    }
-    .laporan-header h2 {
-      margin: 6px 0 4px;
-      font-size: 0.95rem;
-    }
-    .laporan-header h3 {
-      margin: 4px 0 8px;
-      font-size: 1rem;
-    }
-    .laporan-header p {
-      margin: 0;
-      font-size: 0.8rem;
-      color: #4b5563;
-    }
-    .dimensi-box {
-      background: #ffffff;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      font-size: 0.82rem;
-    }
-    .dimensi-title {
-      margin: 12px 0 6px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #0f766e;
-    }
-    .laporan-wrapper table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 0.8rem;
-      margin-top: 6px;
-    }
-    .laporan-wrapper th,
-    .laporan-wrapper td {
-      border: 1px solid #e5e7eb;
-      padding: 6px;
-      text-align: left;
-      color: #111827;
-    }
-    .laporan-wrapper th {
-      background: #eef2ff;
-      font-weight: 700;
-    }
-    .laporan-section-title {
-      margin-top: 14px;
-      margin-bottom: 4px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #0f766e;
-    }
-    .muted {
-      color: #6b7280;
-      font-size: 0.8rem;
-    }
-    .btn-export-pdf {
-      background: #2563eb;
-      border: none;
-      padding: 9px 16px;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      margin-top: 14px;
-    }
+    .hadir { background: #16a34a; }
+    .izin { background: #0ea5e9; }
+    .sakit { background: #eab308; color: #111; }
+    .alfa { background: #dc2626; }
 
     /* === BUTTON BAWAH === */
     .bottom-buttons {
@@ -317,8 +202,8 @@
     @media (max-width: 600px) {
       header h1 { font-size: 1.3rem; }
       .toolbar { flex-direction: row; gap: 5px; }
-      .toolbar input,
-      .toolbar select { font-size: 0.85rem; }
+      .toolbar label { display: none; }
+      .toolbar input { font-size: 0.85rem; }
       .toolbar button { font-size: 0.85rem; padding: 6px 10px; }
     }
   </style>
@@ -326,46 +211,38 @@
 
 <body>
 <div class="dashboard">
-  <!-- SLIDE -->
   <div class="welcome-slide">
     <div class="slide-content">
       <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
-      <div class="slide-text">
-        <h2>Selamat Datang di<br><b>Cahaya App</b></h2>
+      <div>
+        <h2>Selamat Datang di <b>Cahaya App</b></h2>
         <p>Pesantren Cahaya Fajrul Islam</p>
       </div>
     </div>
   </div>
 
-  <!-- HEADER -->
   <header>
     <h1>📊 Dashboard Wali Santri</h1>
     <div id="greeting"></div>
   </header>
 
-  <!-- MENU -->
   <div class="menu-grid">
     <div class="menu-card" id="btnHarian">
-      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
       <h4>Progres Harian</h4>
     </div>
     <div class="menu-card" id="btnBulanan">
-      <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="">
+      <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
       <h4>Progres Bulanan</h4>
     </div>
   </div>
 
-  <!-- FILTER -->
   <div class="toolbar" id="filterToolbar"></div>
 
-  <!-- ISI -->
   <main id="content">
-    <p style="text-align:center;opacity:0.8;">
-      Klik salah satu menu di atas untuk melihat progres santri.
-    </p>
+    <p style="text-align:center;opacity:0.8;">Klik salah satu menu di atas untuk melihat progres santri.</p>
   </main>
 
-  <!-- BUTTON BAWAH -->
   <div class="bottom-buttons">
     <button onclick="scrollToTop()">⬆️ Kembali ke Atas</button>
     <button class="logout" onclick="logoutWali()">Keluar</button>
@@ -374,16 +251,11 @@
   <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
 </div>
 
-<!-- LIBRARY UNTUK EXPORT PDF (UNTUK PROGRES BULANAN) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script type="module">
   import { checkWaliLogin, logoutWali } from './wali-script.js';
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  /* === FIREBASE === */
   const app = initializeApp({
     apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
     authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -393,24 +265,19 @@
     messagingSenderId: "739928369926",
     appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
   });
-  const db  = getDatabase(app);
-  const dbRef = ref(db);
+  const db = getDatabase(app);
 
-  /* === CEK LOGIN WALI === */
   const user = checkWaliLogin();
   if (!user) window.location.href = "../index.html";
-  document.getElementById("greeting").innerHTML =
-    `👋 Assalamu’alaikum Ayah/Bunda<br><b>${user.namaAnak}</b>`;
+  document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
 
   const content = document.getElementById("content");
   const toolbar = document.getElementById("filterToolbar");
 
-  /* === EVENT MENU HARIAN === */
   document.getElementById("btnHarian").addEventListener("click", () => {
     toolbar.style.display = "flex";
     toolbar.innerHTML = `
-      <input type="date" id="tanggal"
-             value="${new Date().toISOString().split("T")[0]}" />
+      <input type="date" id="tanggal" value="${new Date().toISOString().split("T")[0]}" />
       <button id="lihatProgres">Lihat Progres</button>
     `;
     document.getElementById("lihatProgres").onclick = () => {
@@ -418,16 +285,13 @@
       if (!tgl) return alert("Pilih tanggal terlebih dahulu.");
       loadProgresHarian(tgl);
     };
-    content.innerHTML =
-      `<p style="text-align:center;">Silakan pilih tanggal, lalu klik "Lihat Progres".</p>`;
+    content.innerHTML = `<p style="text-align:center;">Silakan pilih tanggal, lalu klik "Lihat Progres".</p>`;
   });
 
-  /* === EVENT MENU BULANAN === */
   document.getElementById("btnBulanan").addEventListener("click", () => {
     toolbar.style.display = "flex";
     toolbar.innerHTML = `
-      <input type="month" id="bulan"
-             value="${new Date().toISOString().slice(0,7)}" />
+      <input type="month" id="bulan" value="${new Date().toISOString().slice(0,7)}" />
       <button id="lihatProgresBulanan">Lihat Progres</button>
     `;
     document.getElementById("lihatProgresBulanan").onclick = () => {
@@ -435,11 +299,9 @@
       if (!bln) return alert("Pilih bulan terlebih dahulu.");
       loadProgresBulanan(bln);
     };
-    content.innerHTML =
-      `<p style="text-align:center;">Silakan pilih bulan, lalu klik "Lihat Progres".</p>`;
+    content.innerHTML = `<p style="text-align:center;">Silakan pilih bulan, lalu klik "Lihat Progres".</p>`;
   });
 
-  /* ========== PROGRES HARIAN ========== */
   async function loadProgresHarian(tanggal) {
     const nama = user.namaAnak.toUpperCase().trim();
     content.innerHTML = `
@@ -448,63 +310,20 @@
       <div class="card purple"><h2>📖 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
       <div class="card red"><h2>⚠️ Pelanggaran</h2><div id="pelanggaran">Memuat...</div></div>
     `;
-    await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog",  "program", "status");
-    await loadData("cahaya_app/absensi_pembelajaran",   tanggal, nama, "pemb", "mapel",   "status");
-    await loadData("cahaya_app/setoran_tahfiz",         tanggal, nama, "tahfiz","setoran","nilai");
+    await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog", "program", "status");
+    await loadData("cahaya_app/absensi_pembelajaran", tanggal, nama, "pemb", "mapel", "status");
+    await loadData("cahaya_app/setoran_tahfiz", tanggal, nama, "tahfiz", "setoran", "nilai");
     await loadPelanggaran(tanggal, nama);
-  }
-
-  async function loadData(path, tanggal, nama, targetId, col1, col2) {
-    const target = document.getElementById(targetId);
-    try {
-      const snap = await get(child(dbRef, path));
-      let html = `<table><tr><th>${capitalize(col1)}</th><th>${capitalize(col2)}</th></tr>`;
-      if (snap.exists()) {
-        Object.values(snap.val()).forEach(d => {
-          if (d.tanggal === tanggal && d.data) {
-            d.data.forEach(s => {
-              if (s.nama?.trim().toUpperCase() === nama) {
-                const value = s[col2] || d[col2] || "-";
-                const valLower = (value || "").toString().toLowerCase();
-                let statusClass = "";
-                if (valLower.includes("hadir")) statusClass = "status-hadir";
-                else if (valLower.includes("izin")) statusClass = "status-izin";
-                else if (valLower.includes("sakit")) statusClass = "status-sakit";
-                else if (valLower.includes("alfa"))  statusClass = "status-alfa";
-
-                const displayVal = statusClass
-                  ? `<span class="status-box ${statusClass}">${value}</span>`
-                  : value;
-
-                html += `<tr>
-                  <td>${s[col1] || d[col1] || "-"}</td>
-                  <td>${displayVal}</td>
-                </tr>`;
-              }
-            });
-          }
-        });
-      }
-      html += "</table>";
-      target.innerHTML = html.includes("<tr><td") ? html : "Belum ada data.";
-    } catch (e) {
-      target.textContent = "❌ Gagal memuat data: " + e.message;
-    }
   }
 
   async function loadPelanggaran(tanggal, nama) {
     const target = document.getElementById("pelanggaran");
     try {
-      const snap = await get(child(dbRef, "cahaya_app/pelanggaran_santri"));
-      if (!snap.exists()) {
-        target.textContent = "Belum ada data pelanggaran.";
-        return;
-      }
-      let html = `<table>
-        <tr>
-          <th>Pelanggaran</th><th>Kategori</th>
-          <th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th>
-        </tr>`;
+      const snap = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
+      if (!snap.exists()) return target.textContent = "Belum ada data pelanggaran.";
+      let html = `<table><tr>
+        <th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th>
+      </tr>`;
       let ditemukan = false;
       Object.values(snap.val()).forEach(p => {
         if (p.tanggal === tanggal && p.santri?.trim().toUpperCase() === nama) {
@@ -527,376 +346,41 @@
     }
   }
 
-  /* ========== PROGRES BULANAN ========== */
-
-  function parseDate(s){
-    if(!s) return null;
-    const p = s.split("-");
-    return new Date(+p[0], +p[1]-1, +p[2]);
-  }
-  function isSameMonthYear(tgl, b, t){
-    const d = parseDate(tgl);
-    return d && d.getMonth() === b && d.getFullYear() === t;
-  }
-
-  function hitungKehadiranGabungan(namaUpper, bulan, tahun, absensiNaqib, absensiGuru) {
-    const kehadiran = {};
-    function tambah(prog, status) {
-      if (!kehadiran[prog])
-        kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
-      const s = (status || "").toLowerCase();
-      if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
-      kehadiran[prog].total++;
-    }
-
-    absensiNaqib.forEach(log => {
-      if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-      (log.data || []).forEach(d => {
-        if ((d.nama || "").toUpperCase() === namaUpper)
-          tambah(log.program || "Program Harian", d.status);
-      });
-    });
-
-    absensiGuru.forEach(log => {
-      if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-      (log.data || []).forEach(d => {
-        if ((d.nama || "").toUpperCase() === namaUpper)
-          tambah(log.mapel || "KBM", d.status);
-      });
-    });
-
-    const result = Object.entries(kehadiran).map(([prog, v], i) => {
-      const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
-      return {
-        no: i + 1,
-        program: prog,
-        hadir: toP(v.hadir),
-        izin: toP(v.izin),
-        sakit: toP(v.sakit),
-        alfa: toP(v.alfa)
-      };
-    });
-
-    if (result.length) {
-      const avg = x => Math.round(result.reduce((s,r)=>s + r[x],0) / result.length);
-      result.push({
-        no: "",
-        program: "<b>Rata-rata</b>",
-        hadir: avg("hadir"),
-        izin: avg("izin"),
-        sakit: avg("sakit"),
-        alfa: avg("alfa")
-      });
-    }
-    return result;
-  }
-
-  async function loadProgresBulanan(bulanStr) {
-    const namaSantri = user.namaAnak.trim();
-    const [tahunStr, bulanNumStr] = bulanStr.split("-");
-    const tahun = parseInt(tahunStr);
-    const bulan = parseInt(bulanNumStr) - 1;
-    const namaUpper = namaSantri.toUpperCase();
-
-    content.innerHTML = `
-      <div class="card blue">
-        <h2>📊 Laporan Bulanan Santri</h2>
-        <p>Sedang memuat laporan ${namaSantri}...</p>
-      </div>
-    `;
-
+  async function loadData(path, tanggal, nama, targetId, col1, col2) {
+    const target = document.getElementById(targetId);
     try {
-      const [
-        assesGuruSnap,
-        assesNaqibSnap,
-        absNaqibSnap,
-        absKbmSnap,
-        ujianSnap,
-        tahfizSnap,
-        pelanggaranSnap
-      ] = await Promise.all([
-        get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
-        get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
-        get(child(dbRef, "cahaya_app/absensi_program_harian")),
-        get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
-        get(child(dbRef, "cahaya_app/nilai_ujian")),
-        get(child(dbRef, "cahaya_app/setoran_tahfiz")),
-        get(child(dbRef, "cahaya_app/pelanggaran_santri")),
-      ]);
-
-      const data = {
-        assesmentGuru: assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [],
-        assesmentNaqib: assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [],
-        absensiNaqib:  absNaqibSnap.exists()  ? Object.values(absNaqibSnap.val())  : [],
-        absensiKbm:    absKbmSnap.exists()    ? Object.values(absKbmSnap.val())    : [],
-        ujian:         ujianSnap.exists()     ? Object.values(ujianSnap.val())     : [],
-        tahfiz:        tahfizSnap.exists()    ? Object.values(tahfizSnap.val())    : [],
-        pelanggaranAll:pelanggaranSnap.exists()?Object.values(pelanggaranSnap.val()):[],
-      };
-
-      const bulanNama = [
-        "Januari","Februari","Maret","April","Mei","Juni",
-        "Juli","Agustus","September","Oktober","November","Desember"
-      ][bulan];
-
-      // --- ambil assesmen terbaru ---
-      const asesGuru = data.assesmentGuru
-        .filter(a => a.namaSantri === namaSantri &&
-                     isSameMonthYear(a.tgl || a.tanggal, bulan, tahun))
-        .at(-1) || {};
-
-      const asesNaqib = data.assesmentNaqib
-        .filter(a => a.namaSantri === namaSantri &&
-                     isSameMonthYear(a.tgl || a.tanggal, bulan, tahun))
-        .at(-1) || {};
-
-      const narasiSpiritual =
-        asesGuru.narasiSpiritual  || asesGuru.catatanSpiritual ||
-        "Belum ada catatan asesmen Cinta Allah (Spiritual) bulan ini.";
-      const narasiIntellectual =
-        asesGuru.narasiIntellectual || asesGuru.catatanAkal ||
-        "Belum ada catatan asesmen Akal Cerdas (Intellectual) bulan ini.";
-      const narasiRel =
-        asesNaqib.narasiRelational || asesNaqib.catatanRelasi ||
-        "Belum ada catatan dimensi Akhlak Mulia (Relational) bulan ini.";
-      const narasiEmo =
-        asesNaqib.narasiEmotional || asesNaqib.catatanHati ||
-        "Belum ada catatan dimensi Hati Bersih (Emotional) bulan ini.";
-      const narasiFis =
-        asesNaqib.narasiPhysical || asesNaqib.catatanFisik ||
-        "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
-
-      const namaNaqib = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
-
-      const hadir = hitungKehadiranGabungan(
-        namaUpper, bulan, tahun,
-        data.absensiNaqib, data.absensiKbm
-      );
-
-      // nilai ujian
-      const nilaiUjian = data.ujian
-        .filter(u => (u.santri || "").toLowerCase() === namaSantri.toLowerCase() &&
-                     isSameMonthYear(u.tanggal, bulan, tahun))
-        .filter((u,i,self) =>
-          i === self.findIndex(x =>
-            x.santri === u.santri &&
-            x.mapel  === u.mapel &&
-            x.materi === u.materi &&
-            x.tanggal=== u.tanggal
-          )
-        );
-      let rataUjian = 0;
-      if (nilaiUjian.length) {
-        rataUjian = Math.round(
-          nilaiUjian.reduce((s,u)=>s + (+u.nilai || 0), 0) / nilaiUjian.length
-        );
+      const snap = await get(child(ref(db), path));
+      let html = `<table><tr><th>${capitalize(col1)}</th><th>${capitalize(col2)}</th></tr>`;
+      if (snap.exists()) {
+        Object.values(snap.val()).forEach(d => {
+          if (d.tanggal === tanggal && d.data) {
+            d.data.forEach(s => {
+              if (s.nama?.trim().toUpperCase() === nama) {
+                const val = (s[col2] || d[col2] || "-").toLowerCase();
+                const statusClass = val.includes("hadir") ? "hadir" :
+                                    val.includes("izin") ? "izin" :
+                                    val.includes("sakit") ? "sakit" :
+                                    val.includes("alfa") ? "alfa" : "";
+                html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td><span class="status-box ${statusClass}">${s[col2]}</span></td></tr>`;
+              }
+            });
+          }
+        });
       }
-
-      // tahfiz
-      const dataTahfiz = data.tahfiz
-        .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-        .flatMap(t => t.data || [])
-        .filter(d => d.nama === namaSantri);
-
-      // pelanggaran
-      const pelanggaran = data.pelanggaranAll
-        .filter(p => p.santri === namaSantri &&
-                     isSameMonthYear(p.tanggal, bulan, tahun));
-
-      // --- susun HTML laporan bulanan ---
-      const wrap = document.createElement("div");
-      wrap.className = "laporan-wrapper";
-      wrap.id = "laporanBulanan";
-
-      wrap.innerHTML = `
-        <div class="laporan-header">
-          <h1>📄 LAPORAN BULANAN SANTRI</h1>
-          <h2>PESANTREN CAHAYA FAJRUL ISLAM</h2>
-          <h3>${namaUpper}</h3>
-          <p>Bulan ${bulanNama} ${tahun} &mdash; Naqib: ${namaNaqib}</p>
-        </div>
-
-        <div class="dimensi-title">🌈 Dimensi CAHAYA</div>
-        <div class="dimensi-box">🕋 <b>Cinta Allah (Spiritual):</b><br>${narasiSpiritual}</div>
-        <div class="dimensi-box">🤝 <b>Akhlak Mulia (Relational):</b><br>${narasiRel}</div>
-        <div class="dimensi-box">💓 <b>Hati Bersih (Emotional):</b><br>${narasiEmo}</div>
-        <div class="dimensi-box">🧠 <b>Akal Cerdas (Intellectual):</b><br>${narasiIntellectual}</div>
-        <div class="dimensi-box">🏃‍♂️ <b>Fisik Berdaya (Physical):</b><br>${narasiFis}</div>
-
-        <div class="laporan-section-title">📊 Laporan Kehadiran</div>
-        ${
-          hadir.length ? `
-          <table>
-            <thead>
-              <tr>
-                <th>No</th><th>Program</th>
-                <th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${hadir.map(r => `
-                <tr>
-                  <td>${r.no}</td>
-                  <td>${r.program}</td>
-                  <td style="color:#16a34a;">${r.hadir}%</td>
-                  <td style="color:#0ea5e9;">${r.izin}%</td>
-                  <td style="color:#eab308;">${r.sakit}%</td>
-                  <td style="color:#dc2626;">${r.alfa}%</td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>` :
-          `<p class="muted">Belum ada data kehadiran bulan ini.</p>`
-        }
-
-        <div class="laporan-section-title">🧾 Laporan Nilai Ujian</div>
-        ${
-          nilaiUjian.length ? `
-          <table>
-            <thead>
-              <tr>
-                <th>No</th><th>Mata Pelajaran</th>
-                <th>Materi</th><th>Nilai</th><th>Keterangan</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${
-                nilaiUjian.map((u,i)=>`
-                  <tr>
-                    <td>${i+1}</td>
-                    <td>${u.mapel || "-"}</td>
-                    <td>${u.materi || "-"}</td>
-                    <td>${u.nilai || "-"}</td>
-                    <td>${u.nilai >= 75 ? "✅ Tuntas" : "❌ Belum Tuntas"}</td>
-                  </tr>
-                `).join("")
-              }
-              <tr>
-                <td colspan="3"><b>Rata-rata</b></td>
-                <td colspan="2">${rataUjian}</td>
-              </tr>
-            </tbody>
-          </table>` :
-          `<p class="muted">Belum ada data ujian bulan ini.</p>`
-        }
-
-        <div class="laporan-section-title">📖 Laporan Setoran Tahfiz</div>
-        ${
-          dataTahfiz.length ? `
-          <table>
-            <thead>
-              <tr>
-                <th>No</th><th>Setoran</th>
-                <th>Kesalahan</th><th>Nilai</th><th>Keterangan</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${
-                dataTahfiz.map((d,i)=>`
-                  <tr>
-                    <td>${i+1}</td>
-                    <td>${d.surat || d.setoran || "-"}</td>
-                    <td>${d.kesalahan || "-"}</td>
-                    <td>${d.nilai || "-"}</td>
-                    <td>${d.keterangan || "-"}</td>
-                  </tr>
-                `).join("")
-              }
-            </tbody>
-          </table>` :
-          `<p class="muted">Belum ada setoran tahfiz bulan ini.</p>`
-        }
-
-        <div class="laporan-section-title">⚠️ Laporan Pelanggaran</div>
-        ${
-          pelanggaran.length ? `
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Nama Pelanggaran</th>
-                <th>Kategori</th>
-                <th>Keterangan / Kronologi</th>
-                <th>Tindak Lanjut</th>
-                <th>Konsekuensi</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${
-                pelanggaran.map((p,i)=>`
-                  <tr>
-                    <td>${i+1}</td>
-                    <td>${p.tanggal || "-"}</td>
-                    <td>${p.namaPelanggaran || "-"}</td>
-                    <td>${p.kategori || "-"}</td>
-                    <td>${p.keterangan || p.ket || "-"}</td>
-                    <td>${p.tindakLanjut || "-"}</td>
-                    <td>${p.konsekuensi || "-"}</td>
-                  </tr>
-                `).join("")
-              }
-            </tbody>
-          </table>` :
-          `<p class="muted">Tidak ada pelanggaran bulan ini.</p>`
-        }
-
-        <div style="text-align:center;">
-          <button class="btn-export-pdf"
-            onclick="exportPDFWali('${namaUpper.replace(/'/g,"\\'")}',
-                                   '${bulanNama}','${tahun}')">
-            ⬇️ Unduh PDF
-          </button>
-        </div>
-      `;
-
-      content.innerHTML = "";
-      content.appendChild(wrap);
-
-    } catch (err) {
-      content.innerHTML =
-        `<div class="card red"><h2>❌ Gagal memuat laporan</h2><p>${err.message}</p></div>`;
-    }
-  }
-
-  /* === UTIL === */
-  function capitalize(str){
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
-  window.scrollToTop = () =>
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-  window.logoutWali = logoutWali;
-
-  /* === EXPORT PDF (GLOBAL UNTUK DIPANGGIL BUTTON) === */
-  window.exportPDFWali = async function(namaUpper, bulanNama, tahun){
-    try {
-      const el = document.getElementById("laporanBulanan");
-      if (!el) {
-        alert("Laporan belum tersedia.");
-        return;
-      }
-      const canvas = await html2canvas(el, {
-        scale: 2,
-        useCORS: true,
-        scrollY: 0
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth  = pageWidth - 20;   // margin 10 mm kiri-kanan
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-      const cleanName = namaUpper.replace(/\s+/g, "_");
-      pdf.save(`Laporan_${cleanName}_${bulanNama}_${tahun}.pdf`);
+      html += "</table>";
+      target.innerHTML = html.includes("<tr><td") ? html : "Belum ada data.";
     } catch (e) {
-      alert("Gagal mengunduh PDF: " + e.message);
+      target.textContent = "❌ Gagal memuat data: " + e.message;
     }
-  };
+  }
+
+  async function loadProgresBulanan(bulan) {
+    content.innerHTML = `<div class='card blue'><h2>📆 Progres Bulanan (${bulan})</h2><p>Rekap bulanan sedang dikembangkan.</p></div>`;
+  }
+
+  function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
+  window.scrollToTop = () => window.scrollTo({top:0,behavior:"smooth"});
+  window.logoutWali = logoutWali;
 </script>
 </body>
 </html>
