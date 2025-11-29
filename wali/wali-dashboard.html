@@ -16,7 +16,6 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Efek muncul konten halaman */
     #content section {
       animation: fadeIn 0.4s ease;
     }
@@ -29,7 +28,6 @@
 
     <!-- MENU GRID -->
     <div class="menu-grid">
-
       <div class="menu-card" onclick="loadPage('laporan-harian.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/3185/3185656.png" alt="">
         <h4>Laporan Harian</h4>
@@ -49,7 +47,6 @@
         <img src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png" alt="">
         <h4>Chat Pengurus</h4>
       </div>
-
     </div>
 
     <!-- TEMPAT MUNCUL KONTEN -->
@@ -68,7 +65,7 @@
       window.location.href = "wali-login.html";
     } else {
       document.getElementById("greeting").innerHTML = 
-        `👋 Assalamu’alaikum Wali <b>${user.namaAnak}</b>`;
+        `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
     }
 
     // === LOAD PAGE TANPA RELOAD ===
@@ -85,7 +82,8 @@
       }
     }
 
-    // === LOGOUT ===
+    // === REGISTRASI KE GLOBAL ===
+    window.loadPage = loadPage;
     window.logoutWali = logoutWali;
   </script>
 </body>
