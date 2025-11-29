@@ -14,7 +14,7 @@
       padding: 0;
     }
 
-    /* === SLIDE WELCOME STATIS === */
+    /* ==== WELCOME SLIDE ==== */
     .welcome-slide {
       background: linear-gradient(90deg, #0d9488, #0f766e);
       color: white;
@@ -24,7 +24,6 @@
       margin-bottom: 15px;
       text-align: center;
     }
-
     .slide-content {
       display: flex;
       align-items: center;
@@ -32,7 +31,6 @@
       gap: 14px;
       flex-wrap: wrap;
     }
-
     .logo-slide {
       width: 42px;
       height: 42px;
@@ -40,127 +38,108 @@
       border-radius: 50%;
       background: white;
       padding: 4px;
-      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
     }
 
-    .text-content h2 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .text-content p {
-      margin: 0;
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
-
-    /* === DASHBOARD === */
+    /* ==== DASHBOARD ==== */
     .dashboard {
       max-width: 900px;
       margin: auto;
-      padding: 10px 20px 40px;
+      padding: 10px 20px 60px;
     }
-
     header {
       text-align: center;
       margin-bottom: 10px;
     }
-
     header h1 {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
     }
-
     #greeting {
       font-size: 1rem;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
-    .logout {
-      background: #dc2626;
+    /* ==== MENU PROGRES ==== */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .menu-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .menu-card:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    .menu-card img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 8px;
+    }
+    .menu-card h4 {
+      margin: 0;
+      font-size: 0.95rem;
       color: white;
+    }
+
+    /* ==== TOOLBAR ==== */
+    .toolbar {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .toolbar input {
+      background: rgba(255, 255, 255, 0.2);
       border: none;
       border-radius: 6px;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      display: inline-block;
+      color: white;
+      padding: 6px 10px;
+    }
+    .toolbar input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
+    /* ==== CARD LAPORAN ==== */
+    .card {
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      overflow-x: auto;
+    }
+    .card h2 {
+      font-size: 1rem;
+      margin-top: 0;
       margin-bottom: 10px;
     }
 
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .menu button {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .menu button.active { background: #0d9488; font-weight: 600; }
-
-    .filter input {
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: none;
-      background: rgba(255,255,255,0.2);
-      color: white;
-    }
-
-    .filter input::-webkit-calendar-picker-indicator { filter: invert(1); }
-
-    .card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-      overflow-x: auto;
-    }
-
-    .card h2 {
-      font-size: 1.05rem;
-      margin: 0 0 10px 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .card.green { background: rgba(34,197,94,0.15); }
+    .card.blue { background: rgba(59,130,246,0.15); }
+    .card.purple { background: rgba(147,51,234,0.15); }
+    .card.red { background: rgba(239,68,68,0.15); }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
-      margin-top: 8px;
       table-layout: fixed;
     }
-
     th, td {
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 6px;
       text-align: left;
       word-wrap: break-word;
     }
-
     th {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.15);
     }
-
     .badge {
       border-radius: 6px;
       padding: 2px 6px;
@@ -168,15 +147,34 @@
       font-weight: 600;
       color: white;
     }
-
     .badge-hadir { background: #16a34a; }
     .badge-izin { background: #0ea5e9; }
     .badge-sakit { background: #eab308; }
     .badge-alfa { background: #dc2626; }
 
-    footer {
+    /* ==== BUTTON BAWAH ==== */
+    .bottom-buttons {
       text-align: center;
       margin-top: 30px;
+    }
+    .bottom-buttons button {
+      background: #0d9488;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+    .bottom-buttons button:hover { background: #115e59; }
+    .bottom-buttons .logout { background: #dc2626; }
+    .bottom-buttons .logout:hover { background: #b91c1c; }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
       font-size: 0.8rem;
       opacity: 0.8;
     }
@@ -184,47 +182,57 @@
     @media (max-width:600px) {
       header h1 { font-size: 1.2rem; }
       #greeting { font-size: 0.9rem; }
-      .toolbar { flex-direction: column; align-items: stretch; }
-      .text-content h2 { font-size: 1rem; }
-      .text-content p { font-size: 0.8rem; }
-      .logo-slide { width: 36px; height: 36px; }
-      .card h2 { font-size: 0.95rem; text-align: center; }
+      .menu-card h4 { font-size: 0.85rem; }
+      .card h2 { text-align: center; }
     }
   </style>
 </head>
 
 <body>
   <div class="dashboard">
-    <!-- === SLIDE WELCOME (STATIS) === -->
+    <!-- === SLIDE === -->
     <div class="welcome-slide">
       <div class="slide-content">
         <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
-        <div class="text-content">
+        <div>
           <h2>Selamat Datang di <b>Cahaya App</b></h2>
           <p>Pesantren Cahaya Fajrul Islam</p>
         </div>
       </div>
     </div>
 
+    <!-- === HEADER === -->
     <header>
       <h1>📊 Dashboard Wali Santri</h1>
       <div id="greeting"></div>
-      <button class="logout" onclick="logoutWali()">Keluar</button>
     </header>
 
-    <div class="toolbar">
-      <div class="menu">
-        <button id="btnHarian" class="active">Laporan Harian</button>
-        <button id="btnBulanan">Laporan Bulanan</button>
+    <!-- === MENU PROGRES === -->
+    <div class="menu-grid">
+      <div class="menu-card" id="btnHarian">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+        <h4>Progres Harian</h4>
       </div>
-
-      <div id="filterHarian" class="filter">
-        <label for="tanggal">Tanggal:</label>
-        <input type="date" id="tanggal" />
+      <div class="menu-card" id="btnBulanan">
+        <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
+        <h4>Progres Bulanan</h4>
       </div>
     </div>
 
+    <!-- === FILTER === -->
+    <div class="toolbar">
+      <label for="tanggal">Tanggal: </label>
+      <input type="date" id="tanggal" />
+    </div>
+
+    <!-- === ISI LAPORAN === -->
     <main id="content"></main>
+
+    <!-- === BUTTON BAWAH === -->
+    <div class="bottom-buttons">
+      <button onclick="scrollToTop()">⬆️ Kembali ke Atas</button>
+      <button class="logout" onclick="logoutWali()">Keluar</button>
+    </div>
 
     <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
@@ -235,7 +243,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // === FIREBASE CONFIG ===
     const app = initializeApp({
       apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
       authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -245,80 +252,72 @@
       messagingSenderId: "739928369926",
       appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
     });
-
     const db = getDatabase(app);
+
     const user = checkWaliLogin();
     if (!user) window.location.href = "wali-login.html";
-
-    document.getElementById("greeting").innerHTML =
-      `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
+    document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
 
     const content = document.getElementById("content");
     const tanggalInput = document.getElementById("tanggal");
     const today = new Date().toISOString().split("T")[0];
     tanggalInput.value = today;
-    tanggalInput.addEventListener("change", () => loadLaporanHarian(tanggalInput.value));
-    document.addEventListener("DOMContentLoaded", () => loadLaporanHarian(today));
 
-    async function loadLaporanHarian(tanggal) {
+    tanggalInput.addEventListener("change", () => loadProgresHarian(tanggalInput.value));
+    document.getElementById("btnHarian").addEventListener("click", () => loadProgresHarian(tanggalInput.value));
+    document.getElementById("btnBulanan").addEventListener("click", () => {
+      content.innerHTML = `<div class='card blue'><h2>📆 Progres Bulanan</h2><p>Fitur ini akan tersedia segera.</p></div>`;
+    });
+
+    document.addEventListener("DOMContentLoaded", () => loadProgresHarian(today));
+
+    async function loadProgresHarian(tanggal) {
       const nama = user.namaAnak.toUpperCase().trim();
       content.innerHTML = `
-        <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
-        <div class="card"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
+        <div class="card green"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
+        <div class="card blue"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
+        <div class="card purple"><h2>📖 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
+        <div class="card red"><h2>⚠️ Pelanggaran</h2><div id="pelanggaran">Memuat...</div></div>
       `;
 
-      // === ABSENSI PROGRAM HARIAN ===
-      const elProg = document.getElementById("prog");
+      // === Absensi Program Harian ===
+      await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog", "program", "status");
+
+      // === Absensi Pembelajaran ===
+      await loadData("cahaya_app/absensi_pembelajaran", tanggal, nama, "pemb", "mapel", "status");
+
+      // === Setoran Tahfiz ===
+      await loadData("cahaya_app/setoran_tahfiz", tanggal, nama, "tahfiz", "setoran", "nilai");
+
+      // === Pelanggaran ===
+      await loadData("cahaya_app/pelanggaran", tanggal, nama, "pelanggaran", "jenis", "keterangan");
+    }
+
+    async function loadData(path, tanggal, nama, targetId, col1, col2) {
+      const target = document.getElementById(targetId);
       try {
-        const snapProg = await get(child(ref(db), "cahaya_app/absensi_program_harian"));
-        let html = `<table><tr><th>Program</th><th>Status</th></tr>`;
-        if (snapProg.exists()) {
-          Object.values(snapProg.val()).forEach(d => {
+        const snap = await get(child(ref(db), path));
+        let html = `<table><tr><th>${capitalize(col1)}</th><th>${capitalize(col2)}</th></tr>`;
+        if (snap.exists()) {
+          Object.values(snap.val()).forEach(d => {
             if (d.tanggal === tanggal && d.data) {
               d.data.forEach(s => {
-                if (s.nama.trim().toUpperCase() === nama) {
-                  html += `<tr><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
+                if (s.nama?.trim().toUpperCase() === nama) {
+                  html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td>${s[col2] || d[col2] || "-"}</td></tr>`;
                 }
               });
             }
           });
         }
         html += "</table>";
-        elProg.innerHTML = html.includes("<tr><td") ? html : "Belum ada data absensi program harian.";
+        target.innerHTML = html.includes("<tr><td") ? html : "Belum ada data.";
       } catch (e) {
-        elProg.textContent = "❌ Gagal memuat data: " + e.message;
-      }
-
-      // === ABSENSI PEMBELAJARAN ===
-      const elPemb = document.getElementById("pemb");
-      try {
-        const snapPemb = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
-        let html = `<table><tr><th>Mapel</th><th>Status</th></tr>`;
-        if (snapPemb.exists()) {
-          Object.values(snapPemb.val()).forEach(d => {
-            if (d.tanggal === tanggal && d.data) {
-              d.data.forEach(s => {
-                if (s.nama.trim().toUpperCase() === nama) {
-                  html += `<tr><td>${d.mapel}</td><td>${badge(s.status)}</td></tr>`;
-                }
-              });
-            }
-          });
-        }
-        html += "</table>";
-        elPemb.innerHTML = html.includes("<tr><td") ? html : "Belum ada data kehadiran pembelajaran.";
-      } catch (e) {
-        elPemb.textContent = "❌ Gagal memuat data: " + e.message;
+        target.textContent = "❌ Gagal memuat data: " + e.message;
       }
     }
 
-    function badge(status) {
-      const cls = status === "Hadir" ? "badge-hadir" :
-                  status === "Izin" ? "badge-izin" :
-                  status === "Sakit" ? "badge-sakit" : "badge-alfa";
-      return `<span class="badge ${cls}">${status}</span>`;
-    }
-
+    function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
+    window.scrollToTop = () => window.scrollTo({top:0,behavior:"smooth"});
     window.logoutWali = logoutWali;
   </script>
 </body>
