@@ -38,29 +38,77 @@
         -webkit-overflow-scrolling: touch;
         padding-bottom: 10px;
       }
-
       .menu-card {
-        flex: 0 0 45%; /* 2 kartu muat di layar kecil */
+        flex: 0 0 45%;
         min-width: 180px;
         scroll-snap-align: start;
       }
-
-      /* Untuk layar HP sangat kecil (≤400px), 1 baris 4 langsung */
       @media (max-width: 400px) {
         .menu-card {
-          flex: 0 0 25%; /* 4 kartu pas satu baris */
+          flex: 0 0 25%;
           min-width: 90px;
           padding: 10px 5px;
         }
-        .menu-card img {
-          width: 32px;
-          height: 32px;
-        }
-        .menu-card h4 {
-          font-size: 0.75rem;
-        }
+        .menu-card img { width: 32px; height: 32px; }
+        .menu-card h4 { font-size: 0.75rem; }
       }
     }
+
+    /* === TAB & TABEL LAPORAN === */
+    .tab-menu {
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .tab-menu::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: #0d9488;
+      font-weight: 600;
+    }
+    .tab-content {
+      background: rgba(255,255,255,0.08);
+      padding: 10px;
+      border-radius: 12px;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+    th, td {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px;
+      text-align: left;
+    }
+    th { background: rgba(255,255,255,0.15); }
+    .badge {
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-hadir { background: #16a34a; }
+    .badge-izin { background: #0ea5e9; }
+    .badge-sakit { background: #eab308; }
+    .badge-alfa { background: #dc2626; }
   </style>
 </head>
 
@@ -70,22 +118,19 @@
 
     <!-- MENU GRID -->
     <div class="menu-grid">
-      <div class="menu-card" onclick="loadPage('laporan-harian.html')">
+      <div class="menu-card" onclick="loadPage('laporan-harian')">
         <img src="https://cdn-icons-png.flaticon.com/512/3185/3185656.png" alt="">
         <h4>Harian</h4>
       </div>
-
-      <div class="menu-card" onclick="loadPage('laporan-pekanan.html')">
+      <div class="menu-card" onclick="loadPage('laporan-pekanan')">
         <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="">
         <h4>Pekanan</h4>
       </div>
-
-      <div class="menu-card" onclick="loadPage('laporan-bulanan.html')">
+      <div class="menu-card" onclick="loadPage('laporan-bulanan')">
         <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="">
         <h4>Bulanan</h4>
       </div>
-
-      <div class="menu-card" onclick="loadPage('chat-pengurus.html')">
+      <div class="menu-card" onclick="loadPage('chat-pengurus')">
         <img src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png" alt="">
         <h4>Chat</h4>
       </div>
@@ -100,6 +145,20 @@
 
   <script type="module">
     import { checkWaliLogin, logoutWali } from './wali-script.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // === FIREBASE CONFIG ===
+    const app = initializeApp({
+      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+      messagingSenderId: "739928369926",
+      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+    });
+    const db = getDatabase(app);
 
     // === CEK LOGIN ===
     const user = checkWaliLogin();
@@ -110,21 +169,129 @@
         `👋 Assalamu’alaikum Walisantri <b>${user.namaAnak}</b>`;
     }
 
-    // === LOAD PAGE TANPA RELOAD ===
+    // === LOAD PAGE ===
     async function loadPage(page) {
-      const container = document.getElementById("content");
-      container.innerHTML = "<p>Sedang memuat...</p>";
-      try {
-        const res = await fetch(`pages/${page}`);
-        if (!res.ok) throw new Error("Gagal memuat halaman.");
-        const html = await res.text();
-        container.innerHTML = html;
-      } catch (err) {
-        container.innerHTML = `<p style='color:red;'>${err.message}</p>`;
+      const content = document.getElementById("content");
+      content.innerHTML = "<p>Sedang memuat...</p>";
+
+      if (page === 'laporan-harian') {
+        await renderLaporanHarian();
+      } else {
+        // halaman dummy sementara
+        content.innerHTML = `<h3>${page.replace('-', ' ').toUpperCase()} sedang dikembangkan...</h3>`;
       }
     }
 
-    // === REGISTRASI KE GLOBAL ===
+    // === FUNGSI LAPORAN HARIAN ===
+    async function renderLaporanHarian() {
+      const container = document.getElementById("content");
+      container.innerHTML = `
+      <section class="laporan-harian">
+        <h2>📅 Laporan Harian Santri</h2>
+        <p class="laporan-subtitle">Pantauan kegiatan harian santri oleh guru dan naqib.</p>
+        <div class="tab-menu">
+          <button class="tab-btn active" data-tab="program">Program Harian</button>
+          <button class="tab-btn" data-tab="pembelajaran">Pembelajaran</button>
+          <button class="tab-btn" data-tab="tahfiz">Setoran Tahfiz</button>
+          <button class="tab-btn" data-tab="pelanggaran">Pelanggaran</button>
+        </div>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab-program"><h3>📋 Absensi Program Harian</h3><div id="program-content">Memuat data...</div></div>
+          <div class="tab-pane" id="tab-pembelajaran"><h3>📖 Absensi Pembelajaran</h3><div id="pembelajaran-content">Memuat data...</div></div>
+          <div class="tab-pane" id="tab-tahfiz"><h3>🕋 Setoran Tahfiz</h3><div id="tahfiz-content">Memuat data...</div></div>
+          <div class="tab-pane" id="tab-pelanggaran"><h3>⚠️ Pelanggaran</h3><div id="pelanggaran-content">Memuat data...</div></div>
+        </div>
+      </section>`;
+
+      // TAB HANDLER
+      const tabBtns = container.querySelectorAll('.tab-btn');
+      const tabPanes = container.querySelectorAll('.tab-pane');
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabPanes.forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          container.querySelector('#tab-' + btn.dataset.tab).classList.add('active');
+        });
+      });
+
+      const nama = user.namaAnak;
+      const elProg = document.getElementById("program-content");
+      const elPemb = document.getElementById("pembelajaran-content");
+      const elTahfiz = document.getElementById("tahfiz-content");
+      const elLanggar = document.getElementById("pelanggaran-content");
+
+      try {
+        // === 1. Program Harian ===
+        const snapProg = await get(child(ref(db), "cahaya_app/absensi_program_harian"));
+        if (snapProg.exists()) {
+          let html = "<table><tr><th>Tanggal</th><th>Program</th><th>Status</th></tr>";
+          Object.values(snapProg.val()).forEach(d => {
+            d.data?.forEach(s => {
+              if (s.nama === nama) {
+                const color = s.status === "Hadir" ? "badge-hadir"
+                  : s.status === "Izin" ? "badge-izin"
+                  : s.status === "Sakit" ? "badge-sakit" : "badge-alfa";
+                html += `<tr><td>${d.tanggal}</td><td>${d.program}</td><td><span class="badge ${color}">${s.status}</span></td></tr>`;
+              }
+            });
+          });
+          html += "</table>";
+          elProg.innerHTML = html;
+        } else elProg.textContent = "Tidak ada data program harian.";
+
+        // === 2. Pembelajaran ===
+        const snapPemb = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
+        if (snapPemb.exists()) {
+          let html = "<table><tr><th>Tanggal</th><th>Mapel</th><th>Status</th></tr>";
+          Object.values(snapPemb.val()).forEach(d => {
+            d.data?.forEach(s => {
+              if (s.nama === nama) {
+                const color = s.status === "Hadir" ? "badge-hadir"
+                  : s.status === "Izin" ? "badge-izin"
+                  : s.status === "Sakit" ? "badge-sakit" : "badge-alfa";
+                html += `<tr><td>${d.tanggal}</td><td>${d.mapel}</td><td><span class="badge ${color}">${s.status}</span></td></tr>`;
+              }
+            });
+          });
+          html += "</table>";
+          elPemb.innerHTML = html;
+        } else elPemb.textContent = "Tidak ada data pembelajaran.";
+
+        // === 3. Tahfiz ===
+        const snapTahfiz = await get(child(ref(db), "cahaya_app/setoran_tahfiz"));
+        if (snapTahfiz.exists()) {
+          let html = "<table><tr><th>Tanggal</th><th>Surah</th><th>Ayat</th><th>Keterangan</th></tr>";
+          Object.values(snapTahfiz.val()).forEach(d => {
+            if (d.nama === nama) {
+              html += `<tr><td>${d.tanggal}</td><td>${d.surah}</td><td>${d.ayat}</td><td>${d.keterangan || "-"}</td></tr>`;
+            }
+          });
+          html += "</table>";
+          elTahfiz.innerHTML = html;
+        } else elTahfiz.textContent = "Belum ada setoran tahfiz.";
+
+        // === 4. Pelanggaran ===
+        const snapLanggar = await get(child(ref(db), "cahaya_app/pelanggaran"));
+        if (snapLanggar.exists()) {
+          let html = "<table><tr><th>Tanggal</th><th>Pelanggaran</th><th>Tindakan</th></tr>";
+          Object.values(snapLanggar.val()).forEach(d => {
+            if (d.nama === nama) {
+              html += `<tr><td>${d.tanggal}</td><td>${d.keterangan}</td><td>${d.tindakan || "-"}</td></tr>`;
+            }
+          });
+          html += "</table>";
+          elLanggar.innerHTML = html;
+        } else elLanggar.textContent = "Tidak ada catatan pelanggaran.";
+
+      } catch (err) {
+        elProg.textContent = elPemb.textContent = elTahfiz.textContent = elLanggar.textContent =
+          "Gagal memuat data: " + err.message;
+      }
+    }
+
+    // === GLOBAL ===
     window.loadPage = loadPage;
     window.logoutWali = logoutWali;
   </script>
