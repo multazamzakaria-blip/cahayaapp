@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Wali Santri - CAHAYA APP</title>
   <link rel="stylesheet" href="wali-style.css">
   <style>
@@ -44,6 +44,7 @@
       cursor: pointer;
       transition: 0.3s;
     }
+
     .menu button.active { background: #0d9488; font-weight: 600; }
 
     .filter input {
@@ -71,14 +72,17 @@
       padding: 16px;
       margin-top: 12px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      overflow-x: auto; /* ✅ tabel bisa discroll di HP */
     }
 
     table {
       width: 100%;
+      min-width: 480px; /* ✅ agar tidak pecah di HP */
       border-collapse: collapse;
       font-size: 0.85rem;
       margin-top: 8px;
     }
+
     th, td {
       border: 1px solid rgba(255,255,255,0.2);
       padding: 6px;
@@ -98,12 +102,10 @@
     .badge-alfa { background: #dc2626; }
 
     @media (max-width:600px) {
-      th, td { font-size: 0.8rem; padding: 5px; }
       .toolbar { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
-
 <body>
   <div class="dashboard">
     <header>
@@ -133,7 +135,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // === FIREBASE CONFIG ===
+    // === FIREBASE CONFIG SESUAI KODE NAIQIB ===
     const app = initializeApp({
       apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
       authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -147,122 +149,50 @@
     const db = getDatabase(app);
     const user = checkWaliLogin();
     if (!user) window.location.href = "wali-login.html";
+
     document.getElementById("greeting").innerHTML =
       `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
 
-    const btnHarian = document.getElementById("btnHarian");
-    const btnBulanan = document.getElementById("btnBulanan");
     const content = document.getElementById("content");
     const tanggalInput = document.getElementById("tanggal");
     const today = new Date().toISOString().split("T")[0];
     tanggalInput.value = today;
 
-    btnHarian.addEventListener("click", () => {
-      btnHarian.classList.add("active");
-      btnBulanan.classList.remove("active");
-      document.getElementById("filterHarian").style.display = "block";
-      loadLaporanHarian(tanggalInput.value);
-    });
-
-    btnBulanan.addEventListener("click", () => {
-      btnBulanan.classList.add("active");
-      btnHarian.classList.remove("active");
-      document.getElementById("filterHarian").style.display = "none";
-      content.innerHTML = `
-        <div class="card"><h2>📊 Laporan Bulanan</h2>
-        <p>Rekap bulanan akan dikembangkan nanti.</p></div>`;
-    });
-
     tanggalInput.addEventListener("change", () => loadLaporanHarian(tanggalInput.value));
 
+    document.addEventListener("DOMContentLoaded", () => loadLaporanHarian(today));
+
     async function loadLaporanHarian(tanggal) {
-      const nama = user.namaAnak;
+      const nama = user.namaAnak.toUpperCase().trim(); // karena di database uppercase
       content.innerHTML = `
         <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
-        <div class="card"><h2>📖 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
-        <div class="card"><h2>🕋 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
-        <div class="card"><h2>⚠️ Pelanggaran</h2><div id="pel">Memuat...</div></div>`;
+      `;
 
       const elProg = document.getElementById("prog");
-      const elPemb = document.getElementById("pemb");
-      const elTahfiz = document.getElementById("tahfiz");
-      const elPel = document.getElementById("pel");
 
       try {
-        // 1️⃣ Absensi Program Harian
         const snapProg = await get(child(ref(db), "cahaya_app/absensi_program_harian"));
-        elProg.innerHTML = renderTableAbsensi(snapProg, tanggal, nama);
+        if (!snapProg.exists()) {
+          elProg.textContent = "Tidak ada data absensi.";
+          return;
+        }
 
-        // 2️⃣ Absensi Pembelajaran
-        const snapPemb = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
-        elPemb.innerHTML = renderTablePembelajaran(snapPemb, tanggal, nama);
+        let html = `<table><tr><th>Tanggal</th><th>Program</th><th>Status</th></tr>`;
+        Object.values(snapProg.val()).forEach(d => {
+          if (d.tanggal === tanggal && d.data) {
+            d.data.forEach(s => {
+              if (s.nama.trim().toUpperCase() === nama) {
+                html += `<tr><td>${d.tanggal}</td><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
+              }
+            });
+          }
+        });
+        html += "</table>";
 
-        // 3️⃣ Setoran Tahfiz
-        const snapTahfiz = await get(child(ref(db), "cahaya_app/setoran_tahfiz"));
-        elTahfiz.innerHTML = renderTableTahfiz(snapTahfiz, tanggal, nama);
-
-        // 4️⃣ Pelanggaran
-        const snapPel = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
-        elPel.innerHTML = renderTablePelanggaran(snapPel, tanggal, nama);
+        elProg.innerHTML = html.includes("<tr><td") ? html : "Belum ada data absensi untuk tanggal ini.";
       } catch (e) {
-        content.innerHTML = `<p>❌ Gagal memuat data: ${e.message}</p>`;
+        elProg.textContent = "❌ Gagal memuat data: " + e.message;
       }
-    }
-
-    function renderTableAbsensi(snap, tanggal, nama) {
-      if (!snap.exists()) return "Tidak ada data.";
-      let html = "<table><tr><th>Tanggal</th><th>Program</th><th>Status</th></tr>";
-      Object.values(snap.val()).forEach(d => {
-        if (d.tanggal === tanggal && d.data) {
-          d.data.forEach(s => {
-            if (s.nama === nama) {
-              html += `<tr><td>${d.tanggal}</td><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
-            }
-          });
-        }
-      });
-      return html + "</table>";
-    }
-
-    function renderTablePembelajaran(snap, tanggal, nama) {
-      if (!snap.exists()) return "Tidak ada data.";
-      let html = "<table><tr><th>Tanggal</th><th>Mapel</th><th>Status</th></tr>";
-      Object.values(snap.val()).forEach(d => {
-        if (d.tanggal === tanggal && d.data) {
-          d.data.forEach(s => {
-            if (s.nama === nama) {
-              html += `<tr><td>${d.tanggal}</td><td>${d.mapel}</td><td>${badge(s.status)}</td></tr>`;
-            }
-          });
-        }
-      });
-      return html + "</table>";
-    }
-
-    function renderTableTahfiz(snap, tanggal, nama) {
-      if (!snap.exists()) return "Tidak ada data.";
-      let html = "<table><tr><th>Tanggal</th><th>Surah</th><th>Ayat</th><th>Nilai</th><th>Keterangan</th></tr>";
-      Object.values(snap.val()).forEach(d => {
-        if (d.tanggal === tanggal && d.data) {
-          d.data.forEach(x => {
-            if (x.nama === nama) {
-              html += `<tr><td>${d.tanggal}</td><td>${x.setoran}</td><td>${x.ayat}</td><td>${x.nilai}</td><td>${x.ket || '-'}</td></tr>`;
-            }
-          });
-        }
-      });
-      return html + "</table>";
-    }
-
-    function renderTablePelanggaran(snap, tanggal, nama) {
-      if (!snap.exists()) return "Tidak ada data.";
-      let html = "<table><tr><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr>";
-      Object.values(snap.val()).forEach(d => {
-        if (d.tanggal === tanggal && d.santri === nama) {
-          html += `<tr><td>${d.tanggal}</td><td>${d.namaPelanggaran}</td><td>${d.kategori}</td><td>${d.keterangan || '-'}</td><td>${d.tindakLanjut || '-'}</td><td>${d.konsekuensi || '-'}</td></tr>`;
-        }
-      });
-      return html + "</table>";
     }
 
     function badge(status) {
@@ -272,7 +202,6 @@
       return `<span class="badge ${cls}">${status}</span>`;
     }
 
-    document.addEventListener("DOMContentLoaded", () => loadLaporanHarian(tanggalInput.value));
     window.logoutWali = logoutWali;
   </script>
 </body>
