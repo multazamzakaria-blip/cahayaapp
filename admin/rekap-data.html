@@ -26,7 +26,7 @@
     }
     main {
       padding: 24px;
-      max-width: 900px;
+      max-width: 1000px;
       margin: auto;
     }
     h2 {
@@ -59,13 +59,6 @@
       font-size: 0.95rem;
       box-sizing: border-box;
     }
-    .flex-row {
-      display: flex;
-      gap: 10px;
-    }
-    .flex-row > div {
-      flex: 1;
-    }
     button {
       background: #0f766e;
       color: white;
@@ -92,7 +85,14 @@
       color: #6b7280;
       margin-top: 4px;
     }
-    #hasilRekap {
+    .flex-row {
+      display: flex;
+      gap: 10px;
+    }
+    .flex-row > div {
+      flex: 1;
+    }
+    #hasilInfo {
       font-size: 0.9rem;
       color: #111827;
       margin-top: 10px;
@@ -100,10 +100,38 @@
       white-space: pre-line;
     }
 
+    /* Tabel hasil */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 6px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    th {
+      background: #0f766e;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tr:nth-child(even) td {
+      background: #f9fafb;
+    }
     @media (max-width: 600px) {
-      main {
-        padding: 16px;
-      }
+      main { padding: 16px; }
+      th, td { padding: 6px 8px; }
     }
   </style>
 </head>
@@ -111,7 +139,7 @@
   <header>
     <h1>Rekap Data – CAHAYA APP</h1>
     <div>
-      <button class="back-btn" onclick="goBack()">⬅ Kembali</button>
+      <button class="back-btn" onclick="history.back()">⬅ Kembali</button>
     </div>
   </header>
 
@@ -162,7 +190,7 @@
         <div id="naqibListWrapper" style="display:none;margin-top:8px;">
           <label for="naqibList">Pilih Naqib</label>
           <select id="naqibList">
-            <!-- Bisa diisi dinamis dari database nanti -->
+            <!-- Nanti bisa diisi otomatis dari database -->
             <option value="">-- Pilih Naqib --</option>
             <option value="Naqib 1">Naqib 1</option>
             <option value="Naqib 2">Naqib 2</option>
@@ -182,7 +210,7 @@
         <div id="kelasListWrapper" style="display:none;margin-top:8px;">
           <label for="kelasList">Pilih Kelas</label>
           <select id="kelasList">
-            <!-- Bisa diisi dinamis dari database kelas nanti -->
+            <!-- Nanti bisa diisi otomatis dari database kelas -->
             <option value="">-- Pilih Kelas --</option>
             <option value="7A">7A</option>
             <option value="7B">7B</option>
@@ -193,122 +221,333 @@
         </div>
       </div>
 
-      <div class="form-row" style="margin-top:18px;">
+      <div class="form-row" style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;">
         <button onclick="tampilkanRekap()">Tampilkan Rekap</button>
+        <button id="exportBtn" onclick="exportExcel()" disabled>Export Excel</button>
       </div>
 
-      <div id="hasilRekap"></div>
+      <div id="hasilInfo"></div>
+
+      <div class="table-wrapper">
+        <table id="rekapTable">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Nama Santri</th>
+              <th>Naqib / Guru</th>
+              <th>Kelas</th>
+              <th>Status / Keterangan</th>
+            </tr>
+          </thead>
+          <tbody id="rekapBody">
+            <!-- Baris data akan diisi via JS -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 
-  <script>
-    function goBack() {
-      // kembali ke admin (sesuaikan path jika file ini di folder admin/)
-      window.location.href = 'index.html';
+  <!-- 📦 SheetJS untuk Export Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- 🔥 Firebase + Logika Rekap -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // 🔥 KONFIGURASI FIREBASE (SAMA DENGAN admin.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+      messagingSenderId: "739928369926",
+      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    // 🔎 Mapping jenis data → path Firebase (menyesuaikan admin.html)
+    const DATA_PATH = {
+      absensi_program: "cahaya_app/absensi_program_harian",
+      absensi_belajar: "cahaya_app/absensi_pembelajaran",
+      setoran_tahfiz: "cahaya_app/setoran_tahfiz",
+      pelanggaran: "cahaya_app/pelanggaran_santri"
+    };
+
+    // 🔎 Field kemungkinan tanggal (mengikuti admin.html)
+    const DATE_FIELDS  = ["tanggal", "tgl", "waktuSimpan"];
+
+    // 🔎 Dugaan field sumber naqib / guru & kelas
+    const NAMA_SANTRI_FIELDS = ["namaSantri", "santri", "nama", "nama_santri"];
+    const NAMA_NAQIB_FIELDS  = ["namaNaqib", "naqib", "waliKamar", "penginput", "guru"];
+    const KELAS_FIELDS       = ["kelas", "namaKelas", "kodeKelas", "rombel"];
+    const STATUS_FIELDS      = ["status", "ket", "keterangan", "jenis", "tipe", "program", "namaProgram"];
+
+    // Menyimpan hasil terakhir untuk export Excel
+    let lastResultRows = [];
+    let lastJenisLabel = "";
+    let lastRangeText  = "";
+
+    // ====== FUNGSI BANTUAN ======
+    function getFirstField(obj, fields) {
+      for (const f of fields) {
+        if (obj && Object.prototype.hasOwnProperty.call(obj, f) && obj[f]) {
+          return obj[f];
+        }
+      }
+      return "";
     }
 
-    // Tampilkan / sembunyikan input tanggal khusus
-    function toggleDateInputsRekap() {
-      const val = document.getElementById('rangeRekapSelect').value;
-      document.getElementById('rekapDateInputs').style.display =
-        val === 'rentang' ? 'block' : 'none';
+    function getDateFromItem(item) {
+      const raw = getFirstField(item, DATE_FIELDS);
+      if (!raw) return null;
+      const d = new Date(raw);
+      if (isNaN(d)) return null;
+      return d;
     }
 
-    function toggleNaqibDetail() {
-      const val = document.getElementById('filterNaqibSelect').value;
-      document.getElementById('naqibListWrapper').style.display =
-        val === 'tertentu' ? 'block' : 'none';
+    function formatDate(d) {
+      if (!(d instanceof Date) || isNaN(d)) return "";
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
     }
 
-    function toggleKelasDetail() {
-      const val = document.getElementById('filterKelasSelect').value;
-      document.getElementById('kelasListWrapper').style.display =
-        val === 'tertentu' ? 'block' : 'none';
+    function getRangeDates(mode, startInputId, endInputId) {
+      const now = new Date();
+      let start, end;
+      if (mode === "hari") {
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        end   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+      } else if (mode === "pekan") {
+        const first = now.getDate() - now.getDay();
+        start = new Date(now.getFullYear(), now.getMonth(), first);
+        end   = new Date(now.getFullYear(), now.getMonth(), first + 6, 23, 59, 59);
+      } else if (mode === "bulan") {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+      } else {
+        const s = document.getElementById(startInputId).value;
+        const e = document.getElementById(endInputId).value;
+        if (!s || !e) {
+          alert("Lengkapi tanggal mulai dan akhir untuk rentang waktu tertentu.");
+          return null;
+        }
+        start = new Date(s);
+        end   = new Date(e + "T23:59:59");
+      }
+      return { start, end };
     }
 
-    // Mapping jenis data ↔ sumber (naqib/guru)
-    // absensi_program, setoran_tahfiz, pelanggaran -> Naqib
-    // absensi_belajar -> Guru
-    function updateFilterVisibility() {
-      const jenis = document.getElementById('jenisDataSelect').value;
-      const naqibGroup = document.getElementById('filterNaqibGroup');
-      const kelasGroup = document.getElementById('filterKelasGroup');
+    function getJenisLabel(jenis) {
+      return {
+        "absensi_program": "Absensi Program",
+        "absensi_belajar": "Absensi Belajar",
+        "setoran_tahfiz": "Setoran Tahfiz",
+        "pelanggaran": "Pelanggaran"
+      }[jenis] || jenis;
+    }
 
-      if (jenis === 'absensi_belajar') {
+    function getRangeLabel(mode, startId, endId) {
+      if (mode === "hari")  return "Hari ini";
+      if (mode === "pekan") return "Pekan ini";
+      if (mode === "bulan") return "Bulan ini";
+      const s = document.getElementById(startId).value;
+      const e = document.getElementById(endId).value;
+      return `Rentang ${s} s.d. ${e}`;
+    }
+
+    // ====== FUNGSI UI (global di window) ======
+    window.toggleDateInputsRekap = function() {
+      const val = document.getElementById("rangeRekapSelect").value;
+      document.getElementById("rekapDateInputs").style.display =
+        val === "rentang" ? "block" : "none";
+    };
+
+    window.toggleNaqibDetail = function() {
+      const val = document.getElementById("filterNaqibSelect").value;
+      document.getElementById("naqibListWrapper").style.display =
+        val === "tertentu" ? "block" : "none";
+    };
+
+    window.toggleKelasDetail = function() {
+      const val = document.getElementById("filterKelasSelect").value;
+      document.getElementById("kelasListWrapper").style.display =
+        val === "tertentu" ? "block" : "none";
+    };
+
+    // Mapping: absensi_belajar → Guru (kelas), yang lain → Naqib
+    window.updateFilterVisibility = function() {
+      const jenis = document.getElementById("jenisDataSelect").value;
+      const naqibGroup = document.getElementById("filterNaqibGroup");
+      const kelasGroup = document.getElementById("filterKelasGroup");
+
+      if (jenis === "absensi_belajar") {
         // data dari guru
-        kelasGroup.style.display = 'block';
-        naqibGroup.style.display = 'none';
+        kelasGroup.style.display = "block";
+        naqibGroup.style.display = "none";
       } else {
         // data dari naqib
-        kelasGroup.style.display = 'none';
-        naqibGroup.style.display = 'block';
+        kelasGroup.style.display = "none";
+        naqibGroup.style.display = "block";
       }
-    }
+    };
 
-    // Tampilkan ringkasan pilihan (sementara, sebelum dihubungkan ke Firebase)
-    function tampilkanRekap() {
-      const jenis = document.getElementById('jenisDataSelect').value;
-      const range = document.getElementById('rangeRekapSelect').value;
+    // ====== AMBIL & TAMPILKAN REKAP ======
+    window.tampilkanRekap = async function() {
+      const jenis     = document.getElementById("jenisDataSelect").value;
+      const rentang   = document.getElementById("rangeRekapSelect").value;
+      const jenisLabel = getJenisLabel(jenis);
+      const hasilInfo = document.getElementById("hasilInfo");
+      const tbody     = document.getElementById("rekapBody");
+      const exportBtn = document.getElementById("exportBtn");
 
-      let rangeText = '';
-      if (range === 'hari') rangeText = 'Hari ini';
-      else if (range === 'pekan') rangeText = 'Pekan ini';
-      else if (range === 'bulan') rangeText = 'Bulan ini';
-      else {
-        const s = document.getElementById('rekapStartDate').value;
-        const e = document.getElementById('rekapEndDate').value;
-        if (!s || !e) {
-          alert('Lengkapi tanggal mulai dan akhir untuk rentang waktu tertentu.');
+      tbody.innerHTML = "";
+      exportBtn.disabled = true;
+      hasilInfo.textContent = "⏳ Mengambil data dari Firebase...";
+
+      const rangeObj = getRangeDates(rentang, "rekapStartDate", "rekapEndDate");
+      if (!rangeObj) {
+        hasilInfo.textContent = "";
+        return;
+      }
+      const { start, end } = rangeObj;
+      const rangeText = getRangeLabel(rentang, "rekapStartDate", "rekapEndDate");
+
+      const path = DATA_PATH[jenis];
+      if (!path) {
+        hasilInfo.textContent = "❌ Path Firebase belum ditentukan untuk jenis data ini.";
+        return;
+      }
+
+      try {
+        const rootRef = ref(db);
+        const snap = await get(child(rootRef, path));
+
+        if (!snap.exists()) {
+          hasilInfo.textContent = "❌ Tidak ada data ditemukan di Firebase.";
           return;
         }
-        rangeText = `Rentang ${s} s.d. ${e}`;
-      }
 
-      let sumberText = '';
-      let filterText = '';
+        const rawData = snap.val();
+        const rows = [];
 
-      if (document.getElementById('filterNaqibGroup').style.display !== 'none') {
-        const modeNaqib = document.getElementById('filterNaqibSelect').value;
-        sumberText = 'Sumber: Naqib';
-        if (modeNaqib === 'semua') {
-          filterText = 'Semua naqib';
-        } else {
-          const naqib = document.getElementById('naqibList').value || '(belum dipilih)';
-          filterText = `Naqib tertentu: ${naqib}`;
+        const isNaqibSource = (jenis !== "absensi_belajar");
+
+        // Filter tambahan: naqib / kelas
+        const filterNaqibMode  = document.getElementById("filterNaqibSelect").value;
+        const selectedNaqib    = document.getElementById("naqibList").value;
+        const filterKelasMode  = document.getElementById("filterKelasSelect").value;
+        const selectedKelas    = document.getElementById("kelasList").value;
+
+        for (const [id, item] of Object.entries(rawData)) {
+          const d = getDateFromItem(item);
+          if (!d) continue;
+          if (d < start || d > end) continue;
+
+          const namaSantri = getFirstField(item, NAMA_SANTRI_FIELDS);
+          const namaNaqib  = getFirstField(item, NAMA_NAQIB_FIELDS);
+          const kelas      = getFirstField(item, KELAS_FIELDS);
+          const status     = getFirstField(item, STATUS_FIELDS);
+
+          // Filter berdasarkan naqib / kelas
+          if (isNaqibSource) {
+            if (filterNaqibMode === "tertentu") {
+              if (!selectedNaqib || (namaNaqib || "").toLowerCase() !== selectedNaqib.toLowerCase()) {
+                continue;
+              }
+            }
+          } else {
+            // sumber guru (absensi_belajar)
+            if (filterKelasMode === "tertentu") {
+              if (!selectedKelas || (kelas || "").toLowerCase() !== selectedKelas.toLowerCase()) {
+                continue;
+              }
+            }
+          }
+
+          rows.push({
+            id,
+            tanggal: formatDate(d),
+            namaSantri: namaSantri || "-",
+            namaNaqibGuru: namaNaqib || "-",
+            kelas: kelas || "-",
+            status: status || "-"
+          });
         }
-      }
 
-      if (document.getElementById('filterKelasGroup').style.display !== 'none') {
-        const modeKelas = document.getElementById('filterKelasSelect').value;
-        sumberText = 'Sumber: Guru';
-        if (modeKelas === 'semua') {
-          filterText = 'Semua kelas';
-        } else {
-          const kelas = document.getElementById('kelasList').value || '(belum dipilih)';
-          filterText = `Kelas tertentu: ${kelas}`;
+        if (!rows.length) {
+          hasilInfo.textContent = `ℹ️ Tidak ada data ${jenisLabel} dalam rentang: ${rangeText}.`;
+          return;
         }
+
+        // Isi tabel
+        tbody.innerHTML = rows.map((row, idx) => `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${row.tanggal}</td>
+            <td>${row.namaSantri}</td>
+            <td>${row.namaNaqibGuru}</td>
+            <td>${row.kelas}</td>
+            <td>${row.status}</td>
+          </tr>
+        `).join("");
+
+        lastResultRows = rows;
+        lastJenisLabel = jenisLabel;
+        lastRangeText  = rangeText;
+        exportBtn.disabled = false;
+
+        const sumberText = isNaqibSource ? "Naqib" : "Guru";
+        hasilInfo.textContent =
+          `✅ Ditemukan ${rows.length} data.\n` +
+          `• Jenis Data : ${jenisLabel}\n` +
+          `• Rentang    : ${rangeText}\n` +
+          `• Sumber     : ${sumberText}\n` +
+          `Silakan cek tabel di bawah atau export ke Excel.`;
+
+      } catch (err) {
+        console.error(err);
+        hasilInfo.textContent = "❌ Terjadi kesalahan saat mengambil data dari Firebase.";
+      }
+    };
+
+    // ====== EXPORT EXCEL ======
+    window.exportExcel = function() {
+      if (!lastResultRows || !lastResultRows.length) {
+        alert("Belum ada data untuk diexport.");
+        return;
+      }
+      if (typeof XLSX === "undefined") {
+        alert("Library XLSX belum termuat.");
+        return;
       }
 
-      const jenisLabel = {
-        'absensi_program': 'Absensi Program',
-        'absensi_belajar': 'Absensi Belajar',
-        'setoran_tahfiz': 'Setoran Tahfiz',
-        'pelanggaran': 'Pelanggaran'
-      }[jenis] || jenis;
+      const dataForExcel = lastResultRows.map((row, idx) => ({
+        No: idx + 1,
+        Tanggal: row.tanggal,
+        "Nama Santri": row.namaSantri,
+        "Naqib/Guru": row.namaNaqibGuru,
+        Kelas: row.kelas,
+        "Status/Keterangan": row.status
+      }));
 
-      const hasil = `🔎 Rekap Data
-• Jenis Data : ${jenisLabel}
-• Rentang    : ${rangeText}
-• ${sumberText}
-• Filter     : ${filterText}
+      const ws = XLSX.utils.json_to_sheet(dataForExcel);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Rekap");
 
-(Rekap data belum dihubungkan ke database. Nanti bagian ini bisa menampilkan tabel atau tombol export.)`;
+      // Nama file: Rekap_[Jenis]_[Rentang].xlsx (rentang dibersihkan dari spasi & titik)
+      const safeRange = lastRangeText.replace(/\s+/g, "_").replace(/[^\w\-]/g, "");
+      const fileName  = `Rekap_${lastJenisLabel.replace(/\s+/g,"_")}_${safeRange}.xlsx`;
 
-      document.getElementById('hasilRekap').textContent = hasil;
-    }
+      XLSX.writeFile(wb, fileName);
+    };
 
-    // Inisialisasi awal
-    document.addEventListener('DOMContentLoaded', () => {
+    // ====== INISIALISASI AWAL ======
+    document.addEventListener("DOMContentLoaded", () => {
       updateFilterVisibility();
       toggleDateInputsRekap();
     });
