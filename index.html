@@ -130,6 +130,19 @@
       transform: translateY(-2px);
     }
 
+    /* ✅ Tombol tambahan untuk Wali Santri */
+    .wali-btn {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.5);
+      color: white;
+      margin-top: 14px;
+    }
+
+    .wali-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: none;
+    }
+
     .hint {
       font-size: 11px;
       color: #cbd5e1;
@@ -167,6 +180,9 @@
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Masuk</button>
+
+    <!-- ✅ TAMBAHAN WALI SANTRI -->
+    <button class="wali-btn" onclick="goWali()">👨‍👩‍👧 Login Wali Santri</button>
 
     <div class="hint">💡 Baca Bismillah sebelum masuk</div>
   </div>
@@ -242,6 +258,11 @@
       if (role === 'guru') window.location.href = 'guru/fitur.html';
       else if (role === 'naqib') window.location.href = 'naqib/dashboard.html';
       else if (role === 'admin') window.location.href = 'admin/index.html';
+    }
+
+    // ✅ Fungsi menuju portal wali santri
+    function goWali() {
+      window.location.href = 'wali/login.html';
     }
   </script>
 </body>
