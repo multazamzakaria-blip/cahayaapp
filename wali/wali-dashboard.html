@@ -18,10 +18,11 @@
     .welcome-slide {
       background: linear-gradient(90deg, #0d9488, #0f766e);
       color: white;
-      padding: 14px 20px;
-      border-radius: 0 0 20px 20px;
+      padding: 12px 18px;
+      border-radius: 12px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       margin-bottom: 15px;
+      text-align: center;
     }
 
     .slide-content {
@@ -29,13 +30,12 @@
       align-items: center;
       justify-content: center;
       gap: 14px;
-      text-align: center;
       flex-wrap: wrap;
     }
 
     .logo-slide {
-      width: 50px;
-      height: 50px;
+      width: 42px;
+      height: 42px;
       object-fit: contain;
       border-radius: 50%;
       background: white;
@@ -45,13 +45,13 @@
 
     .text-content h2 {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
     }
 
     .text-content p {
       margin: 0;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       opacity: 0.9;
     }
 
@@ -68,8 +68,12 @@
     }
 
     header h1 {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     #greeting {
@@ -130,6 +134,14 @@
       overflow-x: auto;
     }
 
+    .card h2 {
+      font-size: 1.05rem;
+      margin: 0 0 10px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -170,31 +182,32 @@
     }
 
     @media (max-width:600px) {
-      header h1 { font-size: 1.25rem; }
+      header h1 { font-size: 1.2rem; }
       #greeting { font-size: 0.9rem; }
       .toolbar { flex-direction: column; align-items: stretch; }
       .text-content h2 { font-size: 1rem; }
       .text-content p { font-size: 0.8rem; }
-      .logo-slide { width: 40px; height: 40px; }
+      .logo-slide { width: 36px; height: 36px; }
+      .card h2 { font-size: 0.95rem; text-align: center; }
     }
   </style>
 </head>
 
 <body>
-  <!-- === SLIDE WELCOME (STATIS) === -->
-  <div class="welcome-slide">
-    <div class="slide-content">
-      <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
-      <div class="text-content">
-        <h2>Selamat Datang di <b>Cahaya App</b></h2>
-        <p>Pesantren Cahaya Fajrul Islam</p>
+  <div class="dashboard">
+    <!-- === SLIDE WELCOME (STATIS) === -->
+    <div class="welcome-slide">
+      <div class="slide-content">
+        <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
+        <div class="text-content">
+          <h2>Selamat Datang di <b>Cahaya App</b></h2>
+          <p>Pesantren Cahaya Fajrul Islam</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="dashboard">
     <header>
-      <h1>🦁 Dashboard Wali Santri</h1>
+      <h1>📊 Dashboard Wali Santri</h1>
       <div id="greeting"></div>
       <button class="logout" onclick="logoutWali()">Keluar</button>
     </header>
