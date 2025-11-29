@@ -404,6 +404,63 @@
 
   document.addEventListener('DOMContentLoaded', init);
 </script>
+  <script>
+  // === Ambil data user dan kelompok dari localStorage ===
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
+  const kelompok = JSON.parse(localStorage.getItem("kelompokNaqib") || "[]");
+
+  const namaNaqib = user.label || "Tidak diketahui";
+  document.querySelector("h2").textContent = namaNaqib;
+
+  const tbody = document.querySelector("tbody");
+  tbody.innerHTML = "";
+
+  // === Jika tidak ada kelompok ===
+  if (!kelompok || kelompok.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center;color:#6b7280">
+          Belum ada data santri untuk naqib ini.
+        </td>
+      </tr>`;
+  } else {
+    kelompok.forEach((nama, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${nama}</td>
+        <td><input type="radio" name="absen-${i}" value="H" checked /></td>
+        <td><input type="radio" name="absen-${i}" value="I" /></td>
+        <td><input type="radio" name="absen-${i}" value="S" /></td>
+        <td><input type="radio" name="absen-${i}" value="A" /></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // === Tombol Simpan Absensi ===
+  function simpanAbsensi() {
+    const hasil = kelompok.map((nama, i) => {
+      const status = document.querySelector(`input[name="absen-${i}"]:checked`)?.value || "-";
+      return { nama, status };
+    });
+    console.log("📋 Data absensi:", hasil);
+    alert("✅ Absensi tersimpan sementara di localStorage (offline).");
+    localStorage.setItem("absensiProgramHarianTemp", JSON.stringify(hasil));
+  }
+
+  // === Tombol tandai semua hadir ===
+  const selectAll = document.querySelector("input[type='checkbox']");
+  if (selectAll) {
+    selectAll.addEventListener("change", (e) => {
+      const semuaH = e.target.checked;
+      if (!kelompok.length) return;
+      kelompok.forEach((_, i) => {
+        document.querySelector(`input[name='absen-${i}'][value='H']`).checked = semuaH;
+      });
+    });
+  }
+</script>
 </body>
 </html>
+
 
