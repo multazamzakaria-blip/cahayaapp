@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Wali Santri – CAHAYA APP</title>
+<link rel="stylesheet" href="wali-style.css">
+</head>
+<body>
+
+<header><h1>👨‍👩‍👧 Login Wali Santri</h1></header>
+
+<main>
+  <div class="card" style="max-width:340px;margin:auto;text-align:center">
+    <input id="username" placeholder="Username" style="width:100%;padding:8px;margin:6px 0">
+    <input id="password" type="password" placeholder="Password" style="width:100%;padding:8px;margin:6px 0">
+    <button onclick="loginWali()">Masuk</button>
+  </div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId: "absensi-santri-fajrul-islam",
+  storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+  messagingSenderId: "739928369926",
+  appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.loginWali = async function() {
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value.trim();
+  if (!u || !p) return alert("Isi username dan password!");
+
+  const snap = await get(child(ref(db), "cahaya_app/akun_walisantri"));
+  if (!snap.exists()) return alert("Data akun wali belum tersedia.");
+  const user = Object.values(snap.val()).find(a => a.username === u && a.password === p);
+  if (!user) return alert("Username atau password salah!");
+
+  localStorage.setItem("cahayaWaliUser", JSON.stringify(user));
+  alert(`Selamat datang, Ayah/Bunda ${user.namaAnak}!`);
+  window.location.href = "wali-santri.html";
+};
+</script>
+</body>
+</html>
