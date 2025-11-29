@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📊 Rekap Data Santri – CAHAYA APP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      color: #1f2937;
+    }
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    main {
+      padding: 24px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      background: #f0fdf4;
+    }
+    .card h3 { margin: 0; color: #0f766e; font-size: 1.05rem; }
+    .card p { margin: 6px 0 0; font-size: 0.9rem; color: #374151; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📊 Rekap Data Santri</h1>
+    <button onclick="history.back()" style="background:#fff;color:#0f766e;padding:6px 10px;border-radius:6px;border:none;">⬅ Kembali</button>
+  </header>
+
+  <main>
+    <div class="card" onclick="go('rekap/rekap-program.html')">
+      <h3>📆 Rekap Absensi Program Harian</h3>
+      <p>Lihat kehadiran program harian dan pekanan seluruh santri.</p>
+    </div>
+    <div class="card" onclick="go('rekap/rekap-pembelajaran.html')">
+      <h3>📘 Rekap Absensi Pembelajaran</h3>
+      <p>Kehadiran santri dalam pembelajaran keilmuan, bahasa, dan tahfiz.</p>
+    </div>
+    <div class="card" onclick="go('rekap/rekap-tahfiz.html')">
+      <h3>📖 Rekap Setoran Tahfiz</h3>
+      <p>Data setoran hafalan Al-Qur’an dan nilai tahfiz santri.</p>
+    </div>
+    <div class="card" onclick="go('rekap/rekap-pelanggaran.html')">
+      <h3>⚠️ Rekap Pelanggaran Santri</h3>
+      <p>Catatan pelanggaran dan penindakannya oleh pengurus.</p>
+    </div>
+    <div class="card" onclick="go('rekap/rekap-nilai.html')">
+      <h3>🎓 Rekap Nilai Ujian</h3>
+      <p>Nilai hasil ujian seluruh mapel dan periode ujian.</p>
+    </div>
+  </main>
+
+  <script>
+    function go(path){ window.location.href = path; }
+  </script>
+</body>
+</html>
