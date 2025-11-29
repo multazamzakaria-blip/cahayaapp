@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Wali – CAHAYA APP</title>
+<link rel="stylesheet" href="wali-style.css">
+</head>
+<body>
+<header><h1>CAHAYA APP – Portal Wali Santri</h1></header>
+
+<main>
+  <div class="card" id="greeting"></div>
+  <div class="card">
+    <button onclick="go('wali-laporan-harian.html')">📅 Laporan Harian</button>
+    <button onclick="go('wali-laporan-pekanan.html')">📆 Laporan Pekanan</button>
+    <button onclick="go('wali-laporan-bulanan.html')">🗓️ Laporan Bulanan</button>
+    <button onclick="go('wali-chat.html')">💬 Chat Pengurus</button>
+  </div>
+  <button class="logout" onclick="logoutWali()">Keluar</button>
+</main>
+
+<script type="module">
+import { checkWaliLogin, logoutWali } from './wali-script.js';
+const user = checkWaliLogin();
+if (user) document.getElementById('greeting').innerHTML =
+  `<h3>Assalamu’alaikum Ayah/Bunda ${user.namaAnak}</h3>`;
+window.logoutWali = logoutWali;
+window.go = page => window.location.href = page;
+</script>
+</body>
+</html>
