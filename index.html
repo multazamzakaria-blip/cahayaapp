@@ -82,32 +82,29 @@
 
     /* === LOGIN BOX === */
     .login-box {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 25px 22px;
-      width: 85%;
-      max-width: 300px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      animation: fadeIn 1s ease 1.7s both;
-    }
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 25px 22px;
+  width: 85%;
+  max-width: 300px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  animation: fadeInUp 1s ease 1.7s both;
+  box-sizing: border-box; /* 💥 Tambahan penting */
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      background: rgba(255, 255, 255, 0.95);
-      color: #1f2937;
-      box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
-    }
+input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+  box-sizing: border-box; /* 💥 Tambahan penting */
+}
 
     button {
       width: 100%;
