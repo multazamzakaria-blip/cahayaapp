@@ -3,77 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>⚠️ Rekap Pelanggaran Santri</title>
+  <title>⚠️ Rekap Pelanggaran Santri – CAHAYA APP</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f9fafb; margin: 0; color: #1f2937; }
-    header { background: #dc2626; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
-    header h1 { margin: 0; font-size: 1.2rem; font-weight: 700; }
-    main { padding: 24px; max-width: 1100px; margin: auto; }
-    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; }
-    select, input[type="date"] { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #d1d5db; font-size: 0.9rem; margin-top: 4px; }
-    button { background: #dc2626; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    button:hover { background: #b91c1c; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; background: white; }
-    th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: center; }
-    th { background: #dc2626; color: white; font-weight: bold; }
+    body { font-family: "Poppins", Arial, sans-serif; background:#f9fafb; margin:0; color:#111827; }
+    header { background:#dc2626; color:white; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; }
+    header h1 { margin:0; font-size:1.2rem; font-weight:700; }
+    main { max-width:1000px; margin:24px auto; padding:0 16px 24px; }
+    .card {
+      background:white; border-radius:16px; padding:20px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+    label { font-weight:600; font-size:.9rem; }
+    select, input[type="date"] {
+      width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db;
+      margin-top:4px; font-size:.9rem; box-sizing:border-box;
+    }
+    .filter-row { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:12px; }
+    .filter-row > div { flex:1; min-width:180px; }
+    button {
+      border:none; border-radius:999px; padding:9px 16px; font-weight:600;
+      cursor:pointer; font-size:.9rem; margin-right:8px;
+    }
+    .btn-primary { background:#dc2626; color:white; }
+    .btn-primary:hover { background:#b91c1c; }
+    .btn-secondary { background:white; color:#dc2626; border:1px solid #fecaca; }
+    .btn-secondary:hover { background:#fee2e2; }
+    table { width:100%; border-collapse:collapse; margin-top:14px; font-size:.85rem; }
+    th,td { border:1px solid #e5e7eb; padding:6px 8px; text-align:left; }
+    th { background:#ef4444; color:white; text-align:center; }
+    tr:nth-child(even) td { background:#f9fafb; }
+    #info { font-size:.85rem; margin-top:10px; }
+    .ok { color:#16a34a; } .warn { color:#ea580c; }
+    @media(max-width:640px){ main{padding:0 8px 16px;} .card{padding:16px;} }
   </style>
 </head>
 <body>
 <header>
   <h1>⚠️ Rekap Pelanggaran Santri</h1>
-  <button onclick="history.back()">⬅ Kembali</button>
+  <button onclick="history.back()" style="background:white;color:#dc2626;padding:6px 12px;border-radius:6px;border:none;font-weight:600;">⬅ Kembali</button>
 </header>
 
 <main>
   <div class="card">
-    <div><label>Rentang Waktu</label>
-      <select id="rangeSelect" onchange="toggleCustomDate()">
-        <option value="bulan">Bulan Ini</option>
-        <option value="rentang">Rentang Tanggal</option>
-      </select>
-    </div>
-    <div id="customDate" style="display:none;margin-top:10px;">
-      <label>Dari</label><input type="date" id="startDate">
-      <label>Sampai</label><input type="date" id="endDate">
+    <div class="filter-row">
+      <div>
+        <label>Rentang Waktu</label>
+        <select id="rangeSelect" onchange="toggleCustom()">
+          <option value="hari">Hari Ini</option>
+          <option value="pekan">Pekan Ini</option>
+          <option value="bulan" selected>Bulan Ini</option>
+          <option value="rentang">Rentang Tanggal</option>
+        </select>
+      </div>
+      <div id="customRange" style="display:none;flex:2;gap:8px;flex-wrap:wrap;">
+        <div>
+          <label>Dari</label>
+          <input type="date" id="startDate">
+        </div>
+        <div>
+          <label>Sampai</label>
+          <input type="date" id="endDate">
+        </div>
+      </div>
+      <div>
+        <label>Kategori</label>
+        <select id="kategoriFilter">
+          <option value="semua">Semua Kategori</option>
+          <option value="Ringan">Ringan</option>
+          <option value="Sedang">Sedang</option>
+          <option value="Berat">Berat</option>
+        </select>
+      </div>
     </div>
 
-    <div style="margin-top:10px;">
-      <button onclick="tampilkanRekap()">🔍 Tampilkan Rekap</button>
-      <button id="exportBtn" onclick="exportExcel()" disabled>💾 Export Excel</button>
+    <div style="margin-top:8px;">
+      <button class="btn-primary" onclick="tampilkanRekap()">🔍 Tampilkan Rekap</button>
+      <button class="btn-secondary" id="exportBtn" onclick="exportExcel()" disabled>💾 Export Excel</button>
     </div>
 
-    <p id="info"></p>
-    <table><thead><tr id="rekapHead"></tr></thead><tbody id="rekapBody"></tbody></table>
+    <p id="info" class="warn"></p>
+
+    <div style="overflow-x:auto;margin-top:10px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Nama Santri</th>
+            <th>Kategori</th>
+            <th>Deskripsi</th>
+            <th>Petugas</th>
+          </tr>
+        </thead>
+        <tbody id="rekapBody"></tbody>
+      </table>
+    </div>
   </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  const firebaseConfig = { apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI", authDomain: "absensi-santri-fajrul-islam.firebaseapp.com", databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com", projectId: "absensi-santri-fajrul-islam", storageBucket: "absensi-santri-fajrul-islam.appspot.com", messagingSenderId: "739928369926", appId: "1:739928369926:web:7e95375c3ddba0f584cdd07" };
-  const app = initializeApp(firebaseConfig);
-  const db  = getDatabase(app);
-  let lastData = [];
-
-  window.toggleCustomDate = function(){ document.getElementById("customDate").style.display = document.getElementById("rangeSelect").value === "rentang" ? "block" : "none"; };
-  function getRange(){ const s=document.getElementById("startDate").value;const e=document.getElementById("endDate").value;return s&&e?{start:new Date(s),end:new Date(e+"T23:59:59")}:null;}
-
-  window.tampilkanRekap = async function(){
-    const info=document.getElementById("info");const tbody=document.getElementById("rekapBody");const thead=document.getElementById("rekapHead");const exportBtn=document.getElementById("exportBtn");
-    info.textContent="⏳ Mengambil data...";tbody.innerHTML="";thead.innerHTML="";exportBtn.disabled=true;
-    const range=getRange();const snap=await get(child(ref(db),"cahaya_app/pelanggaran_santri"));
-    if(!snap.exists()){info.textContent="❌ Tidak ada data.";return;}
-    const data=snap.val();const rows=[];
-    for(const[id,d]of Object.entries(data)){rows.push({tanggal:d.tanggal||"-",nama:d.nama||"-",kategori:d.kategori||"-",deskripsi:d.deskripsi||"-",penindak:d.petugas||"-"});}
-    if(!rows.length){info.textContent="ℹ️ Tidak ada data.";return;}
-    thead.innerHTML="<th>Tanggal</th><th>Nama Santri</th><th>Kategori</th><th>Deskripsi</th><th>Petugas</th>";
-    tbody.innerHTML=rows.map(r=>`<tr><td>${r.tanggal}</td><td>${r.nama}</td><td>${r.kategori}</td><td>${r.deskripsi}</td><td>${r.penindak}</td></tr>`).join("");
-    lastData=rows;exportBtn.disabled=false;info.textContent=`✅ ${rows.length} data ditemukan.`;
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
   };
 
-  window.exportExcel=function(){if(!lastData.length)return alert("Tidak ada data.");const ws=XLSX.utils.json_to_sheet(lastData);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Pelanggaran");XLSX.writeFile(wb,"Rekap_Pelanggaran.xlsx");};
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  let lastRows = [];
+
+  window.toggleCustom = function(){
+    const val = document.getElementById("rangeSelect").value;
+    document.getElementById("customRange").style.display = val === "rentang" ? "flex" : "none";
+  };
+
+  function getRange(mode){
+    const now = new Date();
+    let start, end;
+    if(mode === "hari"){
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      end   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,59);
+    }else if(mode === "pekan"){
+      const first = now.getDate() - now.getDay();
+      start = new Date(now.getFullYear(), now.getMonth(), first);
+      end   = new Date(now.getFullYear(), now.getMonth(), first+6, 23,59,59);
+    }else if(mode === "bulan"){
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end   = new Date(now.getFullYear(), now.getMonth()+1, 0, 23,59,59);
+    }else{
+      const s = document.getElementById("startDate").value;
+      const e = document.getElementById("endDate").value;
+      if(!s || !e) return null;
+      start = new Date(s);
+      end   = new Date(e + "T23:59:59");
+    }
+    return {start,end};
+  }
+
+  function normalizeDate(d){
+    if(!d) return null;
+    const t = new Date(d);
+    if(isNaN(t)) return null;
+    return t;
+  }
+
+  window.tampilkanRekap = async function(){
+    const info   = document.getElementById("info");
+    const tbody  = document.getElementById("rekapBody");
+    const exportBtn = document.getElementById("exportBtn");
+    tbody.innerHTML = "";
+    exportBtn.disabled = true;
+
+    const rangeSel = document.getElementById("rangeSelect").value;
+    const kategoriFilter = document.getElementById("kategoriFilter").value;
+    const range = getRange(rangeSel);
+    if(!range){ info.textContent = "❌ Lengkapi tanggal rentang."; return; }
+    const {start,end} = range;
+
+    info.textContent = "⏳ Mengambil data pelanggaran dari Firebase...";
+    const snap = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
+    if(!snap.exists()){
+      info.textContent = "❌ Tidak ada data pelanggaran.";
+      return;
+    }
+
+    const raw = snap.val();
+    const rows = [];
+
+    for(const [id, d] of Object.entries(raw)){
+      const tglObj = normalizeDate(d.tanggal || d.tgl || d.waktuSimpan);
+      if(!tglObj) continue;
+      if(tglObj < start || tglObj > end) continue;
+
+      const kategori = d.kategori || d.jenis || "-";
+      if(kategoriFilter !== "semua" && kategori !== kategoriFilter) continue;
+
+      const row = {
+        tanggal  : (d.tanggal || tglObj.toISOString().slice(0,10)),
+        santri   : d.santri || d.namaSantri || d.nama_santri || "-",
+        kategori : kategori,
+        deskripsi: d.keterangan || d.deskripsi || d.detail || d.kronologi || "-",
+        petugas  : d.naqib || d.petugas || d.pencatat || d.guru || "-"
+      };
+      rows.push(row);
+    }
+
+    if(!rows.length){
+      info.textContent = "ℹ️ Tidak ada data pada rentang & filter terpilih.";
+      return;
+    }
+
+    rows.sort((a,b) => a.tanggal.localeCompare(b.tanggal));
+
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.tanggal}</td>
+        <td>${r.santri}</td>
+        <td>${r.kategori}</td>
+        <td>${r.deskripsi}</td>
+        <td>${r.petugas}</td>
+      </tr>
+    `).join("");
+
+    lastRows = rows;
+    exportBtn.disabled = false;
+    info.textContent = `✅ ${rows.length} data ditemukan.`;
+    info.className = "ok";
+  };
+
+  window.exportExcel = function(){
+    if(!lastRows.length) return alert("Tidak ada data untuk diexport.");
+    const ws = XLSX.utils.json_to_sheet(lastRows, {header:["tanggal","santri","kategori","deskripsi","petugas"]});
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Pelanggaran");
+    const today = new Date().toISOString().slice(0,10);
+    XLSX.writeFile(wb, `Rekap_Pelanggaran_${today}.xlsx`);
+  };
 </script>
 </body>
 </html>
