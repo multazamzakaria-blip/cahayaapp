@@ -3,37 +3,264 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎓 Rekap Nilai Ujian</title>
+  <title>🎓 Rekap Nilai Ujian – CAHAYA APP</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f9fafb; margin: 0; color: #1f2937; }
-    header { background: #7c3aed; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
-    main { padding: 24px; max-width: 1100px; margin: auto; }
-    table { width: 100%; border-collapse: collapse; background: white; }
-    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; }
-    th { background: #7c3aed; color: white; }
-    button { background: #7c3aed; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; margin-top: 8px; font-weight: bold; }
+    body{font-family:"Poppins",Arial,sans-serif;background:#f3f4f6;margin:0;color:#111827;}
+    header{background:#0f766e;color:white;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;}
+    header h1{margin:0;font-size:1.2rem;font-weight:700;}
+    main{max-width:1100px;margin:24px auto;padding:0 16px 24px;}
+    .card{background:white;border-radius:16px;padding:20px;box-shadow:0 6px 18px rgba(0,0,0,0.08);}
+    label{font-weight:600;font-size:.9rem;}
+    select,input[type=date]{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;font-size:.9rem;box-sizing:border-box;}
+    .filter-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;}
+    .filter-row>div{flex:1;min-width:180px;}
+    button{border:none;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer;font-size:.9rem;margin-right:8px;}
+    .btn-primary{background:#0f766e;color:white;}
+    .btn-primary:hover{background:#115e59;}
+    .btn-secondary{background:white;color:#0f766e;border:1px solid #a7f3d0;}
+    .btn-secondary:hover{background:#ecfdf5;}
+    table{width:100%;border-collapse:collapse;margin-top:14px;font-size:.82rem;min-width:900px;}
+    th,td{border:1px solid #e5e7eb;padding:6px 8px;text-align:center;}
+    th{background:#0f766e;color:white;}
+    td.text-left{text-align:left;}
+    tr:nth-child(even) td{background:#f9fafb;}
+    .table-wrap{overflow-x:auto;margin-top:10px;}
+    #info{font-size:.85rem;margin-top:10px;}
+    .ok{color:#16a34a;} .warn{color:#ea580c;}
+    @media(max-width:640px){main{padding:0 8px 16px;}.card{padding:16px;}}
   </style>
 </head>
 <body>
 <header>
   <h1>🎓 Rekap Nilai Ujian</h1>
-  <button onclick="history.back()">⬅ Kembali</button>
+  <button onclick="history.back()" style="background:white;color:#0f766e;padding:6px 12px;border-radius:6px;border:none;font-weight:600;">⬅ Kembali</button>
 </header>
+
 <main>
-  <button onclick="tampilkan()">🔍 Tampilkan Rekap</button>
-  <button id="exportBtn" onclick="exportExcel()" disabled>💾 Export Excel</button>
-  <p id="info"></p>
-  <table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table>
+  <div class="card">
+    <div class="filter-row">
+      <div>
+        <label>Rentang Waktu (Tanggal Ujian)</label>
+        <select id="rangeSelect" onchange="toggleCustom()">
+          <option value="hari">Hari Ini</option>
+          <option value="pekan">Pekan Ini</option>
+          <option value="bulan" selected>Bulan Ini</option>
+          <option value="rentang">Rentang Tanggal</option>
+        </select>
+      </div>
+      <div id="customRange" style="display:none;flex:2;gap:8px;flex-wrap:wrap;">
+        <div>
+          <label>Dari</label>
+          <input type="date" id="startDate">
+        </div>
+        <div>
+          <label>Sampai</label>
+          <input type="date" id="endDate">
+        </div>
+      </div>
+      <div>
+        <label>Kelas</label>
+        <select id="kelasFilter">
+          <option value="semua">Semua Kelas</option>
+          <option value="Keilmuan Islam & Umum">Keilmuan Islam & Umum</option>
+          <option value="Bahasa Internasional">Bahasa Internasional</option>
+          <option value="Tahsin & Tahfiz Al-Qur'an">Tahsin & Tahfiz Al-Qur'an</option>
+        </select>
+      </div>
+      <div>
+        <label>Mapel</label>
+        <select id="mapelFilter">
+          <option value="semua">Semua Mapel</option>
+          <option>Fiqih</option>
+          <option>Nahwu</option>
+          <option>Akidah</option>
+          <option>Adab</option>
+          <option>Sirah</option>
+          <option>Sharaf</option>
+          <option>Balaghah</option>
+          <option>Kewirausahaan</option>
+          <option>Metode Pengajaran</option>
+          <option>Bahasa Arab</option>
+          <option>Bahasa Inggris</option>
+          <option>Tahsin</option>
+          <option>Tahfiz</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <button class="btn-primary" onclick="tampilkanRekap()">🔍 Tampilkan Rekap</button>
+      <button class="btn-secondary" id="exportBtn" onclick="exportExcel()" disabled>💾 Export Excel</button>
+    </div>
+
+    <p id="info" class="warn"></p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Santri</th>
+            <th>Kelas</th>
+            <th>Sub Program</th>
+            <th>Kelompok</th>
+            <th>Mapel</th>
+            <th>Bulan</th>
+            <th>Materi</th>
+            <th>Nilai</th>
+          </tr>
+        </thead>
+        <tbody id="rekapBody"></tbody>
+      </table>
+    </div>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-  const firebaseConfig={apiKey:"AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",authDomain:"absensi-santri-fajrul-islam.firebaseapp.com",databaseURL:"https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",projectId:"absensi-santri-fajrul-islam",storageBucket:"absensi-santri-fajrul-islam.appspot.com",messagingSenderId:"739928369926",appId:"1:739928369926:web:7e95375c3ddba0f584cdd07"};
-  const app=initializeApp(firebaseConfig);const db=getDatabase(app);let last=[];
-  window.tampilkan=async function(){const info=document.getElementById("info");info.textContent="⏳ Mengambil data...";const snap=await get(child(ref(db),"cahaya_app/nilai_ujian"));if(!snap.exists()){info.textContent="❌ Tidak ada data.";return;}const data=snap.val();const rows=[];for(const[id,d]of Object.entries(data)){rows.push({tanggal:d.tanggal||"-",nama:d.nama||"-",mapel:d.mapel||"-",nilai:d.nilai||"-",penguji:d.penguji||"-"});}document.getElementById("thead").innerHTML="<th>Tanggal</th><th>Nama</th><th>Mapel</th><th>Nilai</th><th>Penguji</th>";document.getElementById("tbody").innerHTML=rows.map(r=>`<tr><td>${r.tanggal}</td><td>${r.nama}</td><td>${r.mapel}</td><td>${r.nilai}</td><td>${r.penguji}</td></tr>`).join("");info.textContent=`✅ ${rows.length} data ditemukan.`;last=rows;document.getElementById("exportBtn").disabled=false;};
-  window.exportExcel=function(){if(!last.length)return alert("Tidak ada data.");const ws=XLSX.utils.json_to_sheet(last);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Nilai");XLSX.writeFile(wb,"Rekap_Nilai.xlsx");};
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  const BULAN_NAMA = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+  let lastRows = [];
+
+  window.toggleCustom = function(){
+    const val = document.getElementById("rangeSelect").value;
+    document.getElementById("customRange").style.display = val === "rentang" ? "flex" : "none";
+  };
+
+  function getRange(mode){
+    const now = new Date();
+    let start, end;
+    if(mode === "hari"){
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      end   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,59);
+    }else if(mode === "pekan"){
+      const first = now.getDate() - now.getDay();
+      start = new Date(now.getFullYear(), now.getMonth(), first);
+      end   = new Date(now.getFullYear(), now.getMonth(), first+6,23,59,59);
+    }else if(mode === "bulan"){
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end   = new Date(now.getFullYear(), now.getMonth()+1,0,23,59,59);
+    }else{
+      const s = document.getElementById("startDate").value;
+      const e = document.getElementById("endDate").value;
+      if(!s || !e) return null;
+      start = new Date(s);
+      end   = new Date(e + "T23:59:59");
+    }
+    return {start,end};
+  }
+
+  function normalizeDate(d){
+    if(!d) return null;
+    const t = new Date(d);
+    if(isNaN(t)) return null;
+    return t;
+  }
+
+  window.tampilkanRekap = async function(){
+    const info  = document.getElementById("info");
+    const tbody = document.getElementById("rekapBody");
+    const exportBtn = document.getElementById("exportBtn");
+    tbody.innerHTML = "";
+    exportBtn.disabled = true;
+
+    const rangeSel   = document.getElementById("rangeSelect").value;
+    const kelasFilter= document.getElementById("kelasFilter").value;
+    const mapelFilter= document.getElementById("mapelFilter").value;
+    const range = getRange(rangeSel);
+    if(!range){ info.textContent = "❌ Lengkapi tanggal rentang."; return; }
+    const {start,end} = range;
+
+    info.textContent = "⏳ Mengambil data nilai ujian dari Firebase...";
+    const snap = await get(child(ref(db), "cahaya_app/nilai_ujian"));
+    if(!snap.exists()){
+      info.textContent = "❌ Tidak ada data nilai ujian.";
+      return;
+    }
+
+    const raw = snap.val();
+    const rows = [];
+
+    for(const [id, d] of Object.entries(raw)){
+      const tglObj = normalizeDate(d.tanggal || d.tgl || d.timestamp);
+      if(!tglObj) continue;
+      if(tglObj < start || tglObj > end) continue;
+
+      const kelas = d.kelas || "-";
+      const mapel = d.mapel || "-";
+      if(kelasFilter !== "semua" && kelas !== kelasFilter) continue;
+      if(mapelFilter !== "semua" && mapel !== mapelFilter) continue;
+
+      const bulanIndex = parseInt(d.bulan,10);
+      const bulanNama = Number.isInteger(bulanIndex) && bulanIndex>=0 && bulanIndex<12 ? BULAN_NAMA[bulanIndex] : "-";
+
+      rows.push({
+        tanggal   : d.tanggal || tglObj.toISOString().slice(0,10),
+        santri    : d.santri || d.nama || "-",
+        kelas     : kelas,
+        subProgram: d.subProgram || "-",
+        kelompok  : d.kelompok || "-",
+        mapel     : mapel,
+        bulan     : bulanNama,
+        materi    : d.materi || "-",
+        nilai     : d.nilai ?? "-"
+      });
+    }
+
+    if(!rows.length){
+      info.textContent = "ℹ️ Tidak ada data pada rentang & filter terpilih.";
+      return;
+    }
+
+    rows.sort((a,b) => a.tanggal.localeCompare(b.tanggal) || a.santri.localeCompare(b.santri));
+
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.tanggal}</td>
+        <td class="text-left">${r.santri}</td>
+        <td>${r.kelas}</td>
+        <td>${r.subProgram}</td>
+        <td>${r.kelompok}</td>
+        <td>${r.mapel}</td>
+        <td>${r.bulan}</td>
+        <td class="text-left">${r.materi}</td>
+        <td>${r.nilai}</td>
+      </tr>
+    `).join("");
+
+    lastRows = rows;
+    exportBtn.disabled = false;
+    info.textContent = `✅ ${rows.length} data nilai ujian ditemukan.`;
+    info.className = "ok";
+  };
+
+  window.exportExcel = function(){
+    if(!lastRows.length) return alert("Tidak ada data untuk diexport.");
+    const ws = XLSX.utils.json_to_sheet(lastRows, {
+      header:["tanggal","santri","kelas","subProgram","kelompok","mapel","bulan","materi","nilai"]
+    });
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "NilaiUjian");
+    const today = new Date().toISOString().slice(0,10);
+    XLSX.writeFile(wb, `Rekap_Nilai_Ujian_${today}.xlsx`);
+  };
 </script>
 </body>
 </html>
