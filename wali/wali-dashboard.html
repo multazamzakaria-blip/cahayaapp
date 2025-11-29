@@ -390,20 +390,21 @@
     }
   }
 
-    async function loadProgresBulanan(bulan) {
+      async function loadProgresBulanan(bulan) {
     const namaSantri = user.namaAnak.trim();
     const [tahun, bulanIndex] = bulan.split("-");
     const bulanNum = parseInt(bulanIndex) - 1;
+    const namaUpper = namaSantri.toUpperCase();
 
     content.innerHTML = `
-      <div class='card blue' id='laporanBulanan'>
-        <h2>📆 Laporan Bulanan Santri</h2>
-        <p style='text-align:center;opacity:0.9;'>Memuat data ${namaSantri} bulan ${bulanIndex}/${tahun}...</p>
+      <div class="card blue" id="laporanBulanan">
+        <h2 style="text-align:center;">📊 Laporan Bulanan Santri</h2>
+        <p style="text-align:center;opacity:0.8;">Memuat data ${namaSantri} bulan ${bulanIndex}/${tahun}...</p>
       </div>
     `;
 
     try {
-      // ambil semua data dari Firebase
+      // ambil data firebase (versi admin)
       const [
         assesGuruSnap,
         assesNaqibSnap,
@@ -422,171 +423,225 @@
         get(child(ref(db), "cahaya_app/pelanggaran_santri")),
       ]);
 
-      // ubah ke array aman
-      const assesGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
-      const assesNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
-      const absHarian = absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [];
-      const absKbm = absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [];
-      const ujian = ujianSnap.exists() ? Object.values(ujianSnap.val()) : [];
-      const tahfiz = tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [];
-      const pelanggaran = pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [];
+      const data = {
+        assesmentGuru: assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [],
+        assesmentNaqib: assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [],
+        absensiNaqib: absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [],
+        absensiKbm: absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [],
+        ujian: ujianSnap.exists() ? Object.values(ujianSnap.val()) : [],
+        tahfiz: tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [],
+        pelanggaranAll: pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [],
+      };
 
       function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
       function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
 
-      const namaUpper = namaSantri.toUpperCase();
+      // fungsi kehadiran
+      function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) {
+        const kehadiran = {};
+        function tambah(prog, status) {
+          if (!kehadiran[prog]) kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+          const s = (status || "").toLowerCase();
+          if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
+          kehadiran[prog].total++;
+        }
+
+        absensiNaqib.forEach(log => {
+          if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+          (log.data || []).forEach(d => {
+            if ((d.nama || "").toUpperCase() === namaUpper) tambah(log.program || "Program Harian", d.status);
+          });
+        });
+
+        absensiGuru.forEach(log => {
+          if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+          (log.data || []).forEach(d => {
+            if ((d.nama || "").toUpperCase() === namaUpper) tambah(log.mapel || "KBM", d.status);
+          });
+        });
+
+        const result = Object.entries(kehadiran).map(([prog,v],i)=>{
+          const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
+          return {
+            no: i+1,
+            program: prog,
+            hadir: toP(v.hadir),
+            izin: toP(v.izin),
+            sakit: toP(v.sakit),
+            alfa: toP(v.alfa)
+          };
+        });
+
+        if (result.length) {
+          const avg = x => Math.round(result.reduce((s,r)=>s + r[x],0) / result.length);
+          result.push({
+            no: "",
+            program: "<b>Rata-rata</b>",
+            hadir: avg("hadir"),
+            izin: avg("izin"),
+            sakit: avg("sakit"),
+            alfa: avg("alfa")
+          });
+        }
+        return result;
+      }
+
+      const laporanDiv = buatLaporanSantri({
+        nama: namaSantri,
+        bulan: bulanNum,
+        tahun: parseInt(tahun),
+        ...data
+      });
+
+      content.innerHTML = "";
+      content.appendChild(laporanDiv);
+
+    } catch (err) {
+      content.innerHTML = `<div class="card red"><h2>❌ Gagal memuat laporan</h2><p>${err.message}</p></div>`;
+    }
+
+    // ambil fungsi buatLaporanSantri dari admin, modifikasi tampilannya
+    function buatLaporanSantri(ctx) {
+      const {
+        nama, bulan, tahun,
+        assesmentGuru, assesmentNaqib,
+        absensiNaqib, absensiKbm,
+        ujian, tahfiz, pelanggaranAll
+      } = ctx;
+
+      const namaUpper = (nama || "").toUpperCase();
       const namaBulan = [
         "Januari","Februari","Maret","April","Mei","Juni",
         "Juli","Agustus","September","Oktober","November","Desember"
-      ][bulanNum];
+      ][bulan];
 
-      // cari data asesmen guru & naqib bulan ini
-      const asesGuru = assesGuru.find(a => a.namaSantri === namaSantri && isSameMonthYear(a.tanggal || a.tgl, bulanNum, tahun)) || {};
-      const asesNaqib = assesNaqib.find(a => a.namaSantri === namaSantri && isSameMonthYear(a.tanggal || a.tgl, bulanNum, tahun)) || {};
+      const asesGuru =
+        assesmentGuru
+          .filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun))
+          .at(-1) || {};
 
-      // narasi
-      const narasiSpiritual = asesGuru.narasiSpiritual || asesGuru.catatanSpiritual || "Belum ada catatan dimensi Spiritual (Cinta Allah).";
-      const narasiRel = asesNaqib.narasiRelational || asesNaqib.catatanRelasi || "Belum ada catatan dimensi Relational (Akhlak Mulia).";
-      const narasiEmo = asesNaqib.narasiEmotional || asesNaqib.catatanHati || "Belum ada catatan dimensi Emotional (Hati Bersih).";
-      const narasiInt = asesGuru.narasiIntellectual || asesGuru.catatanAkal || "Belum ada catatan dimensi Intellectual (Akal Cerdas).";
-      const narasiFis = asesNaqib.narasiPhysical || asesNaqib.catatanFisik || "Belum ada catatan dimensi Physical (Fisik Berdaya).";
+      const asesNaqib =
+        assesmentNaqib
+          .filter(a => a.namaSantri === nama && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun))
+          .at(-1) || {};
+
+      const narasiSpiritual = asesGuru.narasiSpiritual || asesGuru.catatanSpiritual || "Belum ada catatan Spiritual.";
+      const narasiIntellectual = asesGuru.narasiIntellectual || asesGuru.catatanAkal || "Belum ada catatan Akal Cerdas.";
+      const narasiRel = asesNaqib.narasiRelational || asesNaqib.catatanRelasi || "Belum ada catatan Akhlak Mulia.";
+      const narasiEmo = asesNaqib.narasiEmotional || asesNaqib.catatanHati || "Belum ada catatan Hati Bersih.";
+      const narasiFis = asesNaqib.narasiPhysical || asesNaqib.catatanFisik || "Belum ada catatan Fisik Berdaya.";
       const namaNaqib = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
 
-      // hitung kehadiran
-      function hitungKehadiran(arr, field) {
-        let hadir=0, izin=0, sakit=0, alfa=0, total=0;
-        arr.forEach(log=>{
-          if (!isSameMonthYear(log.tanggal, bulanNum, tahun)) return;
-          (log.data||[]).forEach(d=>{
-            if (d.nama?.trim().toUpperCase() === namaUpper) {
-              const s=(d.status||"").toLowerCase();
-              if(s.includes("hadir")) hadir++;
-              else if(s.includes("izin")) izin++;
-              else if(s.includes("sakit")) sakit++;
-              else if(s.includes("alfa")) alfa++;
-              total++;
-            }
-          });
-        });
-        const persen = x => total ? Math.round((x/total)*100) : 0;
-        return { hadir: persen(hadir), izin: persen(izin), sakit: persen(sakit), alfa: persen(alfa), total };
-      }
+      const wrapper = document.createElement("div");
+      wrapper.className = "card green";
+      wrapper.style.background = "rgba(255,255,255,0.1)";
+      wrapper.style.backdropFilter = "blur(10px)";
+      wrapper.style.padding = "20px";
+      wrapper.innerHTML = `
+        <h2 style="text-align:center;">📋 LAPORAN BULANAN SANTRI</h2>
+        <p style="text-align:center;">Pesantren Cahaya Fajrul Islam</p>
+        <h3 style="text-align:center;">${namaUpper}</h3>
+        <p style="text-align:center;font-size:0.9rem;">Bulan ${namaBulan} ${tahun}<br>Naqib: ${namaNaqib}</p>
 
-      const hadirProg = hitungKehadiran(absHarian,"program");
-      const hadirKbm = hitungKehadiran(absKbm,"mapel");
+        <h4>🌈 Dimensi CAHAYA</h4>
+        <p><b>🕋 Cinta Allah:</b> ${narasiSpiritual}</p>
+        <p><b>🤝 Akhlak Mulia:</b> ${narasiRel}</p>
+        <p><b>💓 Hati Bersih:</b> ${narasiEmo}</p>
+        <p><b>🧠 Akal Cerdas:</b> ${narasiIntellectual}</p>
+        <p><b>🏃‍♂️ Fisik Berdaya:</b> ${narasiFis}</p>
+      `;
 
-      // nilai ujian
-      const nilaiUjian = ujian.filter(u => u.santri === namaSantri && isSameMonthYear(u.tanggal, bulanNum, tahun));
-      const rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s,u)=>s+(+u.nilai||0),0)/nilaiUjian.length) : 0;
+      // tambah kehadiran
+      const hadir = hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiKbm);
+      wrapper.innerHTML += `
+        <h4>🗓️ Kehadiran</h4>
+        ${hadir.length ? `
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr>
+            ${hadir.map(r=>`
+              <tr>
+                <td>${r.no}</td>
+                <td>${r.program}</td>
+                <td style="color:#16a34a;">${r.hadir}%</td>
+                <td style="color:#3b82f6;">${r.izin}%</td>
+                <td style="color:#eab308;">${r.sakit}%</td>
+                <td style="color:#dc2626;">${r.alfa}%</td>
+              </tr>
+            `).join("")}
+          </table>` : `<p>Belum ada data kehadiran.</p>`}
+      `;
 
-      // tahfiz
-      const dataTahfiz = tahfiz.filter(t=>isSameMonthYear(t.tanggal,bulanNum,tahun))
-                               .flatMap(t=>t.data||[])
-                               .filter(d=>d.nama===namaSantri);
-
-      // pelanggaran
-      const dataPelanggaran = pelanggaran.filter(p=>p.santri===namaSantri && isSameMonthYear(p.tanggal,bulanNum,tahun));
-
-      // tampilkan hasil
-      content.innerHTML = `
-      <div class='card blue laporan-bulanan'>
-        <h2 style='text-align:center;'>📋 LAPORAN BULANAN SANTRI</h2>
-        <p style='text-align:center;margin-top:-10px;'>Pesantren Cahaya Fajrul Islam</p>
-        <h3 style='text-align:center;margin-bottom:6px;'>${namaUpper}</h3>
-        <p style='text-align:center;font-size:0.9rem;opacity:0.8;'>Bulan ${namaBulan} ${tahun}<br>Naqib: ${namaNaqib}</p>
-
-        <div class='section'>
-          <h4>🌈 Dimensi CAHAYA</h4>
-          <p><b>🕋 Cinta Allah (Spiritual):</b> ${narasiSpiritual}</p>
-          <p><b>🤝 Akhlak Mulia (Relational):</b> ${narasiRel}</p>
-          <p><b>💓 Hati Bersih (Emotional):</b> ${narasiEmo}</p>
-          <p><b>🧠 Akal Cerdas (Intellectual):</b> ${narasiInt}</p>
-          <p><b>🏃‍♂️ Fisik Berdaya (Physical):</b> ${narasiFis}</p>
-        </div>
-
-        <div class='section'>
-          <h4>🗓️ Rekap Kehadiran</h4>
-          <table>
-            <tr><th>Kegiatan</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr>
-            <tr><td>Program Harian</td><td>${hadirProg.hadir}%</td><td>${hadirProg.izin}%</td><td>${hadirProg.sakit}%</td><td>${hadirProg.alfa}%</td></tr>
-            <tr><td>Pembelajaran (KBM)</td><td>${hadirKbm.hadir}%</td><td>${hadirKbm.izin}%</td><td>${hadirKbm.sakit}%</td><td>${hadirKbm.alfa}%</td></tr>
-          </table>
-        </div>
-
-        <div class='section'>
-          <h4>🧾 Nilai Ujian</h4>
-          ${nilaiUjian.length ? `
-          <table>
+      // ujian
+      const nilaiUjian = ujian.filter(u=>u.santri===nama && isSameMonthYear(u.tanggal, bulan, tahun));
+      let rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s,u)=>s+(+u.nilai||0),0)/nilaiUjian.length):0;
+      wrapper.innerHTML += `
+        <h4>🧾 Nilai Ujian</h4>
+        ${nilaiUjian.length ? `
+          <table style="width:100%;border-collapse:collapse;">
             <tr><th>No</th><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr>
             ${nilaiUjian.map((u,i)=>`
-              <tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>
+              <tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum"}</td></tr>
             `).join("")}
-            <tr><td colspan='3'><b>Rata-rata</b></td><td colspan='2'><b>${rataUjian}</b></td></tr>
+            <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr>
           </table>
-          ` : `<p style='opacity:0.8;'>Belum ada data ujian bulan ini.</p>`}
-        </div>
+        `:`<p>Belum ada data ujian.</p>`}
+      `;
 
-        <div class='section'>
-          <h4>📖 Setoran Tahfiz</h4>
-          ${dataTahfiz.length ? `
-          <table>
+      // tahfiz
+      const dataTahfiz = tahfiz.filter(t=>isSameMonthYear(t.tanggal,bulan,tahun))
+                               .flatMap(t=>t.data||[])
+                               .filter(d=>d.nama===nama);
+      wrapper.innerHTML += `
+        <h4>📖 Setoran Tahfiz</h4>
+        ${dataTahfiz.length ? `
+          <table style="width:100%;border-collapse:collapse;">
             <tr><th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th></tr>
             ${dataTahfiz.map((d,i)=>`
               <tr><td>${i+1}</td><td>${d.surat||d.setoran||"-"}</td><td>${d.kesalahan||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>
             `).join("")}
           </table>
-          ` : `<p style='opacity:0.8;'>Belum ada setoran tahfiz bulan ini.</p>`}
-        </div>
-
-        <div class='section'>
-          <h4>⚠️ Pelanggaran</h4>
-          ${dataPelanggaran.length ? `
-          <table>
-            <tr><th>No</th><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th></tr>
-            ${dataPelanggaran.map((p,i)=>`
-              <tr><td>${i+1}</td><td>${p.tanggal||"-"}</td><td>${p.namaPelanggaran||"-"}</td><td>${p.kategori||"-"}</td><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td></tr>
-            `).join("")}
-          </table>
-          ` : `<p style='opacity:0.8;'>Tidak ada pelanggaran bulan ini.</p>`}
-        </div>
-
-        <div style='text-align:center;margin-top:20px;'>
-          <button onclick='exportPDF()' style='background:#2563eb;border:none;padding:10px 18px;border-radius:8px;color:white;cursor:pointer;font-weight:600;'>⬇️ Unduh PDF</button>
-        </div>
-      </div>
+        `:`<p>Belum ada data tahfiz.</p>`}
       `;
 
-      // tambahkan library PDF
-      if (!window.html2canvas) {
-        const s1 = document.createElement("script");
-        s1.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-        document.body.appendChild(s1);
-      }
-      if (!window.jspdf) {
-        const s2 = document.createElement("script");
-        s2.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-        document.body.appendChild(s2);
-      }
+      // pelanggaran
+      const dataPelanggaran = pelanggaranAll.filter(p=>p.santri===nama && isSameMonthYear(p.tanggal,bulan,tahun));
+      wrapper.innerHTML += `
+        <h4>⚠️ Pelanggaran</h4>
+        ${dataPelanggaran.length ? `
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><th>No</th><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th></tr>
+            ${dataPelanggaran.map((p,i)=>`
+              <tr><td>${i+1}</td><td>${p.tanggal}</td><td>${p.namaPelanggaran||"-"}</td><td>${p.kategori||"-"}</td><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td></tr>
+            `).join("")}
+          </table>
+        `:`<p>Tidak ada pelanggaran bulan ini.</p>`}
+      `;
 
-      // fungsi export PDF
-      window.exportPDF = async function() {
-        const el = document.querySelector(".laporan-bulanan");
-        if (!el) return alert("Laporan belum siap.");
-        const canvas = await html2canvas(el, { scale: 2, useCORS: true, scrollY: 0 });
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new window.jspdf.jsPDF("p","mm","a4");
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const imgWidth = pageWidth - 20;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-        const cleanName = namaSantri.toUpperCase().replace(/\s+/g,"_");
-        pdf.save(`Laporan_${cleanName}_${namaBulan}_${tahun}.pdf`);
-      };
+      // tombol export
+      wrapper.innerHTML += `
+        <div style="text-align:center;margin-top:20px;">
+          <button onclick="exportPDF('${namaUpper}','${namaBulan}','${tahun}')" 
+            style="background:#2563eb;border:none;padding:10px 18px;border-radius:8px;color:white;font-weight:600;cursor:pointer;">⬇️ Unduh PDF</button>
+        </div>
+      `;
 
-    } catch (err) {
-      content.innerHTML = `<div class='card red'><h2>❌ Gagal memuat laporan</h2><p>${err.message}</p></div>`;
+      return wrapper;
     }
+
+    // export PDF (pakai html2canvas + jspdf)
+    window.exportPDF = async function(nama, bulan, tahun) {
+      const el = document.querySelector(".card.green");
+      const canvas = await html2canvas(el, { scale: 2, useCORS: true, scrollY: 0 });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new window.jspdf.jsPDF("p","mm","a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth - 20;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+      pdf.save(`Laporan_${nama}_${bulan}_${tahun}.pdf`);
+    };
   }
+
 
 
   function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
