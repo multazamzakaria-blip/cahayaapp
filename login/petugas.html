@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Petugas - CAHAYA APP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; margin: 0; color: white;
+    }
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 36px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      width: 90%; max-width: 380px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    img { width: 80px; border-radius: 50%; margin-bottom: 12px; }
+    input {
+      width: 100%; padding: 10px; margin-bottom: 10px;
+      border: none; border-radius: 10px;
+      font-size: 14px; background: rgba(255,255,255,0.95); color: #111;
+    }
+    button {
+      background: white; color: #0f766e; border: none; border-radius: 10px;
+      width: 100%; padding: 10px; font-weight: bold; cursor: pointer;
+    }
+    button:hover { background: #f3f4f6; }
+    a { color: #facc15; display: block; margin-top: 12px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img src="../logofi.png">
+    <h2>Login Petugas</h2>
+    <p>Masuk sebagai Admin, Guru, atau Naqib</p>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Masuk</button>
+    <a href="../index.html">⬅️ Kembali</a>
+  </div>
+
+  <script>
+    const users = [
+      { username: "admin", password: "cahaya2025", role: "admin", label: "Admin Pesantren" },
+      { username: "multazam", password: "guru123", role: "guru", label: "Ustadz Multazam" },
+      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal" },
+      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian" },
+      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita" }
+    ];
+
+    function login(){
+      const u = username.value.trim().toLowerCase();
+      const p = password.value.trim();
+      const found = users.find(a => a.username === u && a.password === p);
+      if(!found){ alert("❌ Username atau password salah."); return; }
+
+      localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
+
+      if(found.role === "guru") location.href = "../guru/fitur.html";
+      else if(found.role === "naqib") location.href = "../naqib/dashboard.html";
+      else if(found.role === "admin") location.href = "../admin/index.html";
+    }
+  </script>
+</body>
+</html>
