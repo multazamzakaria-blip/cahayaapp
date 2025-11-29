@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chat Pengurus – CAHAYA APP</title>
+<link rel="stylesheet" href="wali-style.css" />
+</head>
+<body>
+<header><h1>Chat Pengurus Pesantren</h1></header>
+
+<main>
+  <div class="card">
+    <p>Pilih bagian pengurus yang ingin dihubungi:</p>
+    <select id="bagian" style="width:100%;padding:8px;margin-bottom:10px">
+      <option value="">-- Pilih Bagian --</option>
+      <option value="Call Center">📞 Call Center</option>
+      <option value="Kesehatan">🏥 Kesehatan</option>
+      <option value="Pengasuhan">💚 Pengasuhan</option>
+      <option value="Pengajaran">📘 Pengajaran</option>
+    </select>
+
+    <textarea id="pesan" rows="4" placeholder="Tulis pesan Anda..." style="width:100%;padding:8px"></textarea>
+    <button onclick="kirimPesan()">Kirim Pesan</button>
+  </div>
+
+  <div class="card" id="status"></div>
+  <button class="logout" onclick="logoutWali()">Kembali</button>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { checkWaliLogin, logoutWali } from "./wali-script.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId: "absensi-santri-fajrul-islam",
+  storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+  messagingSenderId: "739928369926",
+  appId: "1:739928369926:web:7e95375c3ddba0f584cdd07",
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const user = checkWaliLogin();
+window.logoutWali = logoutWali;
+
+window.kirimPesan = async function () {
+  const bagian = document.getElementById("bagian").value;
+  const pesan = document.getElementById("pesan").value.trim();
+  if (!bagian || !pesan) return alert("Lengkapi bagian dan isi pesan.");
+
+  const log = {
+    bagian,
+    pesan,
+    namaAnak: user.namaAnak,
+    username: user.username,
+    waktu: new Date().toISOString(),
+  };
+
+  await push(ref(db, "cahaya_app/pesan_wali"), log);
+  document.getElementById("status").innerHTML = "✅ Pesan terkirim ke bagian " + bagian;
+  document.getElementById("pesan").value = "";
+};
+</script>
+</body>
+</html>
