@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Wali Santri - CAHAYA APP</title>
+<link rel="stylesheet" href="wali-style.css">
+</head>
+<body class="centered">
+  <div class="login-card">
+    <h2>🔑 Login Wali Santri</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="loginWali()">Masuk</button>
+  </div>
+
+<script>
+function loginWali() {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+
+  // Contoh login sederhana (nanti bisa disambung Firebase)
+  if (user === "" || pass === "") {
+    alert("Isi username dan password dulu ya.");
+    return;
+  }
+
+  // Simulasi data login wali
+  const data = {
+    nama: "Ayah/Bunda Najmihadi Syauqii Tamaam",
+    namaAnak: "Najmihadi Syauqii Tamaam",
+    username: user
+  };
+
+  localStorage.setItem("waliSantri", JSON.stringify(data));
+  window.location.href = "wali-dashboard.html";
+}
+</script>
+</body>
+</html>
