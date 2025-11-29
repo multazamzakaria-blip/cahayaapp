@@ -19,6 +19,48 @@
     #content section {
       animation: fadeIn 0.4s ease;
     }
+
+    /* === GRID DEFAULT === */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    /* === KHUSUS HP: 1 LINE SCROLL === */
+    @media (max-width: 768px) {
+      .menu-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+      }
+
+      .menu-card {
+        flex: 0 0 45%; /* 2 kartu muat di layar kecil */
+        min-width: 180px;
+        scroll-snap-align: start;
+      }
+
+      /* Untuk layar HP sangat kecil (≤400px), 1 baris 4 langsung */
+      @media (max-width: 400px) {
+        .menu-card {
+          flex: 0 0 25%; /* 4 kartu pas satu baris */
+          min-width: 90px;
+          padding: 10px 5px;
+        }
+        .menu-card img {
+          width: 32px;
+          height: 32px;
+        }
+        .menu-card h4 {
+          font-size: 0.75rem;
+        }
+      }
+    }
   </style>
 </head>
 
@@ -30,22 +72,22 @@
     <div class="menu-grid">
       <div class="menu-card" onclick="loadPage('laporan-harian.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/3185/3185656.png" alt="">
-        <h4>Laporan Harian</h4>
+        <h4>Harian</h4>
       </div>
 
       <div class="menu-card" onclick="loadPage('laporan-pekanan.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="">
-        <h4>Laporan Pekanan</h4>
+        <h4>Pekanan</h4>
       </div>
 
       <div class="menu-card" onclick="loadPage('laporan-bulanan.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="">
-        <h4>Laporan Bulanan</h4>
+        <h4>Bulanan</h4>
       </div>
 
       <div class="menu-card" onclick="loadPage('chat-pengurus.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png" alt="">
-        <h4>Chat Pengurus</h4>
+        <h4>Chat</h4>
       </div>
     </div>
 
