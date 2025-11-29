@@ -25,30 +25,22 @@
       overflow: hidden;
     }
 
-    /* === SPLASH SCREEN === */
+    /* === SPLASH LOGO === */
     #splash {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: var(--green-dark);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 10;
-      animation: fadeOut 2s ease forwards;
-      animation-delay: 2.3s;
+      animation: fadeOut 1.5s ease forwards;
+      animation-delay: 1.5s;
     }
     #splash img {
-      width: 100px;
-      animation: zoomIn 1.5s ease;
-    }
-    #splash h1 {
-      margin: 10px 0 4px;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-    }
-    #splash p {
-      font-size: 0.9rem;
-      opacity: 0.9;
+      width: 120px;
+      animation: zoomIn 1.3s ease;
     }
     @keyframes zoomIn {
       0% { transform: scale(0); opacity: 0; }
@@ -61,34 +53,37 @@
     /* === HEADER LOGO === */
     .logo-area {
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .logo-area img {
-      width: 70px;
-      margin-bottom: 10px;
+      width: 90px;
+      vertical-align: middle;
+      margin-right: 10px;
     }
     .logo-area h1 {
-      margin: 0;
-      font-size: 1.6rem;
+      display: inline-block;
+      font-size: 2rem;
       font-weight: 700;
+      margin: 0;
+      vertical-align: middle;
     }
     .logo-area p {
-      margin: 0;
-      font-size: 0.95rem;
-      opacity: 0.85;
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
 
     /* === LOGIN BOX === */
     .login-box {
       background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-      width: 90%;
-      max-width: 350px;
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      width: 85%;
+      max-width: 280px;
       text-align: center;
-      animation: slideUp 0.8s ease 2.2s both;
+      animation: slideUp 0.8s ease 1.4s both;
     }
     @keyframes slideUp {
       from { transform: translateY(40px); opacity: 0; }
@@ -97,10 +92,10 @@
 
     .login-box input {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 14px;
+      padding: 10px;
+      margin-bottom: 10px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 14px;
       background: rgba(255, 255, 255, 0.95);
       color: #111;
@@ -110,9 +105,9 @@
       background: var(--yellow);
       color: #1f2937;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       font-weight: bold;
       cursor: pointer;
       transition: 0.3s;
@@ -130,18 +125,17 @@
     }
 
     @media (max-width: 480px) {
-      .logo-area h1 { font-size: 1.3rem; }
-      .logo-area p { font-size: 0.85rem; }
+      .logo-area img { width: 70px; }
+      .logo-area h1 { font-size: 1.5rem; }
+      .login-box { max-width: 240px; padding: 20px; }
     }
   </style>
 </head>
 
 <body>
-  <!-- SPLASH LOGO -->
+  <!-- SPLASH -->
   <div id="splash">
-    <img src="logofi.png" alt="Logo Cahaya App">
-    <h1>CAHAYA APP</h1>
-    <p>Pesantren Cahaya Fajrul Islam</p>
+    <img src="logofi.png" alt="Logo Cahaya App" />
   </div>
 
   <!-- HEADER -->
@@ -178,13 +172,13 @@
       { username: "kamal", password: "guru123", role: "guru", label: "Mu'allim Kamal" },
       { username: "evita", password: "guru123", role: "guru", label: "Mrs Evita" },
 
-      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas Bayu Aditya", naqibName: "Dimas" },
-      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen Prayitno", naqibName: "Regen" },
-      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian", naqibName: "Favian" },
-      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
-      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal", naqibName: "Kamal" },
-      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
-      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" },
+      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas" },
+      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen" },
+      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian" },
+      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan" },
+      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal" },
+      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita" },
+      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah" },
 
       { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
     ];
@@ -316,6 +310,7 @@
       {nama:"Fitrah Kirana",username:"fitrah607",password:"Cahaya@7839"}
     ];
 
+
     function login() {
       const u = username.value.trim().toLowerCase();
       const p = password.value.trim();
@@ -340,7 +335,6 @@
       }
     }
 
-    // AUTO LOGIN — hanya aktif jika belum logout
     (function autoLogin() {
       const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
       if (!user) return;
