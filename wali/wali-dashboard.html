@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Wali Santri - CAHAYA APP</title>
   <link rel="stylesheet" href="wali-style.css">
   <style>
@@ -22,6 +22,28 @@
 
     header {
       text-align: center;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+
+    #greeting {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .logout {
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-block;
       margin-bottom: 10px;
     }
 
@@ -54,17 +76,8 @@
       background: rgba(255,255,255,0.2);
       color: white;
     }
-    .filter input::-webkit-calendar-picker-indicator { filter: invert(1); }
 
-    .logout {
-      background: #dc2626;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-weight: 600;
-    }
+    .filter input::-webkit-calendar-picker-indicator { filter: invert(1); }
 
     .card {
       background: rgba(255,255,255,0.1);
@@ -72,37 +85,52 @@
       padding: 16px;
       margin-top: 12px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-      overflow-x: auto; /* ✅ tabel bisa discroll di HP */
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
-      min-width: 480px; /* ✅ agar tidak pecah di HP */
       border-collapse: collapse;
       font-size: 0.85rem;
       margin-top: 8px;
+      table-layout: fixed;
     }
 
     th, td {
       border: 1px solid rgba(255,255,255,0.2);
       padding: 6px;
       text-align: left;
+      word-wrap: break-word;
     }
-    th { background: rgba(255,255,255,0.15); }
+
+    th {
+      background: rgba(255,255,255,0.15);
+    }
 
     .badge {
       border-radius: 6px;
       padding: 2px 6px;
       font-size: 0.75rem;
       font-weight: 600;
+      color: white;
     }
+
     .badge-hadir { background: #16a34a; }
     .badge-izin { background: #0ea5e9; }
     .badge-sakit { background: #eab308; }
     .badge-alfa { background: #dc2626; }
 
     @media (max-width:600px) {
-      .toolbar { flex-direction: column; align-items: stretch; }
+      header h1 {
+        font-size: 1.25rem; /* ✅ agar muat 1 baris di HP */
+      }
+      #greeting {
+        font-size: 0.9rem;
+      }
+      .toolbar { 
+        flex-direction: column; 
+        align-items: stretch;
+      }
     }
   </style>
 </head>
@@ -111,6 +139,7 @@
     <header>
       <h1>🦁 Dashboard Wali Santri</h1>
       <div id="greeting"></div>
+      <button class="logout" onclick="logoutWali()">Keluar</button>
     </header>
 
     <div class="toolbar">
@@ -123,8 +152,6 @@
         <label for="tanggal">Tanggal:</label>
         <input type="date" id="tanggal" />
       </div>
-
-      <button class="logout" onclick="logoutWali()">Keluar</button>
     </div>
 
     <main id="content"></main>
@@ -159,7 +186,6 @@
     tanggalInput.value = today;
 
     tanggalInput.addEventListener("change", () => loadLaporanHarian(tanggalInput.value));
-
     document.addEventListener("DOMContentLoaded", () => loadLaporanHarian(today));
 
     async function loadLaporanHarian(tanggal) {
@@ -177,12 +203,12 @@
           return;
         }
 
-        let html = `<table><tr><th>Tanggal</th><th>Program</th><th>Status</th></tr>`;
+        let html = `<table><tr><th>Program</th><th>Status</th></tr>`;
         Object.values(snapProg.val()).forEach(d => {
           if (d.tanggal === tanggal && d.data) {
             d.data.forEach(s => {
               if (s.nama.trim().toUpperCase() === nama) {
-                html += `<tr><td>${d.tanggal}</td><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
+                html += `<tr><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
               }
             });
           }
