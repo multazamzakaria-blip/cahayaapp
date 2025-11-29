@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Wali Santri - CAHAYA APP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
+      color: #fff;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(0,0,0,0.2);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      padding: 18px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      border-bottom: 2px solid rgba(255,255,255,0.15);
+    }
+    main {
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .card:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-4px);
+    }
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 14px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.25);
+    }
+    button {
+      background: #facc15;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+    button:hover {
+      background: #fde68a;
+    }
+  </style>
+</head>
+<body>
+  <header id="greeting">
+    🌅 CAHAYA APP – Wali Santri
+  </header>
+
+  <main>
+    <div class="card" onclick="go('laporan-harian.html')">
+      <div class="icon">📘</div>
+      <div>Laporan Harian</div>
+    </div>
+    <div class="card" onclick="go('laporan-pekanan.html')">
+      <div class="icon">📆</div>
+      <div>Laporan Pekanan</div>
+    </div>
+    <div class="card" onclick="go('laporan-bulanan.html')">
+      <div class="icon">📊</div>
+      <div>Laporan Bulanan</div>
+    </div>
+    <div class="card" onclick="go('chat-pengurus.html')">
+      <div class="icon">💬</div>
+      <div>Chat Pengurus</div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Pesantren Cahaya Fajrul Islam
+    <br>
+    <button onclick="logout()">Keluar</button>
+  </footer>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("cahayaCurrentUser"));
+
+    if (!user || user.role !== "wali") {
+      window.location.href = "../login/wali.html";
+    } else {
+      document.getElementById("greeting").innerHTML =
+        `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaSantri}</b>`;
+    }
+
+    function go(page) {
+      window.location.href = page;
+    }
+
+    function logout() {
+      localStorage.removeItem("cahayaCurrentUser");
+      window.location.href = "../login/wali.html";
+    }
+  </script>
+</body>
+</html>
