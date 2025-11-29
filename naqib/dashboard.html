@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP – Dashboard Naqib</title>
+  <title>CAHAYA APP – Naqib</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -11,7 +11,7 @@
       --bg: linear-gradient(135deg, #1e3a8a, #2563eb);
     }
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", Arial, sans-serif;
       background: var(--bg);
       color: white;
       margin: 0;
@@ -20,18 +20,15 @@
       min-height: 100vh;
     }
     header {
-      padding: 14px 20px;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(10px);
+      color: white;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    header h1 {
-      font-size: 1.2rem;
-      margin: 0;
-      font-weight: 600;
-    }
+    header h1 { font-size: 1.2rem; margin: 0; font-weight: 600; }
     main {
       flex: 1;
       display: flex;
@@ -41,26 +38,26 @@
     }
     .card {
       background: rgba(255, 255, 255, 0.15);
-      padding: 28px;
       border-radius: 20px;
-      max-width: 500px;
-      width: 100%;
+      padding: 28px;
       text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
     }
-    h2 { margin: 0; color: #fff; }
-    .info { font-size: 0.9rem; color: #dbeafe; margin: 10px 0 20px; }
-    .btn-grid {
+    h2 { margin: 0; font-size: 1.4rem; color: #fff; }
+    .small { font-size: 0.9rem; color: #dbeafe; margin-bottom: 20px; }
+    .btn-group {
       display: grid;
-      gap: 12px;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
     }
     button {
       background: white;
-      border: none;
       color: var(--primary);
-      padding: 12px;
+      border: none;
       border-radius: 10px;
+      padding: 12px 16px;
       font-weight: 600;
       cursor: pointer;
       transition: 0.3s;
@@ -69,16 +66,15 @@
     footer {
       text-align: center;
       font-size: 12px;
-      padding: 8px 0;
-      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      background: rgba(0,0,0,0.15);
     }
   </style>
 </head>
 <body>
-
 <header>
   <h1>🌟 CAHAYA APP – Naqib</h1>
-  <div>
+  <div class="btn-group" style="gap:6px;">
     <button onclick="backToPortal()">⬅️ Portal</button>
     <button onclick="logout()">🚪 Keluar</button>
   </div>
@@ -87,26 +83,26 @@
 <main>
   <div class="card">
     <h2 id="naqibTitle">Dashboard Naqib</h2>
-    <p class="info" id="naqibInfo">Mendeteksi data santri...</p>
+    <p class="small" id="naqibInfo">Mengambil data kelompok...</p>
 
-    <div class="btn-grid">
-      <button onclick="go('absensi.html')">🧍 Absensi Program</button>
-      <button onclick="go('pelanggaran.html')">🚨 Pelanggaran</button>
-      <button onclick="go('assesment.html')">💚 CAHAYA Assessment</button>
+    <div class="btn-group">
+      <button onclick="go('absensi.html')">🧍 Absensi Program Harian</button>
+      <button onclick="go('pelanggaran.html')">🚨 Form Pelanggaran</button>
+      <button onclick="go('assasment.html')">💚 CAHAYA Assessment</button>
     </div>
 
-    <p class="info" style="margin-top:20px;">
-      Pastikan semua laporan diisi dengan jujur dan teliti.
+    <p class="small" style="margin-top:18px;">
+      Isi dengan <b>teliti dan objektif</b>, demi kebaikan bersama.
     </p>
   </div>
 </main>
 
 <footer>
-  © 2025 Pesantren Fajrul Islam – Dashboard Naqib
+  © 2025 Pesantren Cahaya Fajrul Islam — Naqib Dashboard
 </footer>
 
 <script>
-  // === Daftar Santri Berdasarkan Naqib ===
+  // === DATABASE KELOMPOK SANTRI ===
   const dataSantri = {
     "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
     "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
@@ -118,7 +114,7 @@
   };
 
   const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
-  const namaNaqib = user.naqibName || user.label?.split(" ")[0] || "Tidak diketahui";
+  const namaNaqib = user.naqibName || "Tidak diketahui";
   const kelompok = dataSantri[namaNaqib] || [];
 
   const title = document.getElementById("naqibTitle");
