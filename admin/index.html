@@ -102,6 +102,12 @@
         <div class="menu-icon">🚨</div>
         <div class="menu-title">Input Bullying & Pelanggaran Berat</div>
       </div>
+
+      <!-- 🔹 KARTU BARU: REKAP DATA -->
+      <div class="menu-card" onclick="go('rekap-data.html')">
+        <div class="menu-icon">📑</div>
+        <div class="menu-title">Rekap Data</div>
+      </div>
     </div>
   </main>
 
@@ -150,8 +156,8 @@
            style="margin-top:10px;color:#374151;font-size:0.9rem;min-height:1.2em;"></div>
 
       <div style="margin-top:16px;">
-        <button onclick="confirmDelete()"
-                style="background:#dc2626;color:white;padding:10px 18px;border:none;border-radius:8px;font-weight:bold;">
+        <button onclick="confirmDelete()
+                " style="background:#dc2626;color:white;padding:10px 18px;border:none;border-radius:8px;font-weight:bold;">
           Hapus
         </button>
         <button onclick="closeDeleteDialog()"
@@ -184,8 +190,14 @@
     window.go = function(page){ window.location.href = page; };
     window.logout = function(){ localStorage.removeItem('cahayaCurrentUser'); window.location.href='../index.html'; };
     window.openDeleteDialog = function(){ document.getElementById("deleteModal").style.display = "flex"; };
-    window.closeDeleteDialog = function(){ document.getElementById("deleteModal").style.display = "none"; document.getElementById("progressText").textContent = ""; };
-    window.toggleDateInputs = function(){ const val = document.getElementById("rangeSelect").value; document.getElementById("dateInputs").style.display = val === "rentang" ? "block" : "none"; };
+    window.closeDeleteDialog = function(){
+      document.getElementById("deleteModal").style.display = "none";
+      document.getElementById("progressText").textContent = "";
+    };
+    window.toggleDateInputs = function(){
+      const val = document.getElementById("rangeSelect").value;
+      document.getElementById("dateInputs").style.display = val === "rentang" ? "block" : "none";
+    };
 
     // ========= PETA DATASET FIREBASE & LOCALSTORAGE =========
     const FIREBASE_PATHS = {
@@ -228,7 +240,8 @@
         const s = document.getElementById("startDate").value;
         const e = document.getElementById("endDate").value;
         if (!s || !e) { alert("Lengkapi tanggal mulai dan akhir."); return null; }
-        start = new Date(s); end = new Date(e + "T23:59:59");
+        start = new Date(s);
+        end   = new Date(e + "T23:59:59");
       }
       return { start, end };
     }
