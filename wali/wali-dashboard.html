@@ -390,9 +390,204 @@
     }
   }
 
-  async function loadProgresBulanan(bulan) {
-    content.innerHTML = `<div class='card blue'><h2>📆 Progres Bulanan (${bulan})</h2><p>Rekap bulanan sedang dikembangkan.</p></div>`;
+    async function loadProgresBulanan(bulan) {
+    const namaSantri = user.namaAnak.trim();
+    const [tahun, bulanIndex] = bulan.split("-");
+    const bulanNum = parseInt(bulanIndex) - 1;
+
+    content.innerHTML = `
+      <div class='card blue' id='laporanBulanan'>
+        <h2>📆 Laporan Bulanan Santri</h2>
+        <p style='text-align:center;opacity:0.9;'>Memuat data ${namaSantri} bulan ${bulanIndex}/${tahun}...</p>
+      </div>
+    `;
+
+    try {
+      // ambil semua data dari Firebase
+      const [
+        assesGuruSnap,
+        assesNaqibSnap,
+        absNaqibSnap,
+        absKbmSnap,
+        ujianSnap,
+        tahfizSnap,
+        pelanggaranSnap
+      ] = await Promise.all([
+        get(child(ref(db), "cahaya_app/assesment_cahaya_santri")),
+        get(child(ref(db), "cahaya_app/assesment_cahaya_naqib")),
+        get(child(ref(db), "cahaya_app/absensi_program_harian")),
+        get(child(ref(db), "cahaya_app/absensi_pembelajaran")),
+        get(child(ref(db), "cahaya_app/nilai_ujian")),
+        get(child(ref(db), "cahaya_app/setoran_tahfiz")),
+        get(child(ref(db), "cahaya_app/pelanggaran_santri")),
+      ]);
+
+      // ubah ke array aman
+      const assesGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
+      const assesNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
+      const absHarian = absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [];
+      const absKbm = absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [];
+      const ujian = ujianSnap.exists() ? Object.values(ujianSnap.val()) : [];
+      const tahfiz = tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [];
+      const pelanggaran = pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [];
+
+      function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+      function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
+
+      const namaUpper = namaSantri.toUpperCase();
+      const namaBulan = [
+        "Januari","Februari","Maret","April","Mei","Juni",
+        "Juli","Agustus","September","Oktober","November","Desember"
+      ][bulanNum];
+
+      // cari data asesmen guru & naqib bulan ini
+      const asesGuru = assesGuru.find(a => a.namaSantri === namaSantri && isSameMonthYear(a.tanggal || a.tgl, bulanNum, tahun)) || {};
+      const asesNaqib = assesNaqib.find(a => a.namaSantri === namaSantri && isSameMonthYear(a.tanggal || a.tgl, bulanNum, tahun)) || {};
+
+      // narasi
+      const narasiSpiritual = asesGuru.narasiSpiritual || asesGuru.catatanSpiritual || "Belum ada catatan dimensi Spiritual (Cinta Allah).";
+      const narasiRel = asesNaqib.narasiRelational || asesNaqib.catatanRelasi || "Belum ada catatan dimensi Relational (Akhlak Mulia).";
+      const narasiEmo = asesNaqib.narasiEmotional || asesNaqib.catatanHati || "Belum ada catatan dimensi Emotional (Hati Bersih).";
+      const narasiInt = asesGuru.narasiIntellectual || asesGuru.catatanAkal || "Belum ada catatan dimensi Intellectual (Akal Cerdas).";
+      const narasiFis = asesNaqib.narasiPhysical || asesNaqib.catatanFisik || "Belum ada catatan dimensi Physical (Fisik Berdaya).";
+      const namaNaqib = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
+
+      // hitung kehadiran
+      function hitungKehadiran(arr, field) {
+        let hadir=0, izin=0, sakit=0, alfa=0, total=0;
+        arr.forEach(log=>{
+          if (!isSameMonthYear(log.tanggal, bulanNum, tahun)) return;
+          (log.data||[]).forEach(d=>{
+            if (d.nama?.trim().toUpperCase() === namaUpper) {
+              const s=(d.status||"").toLowerCase();
+              if(s.includes("hadir")) hadir++;
+              else if(s.includes("izin")) izin++;
+              else if(s.includes("sakit")) sakit++;
+              else if(s.includes("alfa")) alfa++;
+              total++;
+            }
+          });
+        });
+        const persen = x => total ? Math.round((x/total)*100) : 0;
+        return { hadir: persen(hadir), izin: persen(izin), sakit: persen(sakit), alfa: persen(alfa), total };
+      }
+
+      const hadirProg = hitungKehadiran(absHarian,"program");
+      const hadirKbm = hitungKehadiran(absKbm,"mapel");
+
+      // nilai ujian
+      const nilaiUjian = ujian.filter(u => u.santri === namaSantri && isSameMonthYear(u.tanggal, bulanNum, tahun));
+      const rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s,u)=>s+(+u.nilai||0),0)/nilaiUjian.length) : 0;
+
+      // tahfiz
+      const dataTahfiz = tahfiz.filter(t=>isSameMonthYear(t.tanggal,bulanNum,tahun))
+                               .flatMap(t=>t.data||[])
+                               .filter(d=>d.nama===namaSantri);
+
+      // pelanggaran
+      const dataPelanggaran = pelanggaran.filter(p=>p.santri===namaSantri && isSameMonthYear(p.tanggal,bulanNum,tahun));
+
+      // tampilkan hasil
+      content.innerHTML = `
+      <div class='card blue laporan-bulanan'>
+        <h2 style='text-align:center;'>📋 LAPORAN BULANAN SANTRI</h2>
+        <p style='text-align:center;margin-top:-10px;'>Pesantren Cahaya Fajrul Islam</p>
+        <h3 style='text-align:center;margin-bottom:6px;'>${namaUpper}</h3>
+        <p style='text-align:center;font-size:0.9rem;opacity:0.8;'>Bulan ${namaBulan} ${tahun}<br>Naqib: ${namaNaqib}</p>
+
+        <div class='section'>
+          <h4>🌈 Dimensi CAHAYA</h4>
+          <p><b>🕋 Cinta Allah (Spiritual):</b> ${narasiSpiritual}</p>
+          <p><b>🤝 Akhlak Mulia (Relational):</b> ${narasiRel}</p>
+          <p><b>💓 Hati Bersih (Emotional):</b> ${narasiEmo}</p>
+          <p><b>🧠 Akal Cerdas (Intellectual):</b> ${narasiInt}</p>
+          <p><b>🏃‍♂️ Fisik Berdaya (Physical):</b> ${narasiFis}</p>
+        </div>
+
+        <div class='section'>
+          <h4>🗓️ Rekap Kehadiran</h4>
+          <table>
+            <tr><th>Kegiatan</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr>
+            <tr><td>Program Harian</td><td>${hadirProg.hadir}%</td><td>${hadirProg.izin}%</td><td>${hadirProg.sakit}%</td><td>${hadirProg.alfa}%</td></tr>
+            <tr><td>Pembelajaran (KBM)</td><td>${hadirKbm.hadir}%</td><td>${hadirKbm.izin}%</td><td>${hadirKbm.sakit}%</td><td>${hadirKbm.alfa}%</td></tr>
+          </table>
+        </div>
+
+        <div class='section'>
+          <h4>🧾 Nilai Ujian</h4>
+          ${nilaiUjian.length ? `
+          <table>
+            <tr><th>No</th><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr>
+            ${nilaiUjian.map((u,i)=>`
+              <tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>
+            `).join("")}
+            <tr><td colspan='3'><b>Rata-rata</b></td><td colspan='2'><b>${rataUjian}</b></td></tr>
+          </table>
+          ` : `<p style='opacity:0.8;'>Belum ada data ujian bulan ini.</p>`}
+        </div>
+
+        <div class='section'>
+          <h4>📖 Setoran Tahfiz</h4>
+          ${dataTahfiz.length ? `
+          <table>
+            <tr><th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th></tr>
+            ${dataTahfiz.map((d,i)=>`
+              <tr><td>${i+1}</td><td>${d.surat||d.setoran||"-"}</td><td>${d.kesalahan||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>
+            `).join("")}
+          </table>
+          ` : `<p style='opacity:0.8;'>Belum ada setoran tahfiz bulan ini.</p>`}
+        </div>
+
+        <div class='section'>
+          <h4>⚠️ Pelanggaran</h4>
+          ${dataPelanggaran.length ? `
+          <table>
+            <tr><th>No</th><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th></tr>
+            ${dataPelanggaran.map((p,i)=>`
+              <tr><td>${i+1}</td><td>${p.tanggal||"-"}</td><td>${p.namaPelanggaran||"-"}</td><td>${p.kategori||"-"}</td><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td></tr>
+            `).join("")}
+          </table>
+          ` : `<p style='opacity:0.8;'>Tidak ada pelanggaran bulan ini.</p>`}
+        </div>
+
+        <div style='text-align:center;margin-top:20px;'>
+          <button onclick='exportPDF()' style='background:#2563eb;border:none;padding:10px 18px;border-radius:8px;color:white;cursor:pointer;font-weight:600;'>⬇️ Unduh PDF</button>
+        </div>
+      </div>
+      `;
+
+      // tambahkan library PDF
+      if (!window.html2canvas) {
+        const s1 = document.createElement("script");
+        s1.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+        document.body.appendChild(s1);
+      }
+      if (!window.jspdf) {
+        const s2 = document.createElement("script");
+        s2.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+        document.body.appendChild(s2);
+      }
+
+      // fungsi export PDF
+      window.exportPDF = async function() {
+        const el = document.querySelector(".laporan-bulanan");
+        if (!el) return alert("Laporan belum siap.");
+        const canvas = await html2canvas(el, { scale: 2, useCORS: true, scrollY: 0 });
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new window.jspdf.jsPDF("p","mm","a4");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+        const cleanName = namaSantri.toUpperCase().replace(/\s+/g,"_");
+        pdf.save(`Laporan_${cleanName}_${namaBulan}_${tahun}.pdf`);
+      };
+
+    } catch (err) {
+      content.innerHTML = `<div class='card red'><h2>❌ Gagal memuat laporan</h2><p>${err.message}</p></div>`;
+    }
   }
+
 
   function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
   window.scrollToTop = () => window.scrollTo({top:0,behavior:"smooth"});
