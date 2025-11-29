@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Wali Santri - CAHAYA APP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      color: #fff;
+    }
+    .login-box {
+      background: rgba(255,255,255,0.1);
+      padding: 36px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+    }
+    img { width: 80px; border-radius: 50%; margin-bottom: 14px; }
+    h2 { margin: 0 0 8px; font-weight: 600; }
+    p { color: #d1fae5; margin-bottom: 16px; font-size: 0.9rem; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      background: rgba(255,255,255,0.95);
+      color: #111;
+    }
+    button {
+      background: #facc15;
+      color: #1f2937;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #fde68a; }
+    a {
+      display: block;
+      margin-top: 16px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <img src="../logofi.png" alt="Logo">
+    <h2>Login Wali Santri</h2>
+    <p>Masukkan nama santri dan kode wali</p>
+    <input type="text" id="namaSantri" placeholder="Nama Santri" />
+    <input type="password" id="kodeWali" placeholder="Kode Wali (misal: 1234)" />
+    <button onclick="login()">Masuk</button>
+    <a href="../index.html">⬅️ Kembali</a>
+  </div>
+
+  <script>
+    function login(){
+      const nama = namaSantri.value.trim();
+      const kode = kodeWali.value.trim();
+      if(!nama || !kode){ alert("Lengkapi semua kolom."); return; }
+
+      if(kode === "1234"){ // nanti bisa dihubungkan ke Firebase
+        const user = { role: "wali", namaSantri: nama };
+        localStorage.setItem("cahayaCurrentUser", JSON.stringify(user));
+        location.href = "../wali/index.html";
+      } else {
+        alert("Kode wali salah!");
+      }
+    }
+  </script>
+</body>
+</html>
