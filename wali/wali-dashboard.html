@@ -12,21 +12,71 @@
       margin: 0;
       padding: 0;
     }
+
+    /* === HEADER & SLIDE === */
     .welcome-slide {
       background: linear-gradient(90deg, #0d9488, #0f766e);
       color: white;
-      padding: 12px 18px;
+      padding: 16px 18px;
       border-radius: 12px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       margin-bottom: 15px;
       text-align: center;
     }
-    .slide-content { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
-    .logo-slide { width: 42px; height: 42px; object-fit: contain; border-radius: 50%; background: white; padding: 4px; }
-    .dashboard { max-width: 900px; margin: auto; padding: 10px 20px 60px; }
-    header { text-align: center; margin-bottom: 10px; }
-    header h1 { font-size: 1.6rem; margin-bottom: 6px; }
-    #greeting { font-size: 1rem; margin-bottom: 12px; }
+    .slide-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .logo-slide {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+    }
+    .slide-text h2 {
+      margin: 0;
+      line-height: 1.3;
+      font-size: 1.4rem;
+    }
+    .slide-text b {
+      font-size: 1.6rem;
+      display: block;
+    }
+    .slide-text p {
+      margin-top: 4px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .dashboard {
+      max-width: 900px;
+      margin: auto;
+      padding: 10px 20px 60px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+    #greeting {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    #greeting b {
+      display: block;
+      font-size: 1.1rem;
+    }
+
+    /* === MENU === */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -34,27 +84,48 @@
       margin: 20px 0;
     }
     .menu-card {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       padding: 12px;
       text-align: center;
       cursor: pointer;
       transition: 0.3s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
-    .menu-card:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
-    .menu-card img { width: 40px; height: 40px; margin-bottom: 8px; }
-    .menu-card h4 { margin: 0; font-size: 0.95rem; color: white; }
+    .menu-card:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    .menu-card img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 8px;
+    }
+    .menu-card h4 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: white;
+    }
 
-    /* Toolbar */
-    .toolbar { text-align: right; margin-bottom: 10px; display: none; }
-    .toolbar input, .toolbar select {
-      background: rgba(255,255,255,0.2);
+    /* === FILTER TOOLBAR === */
+    .toolbar {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .toolbar input {
+      background: rgba(255, 255, 255, 0.2);
       border: none;
       border-radius: 6px;
       color: white;
       padding: 6px 10px;
-      margin-left: 8px;
+    }
+    .toolbar input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
     }
     .toolbar button {
       background: #0d9488;
@@ -62,40 +133,105 @@
       border: none;
       border-radius: 6px;
       padding: 6px 12px;
-      margin-left: 10px;
       cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+    .toolbar button:hover {
+      background: #115e59;
     }
 
-    /* Card & Table */
-    .card { border-radius: 12px; padding: 16px; margin-top: 14px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); overflow-x: auto; }
-    .card.green { background: rgba(34,197,94,0.15); }
-    .card.blue { background: rgba(59,130,246,0.15); }
-    .card.purple { background: rgba(147,51,234,0.15); }
-    .card.red { background: rgba(239,68,68,0.15); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { border: 1px solid rgba(255,255,255,0.2); padding: 6px; text-align: left; word-wrap: break-word; }
-    th { background: rgba(255,255,255,0.15); }
+    /* === CARD & TABLE === */
+    .card {
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      overflow-x: auto;
+    }
+    .card.green { background: rgba(34, 197, 94, 0.15); }
+    .card.blue { background: rgba(59, 130, 246, 0.15); }
+    .card.purple { background: rgba(147, 51, 234, 0.15); }
+    .card.red { background: rgba(239, 68, 68, 0.15); }
 
-    .bottom-buttons { text-align: center; margin-top: 30px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px;
+      text-align: left;
+      word-wrap: break-word;
+    }
+    th {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* === STATUS BADGE === */
+    .status-box {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: white;
+      text-align: center;
+      min-width: 60px;
+    }
+    .hadir { background: #16a34a; }
+    .izin { background: #0ea5e9; }
+    .sakit { background: #eab308; color: #111; }
+    .alfa { background: #dc2626; }
+
+    /* === BUTTON BAWAH === */
+    .bottom-buttons {
+      text-align: center;
+      margin-top: 30px;
+    }
     .bottom-buttons button {
-      background: #0d9488; color: white; border: none;
-      padding: 10px 20px; border-radius: 10px; margin: 5px;
-      cursor: pointer; font-weight: 600;
+      background: #0d9488;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin: 5px;
+      cursor: pointer;
+      font-weight: 600;
     }
-    .bottom-buttons button:hover { background: #115e59; }
-    .logout { background: #dc2626; }
-    .logout:hover { background: #b91c1c; }
-    footer { text-align: center; margin-top: 20px; font-size: 0.8rem; opacity: 0.8; }
+    .bottom-buttons button:hover {
+      background: #115e59;
+    }
+    .logout {
+      background: #dc2626;
+    }
+    .logout:hover {
+      background: #b91c1c;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.3rem; }
+      .toolbar { flex-direction: row; gap: 5px; }
+      .toolbar input { font-size: 0.85rem; }
+      .toolbar button { font-size: 0.85rem; padding: 6px 10px; }
+    }
   </style>
 </head>
-<body>
 
+<body>
 <div class="dashboard">
   <div class="welcome-slide">
     <div class="slide-content">
       <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
-      <div>
-        <h2>Selamat Datang di <b>Cahaya App</b></h2>
+      <div class="slide-text">
+        <h2>Selamat Datang di<br><b>Cahaya App</b></h2>
         <p>Pesantren Cahaya Fajrul Islam</p>
       </div>
     </div>
@@ -148,17 +284,15 @@
   const db = getDatabase(app);
 
   const user = checkWaliLogin();
-  if (!user) window.location.href = "wali-login.html";
-  document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
+  if (!user) window.location.href = "../index.html";
+  document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Ayah/Bunda<br><b>${user.namaAnak}</b>`;
 
   const content = document.getElementById("content");
   const toolbar = document.getElementById("filterToolbar");
 
-  // Tombol Harian
   document.getElementById("btnHarian").addEventListener("click", () => {
-    toolbar.style.display = "block";
+    toolbar.style.display = "flex";
     toolbar.innerHTML = `
-      <label>Pilih Tanggal:</label>
       <input type="date" id="tanggal" value="${new Date().toISOString().split("T")[0]}" />
       <button id="lihatProgres">Lihat Progres</button>
     `;
@@ -170,11 +304,9 @@
     content.innerHTML = `<p style="text-align:center;">Silakan pilih tanggal, lalu klik "Lihat Progres".</p>`;
   });
 
-  // Tombol Bulanan
   document.getElementById("btnBulanan").addEventListener("click", () => {
-    toolbar.style.display = "block";
+    toolbar.style.display = "flex";
     toolbar.innerHTML = `
-      <label>Pilih Bulan:</label>
       <input type="month" id="bulan" value="${new Date().toISOString().slice(0,7)}" />
       <button id="lihatProgresBulanan">Lihat Progres</button>
     `;
@@ -240,7 +372,12 @@
           if (d.tanggal === tanggal && d.data) {
             d.data.forEach(s => {
               if (s.nama?.trim().toUpperCase() === nama) {
-                html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td>${s[col2] || d[col2] || "-"}</td></tr>`;
+                const val = (s[col2] || d[col2] || "-").toLowerCase();
+                const statusClass = val.includes("hadir") ? "hadir" :
+                                    val.includes("izin") ? "izin" :
+                                    val.includes("sakit") ? "sakit" :
+                                    val.includes("alfa") ? "alfa" : "";
+                html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td><span class="status-box ${statusClass}">${s[col2]}</span></td></tr>`;
               }
             });
           }
