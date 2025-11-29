@@ -6,7 +6,7 @@
   <title>Dashboard Wali Santri - CAHAYA APP</title>
   <link rel="stylesheet" href="wali-style.css">
   <style>
-    /* Tambahan animasi halus */
+    /* Animasi fade */
     #content {
       margin-top: 20px;
       width: 100%;
@@ -16,67 +16,77 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    /* Efek muncul konten halaman */
+    #content section {
+      animation: fadeIn 0.4s ease;
+    }
   </style>
 </head>
+
 <body>
   <div class="dashboard">
     <div class="greeting" id="greeting">👋 Assalamu’alaikum Ayah/Bunda</div>
 
+    <!-- MENU GRID -->
     <div class="menu-grid">
-      <div class="menu-card" onclick="loadPage('pages/laporan-harian.html')">
+
+      <div class="menu-card" onclick="loadPage('laporan-harian.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/3185/3185656.png" alt="">
         <h4>Laporan Harian</h4>
       </div>
 
-      <div class="menu-card" onclick="loadPage('pages/laporan-pekanan.html')">
+      <div class="menu-card" onclick="loadPage('laporan-pekanan.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="">
         <h4>Laporan Pekanan</h4>
       </div>
 
-      <div class="menu-card" onclick="loadPage('pages/laporan-bulanan.html')">
+      <div class="menu-card" onclick="loadPage('laporan-bulanan.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="">
         <h4>Laporan Bulanan</h4>
       </div>
 
-      <div class="menu-card" onclick="loadPage('pages/chat-pengurus.html')">
+      <div class="menu-card" onclick="loadPage('chat-pengurus.html')">
         <img src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png" alt="">
         <h4>Chat Pengurus</h4>
       </div>
+
     </div>
 
+    <!-- TEMPAT MUNCUL KONTEN -->
     <div id="content" class="card"></div>
 
+    <!-- LOGOUT -->
     <button class="logout" onclick="logoutWali()">Keluar</button>
   </div>
 
-<script type="module">
-import { checkWaliLogin, logoutWali } from './wali-script.js';
+  <script type="module">
+    import { checkWaliLogin, logoutWali } from './wali-script.js';
 
-// --- CEK LOGIN ---
-const user = checkWaliLogin();
-if (!user) {
-  window.location.href = "wali-login.html";
-} else {
-  document.getElementById("greeting").innerHTML = 
-    `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
-}
+    // === CEK LOGIN ===
+    const user = checkWaliLogin();
+    if (!user) {
+      window.location.href = "wali-login.html";
+    } else {
+      document.getElementById("greeting").innerHTML = 
+        `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
+    }
 
-// --- LOAD HALAMAN TANPA RELOAD ---
-async function loadPage(page) {
-  const container = document.getElementById("content");
-  container.innerHTML = "<p>Sedang memuat...</p>";
-  try {
-    const res = await fetch(`pages/${page}`);
-    if (!res.ok) throw new Error("Gagal memuat halaman.");
-    const html = await res.text();
-    container.innerHTML = html;
-  } catch (err) {
-    container.innerHTML = `<p style='color:red;'>${err.message}</p>`;
-  }
-}
+    // === LOAD PAGE TANPA RELOAD ===
+    async function loadPage(page) {
+      const container = document.getElementById("content");
+      container.innerHTML = "<p>Sedang memuat...</p>";
+      try {
+        const res = await fetch(`pages/${page}`);
+        if (!res.ok) throw new Error("Gagal memuat halaman.");
+        const html = await res.text();
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = `<p style='color:red;'>${err.message}</p>`;
+      }
+    }
 
-// --- LOGOUT ---
-window.logoutWali = logoutWali;
-</script>
+    // === LOGOUT ===
+    window.logoutWali = logoutWali;
+  </script>
 </body>
 </html>
