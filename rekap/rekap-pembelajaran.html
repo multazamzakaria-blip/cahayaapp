@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📘 Rekap Absensi Pembelajaran</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      color: #1f2937;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    main {
+      padding: 24px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    select, input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #1d4ed8; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    th {
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+    }
+    tr:nth-child(even) td { background: #f9fafb; }
+    .filter-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+    .filter-row > div { flex: 1; min-width: 200px; }
+    .status { font-weight: bold; font-size: 0.9rem; }
+    .H { color: #16a34a; }
+    .I { color: #2563eb; }
+    .S { color: #ca8a04; }
+    .A { color: #dc2626; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>📘 Rekap Absensi Pembelajaran</h1>
+  <button onclick="history.back()">⬅ Kembali</button>
+</header>
+
+<main>
+  <div class="card">
+    <div class="filter-row">
+      <div>
+        <label>Rentang Waktu</label>
+        <select id="rangeSelect" onchange="toggleCustomDate()">
+          <option value="hari">Hari Ini</option>
+          <option value="pekan">Pekan Ini</option>
+          <option value="bulan">Bulan Ini</option>
+          <option value="rentang">Rentang Tanggal</option>
+        </select>
+      </div>
+      <div id="customDate" style="display:none;flex:2;gap:8px;flex-wrap:wrap;">
+        <div><label>Dari</label><input type="date" id="startDate"></div>
+        <div><label>Sampai</label><input type="date" id="endDate"></div>
+      </div>
+      <div>
+        <label>Guru</label>
+        <input id="guruFilter" placeholder="(Opsional) ketik nama guru">
+      </div>
+    </div>
+
+    <div style="margin-top:10px;">
+      <button onclick="tampilkanRekap()">🔍 Tampilkan Rekap</button>
+      <button id="exportBtn" onclick="exportExcel()" disabled>💾 Export Excel</button>
+    </div>
+
+    <p id="info" style="margin-top:10px;font-size:0.9rem;color:#374151;"></p>
+
+    <div style="overflow-x:auto;margin-top:10px;">
+      <table id="rekapTable">
+        <thead><tr id="rekapHead"></tr></thead>
+        <tbody id="rekapBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  let lastData = [];
+
+  window.toggleCustomDate = function() {
+    const val = document.getElementById("rangeSelect").value;
+    document.getElementById("customDate").style.display = val === "rentang" ? "flex" : "none";
+  };
+
+  function getRange(mode) {
+    const now = new Date();
+    let start, end;
+    if (mode === "hari") {
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    } else if (mode === "pekan") {
+      const first = now.getDate() - now.getDay();
+      start = new Date(now.getFullYear(), now.getMonth(), first);
+      end = new Date(now.getFullYear(), now.getMonth(), first + 6, 23, 59, 59);
+    } else if (mode === "bulan") {
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    } else {
+      const s = document.getElementById("startDate").value;
+      const e = document.getElementById("endDate").value;
+      if (!s || !e) return null;
+      start = new Date(s);
+      end = new Date(e + "T23:59:59");
+    }
+    return { start, end };
+  }
+
+  function shortStatus(status) {
+    if (!status) return "";
+    const s = status.toLowerCase();
+    if (s.includes("hadir")) return "H";
+    if (s.includes("izin")) return "I";
+    if (s.includes("sakit")) return "S";
+    if (s.includes("alfa")) return "A";
+    return "-";
+  }
+
+  window.tampilkanRekap = async function() {
+    const info = document.getElementById("info");
+    const tbody = document.getElementById("rekapBody");
+    const thead = document.getElementById("rekapHead");
+    const exportBtn = document.getElementById("exportBtn");
+
+    info.textContent = "⏳ Mengambil data dari Firebase...";
+    tbody.innerHTML = "";
+    thead.innerHTML = "";
+    exportBtn.disabled = true;
+
+    const rangeSel = document.getElementById("rangeSelect").value;
+    const range = getRange(rangeSel);
+    if (!range) { info.textContent = "❌ Lengkapi tanggal rentang."; return; }
+    const { start, end } = range;
+    const guruFilter = document.getElementById("guruFilter").value.trim().toLowerCase();
+
+    const snap = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
+    if (!snap.exists()) {
+      info.textContent = "❌ Tidak ada data ditemukan.";
+      return;
+    }
+
+    const raw = snap.val();
+    const mapels = new Set();
+    const records = [];
+
+    for (const [id, log] of Object.entries(raw)) {
+      const tgl = new Date(log.tanggal);
+      if (tgl < start || tgl > end) continue;
+      if (guruFilter && !log.guru?.toLowerCase().includes(guruFilter)) continue;
+      const mapel = log.mapel || "-";
+      mapels.add(mapel);
+      if (Array.isArray(log.data)) {
+        log.data.forEach(d => {
+          records.push({
+            tanggal: log.tanggal,
+            guru: log.guru,
+            kelas: log.sub,
+            mapel: mapel,
+            santri: d.nama,
+            status: shortStatus(d.status)
+          });
+        });
+      }
+    }
+
+    if (records.length === 0) {
+      info.textContent = "ℹ️ Tidak ada data pada rentang waktu ini.";
+      return;
+    }
+
+    const mapelList = Array.from(mapels).sort();
+
+    let headHTML = "<th>Tanggal</th><th>Guru</th><th>Kelas</th><th>Santri</th><th>Mapel</th><th>Status</th>";
+    thead.innerHTML = headHTML;
+
+    let bodyHTML = "";
+    records.forEach(r => {
+      bodyHTML += `<tr>
+        <td>${r.tanggal}</td>
+        <td>${r.guru}</td>
+        <td>${r.kelas}</td>
+        <td style='text-align:left'>${r.santri}</td>
+        <td>${r.mapel}</td>
+        <td class='status ${r.status}'>${r.status}</td>
+      </tr>`;
+    });
+
+    tbody.innerHTML = bodyHTML;
+    lastData = records;
+    exportBtn.disabled = false;
+    info.textContent = `✅ Ditemukan ${records.length} data absensi pembelajaran.`;
+  };
+
+  window.exportExcel = function() {
+    if (!lastData.length) return alert("Tidak ada data untuk diexport.");
+    const wsData = [["Tanggal","Guru","Kelas","Santri","Mapel","Status"]];
+    lastData.forEach(r => wsData.push([r.tanggal, r.guru, r.kelas, r.santri, r.mapel, r.status]));
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Rekap Pembelajaran");
+    const now = new Date().toISOString().split("T")[0];
+    XLSX.writeFile(wb, `Rekap_Absensi_Pembelajaran_${now}.xlsx`);
+  };
+</script>
+</body>
+</html>
