@@ -6,7 +6,7 @@
   <title>Dashboard Wali Santri - CAHAYA APP</title>
   <link rel="stylesheet" href="wali-style.css">
   <style>
-    /* Animasi fade */
+    /* === ANIMASI === */
     #content {
       margin-top: 20px;
       width: 100%;
@@ -16,50 +16,37 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    #content section {
-      animation: fadeIn 0.4s ease;
-    }
 
-    /* === GRID DEFAULT === */
+    /* === GRID MENU === */
     .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      width: 100%;
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
     }
-
-    /* === KHUSUS HP: 1 LINE SCROLL === */
-    @media (max-width: 768px) {
-      .menu-grid {
-        display: flex;
-        overflow-x: auto;
-        gap: 12px;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 10px;
-      }
-      .menu-card {
-        flex: 0 0 45%;
-        min-width: 180px;
-        scroll-snap-align: start;
-      }
-      @media (max-width: 400px) {
-        .menu-card {
-          flex: 0 0 25%;
-          min-width: 90px;
-          padding: 10px 5px;
-        }
-        .menu-card img { width: 32px; height: 32px; }
-        .menu-card h4 { font-size: 0.75rem; }
-      }
+    .menu-card {
+      flex: 0 0 25%;
+      min-width: 100px;
+      scroll-snap-align: start;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
     }
+    .menu-card:hover { background: rgba(255,255,255,0.25); }
+    .menu-card img { width: 40px; height: 40px; }
+    .menu-card h4 { margin: 5px 0 0; font-size: 0.8rem; color: white; }
 
-    /* === TAB & TABEL LAPORAN === */
+    /* === TAB NAVIGASI === */
     .tab-menu {
       display: flex;
       overflow-x: auto;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       scrollbar-width: none;
     }
     .tab-menu::-webkit-scrollbar { display: none; }
@@ -75,18 +62,9 @@
       transition: 0.3s;
       white-space: nowrap;
     }
-    .tab-btn.active {
-      background: #0d9488;
-      font-weight: 600;
-    }
-    .tab-content {
-      background: rgba(255,255,255,0.08);
-      padding: 10px;
-      border-radius: 12px;
-    }
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+    .tab-btn.active { background: #0d9488; font-weight: 600; }
 
+    /* === TABEL === */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -109,6 +87,24 @@
     .badge-izin { background: #0ea5e9; }
     .badge-sakit { background: #eab308; }
     .badge-alfa { background: #dc2626; }
+
+    /* === FILTER === */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .filter-bar label { font-size: 0.9rem; }
+    .filter-bar input {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: white;
+    }
+    .filter-bar input::-webkit-calendar-picker-indicator { filter: invert(1); }
   </style>
 </head>
 
@@ -136,13 +132,14 @@
       </div>
     </div>
 
-    <!-- TEMPAT MUNCUL KONTEN -->
+    <!-- KONTEN -->
     <div id="content" class="card"></div>
 
     <!-- LOGOUT -->
     <button class="logout" onclick="logoutWali()">Keluar</button>
   </div>
 
+  <!-- === SCRIPT MODULE === -->
   <script type="module">
     import { checkWaliLogin, logoutWali } from './wali-script.js';
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -166,29 +163,32 @@
       window.location.href = "wali-login.html";
     } else {
       document.getElementById("greeting").innerHTML = 
-        `👋 Assalamu’alaikum Walisantri <b>${user.namaAnak}</b>`;
+        `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
     }
 
     // === LOAD PAGE ===
     async function loadPage(page) {
-      const content = document.getElementById("content");
-      content.innerHTML = "<p>Sedang memuat...</p>";
+      const container = document.getElementById("content");
+      container.innerHTML = "<p>Sedang memuat...</p>";
 
-      if (page === 'laporan-harian') {
+      if (page === "laporan-harian") {
         await renderLaporanHarian();
       } else {
-        // halaman dummy sementara
-        content.innerHTML = `<h3>${page.replace('-', ' ').toUpperCase()} sedang dikembangkan...</h3>`;
+        container.innerHTML = `<h3>${page.replace('-', ' ').toUpperCase()} sedang dikembangkan...</h3>`;
       }
     }
 
-    // === FUNGSI LAPORAN HARIAN ===
+    // === LAPORAN HARIAN ===
     async function renderLaporanHarian() {
       const container = document.getElementById("content");
       container.innerHTML = `
       <section class="laporan-harian">
         <h2>📅 Laporan Harian Santri</h2>
-        <p class="laporan-subtitle">Pantauan kegiatan harian santri oleh guru dan naqib.</p>
+        <div class="filter-bar">
+          <label for="filterTanggal">Filter Tanggal:</label>
+          <input type="date" id="filterTanggal" value="${new Date().toISOString().split('T')[0]}" />
+        </div>
+
         <div class="tab-menu">
           <button class="tab-btn active" data-tab="program">Program Harian</button>
           <button class="tab-btn" data-tab="pembelajaran">Pembelajaran</button>
@@ -204,7 +204,11 @@
         </div>
       </section>`;
 
-      // TAB HANDLER
+      const nama = user.namaAnak;
+      const tanggalFilter = container.querySelector("#filterTanggal");
+      tanggalFilter.addEventListener("change", () => loadAllData(tanggalFilter.value, nama));
+
+      // Tab handler
       const tabBtns = container.querySelectorAll('.tab-btn');
       const tabPanes = container.querySelectorAll('.tab-pane');
       tabBtns.forEach(btn => {
@@ -216,69 +220,52 @@
         });
       });
 
-      const nama = user.namaAnak;
+      await loadAllData(tanggalFilter.value, nama);
+    }
+
+    // === LOAD DATA DARI FIREBASE ===
+    async function loadAllData(filterTanggal, nama) {
       const elProg = document.getElementById("program-content");
       const elPemb = document.getElementById("pembelajaran-content");
       const elTahfiz = document.getElementById("tahfiz-content");
       const elLanggar = document.getElementById("pelanggaran-content");
 
+      elProg.textContent = elPemb.textContent = elTahfiz.textContent = elLanggar.textContent = "Memuat data...";
+
       try {
         // === 1. Program Harian ===
         const snapProg = await get(child(ref(db), "cahaya_app/absensi_program_harian"));
-        if (snapProg.exists()) {
-          let html = "<table><tr><th>Tanggal</th><th>Program</th><th>Status</th></tr>";
-          Object.values(snapProg.val()).forEach(d => {
-            d.data?.forEach(s => {
-              if (s.nama === nama) {
-                const color = s.status === "Hadir" ? "badge-hadir"
-                  : s.status === "Izin" ? "badge-izin"
-                  : s.status === "Sakit" ? "badge-sakit" : "badge-alfa";
-                html += `<tr><td>${d.tanggal}</td><td>${d.program}</td><td><span class="badge ${color}">${s.status}</span></td></tr>`;
-              }
-            });
-          });
-          html += "</table>";
-          elProg.innerHTML = html;
-        } else elProg.textContent = "Tidak ada data program harian.";
+        renderFilteredTable(snapProg, elProg, filterTanggal, nama, ['tanggal', 'program', 'status']);
 
         // === 2. Pembelajaran ===
         const snapPemb = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
-        if (snapPemb.exists()) {
-          let html = "<table><tr><th>Tanggal</th><th>Mapel</th><th>Status</th></tr>";
-          Object.values(snapPemb.val()).forEach(d => {
-            d.data?.forEach(s => {
-              if (s.nama === nama) {
-                const color = s.status === "Hadir" ? "badge-hadir"
-                  : s.status === "Izin" ? "badge-izin"
-                  : s.status === "Sakit" ? "badge-sakit" : "badge-alfa";
-                html += `<tr><td>${d.tanggal}</td><td>${d.mapel}</td><td><span class="badge ${color}">${s.status}</span></td></tr>`;
-              }
-            });
-          });
-          html += "</table>";
-          elPemb.innerHTML = html;
-        } else elPemb.textContent = "Tidak ada data pembelajaran.";
+        renderFilteredTable(snapPemb, elPemb, filterTanggal, nama, ['tanggal', 'mapel', 'status']);
 
         // === 3. Tahfiz ===
         const snapTahfiz = await get(child(ref(db), "cahaya_app/setoran_tahfiz"));
         if (snapTahfiz.exists()) {
           let html = "<table><tr><th>Tanggal</th><th>Surah</th><th>Ayat</th><th>Keterangan</th></tr>";
           Object.values(snapTahfiz.val()).forEach(d => {
-            if (d.nama === nama) {
-              html += `<tr><td>${d.tanggal}</td><td>${d.surah}</td><td>${d.ayat}</td><td>${d.keterangan || "-"}</td></tr>`;
+            if (d.tanggal === filterTanggal && d.data) {
+              d.data.forEach(x => {
+                if (x.nama === nama) {
+                  html += `<tr><td>${d.tanggal}</td><td>${x.setoran}</td><td>${x.ayat}</td><td>${x.ket || '-'}</td></tr>`;
+                }
+              });
             }
           });
           html += "</table>";
-          elTahfiz.innerHTML = html;
+          elTahfiz.innerHTML = html || "Tidak ada data.";
         } else elTahfiz.textContent = "Belum ada setoran tahfiz.";
 
         // === 4. Pelanggaran ===
-        const snapLanggar = await get(child(ref(db), "cahaya_app/pelanggaran"));
+        const snapLanggar = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
         if (snapLanggar.exists()) {
-          let html = "<table><tr><th>Tanggal</th><th>Pelanggaran</th><th>Tindakan</th></tr>";
+          let html = `<table><tr>
+            <th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindakan</th><th>Konsekuensi</th></tr>`;
           Object.values(snapLanggar.val()).forEach(d => {
-            if (d.nama === nama) {
-              html += `<tr><td>${d.tanggal}</td><td>${d.keterangan}</td><td>${d.tindakan || "-"}</td></tr>`;
+            if (d.santri === nama && d.tanggal === filterTanggal) {
+              html += `<tr><td>${d.tanggal}</td><td>${d.namaPelanggaran}</td><td>${d.kategori}</td><td>${d.keterangan || '-'}</td><td>${d.tindakLanjut || '-'}</td><td>${d.konsekuensi || '-'}</td></tr>`;
             }
           });
           html += "</table>";
@@ -286,9 +273,36 @@
         } else elLanggar.textContent = "Tidak ada catatan pelanggaran.";
 
       } catch (err) {
-        elProg.textContent = elPemb.textContent = elTahfiz.textContent = elLanggar.textContent =
-          "Gagal memuat data: " + err.message;
+        console.error(err);
+        elProg.textContent = elPemb.textContent = elTahfiz.textContent = elLanggar.textContent = "Gagal memuat data.";
       }
+    }
+
+    // === RENDER TABEL UMUM ===
+    function renderFilteredTable(snapshot, el, filterTanggal, nama, fields) {
+      if (!snapshot.exists()) {
+        el.textContent = "Tidak ada data.";
+        return;
+      }
+      let html = `<table><tr>${fields.map(f => `<th>${f.toUpperCase()}</th>`).join('')}</tr>`;
+      Object.values(snapshot.val()).forEach(d => {
+        if (d.tanggal === filterTanggal && d.data) {
+          d.data.forEach(s => {
+            if (s.nama === nama) {
+              const color = s.status === "Hadir" ? "badge-hadir"
+                : s.status === "Izin" ? "badge-izin"
+                : s.status === "Sakit" ? "badge-sakit" : "badge-alfa";
+              html += `<tr>${fields.map(f =>
+                f === 'status'
+                ? `<td><span class="badge ${color}">${s.status}</span></td>`
+                : `<td>${d[f] || '-'}</td>`
+              ).join('')}</tr>`;
+            }
+          });
+        }
+      });
+      html += "</table>";
+      el.innerHTML = html;
     }
 
     // === GLOBAL ===
