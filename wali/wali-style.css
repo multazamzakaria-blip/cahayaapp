@@ -151,3 +151,76 @@ th, td {
 th {
   background: rgba(255,255,255,0.15);
 }
+/* === Laporan Harian Lengkap === */
+.laporan-harian h2 {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.laporan-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+/* Tab menu */
+.tab-menu {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+.tab-menu::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: #0d9488;
+  font-weight: 600;
+}
+
+/* Konten tab */
+.tab-content {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+  border-radius: 12px;
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* Tabel umum */
+.laporan-harian table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+.laporan-harian th, .laporan-harian td {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px;
+  text-align: left;
+}
+.laporan-harian th {
+  background: rgba(255,255,255,0.15);
+}
+.badge {
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-hadir { background: #16a34a; }
+.badge-izin { background: #0ea5e9; }
+.badge-sakit { background: #eab308; }
+.badge-alfa { background: #dc2626; }
