@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📊 Rekap Data – CAHAYA APP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      color: #1f2937;
+    }
+
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+    }
+
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.8rem;
+      padding: 20px 0;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📊 Rekap Data Santri</h1>
+    <button onclick="history.back()" style="background:white;color:#0f766e;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">⬅ Kembali</button>
+  </header>
+
+  <main>
+    <div class="card" onclick="go('rekap-program.html')">
+      <div class="icon">🕋</div>
+      <h3>Rekap Absensi Program Harian</h3>
+    </div>
+
+    <div class="card" onclick="go('rekap-pembelajaran.html')">
+      <div class="icon">📘</div>
+      <h3>Rekap Absensi Pembelajaran</h3>
+    </div>
+
+    <div class="card" onclick="go('rekap-tahfiz.html')">
+      <div class="icon">📖</div>
+      <h3>Rekap Setoran Tahfiz</h3>
+    </div>
+
+    <div class="card" onclick="go('rekap-pelanggaran.html')">
+      <div class="icon">⚠️</div>
+      <h3>Rekap Pelanggaran Santri</h3>
+    </div>
+
+    <div class="card" onclick="go('rekap-nilai.html')">
+      <div class="icon">🎓</div>
+      <h3>Rekap Nilai Ujian</h3>
+    </div>
+  </main>
+
+  <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
+
+  <script>
+    function go(page) {
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
