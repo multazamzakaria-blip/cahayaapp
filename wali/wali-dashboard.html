@@ -14,6 +14,22 @@
       padding: 0;
     }
 
+    /* === SLIDE WELCOME === */
+    .welcome-slide {
+      background: linear-gradient(90deg, #0d9488, #059669);
+      padding: 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      color: white;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .dashboard {
       max-width: 900px;
       margin: auto;
@@ -120,21 +136,25 @@
     .badge-sakit { background: #eab308; }
     .badge-alfa { background: #dc2626; }
 
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
     @media (max-width:600px) {
-      header h1 {
-        font-size: 1.25rem; /* ✅ agar muat 1 baris di HP */
-      }
-      #greeting {
-        font-size: 0.9rem;
-      }
-      .toolbar { 
-        flex-direction: column; 
-        align-items: stretch;
-      }
+      header h1 { font-size: 1.25rem; }
+      #greeting { font-size: 0.9rem; }
+      .toolbar { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
+  <div class="welcome-slide">
+    Selamat Datang di <b>Cahaya App</b> — Pesantren Cahaya Fajrul Islam
+  </div>
+
   <div class="dashboard">
     <header>
       <h1>🦁 Dashboard Wali Santri</h1>
@@ -155,6 +175,8 @@
     </div>
 
     <main id="content"></main>
+
+    <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
 
   <script type="module">
@@ -162,7 +184,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // === FIREBASE CONFIG SESUAI KODE NAIQIB ===
+    // === FIREBASE CONFIG ===
     const app = initializeApp({
       apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
       authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -184,40 +206,58 @@
     const tanggalInput = document.getElementById("tanggal");
     const today = new Date().toISOString().split("T")[0];
     tanggalInput.value = today;
-
     tanggalInput.addEventListener("change", () => loadLaporanHarian(tanggalInput.value));
     document.addEventListener("DOMContentLoaded", () => loadLaporanHarian(today));
 
     async function loadLaporanHarian(tanggal) {
-      const nama = user.namaAnak.toUpperCase().trim(); // karena di database uppercase
+      const nama = user.namaAnak.toUpperCase().trim();
       content.innerHTML = `
         <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
+        <div class="card"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
       `;
 
+      // === ABSENSI PROGRAM HARIAN ===
       const elProg = document.getElementById("prog");
-
       try {
         const snapProg = await get(child(ref(db), "cahaya_app/absensi_program_harian"));
-        if (!snapProg.exists()) {
-          elProg.textContent = "Tidak ada data absensi.";
-          return;
-        }
-
         let html = `<table><tr><th>Program</th><th>Status</th></tr>`;
-        Object.values(snapProg.val()).forEach(d => {
-          if (d.tanggal === tanggal && d.data) {
-            d.data.forEach(s => {
-              if (s.nama.trim().toUpperCase() === nama) {
-                html += `<tr><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
-              }
-            });
-          }
-        });
+        if (snapProg.exists()) {
+          Object.values(snapProg.val()).forEach(d => {
+            if (d.tanggal === tanggal && d.data) {
+              d.data.forEach(s => {
+                if (s.nama.trim().toUpperCase() === nama) {
+                  html += `<tr><td>${d.program}</td><td>${badge(s.status)}</td></tr>`;
+                }
+              });
+            }
+          });
+        }
         html += "</table>";
-
-        elProg.innerHTML = html.includes("<tr><td") ? html : "Belum ada data absensi untuk tanggal ini.";
+        elProg.innerHTML = html.includes("<tr><td") ? html : "Belum ada data absensi program harian.";
       } catch (e) {
         elProg.textContent = "❌ Gagal memuat data: " + e.message;
+      }
+
+      // === ABSENSI PEMBELAJARAN ===
+      const elPemb = document.getElementById("pemb");
+      try {
+        const snapPemb = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
+        let html = `<table><tr><th>Mapel</th><th>Status</th></tr>`;
+        if (snapPemb.exists()) {
+          Object.values(snapPemb.val()).forEach(d => {
+            if (d.tanggal === tanggal && d.data) {
+              d.data.forEach(s => {
+                if (s.nama.trim().toUpperCase() === nama) {
+                  html += `<tr><td>${d.mapel}</td><td>${badge(s.status)}</td></tr>`;
+                }
+              });
+            }
+          });
+        }
+        html += "</table>";
+        elPemb.innerHTML = html.includes("<tr><td") ? html : "Belum ada data kehadiran pembelajaran.";
+      } catch (e) {
+        elPemb.textContent = "❌ Gagal memuat data: " + e.message;
       }
     }
 
