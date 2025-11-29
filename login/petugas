@@ -25,7 +25,15 @@
       max-width: 380px;
       text-align: center;
     }
-    img { width: 80px; border-radius: 50%; margin-bottom: 14px; }
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255,255,255,0.2);
+      padding: 6px;
+      margin-bottom: 14px;
+    }
     h2 { margin: 0 0 8px; font-weight: 600; }
     p { color: #d1fae5; margin-bottom: 16px; font-size: 0.9rem; }
     input {
@@ -39,7 +47,7 @@
       color: #111;
     }
     button {
-      background: white;
+      background: #f9fafb;
       color: #0f766e;
       width: 100%;
       border: none;
@@ -47,47 +55,103 @@
       padding: 10px;
       font-weight: 600;
       cursor: pointer;
+      margin-top: 6px;
     }
-    button:hover { background: #f3f4f6; }
+    button:hover { background: white; }
     a {
       display: block;
       margin-top: 16px;
       color: #facc15;
       text-decoration: none;
       font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .hint {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+      margin-top: 6px;
     }
   </style>
 </head>
 <body>
   <div class="login-box">
-    <img src="../logofi.png" alt="Logo">
+    <img src="../logofi.png" alt="Logo" class="logo" />
     <h2>Login Petugas</h2>
-    <p>Masuk untuk Admin, Guru, dan Naqib</p>
+    <p>Untuk Admin, Guru, dan Naqib</p>
+
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Masuk</button>
-    <a href="../index.html">⬅️ Kembali</a>
+    <div class="hint">💡 Gunakan akun yang terdaftar di sistem.</div>
+    <a href="../index.html">⬅️ Kembali ke Portal Utama</a>
   </div>
 
-  <script>
-    const users = [
-      { username: "admin", password: "cahaya2025", role: "admin", label: "Admin Pesantren" },
-      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal" },
-      { username: "multazam", password: "guru123", role: "guru", label: "Ustadz Multazam" },
-      // tambahkan user lain seperti biasa
-    ];
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    function login(){
-      const u = username.value.trim().toLowerCase();
-      const p = password.value.trim();
-      const found = users.find(a => a.username === u && a.password === p);
-      if(!found){ alert("❌ Username atau password salah."); return; }
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+      messagingSenderId: "739928369926",
+      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+    };
 
-      localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
-      if(found.role === "guru") location.href = "../guru/fitur.html";
-      else if(found.role === "naqib") location.href = "../naqib/dashboard.html";
-      else if(found.role === "admin") location.href = "../admin/index.html";
-    }
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    window.login = async function(){
+      const uInput = document.getElementById('username').value.trim().toLowerCase();
+      const pInput = document.getElementById('password').value.trim();
+
+      if(!uInput || !pInput){
+        alert("Lengkapi username dan password.");
+        return;
+      }
+
+      try {
+        const dbRef = ref(db);
+        const snap = await get(child(dbRef, "cahaya_app/users_petugas/" + uInput));
+
+        if(!snap.exists()){
+          alert("❌ Akun tidak ditemukan di database.");
+          return;
+        }
+
+        const userData = snap.val();
+        if(userData.password !== pInput){
+          alert("❌ Password salah.");
+          return;
+        }
+
+        // Bentuk objek localStorage mengikuti struktur lama
+        const currentUser = {
+          username : uInput,
+          role     : userData.role,
+          label    : userData.label || "",
+          naqibName: userData.naqibName || null
+        };
+
+        localStorage.setItem("cahayaCurrentUser", JSON.stringify(currentUser));
+
+        // Redirect berdasarkan role
+        if (userData.role === "guru") {
+          window.location.href = "../guru/fitur.html";
+        } else if (userData.role === "naqib") {
+          window.location.href = "../naqib/dashboard.html";
+        } else if (userData.role === "admin") {
+          window.location.href = "../admin/index.html";
+        } else {
+          alert("Role user tidak dikenal. Pastikan field 'role' di Firebase: guru / naqib / admin.");
+        }
+      } catch(err){
+        console.error(err);
+        alert("Terjadi kesalahan koneksi ke Firebase: " + err.message);
+      }
+    };
   </script>
 </body>
 </html>
