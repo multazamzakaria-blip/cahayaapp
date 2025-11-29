@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Wali Santri - CAHAYA APP</title>
-  <link rel="stylesheet" href="wali-style.css" />
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -22,13 +21,12 @@
       margin-bottom: 15px;
       text-align: center;
     }
-    .slide-content {display: flex;align-items: center;justify-content: center;gap: 14px;flex-wrap: wrap;}
-    .logo-slide {width: 42px;height: 42px;object-fit: contain;border-radius: 50%;background: white;padding: 4px;}
-    .dashboard {max-width: 900px;margin: auto;padding: 10px 20px 60px;}
-    header {text-align: center;margin-bottom: 10px;}
-    header h1 {font-size: 1.6rem;margin-bottom: 6px;}
-    #greeting {font-size: 1rem;margin-bottom: 12px;}
-
+    .slide-content { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .logo-slide { width: 42px; height: 42px; object-fit: contain; border-radius: 50%; background: white; padding: 4px; }
+    .dashboard { max-width: 900px; margin: auto; padding: 10px 20px 60px; }
+    header { text-align: center; margin-bottom: 10px; }
+    header h1 { font-size: 1.6rem; margin-bottom: 6px; }
+    #greeting { font-size: 1rem; margin-bottom: 12px; }
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -36,7 +34,7 @@
       margin: 20px 0;
     }
     .menu-card {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       border-radius: 12px;
       padding: 12px;
       text-align: center;
@@ -44,25 +42,20 @@
       transition: 0.3s;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .menu-card:hover {background: rgba(255, 255, 255, 0.25);transform: translateY(-2px);}
-    .menu-card img {width: 40px;height: 40px;margin-bottom: 8px;}
-    .menu-card h4 {margin: 0;font-size: 0.95rem;color: white;}
+    .menu-card:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+    .menu-card img { width: 40px; height: 40px; margin-bottom: 8px; }
+    .menu-card h4 { margin: 0; font-size: 0.95rem; color: white; }
 
-    .toolbar {
-      text-align: right;
-      margin-bottom: 10px;
-      display: none;
-      animation: fadeIn 0.3s ease-in-out;
-    }
+    /* Toolbar */
+    .toolbar { text-align: right; margin-bottom: 10px; display: none; }
     .toolbar input, .toolbar select {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 6px;
       color: white;
       padding: 6px 10px;
       margin-left: 8px;
     }
-    .toolbar input::-webkit-calendar-picker-indicator {filter: invert(1);}
     .toolbar button {
       background: #0d9488;
       color: white;
@@ -71,189 +64,202 @@
       padding: 6px 12px;
       margin-left: 10px;
       cursor: pointer;
-      transition: 0.3s;
-    }
-    .toolbar button:hover {background: #115e59;}
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-5px);}
-      to {opacity: 1; transform: translateY(0);}
     }
 
-    .card {border-radius: 12px;padding: 16px;margin-top: 14px;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);overflow-x: auto;}
-    .card h2 {font-size: 1rem;margin-top: 0;margin-bottom: 10px;}
+    /* Card & Table */
+    .card { border-radius: 12px; padding: 16px; margin-top: 14px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); overflow-x: auto; }
     .card.green { background: rgba(34,197,94,0.15); }
     .card.blue { background: rgba(59,130,246,0.15); }
     .card.purple { background: rgba(147,51,234,0.15); }
     .card.red { background: rgba(239,68,68,0.15); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { border: 1px solid rgba(255,255,255,0.2); padding: 6px; text-align: left; word-wrap: break-word; }
+    th { background: rgba(255,255,255,0.15); }
 
-    table {width: 100%;border-collapse: collapse;font-size: 0.85rem;table-layout: fixed;}
-    th, td {border: 1px solid rgba(255, 255, 255, 0.2);padding: 6px;text-align: left;word-wrap: break-word;}
-    th {background: rgba(255, 255, 255, 0.15);}
-
-    .bottom-buttons {text-align: center;margin-top: 30px;}
+    .bottom-buttons { text-align: center; margin-top: 30px; }
     .bottom-buttons button {
-      background: #0d9488;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      margin: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-weight: 600;
+      background: #0d9488; color: white; border: none;
+      padding: 10px 20px; border-radius: 10px; margin: 5px;
+      cursor: pointer; font-weight: 600;
     }
     .bottom-buttons button:hover { background: #115e59; }
-    .bottom-buttons .logout { background: #dc2626; }
-    .bottom-buttons .logout:hover { background: #b91c1c; }
-
-    footer {text-align: center;margin-top: 20px;font-size: 0.8rem;opacity: 0.8;}
+    .logout { background: #dc2626; }
+    .logout:hover { background: #b91c1c; }
+    footer { text-align: center; margin-top: 20px; font-size: 0.8rem; opacity: 0.8; }
   </style>
 </head>
-
 <body>
-  <div class="dashboard">
-    <div class="welcome-slide">
-      <div class="slide-content">
-        <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
-        <div>
-          <h2>Selamat Datang di <b>Cahaya App</b></h2>
-          <p>Pesantren Cahaya Fajrul Islam</p>
-        </div>
+
+<div class="dashboard">
+  <div class="welcome-slide">
+    <div class="slide-content">
+      <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
+      <div>
+        <h2>Selamat Datang di <b>Cahaya App</b></h2>
+        <p>Pesantren Cahaya Fajrul Islam</p>
       </div>
     </div>
-
-    <header>
-      <h1>📊 Dashboard Wali Santri</h1>
-      <div id="greeting"></div>
-    </header>
-
-    <div class="menu-grid">
-      <div class="menu-card" id="btnHarian">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-        <h4>Progres Harian</h4>
-      </div>
-      <div class="menu-card" id="btnBulanan">
-        <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
-        <h4>Progres Bulanan</h4>
-      </div>
-    </div>
-
-    <!-- FILTER AREA -->
-    <div class="toolbar" id="filterToolbar"></div>
-
-    <main id="content">
-      <p style="text-align:center;opacity:0.8;">Klik salah satu menu di atas untuk melihat progres santri.</p>
-    </main>
-
-    <div class="bottom-buttons">
-      <button onclick="scrollToTop()">⬆️ Kembali ke Atas</button>
-      <button class="logout" onclick="logoutWali()">Keluar</button>
-    </div>
-
-    <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
 
-  <script type="module">
-    import { checkWaliLogin, logoutWali } from './wali-script.js';
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  <header>
+    <h1>📊 Dashboard Wali Santri</h1>
+    <div id="greeting"></div>
+  </header>
 
-    const app = initializeApp({
-      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
-      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
-      projectId: "absensi-santri-fajrul-islam",
-      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
-      messagingSenderId: "739928369926",
-      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
-    });
-    const db = getDatabase(app);
+  <div class="menu-grid">
+    <div class="menu-card" id="btnHarian">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+      <h4>Progres Harian</h4>
+    </div>
+    <div class="menu-card" id="btnBulanan">
+      <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
+      <h4>Progres Bulanan</h4>
+    </div>
+  </div>
 
-    const user = checkWaliLogin();
-    if (!user) window.location.href = "wali-login.html";
-    document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
+  <div class="toolbar" id="filterToolbar"></div>
 
-    const content = document.getElementById("content");
-    const toolbar = document.getElementById("filterToolbar");
+  <main id="content">
+    <p style="text-align:center;opacity:0.8;">Klik salah satu menu di atas untuk melihat progres santri.</p>
+  </main>
 
-    // === PROGRES HARIAN ===
-    document.getElementById("btnHarian").addEventListener("click", () => {
-      toolbar.style.display = "block";
-      toolbar.innerHTML = `
-        <label>Pilih Tanggal:</label>
-        <input type="date" id="tanggal" value="${new Date().toISOString().split("T")[0]}" />
-        <button id="lihatProgres">Lihat Progres</button>
-      `;
-      document.getElementById("lihatProgres").onclick = () => {
-        const tgl = document.getElementById("tanggal").value;
-        if (!tgl) return alert("Silakan pilih tanggal terlebih dahulu.");
-        loadProgresHarian(tgl);
-      };
-      content.innerHTML = `<p style="text-align:center;">Silakan pilih tanggal, lalu klik "Lihat Progres".</p>`;
-    });
+  <div class="bottom-buttons">
+    <button onclick="scrollToTop()">⬆️ Kembali ke Atas</button>
+    <button class="logout" onclick="logoutWali()">Keluar</button>
+  </div>
 
-    // === PROGRES BULANAN ===
-    document.getElementById("btnBulanan").addEventListener("click", () => {
-      toolbar.style.display = "block";
-      toolbar.innerHTML = `
-        <label>Pilih Bulan:</label>
-        <input type="month" id="bulan" value="${new Date().toISOString().slice(0,7)}" />
-        <button id="lihatProgresBulanan">Lihat Progres</button>
-      `;
-      document.getElementById("lihatProgresBulanan").onclick = () => {
-        const bln = document.getElementById("bulan").value;
-        if (!bln) return alert("Silakan pilih bulan terlebih dahulu.");
-        loadProgresBulanan(bln);
-      };
-      content.innerHTML = `<p style="text-align:center;">Silakan pilih bulan, lalu klik "Lihat Progres".</p>`;
-    });
+  <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
+</div>
 
-    async function loadProgresHarian(tanggal) {
-      const nama = user.namaAnak.toUpperCase().trim();
-      content.innerHTML = `
-        <div class="card green"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
-        <div class="card blue"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
-        <div class="card purple"><h2>📖 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
-        <div class="card red"><h2>⚠️ Pelanggaran</h2><div id="pelanggaran">Memuat...</div></div>
-      `;
-      await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog", "program", "status");
-      await loadData("cahaya_app/absensi_pembelajaran", tanggal, nama, "pemb", "mapel", "status");
-      await loadData("cahaya_app/setoran_tahfiz", tanggal, nama, "tahfiz", "setoran", "nilai");
-      await loadData("cahaya_app/pelanggaran", tanggal, nama, "pelanggaran", "jenis", "keterangan");
-    }
+<script type="module">
+  import { checkWaliLogin, logoutWali } from './wali-script.js';
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    async function loadProgresBulanan(bulan) {
-      const nama = user.namaAnak.toUpperCase().trim();
-      content.innerHTML = `<div class='card blue'><h2>📆 Progres Bulanan (${bulan})</h2><p>Fitur rekap bulanan sedang dikembangkan.</p></div>`;
-    }
+  const app = initializeApp({
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  });
+  const db = getDatabase(app);
 
-    async function loadData(path, tanggal, nama, targetId, col1, col2) {
-      const target = document.getElementById(targetId);
-      try {
-        const snap = await get(child(ref(db), path));
-        let html = `<table><tr><th>${capitalize(col1)}</th><th>${capitalize(col2)}</th></tr>`;
-        if (snap.exists()) {
-          Object.values(snap.val()).forEach(d => {
-            if (d.tanggal === tanggal && d.data) {
-              d.data.forEach(s => {
-                if (s.nama?.trim().toUpperCase() === nama) {
-                  html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td>${s[col2] || d[col2] || "-"}</td></tr>`;
-                }
-              });
-            }
-          });
+  const user = checkWaliLogin();
+  if (!user) window.location.href = "wali-login.html";
+  document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
+
+  const content = document.getElementById("content");
+  const toolbar = document.getElementById("filterToolbar");
+
+  // Tombol Harian
+  document.getElementById("btnHarian").addEventListener("click", () => {
+    toolbar.style.display = "block";
+    toolbar.innerHTML = `
+      <label>Pilih Tanggal:</label>
+      <input type="date" id="tanggal" value="${new Date().toISOString().split("T")[0]}" />
+      <button id="lihatProgres">Lihat Progres</button>
+    `;
+    document.getElementById("lihatProgres").onclick = () => {
+      const tgl = document.getElementById("tanggal").value;
+      if (!tgl) return alert("Pilih tanggal terlebih dahulu.");
+      loadProgresHarian(tgl);
+    };
+    content.innerHTML = `<p style="text-align:center;">Silakan pilih tanggal, lalu klik "Lihat Progres".</p>`;
+  });
+
+  // Tombol Bulanan
+  document.getElementById("btnBulanan").addEventListener("click", () => {
+    toolbar.style.display = "block";
+    toolbar.innerHTML = `
+      <label>Pilih Bulan:</label>
+      <input type="month" id="bulan" value="${new Date().toISOString().slice(0,7)}" />
+      <button id="lihatProgresBulanan">Lihat Progres</button>
+    `;
+    document.getElementById("lihatProgresBulanan").onclick = () => {
+      const bln = document.getElementById("bulan").value;
+      if (!bln) return alert("Pilih bulan terlebih dahulu.");
+      loadProgresBulanan(bln);
+    };
+    content.innerHTML = `<p style="text-align:center;">Silakan pilih bulan, lalu klik "Lihat Progres".</p>`;
+  });
+
+  async function loadProgresHarian(tanggal) {
+    const nama = user.namaAnak.toUpperCase().trim();
+    content.innerHTML = `
+      <div class="card green"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
+      <div class="card blue"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
+      <div class="card purple"><h2>📖 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
+      <div class="card red"><h2>⚠️ Pelanggaran</h2><div id="pelanggaran">Memuat...</div></div>
+    `;
+    await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog", "program", "status");
+    await loadData("cahaya_app/absensi_pembelajaran", tanggal, nama, "pemb", "mapel", "status");
+    await loadData("cahaya_app/setoran_tahfiz", tanggal, nama, "tahfiz", "setoran", "nilai");
+    await loadPelanggaran(tanggal, nama);
+  }
+
+  async function loadPelanggaran(tanggal, nama) {
+    const target = document.getElementById("pelanggaran");
+    try {
+      const snap = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
+      if (!snap.exists()) return target.textContent = "Belum ada data pelanggaran.";
+      let html = `<table><tr>
+        <th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th>
+      </tr>`;
+      let ditemukan = false;
+      Object.values(snap.val()).forEach(p => {
+        if (p.tanggal === tanggal && p.santri?.trim().toUpperCase() === nama) {
+          ditemukan = true;
+          html += `
+            <tr>
+              <td>${p.namaPelanggaran || "-"}</td>
+              <td>${p.kategori || "-"}</td>
+              <td>${p.keterangan || "-"}</td>
+              <td>${p.tindakLanjut || "-"}</td>
+              <td>${p.konsekuensi || "-"}</td>
+            </tr>
+          `;
         }
-        html += "</table>";
-        target.innerHTML = html.includes("<tr><td") ? html : "Belum ada data.";
-      } catch (e) {
-        target.textContent = "❌ Gagal memuat data: " + e.message;
-      }
+      });
+      html += "</table>";
+      target.innerHTML = ditemukan ? html : "Tidak ada pelanggaran hari ini.";
+    } catch (err) {
+      target.textContent = "❌ Gagal memuat pelanggaran: " + err.message;
     }
+  }
 
-    function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
-    window.scrollToTop = () => window.scrollTo({top:0,behavior:"smooth"});
-    window.logoutWali = logoutWali;
-  </script>
+  async function loadData(path, tanggal, nama, targetId, col1, col2) {
+    const target = document.getElementById(targetId);
+    try {
+      const snap = await get(child(ref(db), path));
+      let html = `<table><tr><th>${capitalize(col1)}</th><th>${capitalize(col2)}</th></tr>`;
+      if (snap.exists()) {
+        Object.values(snap.val()).forEach(d => {
+          if (d.tanggal === tanggal && d.data) {
+            d.data.forEach(s => {
+              if (s.nama?.trim().toUpperCase() === nama) {
+                html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td>${s[col2] || d[col2] || "-"}</td></tr>`;
+              }
+            });
+          }
+        });
+      }
+      html += "</table>";
+      target.innerHTML = html.includes("<tr><td") ? html : "Belum ada data.";
+    } catch (e) {
+      target.textContent = "❌ Gagal memuat data: " + e.message;
+    }
+  }
+
+  async function loadProgresBulanan(bulan) {
+    content.innerHTML = `<div class='card blue'><h2>📆 Progres Bulanan (${bulan})</h2><p>Rekap bulanan sedang dikembangkan.</p></div>`;
+  }
+
+  function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
+  window.scrollToTop = () => window.scrollTo({top:0,behavior:"smooth"});
+  window.logoutWali = logoutWali;
+</script>
 </body>
 </html>
