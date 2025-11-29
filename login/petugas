@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Petugas - CAHAYA APP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      color: #fff;
+    }
+    .login-box {
+      background: rgba(255,255,255,0.1);
+      padding: 36px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+    }
+    img { width: 80px; border-radius: 50%; margin-bottom: 14px; }
+    h2 { margin: 0 0 8px; font-weight: 600; }
+    p { color: #d1fae5; margin-bottom: 16px; font-size: 0.9rem; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      background: rgba(255,255,255,0.95);
+      color: #111;
+    }
+    button {
+      background: white;
+      color: #0f766e;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #f3f4f6; }
+    a {
+      display: block;
+      margin-top: 16px;
+      color: #facc15;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <img src="../logofi.png" alt="Logo">
+    <h2>Login Petugas</h2>
+    <p>Masuk untuk Admin, Guru, dan Naqib</p>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Masuk</button>
+    <a href="../index.html">⬅️ Kembali</a>
+  </div>
+
+  <script>
+    const users = [
+      { username: "admin", password: "cahaya2025", role: "admin", label: "Admin Pesantren" },
+      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal" },
+      { username: "multazam", password: "guru123", role: "guru", label: "Ustadz Multazam" },
+      // tambahkan user lain seperti biasa
+    ];
+
+    function login(){
+      const u = username.value.trim().toLowerCase();
+      const p = password.value.trim();
+      const found = users.find(a => a.username === u && a.password === p);
+      if(!found){ alert("❌ Username atau password salah."); return; }
+
+      localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
+      if(found.role === "guru") location.href = "../guru/fitur.html";
+      else if(found.role === "naqib") location.href = "../naqib/dashboard.html";
+      else if(found.role === "admin") location.href = "../admin/index.html";
+    }
+  </script>
+</body>
+</html>
