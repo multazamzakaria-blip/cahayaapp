@@ -1,122 +1,191 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CAHAYA APP - Portal Utama</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+  <link rel="icon" type="image/png" href="logofi.png" />
   <style>
-    :root {
-      --primary: #0d9488;
-      --primary-dark: #0f766e;
-      --bg: #f0fdfa;
-    }
-
     body {
       font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, var(--primary-dark), #115e59);
-      margin: 0;
-      height: 100vh;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
+      height: 100vh;
+      margin: 0;
+      color: white;
     }
 
     .login-box {
-      background: white;
-      color: #1f2937;
-      border-radius: 18px;
-      padding: 30px 25px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px 36px;
+      border-radius: 20px;
+      text-align: center;
       width: 90%;
       max-width: 380px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-      text-align: center;
-      animation: fadeIn 0.6s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
     }
 
-    .login-box img {
-      width: 75px;
-      margin-bottom: 10px;
+    img {
+      width: 90px;
+      margin-bottom: 12px;
     }
 
-    h1 {
-      color: var(--primary-dark);
-      font-size: 1.4rem;
-      margin-bottom: 5px;
+    h2 {
+      margin: 10px 0 5px;
     }
 
     p {
       font-size: 0.9rem;
-      color: #475569;
-      margin-bottom: 20px;
+      opacity: 0.8;
+      margin-bottom: 16px;
     }
 
     input {
       width: 100%;
       padding: 10px;
-      margin: 6px 0;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      box-sizing: border-box;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(13,148,136,0.2);
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #111;
     }
 
     button {
-      background: var(--primary);
-      color: white;
+      background: #facc15;
+      color: #1f2937;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       width: 100%;
       padding: 10px;
       font-weight: bold;
-      font-size: 1rem;
-      margin-top: 10px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.2s;
     }
 
     button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
+      background: #fde68a;
     }
 
     footer {
-      margin-top: 18px;
+      text-align: center;
+      margin-top: 20px;
       font-size: 0.8rem;
-      color: #94a3b8;
-    }
-
-    @keyframes fadeIn {
-      from {opacity:0;transform:translateY(20px);}
-      to {opacity:1;transform:translateY(0);}
-    }
-
-    @media(max-width:480px){
-      .login-box{padding:24px 18px;}
-      h1{font-size:1.2rem;}
+      opacity: 0.8;
     }
   </style>
 </head>
+
 <body>
   <div class="login-box">
-    <img src="logofi.png" alt="Logo Pesantren">
-    <h1>Selamat Datang di<br><b>CAHAYA APP</b></h1>
-    <p>Pesantren Cahaya Fajrul Islam</p>
+    <img src="logofi.png" alt="Logo Pesantren" />
+    <h2>🔑 Login CAHAYA APP</h2>
+    <p>Masukkan username & password sesuai peran Anda</p>
 
-    <input type="text" id="username" placeholder="Nama Pengguna" autocomplete="off">
-    <input type="password" id="password" placeholder="Kata Sandi">
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Masuk</button>
 
     <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
 
-  <script src="portal-script.js"></script>
+  <script>
+    // === DATA LOGIN PETUGAS ===
+    const users = [
+      // === GURU ===
+      { username: "multazam", password: "guru123", role: "guru", label: "Abah Multazam Zakaria" },
+      { username: "alvin", password: "guru123", role: "guru", label: "Mu'allim Alvin Dwianto" },
+      { username: "haidar", password: "guru123", role: "guru", label: "Mu'allim Haidar" },
+      { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
+
+      // === NAQIB ===
+      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas Bayu Aditya", naqibName: "Dimas" },
+      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen Prayitno", naqibName: "Regen" },
+      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
+
+      // === ADMIN ===
+      { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" },
+    ];
+
+    // === DATA LOGIN WALISANTRI ===
+    const waliList = [
+      { nama: "Ahmad Maulana", username: "ahmad312", password: "Cahaya@8723" },
+      { nama: "Najmihadi Syauqii Tamaam", username: "najmi827", password: "Cahaya@7721" },
+      { nama: "Fitrah Kirana", username: "fitrah607", password: "Cahaya@7839" },
+      // ... (kamu bisa masukkan semua daftar wali yang sudah ada)
+    ];
+
+    // === LOGIN FUNCTION ===
+    function login() {
+      const u = username.value.trim().toLowerCase();
+      const p = password.value.trim();
+
+      // cek petugas dulu
+      let found = users.find(a => a.username === u && a.password === p);
+
+      // kalau tidak ditemukan, cek wali
+      if (!found) {
+        const wali = waliList.find(w => w.username.toLowerCase() === u && w.password === p);
+        if (wali) {
+          found = {
+            role: "wali",
+            namaAnak: wali.nama,
+            username: wali.username,
+            label: `Wali ${wali.nama}`,
+          };
+        }
+      }
+
+      if (!found) {
+        alert("❌ Username atau password salah.");
+        return;
+      }
+
+      // simpan ke localStorage global unified
+      localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
+
+      // arahkan berdasarkan role
+      switch (found.role) {
+        case "guru":
+          location.href = "guru/fitur.html";
+          break;
+        case "naqib":
+          location.href = "naqib/dashboard.html";
+          break;
+        case "wali":
+          location.href = "wali/wali-dashboard.html";
+          break;
+        case "admin":
+          location.href = "admin/index.html";
+          break;
+        default:
+          alert("Peran tidak dikenali.");
+      }
+    }
+
+    // === AUTO-LOGIN (jika sudah tersimpan di localStorage) ===
+    (function autoLogin() {
+      const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+      if (!user) return;
+
+      switch (user.role) {
+        case "guru":
+          location.href = "guru/fitur.html";
+          break;
+        case "naqib":
+          location.href = "naqib/dashboard.html";
+          break;
+        case "wali":
+          location.href = "wali/wali-dashboard.html";
+          break;
+        case "admin":
+          location.href = "admin/index.html";
+          break;
+      }
+    })();
+  </script>
 </body>
 </html>
