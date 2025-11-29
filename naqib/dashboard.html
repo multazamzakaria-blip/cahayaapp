@@ -115,18 +115,10 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* RESPONSIVE */
     @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.1rem;
-      }
-      .card {
-        padding: 22px;
-      }
-      button {
-        font-size: 13px;
-        padding: 10px;
-      }
+      header h1 { font-size: 1.1rem; }
+      .card { padding: 22px; }
+      button { font-size: 13px; padding: 10px; }
     }
   </style>
 </head>
@@ -143,7 +135,7 @@
 <main>
   <div class="card">
     <h2 id="naqibTitle">Dashboard Naqib</h2>
-    <p class="small" id="naqibInfo"></p>
+    <p class="small" id="naqibInfo">Memuat data akses...</p>
 
     <div class="btn-group">
       <button onclick="goAbsensi()">🧍 Absensi Program Harian</button>
@@ -160,68 +152,45 @@
 <footer>
   © 2025 Pesantren Cahaya Fajrul Islam — Naqib Dashboard
 </footer>
-// === DATABASE KELOMPOK SANTRI ===
-const dataSantri = {
-  "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
-  "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
-  "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
-  "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
-  "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
-  "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
-  "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
-};
-
-// === AMBIL DATA USER ===
-const user = JSON.parse(localStorage.getItem("cahayaCurrentUser")) || {};
-const namaNaqib = user.label?.split(" ")[1] || ""; // Ambil nama utama naqib (misal 'Regen')
-
-// === CEK AKSES KELOMPOK ===
-let kelompok = dataSantri[namaNaqib];
-let aksesText = document.getElementById("aksesText");
-
-if (kelompok) {
-  aksesText.textContent = `Kelompok: ${namaNaqib}`;
-  console.log(`✅ Kelompok ${namaNaqib} terhubung. Total santri: ${kelompok.length}`);
-} else {
-  aksesText.textContent = "❌ Kelompok tidak ditemukan";
-  console.warn("Kelompok tidak ditemukan untuk:", namaNaqib);
-}
-
-// === SIMPAN KELOMPOK UNTUK DIGUNAKAN DI HALAMAN LAIN ===
-localStorage.setItem("kelompokNaqib", JSON.stringify(kelompok || []));
 
 <script>
-  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+  // === DATABASE KELOMPOK SANTRI ===
+  const dataSantri = {
+    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
+    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
+    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
+    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
+    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
+    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
+    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
+  };
 
-  (function init(){
-    const title = document.getElementById('naqibTitle');
-    const info = document.getElementById('naqibInfo');
-    if (!user || user.role !== 'naqib') {
-      title.textContent = 'Dashboard Naqib (Belum Login)';
-      info.textContent = 'Silakan login dari portal utama.';
-      return;
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
+  const title = document.getElementById("naqibTitle");
+  const info = document.getElementById("naqibInfo");
+
+  // Jika belum login
+  if (!user || user.role !== "naqib") {
+    title.textContent = "Dashboard Naqib (Belum Login)";
+    info.textContent = "Silakan login dari portal utama.";
+  } else {
+    title.textContent = user.label;
+    const namaNaqib = user.label?.split(" ")[1] || "";
+    const kelompok = dataSantri[namaNaqib];
+    if (kelompok) {
+      info.textContent = `Kelompok: ${namaNaqib} (${kelompok.length} santri)`;
+      localStorage.setItem("kelompokNaqib", JSON.stringify(kelompok));
+    } else {
+      info.textContent = "❌ Kelompok tidak ditemukan.";
     }
-    title.textContent = user.label || 'Dashboard Naqib';
-    info.textContent = `Akses: ${user.naqibName || 'Tidak diketahui'}`;
-  })();
+  }
 
-  function backToPortal(){
-    window.location.href = '../index.html';
-  }
-  function logout(){
-    localStorage.removeItem('cahayaCurrentUser');
-    window.location.href = '../index.html';
-  }
-  function goAbsensi(){
-    window.location.href = 'absensi.html';
-  }
-  function goPelanggaran(){
-    window.location.href = 'pelanggaran.html';
-  }
-  function goCahaya(){
-    window.location.href = 'assasment.html';
-  }
+  function backToPortal(){ window.location.href = "../index.html"; }
+  function logout(){ localStorage.removeItem("cahayaCurrentUser"); window.location.href = "../index.html"; }
+  function goAbsensi(){ window.location.href = "absensi-program.html"; }
+  function goPelanggaran(){ window.location.href = "pelanggaran.html"; }
+  function goCahaya(){ window.location.href = "assessment.html"; }
 </script>
+
 </body>
 </html>
-
