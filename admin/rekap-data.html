@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAHAYA APP – Rekap Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      color: #1f2937;
+    }
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    main {
+      padding: 24px;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      color: #0f766e;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    .form-row {
+      margin-bottom: 14px;
+    }
+    .form-row label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    select, input[type="date"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .flex-row {
+      display: flex;
+      gap: 10px;
+    }
+    .flex-row > div {
+      flex: 1;
+    }
+    button {
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+    button:hover {
+      background: #115e59;
+    }
+    .back-btn {
+      background: #e5e7eb;
+      color: #111827;
+      margin-right: 8px;
+    }
+    .back-btn:hover {
+      background: #d1d5db;
+    }
+    .info-text {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    #hasilRekap {
+      font-size: 0.9rem;
+      color: #111827;
+      margin-top: 10px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rekap Data – CAHAYA APP</h1>
+    <div>
+      <button class="back-btn" onclick="goBack()">⬅ Kembali</button>
+    </div>
+  </header>
+
+  <main>
+    <h2>📑 Pengaturan Rekap Data</h2>
+    <div class="card">
+      <!-- 1. JENIS DATA -->
+      <div class="form-row">
+        <label for="jenisDataSelect">Jenis Data</label>
+        <select id="jenisDataSelect" onchange="updateFilterVisibility()">
+          <option value="absensi_program">Absensi Program</option>
+          <option value="absensi_belajar">Absensi Belajar</option>
+          <option value="setoran_tahfiz">Setoran Tahfiz</option>
+          <option value="pelanggaran">Pelanggaran</option>
+        </select>
+      </div>
+
+      <!-- 2. RENTANG WAKTU -->
+      <div class="form-row">
+        <label for="rangeRekapSelect">Rentang Waktu</label>
+        <select id="rangeRekapSelect" onchange="toggleDateInputsRekap()">
+          <option value="hari">Hari Ini</option>
+          <option value="pekan">Pekan Ini</option>
+          <option value="bulan">Bulan Ini</option>
+          <option value="rentang">Rentang Waktu Tertentu</option>
+        </select>
+        <div id="rekapDateInputs" style="display:none;margin-top:8px;">
+          <div class="flex-row">
+            <div>
+              <label for="rekapStartDate">Dari</label>
+              <input type="date" id="rekapStartDate">
+            </div>
+            <div>
+              <label for="rekapEndDate">Sampai</label>
+              <input type="date" id="rekapEndDate">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. FILTER NAIQIB (untuk data dari naqib) -->
+      <div class="form-row" id="filterNaqibGroup">
+        <label for="filterNaqibSelect">Naqib</label>
+        <select id="filterNaqibSelect" onchange="toggleNaqibDetail()">
+          <option value="semua">Semua Naqib</option>
+          <option value="tertentu">Naqib Tertentu</option>
+        </select>
+        <div id="naqibListWrapper" style="display:none;margin-top:8px;">
+          <label for="naqibList">Pilih Naqib</label>
+          <select id="naqibList">
+            <!-- Bisa diisi dinamis dari database nanti -->
+            <option value="">-- Pilih Naqib --</option>
+            <option value="Naqib 1">Naqib 1</option>
+            <option value="Naqib 2">Naqib 2</option>
+            <option value="Naqib 3">Naqib 3</option>
+          </select>
+          <div class="info-text">Daftar ini nanti bisa diisi otomatis dari database naqib.</div>
+        </div>
+      </div>
+
+      <!-- 4. FILTER KELAS (untuk data dari guru) -->
+      <div class="form-row" id="filterKelasGroup">
+        <label for="filterKelasSelect">Kelas</label>
+        <select id="filterKelasSelect" onchange="toggleKelasDetail()">
+          <option value="semua">Semua Kelas</option>
+          <option value="tertentu">Kelas Tertentu</option>
+        </select>
+        <div id="kelasListWrapper" style="display:none;margin-top:8px;">
+          <label for="kelasList">Pilih Kelas</label>
+          <select id="kelasList">
+            <!-- Bisa diisi dinamis dari database kelas nanti -->
+            <option value="">-- Pilih Kelas --</option>
+            <option value="7A">7A</option>
+            <option value="7B">7B</option>
+            <option value="8A">8A</option>
+            <option value="8B">8B</option>
+          </select>
+          <div class="info-text">Daftar ini nanti bisa diisi otomatis dari database kelas.</div>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:18px;">
+        <button onclick="tampilkanRekap()">Tampilkan Rekap</button>
+      </div>
+
+      <div id="hasilRekap"></div>
+    </div>
+  </main>
+
+  <script>
+    function goBack() {
+      // kembali ke admin (sesuaikan path jika file ini di folder admin/)
+      window.location.href = 'admin.html';
+    }
+
+    // Tampilkan / sembunyikan input tanggal khusus
+    function toggleDateInputsRekap() {
+      const val = document.getElementById('rangeRekapSelect').value;
+      document.getElementById('rekapDateInputs').style.display =
+        val === 'rentang' ? 'block' : 'none';
+    }
+
+    function toggleNaqibDetail() {
+      const val = document.getElementById('filterNaqibSelect').value;
+      document.getElementById('naqibListWrapper').style.display =
+        val === 'tertentu' ? 'block' : 'none';
+    }
+
+    function toggleKelasDetail() {
+      const val = document.getElementById('filterKelasSelect').value;
+      document.getElementById('kelasListWrapper').style.display =
+        val === 'tertentu' ? 'block' : 'none';
+    }
+
+    // Mapping jenis data ↔ sumber (naqib/guru)
+    // absensi_program, setoran_tahfiz, pelanggaran -> Naqib
+    // absensi_belajar -> Guru
+    function updateFilterVisibility() {
+      const jenis = document.getElementById('jenisDataSelect').value;
+      const naqibGroup = document.getElementById('filterNaqibGroup');
+      const kelasGroup = document.getElementById('filterKelasGroup');
+
+      if (jenis === 'absensi_belajar') {
+        // data dari guru
+        kelasGroup.style.display = 'block';
+        naqibGroup.style.display = 'none';
+      } else {
+        // data dari naqib
+        kelasGroup.style.display = 'none';
+        naqibGroup.style.display = 'block';
+      }
+    }
+
+    // Tampilkan ringkasan pilihan (sementara, sebelum dihubungkan ke Firebase)
+    function tampilkanRekap() {
+      const jenis = document.getElementById('jenisDataSelect').value;
+      const range = document.getElementById('rangeRekapSelect').value;
+
+      let rangeText = '';
+      if (range === 'hari') rangeText = 'Hari ini';
+      else if (range === 'pekan') rangeText = 'Pekan ini';
+      else if (range === 'bulan') rangeText = 'Bulan ini';
+      else {
+        const s = document.getElementById('rekapStartDate').value;
+        const e = document.getElementById('rekapEndDate').value;
+        if (!s || !e) {
+          alert('Lengkapi tanggal mulai dan akhir untuk rentang waktu tertentu.');
+          return;
+        }
+        rangeText = `Rentang ${s} s.d. ${e}`;
+      }
+
+      let sumberText = '';
+      let filterText = '';
+
+      if (document.getElementById('filterNaqibGroup').style.display !== 'none') {
+        const modeNaqib = document.getElementById('filterNaqibSelect').value;
+        sumberText = 'Sumber: Naqib';
+        if (modeNaqib === 'semua') {
+          filterText = 'Semua naqib';
+        } else {
+          const naqib = document.getElementById('naqibList').value || '(belum dipilih)';
+          filterText = `Naqib tertentu: ${naqib}`;
+        }
+      }
+
+      if (document.getElementById('filterKelasGroup').style.display !== 'none') {
+        const modeKelas = document.getElementById('filterKelasSelect').value;
+        sumberText = 'Sumber: Guru';
+        if (modeKelas === 'semua') {
+          filterText = 'Semua kelas';
+        } else {
+          const kelas = document.getElementById('kelasList').value || '(belum dipilih)';
+          filterText = `Kelas tertentu: ${kelas}`;
+        }
+      }
+
+      const jenisLabel = {
+        'absensi_program': 'Absensi Program',
+        'absensi_belajar': 'Absensi Belajar',
+        'setoran_tahfiz': 'Setoran Tahfiz',
+        'pelanggaran': 'Pelanggaran'
+      }[jenis] || jenis;
+
+      const hasil = `🔎 Rekap Data
+• Jenis Data : ${jenisLabel}
+• Rentang    : ${rangeText}
+• ${sumberText}
+• Filter     : ${filterText}
+
+(Rekap data belum dihubungkan ke database. Nanti bagian ini bisa menampilkan tabel atau tombol export.)`;
+
+      document.getElementById('hasilRekap').textContent = hasil;
+    }
+
+    // Inisialisasi awal
+    document.addEventListener('DOMContentLoaded', () => {
+      updateFilterVisibility();
+      toggleDateInputsRekap();
+    });
+  </script>
+</body>
+</html>
