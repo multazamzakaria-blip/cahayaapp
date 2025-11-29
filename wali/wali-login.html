@@ -16,6 +16,39 @@
       <i>Wali yang sudah login tidak perlu login ulang.</i>
     </p>
   </div>
+<script>
+  // === AUTO REDIRECT JIKA SUDAH LOGIN ===
+  const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if (currentUser && currentUser.role === "wali") {
+    window.location.href = "wali-dashboard.html"; // langsung ke dashboard wali
+  }
+
+  // === LOGIN FUNCTION ===
+  const waliList = [
+    // ... daftar user wali kamu di sini ...
+  ];
+
+  function login() {
+    const u = username.value.trim().toLowerCase();
+    const p = password.value.trim();
+    const wali = waliList.find(w => w.username.toLowerCase() === u && w.password === p);
+
+    if (!wali) {
+      alert("❌ Username atau password salah.");
+      return;
+    }
+
+    // simpan dengan struktur unified agar dikenali juga oleh dashboard
+    const currentUser = {
+      role: "wali",
+      namaAnak: wali.nama,
+      username: wali.username,
+    };
+
+    localStorage.setItem("cahayaCurrentUser", JSON.stringify(currentUser));
+    window.location.href = "wali-dashboard.html";
+  }
+</script>
 
 <script>
 /* --- CEK LOGIN OTOMATIS --- */
