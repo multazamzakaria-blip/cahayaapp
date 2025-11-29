@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Wali Santri - CAHAYA APP</title>
-  <link rel="stylesheet" href="wali-style.css">
+  <link rel="stylesheet" href="wali-style.css" />
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -14,26 +14,52 @@
       padding: 0;
     }
 
-    /* === SLIDE WELCOME === */
+    /* === SLIDE WELCOME STATIS === */
     .welcome-slide {
-      background: linear-gradient(90deg, #0d9488, #059669);
-      padding: 10px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 1rem;
+      background: linear-gradient(90deg, #0d9488, #0f766e);
       color: white;
-      animation: fadeIn 1s ease;
+      padding: 14px 20px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 15px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .slide-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      text-align: center;
+      flex-wrap: wrap;
     }
 
+    .logo-slide {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+    }
+
+    .text-content h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .text-content p {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* === DASHBOARD === */
     .dashboard {
       max-width: 900px;
       margin: auto;
-      padding: 20px;
+      padding: 10px 20px 40px;
     }
 
     header {
@@ -147,12 +173,23 @@
       header h1 { font-size: 1.25rem; }
       #greeting { font-size: 0.9rem; }
       .toolbar { flex-direction: column; align-items: stretch; }
+      .text-content h2 { font-size: 1rem; }
+      .text-content p { font-size: 0.8rem; }
+      .logo-slide { width: 40px; height: 40px; }
     }
   </style>
 </head>
+
 <body>
+  <!-- === SLIDE WELCOME (STATIS) === -->
   <div class="welcome-slide">
-    Selamat Datang di <b>Cahaya App</b> — Pesantren Cahaya Fajrul Islam
+    <div class="slide-content">
+      <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
+      <div class="text-content">
+        <h2>Selamat Datang di <b>Cahaya App</b></h2>
+        <p>Pesantren Cahaya Fajrul Islam</p>
+      </div>
+    </div>
   </div>
 
   <div class="dashboard">
@@ -179,6 +216,7 @@
     <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
 
+  <!-- === SCRIPT === -->
   <script type="module">
     import { checkWaliLogin, logoutWali } from './wali-script.js';
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
