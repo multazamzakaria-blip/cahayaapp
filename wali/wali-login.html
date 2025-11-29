@@ -12,20 +12,30 @@
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
     <button onclick="loginWali()">Masuk</button>
+    <p style="margin-top:10px;font-size:0.9em;opacity:0.8;">
+      <i>Wali yang sudah login tidak perlu login ulang.</i>
+    </p>
   </div>
 
 <script>
+/* --- CEK LOGIN OTOMATIS --- */
+const existing = localStorage.getItem("waliSantri");
+if (existing) {
+  // sudah login, langsung arahkan ke dashboard
+  window.location.href = "wali-dashboard.html";
+}
+
+/* --- LOGIN MANUAL --- */
 function loginWali() {
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
 
-  // Contoh login sederhana (nanti bisa disambung Firebase)
   if (user === "" || pass === "") {
-    alert("Isi username dan password dulu ya.");
+    alert("Silakan isi username dan password terlebih dahulu.");
     return;
   }
 
-  // Simulasi data login wali
+  // simulasi data login wali (nanti bisa diganti verifikasi Firebase)
   const data = {
     nama: "Ayah/Bunda Najmihadi Syauqii Tamaam",
     namaAnak: "Najmihadi Syauqii Tamaam",
@@ -33,6 +43,8 @@ function loginWali() {
   };
 
   localStorage.setItem("waliSantri", JSON.stringify(data));
+
+  // langsung alihkan ke dashboard
   window.location.href = "wali-dashboard.html";
 }
 </script>
