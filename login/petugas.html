@@ -65,13 +65,13 @@
       { username: "evita", password: "guru136", role: "guru", label: "Mrs Evita" },
 
       // === NAQIB & NAQIBAH ===
-      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas Bayu Aditya" },
-      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen Prayitno" },
-      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian" },
-      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan" },
-      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal" },
-      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita" },
-      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah" },
+      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas Bayu Aditya", naqibName: "Dimas" },
+      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen Prayitno", naqibName: "Regen" },
+      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian", naqibName: "Favian" },
+      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
+      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal", naqibName: "Kamal" },
+      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
+      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" },
 
       // === ADMIN ===
       { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
@@ -82,7 +82,10 @@
       const p = password.value.trim();
       const found = users.find(a => a.username === u && a.password === p);
 
-      if(!found){ alert("❌ Username atau password salah."); return; }
+      if(!found){
+        alert("❌ Username atau password salah.");
+        return;
+      }
 
       localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
 
