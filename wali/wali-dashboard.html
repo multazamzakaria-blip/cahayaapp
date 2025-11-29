@@ -6,77 +6,75 @@
   <title>Dashboard Wali Santri - CAHAYA APP</title>
   <link rel="stylesheet" href="wali-style.css">
   <style>
-    /* === ANIMASI === */
-    #content {
-      margin-top: 20px;
-      width: 100%;
-      animation: fadeIn 0.4s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
+      margin: 0;
+      padding: 16px;
+      color: white;
     }
 
-    /* === GRID MENU === */
-    .menu-grid {
+    h2 { margin-top: 10px; }
+
+    /* NAV MENU */
+    .menu {
       display: flex;
-      overflow-x: auto;
+      justify-content: center;
       gap: 10px;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 8px;
+      margin-top: 15px;
     }
-    .menu-card {
-      flex: 0 0 25%;
-      min-width: 100px;
-      scroll-snap-align: start;
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      text-align: center;
-      padding: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .menu-card:hover { background: rgba(255,255,255,0.25); }
-    .menu-card img { width: 40px; height: 40px; }
-    .menu-card h4 { margin: 5px 0 0; font-size: 0.8rem; color: white; }
-
-    /* === TAB NAVIGASI === */
-    .tab-menu {
-      display: flex;
-      overflow-x: auto;
-      gap: 8px;
-      margin-bottom: 10px;
-      scrollbar-width: none;
-    }
-    .tab-menu::-webkit-scrollbar { display: none; }
-    .tab-btn {
-      flex: 1;
-      background: rgba(255,255,255,0.1);
+    .menu button {
+      background: rgba(255,255,255,0.2);
       border: none;
-      padding: 8px 12px;
+      padding: 10px 16px;
       border-radius: 10px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: white;
       cursor: pointer;
       transition: 0.3s;
-      white-space: nowrap;
     }
-    .tab-btn.active { background: #0d9488; font-weight: 600; }
+    .menu button.active {
+      background: #0d9488;
+      font-weight: 600;
+    }
 
-    /* === TABEL === */
+    .filter {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .filter input {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    .filter input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 8px;
       font-size: 0.85rem;
+      margin-top: 8px;
     }
     th, td {
       border: 1px solid rgba(255,255,255,0.2);
       padding: 6px;
       text-align: left;
     }
-    th { background: rgba(255,255,255,0.15); }
+    th {
+      background: rgba(255,255,255,0.15);
+    }
     .badge {
       border-radius: 6px;
       padding: 2px 6px;
@@ -88,64 +86,38 @@
     .badge-sakit { background: #eab308; }
     .badge-alfa { background: #dc2626; }
 
-    /* === FILTER === */
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
+    @media (max-width:600px) {
+      th, td { font-size: 0.8rem; padding: 5px; }
+      .menu button { font-size: 0.8rem; padding: 8px 12px; }
     }
-    .filter-bar label { font-size: 0.9rem; }
-    .filter-bar input {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      color: white;
-    }
-    .filter-bar input::-webkit-calendar-picker-indicator { filter: invert(1); }
   </style>
 </head>
 
 <body>
-  <div class="dashboard">
-    <div class="greeting" id="greeting">👋 Assalamu’alaikum Walisantri</div>
+  <h1>🌞 Dashboard Wali Santri</h1>
+  <div id="greeting"></div>
 
-    <!-- MENU GRID -->
-    <div class="menu-grid">
-      <div class="menu-card" onclick="loadPage('laporan-harian')">
-        <img src="https://cdn-icons-png.flaticon.com/512/3185/3185656.png" alt="">
-        <h4>Harian</h4>
-      </div>
-      <div class="menu-card" onclick="loadPage('laporan-pekanan')">
-        <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="">
-        <h4>Pekanan</h4>
-      </div>
-      <div class="menu-card" onclick="loadPage('laporan-bulanan')">
-        <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="">
-        <h4>Bulanan</h4>
-      </div>
-      <div class="menu-card" onclick="loadPage('chat-pengurus')">
-        <img src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png" alt="">
-        <h4>Chat</h4>
-      </div>
-    </div>
-
-    <!-- KONTEN -->
-    <div id="content" class="card"></div>
-
-    <!-- LOGOUT -->
-    <button class="logout" onclick="logoutWali()">Keluar</button>
+  <div class="menu">
+    <button id="btnHarian" class="active">Laporan Harian</button>
+    <button id="btnBulanan">Laporan Bulanan</button>
   </div>
 
-  <!-- === SCRIPT MODULE === -->
+  <div id="filterHarian" class="filter">
+    <label for="tanggal">Tanggal: </label>
+    <input type="date" id="tanggal" />
+  </div>
+
+  <div id="content"></div>
+
+  <button style="margin-top:20px" onclick="logoutWali()">🚪 Keluar</button>
+
+  <!-- === SCRIPT === -->
   <script type="module">
     import { checkWaliLogin, logoutWali } from './wali-script.js';
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // === FIREBASE CONFIG ===
+    // Firebase config
     const app = initializeApp({
       apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
       authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -155,159 +127,160 @@
       messagingSenderId: "739928369926",
       appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
     });
+
     const db = getDatabase(app);
-
-    // === CEK LOGIN ===
     const user = checkWaliLogin();
-    if (!user) {
-      window.location.href = "wali-login.html";
-    } else {
-      document.getElementById("greeting").innerHTML = 
-        `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
-    }
+    if (!user) window.location.href = "wali-login.html";
 
-    // === LOAD PAGE ===
-    async function loadPage(page) {
-      const container = document.getElementById("content");
-      container.innerHTML = "<p>Sedang memuat...</p>";
+    document.getElementById("greeting").innerHTML = 
+      `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
 
-      if (page === "laporan-harian") {
-        await renderLaporanHarian();
-      } else {
-        container.innerHTML = `<h3>${page.replace('-', ' ').toUpperCase()} sedang dikembangkan...</h3>`;
-      }
-    }
+    // === Event tombol ===
+    const btnHarian = document.getElementById("btnHarian");
+    const btnBulanan = document.getElementById("btnBulanan");
+    const content = document.getElementById("content");
+    const filterDiv = document.getElementById("filterHarian");
+    const tanggalInput = document.getElementById("tanggal");
 
-    // === LAPORAN HARIAN ===
-    async function renderLaporanHarian() {
-      const container = document.getElementById("content");
-      container.innerHTML = `
-      <section class="laporan-harian">
-        <h2>📅 Laporan Harian Santri</h2>
-        <div class="filter-bar">
-          <label for="filterTanggal">Filter Tanggal:</label>
-          <input type="date" id="filterTanggal" value="${new Date().toISOString().split('T')[0]}" />
-        </div>
+    const today = new Date().toISOString().split("T")[0];
+    tanggalInput.value = today;
 
-        <div class="tab-menu">
-          <button class="tab-btn active" data-tab="program">Program Harian</button>
-          <button class="tab-btn" data-tab="pembelajaran">Pembelajaran</button>
-          <button class="tab-btn" data-tab="tahfiz">Setoran Tahfiz</button>
-          <button class="tab-btn" data-tab="pelanggaran">Pelanggaran</button>
-        </div>
+    btnHarian.addEventListener("click", () => {
+      btnHarian.classList.add("active");
+      btnBulanan.classList.remove("active");
+      filterDiv.style.display = "block";
+      loadLaporanHarian(tanggalInput.value);
+    });
 
-        <div class="tab-content">
-          <div class="tab-pane active" id="tab-program"><h3>📋 Absensi Program Harian</h3><div id="program-content">Memuat data...</div></div>
-          <div class="tab-pane" id="tab-pembelajaran"><h3>📖 Absensi Pembelajaran</h3><div id="pembelajaran-content">Memuat data...</div></div>
-          <div class="tab-pane" id="tab-tahfiz"><h3>🕋 Setoran Tahfiz</h3><div id="tahfiz-content">Memuat data...</div></div>
-          <div class="tab-pane" id="tab-pelanggaran"><h3>⚠️ Pelanggaran</h3><div id="pelanggaran-content">Memuat data...</div></div>
-        </div>
-      </section>`;
+    btnBulanan.addEventListener("click", () => {
+      btnBulanan.classList.add("active");
+      btnHarian.classList.remove("active");
+      filterDiv.style.display = "none";
+      loadLaporanBulanan();
+    });
+
+    tanggalInput.addEventListener("change", () => loadLaporanHarian(tanggalInput.value));
+
+    // === Load Laporan Harian ===
+    async function loadLaporanHarian(tanggal) {
+      content.innerHTML = `
+        <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
+        <div class="card"><h2>📖 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
+        <div class="card"><h2>🕋 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
+        <div class="card"><h2>⚠️ Pelanggaran</h2><div id="pel">Memuat...</div></div>
+      `;
 
       const nama = user.namaAnak;
-      const tanggalFilter = container.querySelector("#filterTanggal");
-      tanggalFilter.addEventListener("change", () => loadAllData(tanggalFilter.value, nama));
-
-      // Tab handler
-      const tabBtns = container.querySelectorAll('.tab-btn');
-      const tabPanes = container.querySelectorAll('.tab-pane');
-      tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          tabBtns.forEach(b => b.classList.remove('active'));
-          tabPanes.forEach(p => p.classList.remove('active'));
-          btn.classList.add('active');
-          container.querySelector('#tab-' + btn.dataset.tab).classList.add('active');
-        });
-      });
-
-      await loadAllData(tanggalFilter.value, nama);
-    }
-
-    // === LOAD DATA DARI FIREBASE ===
-    async function loadAllData(filterTanggal, nama) {
-      const elProg = document.getElementById("program-content");
-      const elPemb = document.getElementById("pembelajaran-content");
-      const elTahfiz = document.getElementById("tahfiz-content");
-      const elLanggar = document.getElementById("pelanggaran-content");
-
-      elProg.textContent = elPemb.textContent = elTahfiz.textContent = elLanggar.textContent = "Memuat data...";
+      const elProg = document.getElementById("prog");
+      const elPemb = document.getElementById("pemb");
+      const elTahfiz = document.getElementById("tahfiz");
+      const elPel = document.getElementById("pel");
 
       try {
-        // === 1. Program Harian ===
+        // 1️⃣ Program Harian
         const snapProg = await get(child(ref(db), "cahaya_app/absensi_program_harian"));
-        renderFilteredTable(snapProg, elProg, filterTanggal, nama, ['tanggal', 'program', 'status']);
+        elProg.innerHTML = renderTableAbsensi(snapProg, tanggal, nama);
 
-        // === 2. Pembelajaran ===
+        // 2️⃣ Pembelajaran
         const snapPemb = await get(child(ref(db), "cahaya_app/absensi_pembelajaran"));
-        renderFilteredTable(snapPemb, elPemb, filterTanggal, nama, ['tanggal', 'mapel', 'status']);
+        elPemb.innerHTML = renderTablePembelajaran(snapPemb, tanggal, nama);
 
-        // === 3. Tahfiz ===
+        // 3️⃣ Tahfiz
         const snapTahfiz = await get(child(ref(db), "cahaya_app/setoran_tahfiz"));
-        if (snapTahfiz.exists()) {
-          let html = "<table><tr><th>Tanggal</th><th>Surah</th><th>Ayat</th><th>Keterangan</th></tr>";
-          Object.values(snapTahfiz.val()).forEach(d => {
-            if (d.tanggal === filterTanggal && d.data) {
-              d.data.forEach(x => {
-                if (x.nama === nama) {
-                  html += `<tr><td>${d.tanggal}</td><td>${x.setoran}</td><td>${x.ayat}</td><td>${x.ket || '-'}</td></tr>`;
-                }
-              });
-            }
-          });
-          html += "</table>";
-          elTahfiz.innerHTML = html || "Tidak ada data.";
-        } else elTahfiz.textContent = "Belum ada setoran tahfiz.";
+        elTahfiz.innerHTML = renderTableTahfiz(snapTahfiz, tanggal, nama);
 
-        // === 4. Pelanggaran ===
-        const snapLanggar = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
-        if (snapLanggar.exists()) {
-          let html = `<table><tr>
-            <th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindakan</th><th>Konsekuensi</th></tr>`;
-          Object.values(snapLanggar.val()).forEach(d => {
-            if (d.santri === nama && d.tanggal === filterTanggal) {
-              html += `<tr><td>${d.tanggal}</td><td>${d.namaPelanggaran}</td><td>${d.kategori}</td><td>${d.keterangan || '-'}</td><td>${d.tindakLanjut || '-'}</td><td>${d.konsekuensi || '-'}</td></tr>`;
-            }
-          });
-          html += "</table>";
-          elLanggar.innerHTML = html;
-        } else elLanggar.textContent = "Tidak ada catatan pelanggaran.";
+        // 4️⃣ Pelanggaran
+        const snapPel = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
+        elPel.innerHTML = renderTablePelanggaran(snapPel, tanggal, nama);
 
-      } catch (err) {
-        console.error(err);
-        elProg.textContent = elPemb.textContent = elTahfiz.textContent = elLanggar.textContent = "Gagal memuat data.";
+      } catch (e) {
+        content.innerHTML = `<p>❌ Gagal memuat data: ${e.message}</p>`;
       }
     }
 
-    // === RENDER TABEL UMUM ===
-    function renderFilteredTable(snapshot, el, filterTanggal, nama, fields) {
-      if (!snapshot.exists()) {
-        el.textContent = "Tidak ada data.";
-        return;
-      }
-      let html = `<table><tr>${fields.map(f => `<th>${f.toUpperCase()}</th>`).join('')}</tr>`;
-      Object.values(snapshot.val()).forEach(d => {
-        if (d.tanggal === filterTanggal && d.data) {
+    // === Tabel Program Harian ===
+    function renderTableAbsensi(snap, tanggal, nama) {
+      if (!snap.exists()) return "Tidak ada data.";
+      let html = `<table><tr><th>Tanggal</th><th>Program</th><th>Status</th></tr>`;
+      Object.values(snap.val()).forEach(d => {
+        if (d.tanggal === tanggal && d.data) {
           d.data.forEach(s => {
             if (s.nama === nama) {
-              const color = s.status === "Hadir" ? "badge-hadir"
-                : s.status === "Izin" ? "badge-izin"
-                : s.status === "Sakit" ? "badge-sakit" : "badge-alfa";
-              html += `<tr>${fields.map(f =>
-                f === 'status'
-                ? `<td><span class="badge ${color}">${s.status}</span></td>`
-                : `<td>${d[f] || '-'}</td>`
-              ).join('')}</tr>`;
+              const color = getBadge(s.status);
+              html += `<tr><td>${d.tanggal}</td><td>${d.program}</td><td>${color}</td></tr>`;
             }
           });
         }
       });
-      html += "</table>";
-      el.innerHTML = html;
+      return html + "</table>";
     }
 
-    // === GLOBAL ===
-    window.loadPage = loadPage;
+    // === Tabel Pembelajaran ===
+    function renderTablePembelajaran(snap, tanggal, nama) {
+      if (!snap.exists()) return "Tidak ada data.";
+      let html = `<table><tr><th>Tanggal</th><th>Mapel</th><th>Status</th></tr>`;
+      Object.values(snap.val()).forEach(d => {
+        if (d.tanggal === tanggal && d.data) {
+          d.data.forEach(s => {
+            if (s.nama === nama) {
+              const color = getBadge(s.status);
+              html += `<tr><td>${d.tanggal}</td><td>${d.mapel}</td><td>${color}</td></tr>`;
+            }
+          });
+        }
+      });
+      return html + "</table>";
+    }
+
+    // === Tabel Tahfiz ===
+    function renderTableTahfiz(snap, tanggal, nama) {
+      if (!snap.exists()) return "Tidak ada data.";
+      let html = `<table><tr><th>Tanggal</th><th>Setoran</th><th>Ayat</th><th>Nilai</th><th>Keterangan</th></tr>`;
+      Object.values(snap.val()).forEach(d => {
+        if (d.tanggal === tanggal && d.data) {
+          d.data.forEach(x => {
+            if (x.nama === nama) {
+              html += `<tr><td>${d.tanggal}</td><td>${x.setoran}</td><td>${x.ayat}</td><td>${x.nilai}</td><td>${x.ket || '-'}</td></tr>`;
+            }
+          });
+        }
+      });
+      return html + "</table>";
+    }
+
+    // === Tabel Pelanggaran ===
+    function renderTablePelanggaran(snap, tanggal, nama) {
+      if (!snap.exists()) return "Tidak ada data.";
+      let html = `<table><tr><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th></tr>`;
+      Object.values(snap.val()).forEach(d => {
+        if (d.tanggal === tanggal && d.santri === nama) {
+          html += `<tr><td>${d.tanggal}</td><td>${d.namaPelanggaran}</td><td>${d.kategori}</td><td>${d.keterangan || '-'}</td><td>${d.tindakLanjut || '-'}</td></tr>`;
+        }
+      });
+      return html + "</table>";
+    }
+
+    // === Helper badge warna ===
+    function getBadge(status) {
+      const cls = status === "Hadir" ? "badge-hadir" :
+                  status === "Izin" ? "badge-izin" :
+                  status === "Sakit" ? "badge-sakit" : "badge-alfa";
+      return `<span class="badge ${cls}">${status}</span>`;
+    }
+
+    // === Laporan Bulanan (sementara placeholder) ===
+    function loadLaporanBulanan() {
+      content.innerHTML = `
+        <div class="card">
+          <h2>📊 Laporan Bulanan</h2>
+          <p>Fitur rekap bulanan akan menampilkan total kehadiran dan catatan anak selama 1 bulan.</p>
+        </div>
+      `;
+    }
+
+    // === Export global ===
     window.logoutWali = logoutWali;
+    document.addEventListener("DOMContentLoaded", () => loadLaporanHarian(today));
   </script>
 </body>
 </html>
