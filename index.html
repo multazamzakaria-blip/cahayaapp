@@ -2,268 +2,85 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP - Portal Utama</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌅 CAHAYA APP - Portal Utama</title>
   <style>
-    :root {
-      --primary: #0f766e;
-      --primary-dark: #0c524d;
-      --white: #ffffff;
-      --bg: linear-gradient(135deg, #0f766e, #134e4a);
-    }
-
     body {
-      font-family: "Poppins", system-ui, sans-serif;
-      background: var(--bg);
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
       margin: 0;
-      color: var(--white);
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
+      color: white;
     }
-
-    /* === SPLASH SCREEN === */
-    .splash {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      animation: fadeOut 1.2s ease 1.4s forwards;
-    }
-
-    .splash img {
-      width: 120px;
-      height: 120px;
-      object-fit: contain;
-      border-radius: 50%;
-      animation: popIn 1.2s ease;
-    }
-
-    @keyframes popIn {
-      0% { transform: scale(0.6); opacity: 0; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
-
-    /* === LOGIN CARD === */
-    .login-card {
-      background: rgba(255,255,255,0.12);
-      padding: 36px 30px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    .container {
       text-align: center;
-      width: 90%;
-      max-width: 360px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: showLogin 1s ease 1.6s forwards;
+      padding: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(10px);
     }
-
-    @keyframes showLogin {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .logo {
-      width: 80px;
-      height: 80px;
+    img {
+      width: 90px;
       border-radius: 50%;
-      object-fit: contain;
-      background: rgba(255,255,255,0.2);
-      padding: 6px;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin: 0;
-    }
-
-    p {
-      font-size: 13px;
-      color: #e5e7eb;
-      margin-bottom: 18px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px 12px;
       margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+    p {
+      color: #d1fae5;
+      margin-bottom: 20px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
+      font-size: 15px;
       border: none;
       border-radius: 10px;
-      font-size: 14px;
-      background: rgba(255,255,255,0.95);
-      color: #111;
-      outline: none;
-      transition: box-shadow 0.2s ease;
-    }
-
-    input:focus {
-      box-shadow: 0 0 0 2px var(--primary);
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background: var(--white);
-      color: var(--primary-dark);
-      border: none;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 14px;
       cursor: pointer;
-      margin-top: 6px;
+      font-weight: 600;
       transition: all 0.25s ease;
     }
-
-    button:hover {
+    .petugas {
+      background: white;
+      color: #0f766e;
+    }
+    .petugas:hover {
       background: #f3f4f6;
       transform: translateY(-2px);
     }
-
-    /* ✅ Tombol tambahan untuk Wali Santri */
-    .wali-btn {
-      background: transparent;
-      border: 2px solid rgba(255,255,255,0.5);
-      color: white;
-      margin-top: 14px;
+    .wali {
+      background: #facc15;
+      color: #1e293b;
     }
-
-    .wali-btn:hover {
-      background: rgba(255,255,255,0.2);
-      transform: none;
+    .wali:hover {
+      background: #fde68a;
+      transform: translateY(-2px);
     }
-
-    .hint {
-      font-size: 11px;
-      color: #cbd5e1;
-      margin-top: 8px;
-    }
-
     footer {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 11px;
-      color: #cbd5e1;
-    }
-
-    @media (max-width: 480px) {
-      .login-card { padding: 28px 22px; }
-      h1 { font-size: 22px; }
+      font-size: 0.85rem;
+      color: #d1d5db;
+      margin-top: 20px;
     }
   </style>
 </head>
-
 <body>
-  <!-- Splash Screen -->
-  <div class="splash">
+  <div class="container">
     <img src="logofi.png" alt="Logo Pesantren">
-  </div>
-
-  <!-- Login Card -->
-  <div class="login-card">
-    <img src="logofi.png" alt="Logo Pesantren Cahaya Fajrul Islam" class="logo">
     <h1>🌅 CAHAYA APP</h1>
     <p>Portal Administrasi Santri<br>Pesantren Cahaya Fajrul Islam</p>
 
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Masuk</button>
+    <button class="petugas" onclick="window.location.href='login/petugas.html'">🧑‍🏫 Login Petugas (Guru / Naqib / Admin)</button>
+    <button class="wali" onclick="window.location.href='login/wali.html'">👨‍👩‍👧 Login Wali Santri</button>
 
-    <!-- ✅ TAMBAHAN WALI SANTRI -->
-    <button class="wali-btn" onclick="goWali()">👨‍👩‍👧 Login Wali Santri</button>
-
-    <div class="hint">💡 Baca Bismillah sebelum masuk</div>
+    <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
   </div>
-
-  <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
-
-  <script>
-    // ===============================
-    // 🔐 DATA USER
-    // ===============================
-    const naqibUsers = [
-      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal", naqibName: "Kamal" },
-      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen", naqibName: "Regen" },
-      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas", naqibName: "Dimas" },
-      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
-      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian", naqibName: "Favian" },
-      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
-      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" }
-    ];
-
-    const guruUsers = [
-      { username: "multazam", password: "guru123", role: "guru", label: "Ustadz Multazam" },
-      { username: "alvin", password: "guru123", role: "guru", label: "Ustadz Alvin" },
-      { username: "alzam", password: "guru123", role: "guru", label: "Ustadz Alzam" },
-      { username: "haidar", password: "guru123", role: "guru", label: "Ustadz Haidar" },
-      { username: "shafwan", password: "guru123", role: "guru", label: "Ustadz Shafwan" },
-      { username: "fahmi", password: "guru123", role: "guru", label: "Ustadz Fahmi" },
-      { username: "khaizuran", password: "guru123", role: "guru", label: "Ustadz Khaizuran" },
-      { username: "mulia", password: "guru123", role: "guru", label: "Ustadz Mulia" },
-      { username: "faiq", password: "guru123", role: "guru", label: "Ustadz Faiq" },
-      { username: "favian", password: "guru123", role: "guru", label: "Ustadz Favian" },
-      { username: "kamal", password: "guru123", role: "guru", label: "Ustadz Kamal" },
-      { username: "meilisa", password: "guru123", role: "guru", label: "Ustadzah Meilisa" },
-      { username: "fatimah", password: "guru123", role: "guru", label: "Ustadzah Fatimah" },
-      { username: "evita", password: "guru123", role: "guru", label: "Ustadzah Evita" }
-    ];
-
-    const adminUsers = [
-      { username: "admin", password: "cahaya2025", role: "admin", label: "Admin Pesantren" }
-    ];
-
-    const akun = [...naqibUsers, ...guruUsers, ...adminUsers];
-
-    // ===============================
-    // ⚡ AUTO LOGIN + SPLASH REDIRECT
-    // ===============================
-    const savedUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
-    if (savedUser) {
-      setTimeout(() => redirectByRole(savedUser.role), 1500);
-    }
-
-    // ===============================
-    // 🔑 LOGIN FUNCTION
-    // ===============================
-    function login() {
-      const user = document.getElementById('username').value.trim().toLowerCase();
-      const pass = document.getElementById('password').value.trim();
-      const found = akun.find(a => a.username === user && a.password === pass);
-
-      if (!found) {
-        alert('❌ Username atau password salah!');
-        return;
-      }
-
-      localStorage.setItem('cahayaCurrentUser', JSON.stringify(found));
-      redirectByRole(found.role);
-    }
-
-    // ===============================
-    // 🚀 REDIRECT BY ROLE
-    // ===============================
-    function redirectByRole(role) {
-      if (role === 'guru') window.location.href = 'guru/fitur.html';
-      else if (role === 'naqib') window.location.href = 'naqib/dashboard.html';
-      else if (role === 'admin') window.location.href = 'admin/index.html';
-    }
-
-    // ✅ Fungsi menuju portal wali santri
-    function goWali() {
-      window.location.href = 'wali/login.html';
-    }
-  </script>
 </body>
 </html>
