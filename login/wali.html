@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Wali Santri - CAHAYA APP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0f766e, #134e4a);
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; margin: 0; color: white;
+    }
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 36px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      width: 90%; max-width: 380px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    img { width: 80px; border-radius: 50%; margin-bottom: 12px; }
+    input {
+      width: 100%; padding: 10px; margin-bottom: 10px;
+      border: none; border-radius: 10px;
+      font-size: 14px; background: rgba(255,255,255,0.95); color: #111;
+    }
+    button {
+      background: #facc15; color: #1f2937; border: none; border-radius: 10px;
+      width: 100%; padding: 10px; font-weight: bold; cursor: pointer;
+    }
+    button:hover { background: #fde68a; }
+    a { color: #fff; display: block; margin-top: 12px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img src="../logofi.png">
+    <h2>Login Wali Santri</h2>
+    <p>Masukkan nama santri dan kode wali</p>
+
+    <input type="text" id="namaSantri" placeholder="Nama Santri">
+    <input type="password" id="kodeWali" placeholder="Kode Wali">
+    <button onclick="login()">Masuk</button>
+    <a href="../index.html">⬅️ Kembali</a>
+  </div>
+
+  <script>
+    const waliList = [
+      { namaSantri: "Ahmad Maulana", kodeWali: "1234" },
+      { namaSantri: "Bilqis Nur Anisah", kodeWali: "5678" },
+      { namaSantri: "Dimas Ramadhan", kodeWali: "2468" }
+    ];
+
+    function login(){
+      const nama = namaSantri.value.trim().toLowerCase();
+      const kode = kodeWali.value.trim();
+
+      const wali = waliList.find(w =>
+        w.namaSantri.toLowerCase() === nama && w.kodeWali === kode
+      );
+
+      if(!wali){ alert("❌ Nama santri atau kode wali salah."); return; }
+
+      const currentUser = {
+        role: "wali",
+        namaSantri: wali.namaSantri,
+        kodeWali: wali.kodeWali
+      };
+
+      localStorage.setItem("cahayaCurrentUser", JSON.stringify(currentUser));
+      location.href = "../wali/index.html";
+    }
+  </script>
+</body>
+</html>
