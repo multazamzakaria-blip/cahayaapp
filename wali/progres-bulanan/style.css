@@ -1,8 +1,9 @@
-.hadir-cell { background: #dcfce7; color: #065f46; font-weight: 600; text-align:center; }
-.izin-cell { background: #dbeafe; color: #1e40af; font-weight: 600; text-align:center; }
-.sakit-cell { background: #fef9c3; color: #854d0e; font-weight: 600; text-align:center; }
-.alfa-cell { background: #fee2e2; color: #991b1b; font-weight: 600; text-align:center; }
+/* ==========================================================
+   🎨 CAHAYA APP - WALI STYLE (Final Version)
+   Berlaku untuk Dashboard, Progres Harian, dan Progres Bulanan
+   ========================================================== */
 
+/* ==== GLOBAL RESET ==== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,106 +12,183 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #0f766e, #115e59);
-  color: #fff;
+  background: #f4f6fa;
+  color: #1f2937;
+  line-height: 1.6;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* ==== HEADER ==== */
 header {
-  background: rgba(255, 255, 255, 0.1);
+  background: #0f766e;
+  color: #fff;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 }
 
 header h1 {
   font-size: 1.3rem;
+  font-weight: 600;
 }
 
-#backBtn {
-  background: #f43f5e;
-  color: #fff;
+header button {
+  font-family: inherit;
   border: none;
-  padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  transition: 0.2s;
 }
 
+header .btn-primary {
+  background: #2563eb;
+  color: #fff;
+}
+header .btn-primary:hover { background: #1d4ed8; }
+
+header .btn-secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+header .btn-secondary:hover { background: #d1d5db; }
+
+header .btn-danger {
+  background: #f43f5e;
+  color: #fff;
+}
+header .btn-danger:hover { background: #e11d48; }
+
+/* ==== MAIN WRAPPER ==== */
 main {
   flex: 1;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.info-box {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
+/* ==== CARD / BOX ==== */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
 }
 
+/* ==== FILTER BOX ==== */
 .filter-box {
   display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   align-items: center;
-  gap: 0.5rem;
   margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 12px;
 }
 
-.filter-box input, .filter-box button {
-  font-family: inherit;
+.filter-box select,
+.filter-box input,
+.filter-box button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
 }
 
-.filter-box input[type="month"] {
-  padding: 0.4rem;
-  border: none;
-  border-radius: 6px;
-}
-
-#filterBtn {
-  background: #10b981;
-  border: none;
+.filter-box button {
+  background: #0f766e;
   color: #fff;
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
+  border: none;
   cursor: pointer;
+  font-weight: 600;
 }
+.filter-box button:hover { background: #115e59; }
 
-.tabel-box {
-  overflow-x: auto;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1rem;
-}
-
+/* ==== TABLE ==== */
 table {
   width: 100%;
   border-collapse: collapse;
-  color: #fff;
+  background: #fff;
+  color: #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 th, td {
-  padding: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: left;
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 0.95rem;
 }
 
 th {
-  background: rgba(255, 255, 255, 0.15);
+  background: #f3f4f6;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.empty {
+tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+/* ==== WARNA SEL KEHADIRAN ==== */
+.hadir-cell {
+  background: #dcfce7;
+  color: #065f46;
+  font-weight: 600;
   text-align: center;
-  opacity: 0.8;
 }
 
+.izin-cell {
+  background: #dbeafe;
+  color: #1e40af;
+  font-weight: 600;
+  text-align: center;
+}
+
+.sakit-cell {
+  background: #fef9c3;
+  color: #854d0e;
+  font-weight: 600;
+  text-align: center;
+}
+
+.alfa-cell {
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ==== SECTION TITLE ==== */
+.section-title {
+  font-weight: 700;
+  color: #0f766e;
+  font-size: 1.2rem;
+  margin: 1.5rem 0 0.8rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 768px) {
+  main { padding: 1rem; }
+  table { font-size: 0.85rem; }
+  header h1 { font-size: 1.1rem; }
+  .filter-box { flex-direction: column; align-items: stretch; }
+  .filter-box select, .filter-box button { width: 100%; }
+}
+
+/* ==== FOOTER ==== */
 footer {
   text-align: center;
   padding: 1rem;
   font-size: 0.9rem;
-  opacity: 0.8;
+  color: #6b7280;
 }
