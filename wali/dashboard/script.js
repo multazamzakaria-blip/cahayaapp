@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("cahayaCurrentUser");
-    window.location.href = "../../login.html";
+    window.location.href = "../../index.html";
   });
 
   // === 5️⃣ (Opsional) Tombol tambahan jika kamu mau menambahkan fitur lain ===
