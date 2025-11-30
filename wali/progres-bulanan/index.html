@@ -106,6 +106,52 @@
 
   .section { margin-top: 22px; }
   .section h2 { color: #0f766e; font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+      .cahaya-grid {
+    display: grid;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .cahaya-card {
+    background: #f9fafb;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 10px 12px;
+  }
+
+  .cahaya-card-title {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cahaya-card-title span.icon {
+    font-size: 1.1rem;
+  }
+
+  .cahaya-card-text {
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.5;
+  }
+
+  /* versi layar lebar: dua kolom */
+  @media (min-width: 768px) {
+    .cahaya-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* di HP biar font kartu agak kecil */
+  @media (max-width: 768px) {
+    .cahaya-card-title { font-size: 0.9rem; }
+    .cahaya-card-text  { font-size: 0.8rem; }
+  }
+
 
   /* === TABLE === */
   .section table {
@@ -312,14 +358,62 @@ async function generateLaporan(){
       <button id="downloadBtn" onclick="downloadPDF('${namaAnak}','${bulanNama}')">📄 Download PDF</button>
     </div>
 
-    <div class="section">
+        <div class="section">
       <h2>🌈 Dimensi CAHAYA</h2>
-      <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual||"Belum ada catatan."}</p>
-      <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational||"Belum ada catatan."}</p>
-      <p><b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional||"Belum ada catatan."}</p>
-      <p><b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual||"Belum ada catatan."}</p>
-      <p><b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical||"Belum ada catatan."}</p>
+
+      <div class="cahaya-grid">
+        <div class="cahaya-card">
+          <div class="cahaya-card-title">
+            <span class="icon">🕋</span>
+            <span>Cinta Allah (Spiritual)</span>
+          </div>
+          <div class="cahaya-card-text">
+            ${asesGuru.narasiSpiritual || "Belum ada catatan dimensi Cinta Allah bulan ini."}
+          </div>
+        </div>
+
+        <div class="cahaya-card">
+          <div class="cahaya-card-title">
+            <span class="icon">🤝</span>
+            <span>Akhlak Mulia (Relational)</span>
+          </div>
+          <div class="cahaya-card-text">
+            ${asesNaqib.narasiRelational || "Belum ada catatan dimensi Akhlak Mulia bulan ini."}
+          </div>
+        </div>
+
+        <div class="cahaya-card">
+          <div class="cahaya-card-title">
+            <span class="icon">💓</span>
+            <span>Hati Bersih (Emotional)</span>
+          </div>
+          <div class="cahaya-card-text">
+            ${asesNaqib.narasiEmotional || "Belum ada catatan dimensi Hati Bersih bulan ini."}
+          </div>
+        </div>
+
+        <div class="cahaya-card">
+          <div class="cahaya-card-title">
+            <span class="icon">🧠</span>
+            <span>Akal Cerdas (Intellectual)</span>
+          </div>
+          <div class="cahaya-card-text">
+            ${asesGuru.narasiIntellectual || "Belum ada catatan dimensi Akal Cerdas bulan ini."}
+          </div>
+        </div>
+
+        <div class="cahaya-card">
+          <div class="cahaya-card-title">
+            <span class="icon">🏃‍♂️</span>
+            <span>Fisik Berdaya (Physical)</span>
+          </div>
+          <div class="cahaya-card-text">
+            ${asesNaqib.narasiPhysical || "Belum ada catatan dimensi Fisik Berdaya bulan ini."}
+          </div>
+        </div>
+      </div>
     </div>
+
 
     <div class="section">
       <h2>📅 Kehadiran</h2>
