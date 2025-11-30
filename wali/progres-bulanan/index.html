@@ -368,14 +368,14 @@ async function generateLaporan(){
   </div>`;
 }
 
-function downloadPDF(nama, bulan){
-  const element=document.getElementById("laporanPDF");
-  const opt={
-    margin:0.5,
-    filename:`Laporan_${nama}_${bulan}.pdf`,
-    image:{type:'jpeg',quality:0.98},
-    html2canvas:{scale:2},
-    jsPDF:{unit:'in',format:'a4',orientation:'portrait'}
+function downloadPDF(nama, bulan) {
+  const element = document.getElementById("laporanPDF");
+  const opt = {
+    margin: [0.2, 0.2, 0.2, 0.2], // margin lebih kecil
+    filename: `Laporan_${nama}_${bulan}.pdf`,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 3, useCORS: true },
+    jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
   };
   html2pdf().set(opt).from(element).save();
 }
