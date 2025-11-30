@@ -1,51 +1,181 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progres Bulanan Santri - CAHAYA APP</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wali Santri - Laporan Bulanan Anak</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans', sans-serif; background: #f4f6fa; margin: 0; color: #1f2937; font-size: 18px; line-height: 1.8; }
+    header { background: #0f766e; color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; }
+    header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+    main { padding: 30px; max-width: 1200px; margin: auto; }
+    .card { background: white; padding: 28px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 30px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+    select, button { padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 18px; }
+    button { background: #0f766e; color: white; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; }
+    button:hover { background: #115e59; transform: translateY(-1px); }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-secondary:hover { background: #d1d5db; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 17px; }
+    th, td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+    th { background: #f3f4f6; font-weight: 700; }
+    .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px; margin-bottom: 30px; background: white; }
+    .laporan-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px; }
+    .laporan-header h1 { font-size: 28px; color: #1e3a8a; margin: 0; font-weight: 800; }
+    .laporan-header h2 { font-size: 22px; color: #1e3a8a; margin: 6px 0 12px 0; font-weight: 700; }
+    .laporan-header h3 { font-size: 20px; color: #111827; margin: 6px 0 16px 0; font-weight: 700; }
+    .identitas-grid { display: flex; justify-content: space-between; max-width: 650px; margin: 0 auto; font-size: 18px; }
+    .section-title { margin-top: 28px; margin-bottom: 8px; font-weight: bold; color: #0f766e; display: flex; align-items: center; gap: 8px; font-size: 20px; }
+    .dim-card { border-radius: 12px; padding: 14px 16px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 18px; margin-bottom: 12px; }
+    .dim-card h4 { margin: 0 0 6px; font-size: 18px; color: #0f172a; }
+    .dim-card p { margin: 0; white-space: pre-line; font-size: 18px; }
+    .muted { color: #6b7280; font-size: 17px; }
+    .export-buttons { text-align: right; margin-top: 16px; }
+    .export-buttons button { background: #2563eb; margin-left: 8px; padding: 12px 18px; font-size: 17px; }
+    .export-buttons button:hover { background: #1e40af; }
+  </style>
 </head>
+
 <body>
-  <header>
-    <h1>📊 Progres Bulanan Santri</h1>
-    <button id="backBtn">⬅️ Kembali</button>
-  </header>
+<header>
+  <h1>📊 Laporan Bulanan Anak - CAHAYA APP</h1>
+  <div>
+    <button class="btn-secondary" onclick="goDashboard()">⬅️ Dashboard</button>
+    <button onclick="logout()">Keluar</button>
+  </div>
+</header>
 
-  <main>
-    <section class="info-box">
-      <h2>Assalamu’alaikum, <span id="waliNama">Wali Santri</span></h2>
-      <p>Rekap perkembangan santri Anda selama bulan tertentu.</p>
-    </section>
+<main>
+  <div class="card">
+    <h2>📅 Pilih Bulan Laporan</h2>
+    <div class="controls">
+      <select id="bulanSelect">
+        <option value="">-- Pilih Bulan --</option>
+        <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+        <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+        <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+        <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+      </select>
+      <select id="tahunSelect"></select>
+      <button onclick="generateLaporan()">Tampilkan Laporan</button>
+    </div>
 
-    <section class="filter-box">
-      <label for="bulan">Pilih Bulan:</label>
-      <input type="month" id="bulan" />
-      <button id="filterBtn">Tampilkan</button>
-    </section>
+    <div id="laporanContainer">
+      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan anak Anda.</p>
+    </div>
+  </div>
+</main>
 
-    <section class="tabel-box">
-      <table>
-        <thead>
-          <tr>
-            <th>Minggu ke-</th>
-            <th>Kedisiplinan</th>
-            <th>Akademik</th>
-            <th>Tahfiz</th>
-            <th>Akhlak</th>
-            <th>Catatan</th>
-          </tr>
-        </thead>
-        <tbody id="tabelData">
-          <tr><td colspan="6" class="empty">Silakan pilih bulan untuk melihat data.</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
+<!-- ====== LIBRARY PDF ====== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <footer>
-    <p>© 2025 CAHAYA APP | Pesantren Fajrul Islam</p>
-  </footer>
+<!-- ====== FIREBASE CONFIG ====== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const dbRef = ref(db);
+  window.dbRef = dbRef;
+
+  // ====== Fungsi ambil data Firebase ======
+  window.getFirebaseData = async function() {
+    const [
+      assesGuruSnap, assesNaqibSnap, absNaqibSnap, absKbmSnap, ujianSnap, tahfizSnap, pelanggaranSnap
+    ] = await Promise.all([
+      get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
+      get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
+      get(child(dbRef, "cahaya_app/absensi_program_harian")),
+      get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
+      get(child(dbRef, "cahaya_app/nilai_ujian")),
+      get(child(dbRef, "cahaya_app/setoran_tahfiz")),
+      get(child(dbRef, "cahaya_app/pelanggaran_santri")),
+    ]);
+
+    return {
+      assesmentGuru: assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [],
+      assesmentNaqib: assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [],
+      absensiNaqib: absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [],
+      absensiKbm: absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [],
+      ujian: ujianSnap.exists() ? Object.values(ujianSnap.val()) : [],
+      tahfiz: tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [],
+      pelanggaranAll: pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [],
+    };
+  };
+</script>
+
+<!-- ====== SCRIPT UTAMA ====== -->
+<script>
+let jsPDFLib;
+
+window.addEventListener("load", () => {
+  if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
+  const tahunSelect = document.getElementById("tahunSelect");
+  const tNow = new Date().getFullYear();
+  for (let t = tNow - 2; t <= tNow + 1; t++) {
+    const opt = document.createElement("option");
+    opt.value = t; opt.textContent = t; if (t === tNow) opt.selected = true;
+    tahunSelect.appendChild(opt);
+  }
+});
+
+function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
+
+async function generateLaporan() {
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if (!user || user.role !== "wali") return window.location.href = "../../index.html";
+  const namaAnak = user.namaAnak; // dari portal login utama
+
+  const bulan = +document.getElementById("bulanSelect").value;
+  const tahun = +document.getElementById("tahunSelect").value;
+  const container = document.getElementById("laporanContainer");
+  container.innerHTML = "";
+
+  if (isNaN(bulan) || isNaN(tahun))
+    return container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>";
+
+  const data = await window.getFirebaseData();
+  const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = data;
+
+  // Buat satu laporan saja untuk anak wali
+  container.appendChild(
+    buatLaporanSantri({
+      nama: namaAnak,
+      bulan,
+      tahun,
+      assesmentGuru,
+      assesmentNaqib,
+      absensiNaqib,
+      absensiKbm,
+      ujian,
+      tahfiz,
+      pelanggaranAll
+    })
+  );
+}
+
+function logout(){
+  localStorage.removeItem("cahayaCurrentUser");
+  window.location.href = "../../index.html";
+}
+function goDashboard(){
+  window.location.href = "../dashboard/";
+}
+</script>
 </body>
 </html>
