@@ -305,7 +305,8 @@ async function generateLaporan(){
     container.innerHTML=`
   <div class="laporan-card" id="laporanPDF">
     <div class="laporan-header">
-      <h1>Laporan Bulanan Anak</h1>
+      <h1>Laporan Bulanan Santri</h1>
+      <h2>Pesantren Cahaya Fajrul Islam</h2>
       <h3>${namaAnak.toUpperCase()}</h3>
       <p>${new Date(tahun,bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
       <button id="downloadBtn" onclick="downloadPDF('${namaAnak}','${bulanNama}')">📄 Download PDF</button>
