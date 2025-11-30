@@ -332,10 +332,8 @@ async function generateLaporan() {
   const rata = ujianData.length ? Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length) : 0;
 
   // === Tahfiz ===
-const tahfizData = tahfiz
-  .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-  .flatMap(t => t.data || [])
-  .filter(d => filterNama(d.nama));
+const tahfizData = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
+  .flatMap(t => t.data||[]).filter(d => filterNama(d.nama));
 
 container.innerHTML += `
 <div class="section">
@@ -346,6 +344,9 @@ container.innerHTML += `
           <thead>
             <tr>
               <th>No</th>
+              <th>Tanggal</th>
+              <th>Program</th>
+              <th>Kelompok</th>
               <th>Setoran Hari Ini</th>
               <th>Jumlah Ayat</th>
               <th>Kesalahan</th>
@@ -354,22 +355,29 @@ container.innerHTML += `
             </tr>
           </thead>
           <tbody>
-            ${tahfizData.map((d, i) => `
-              <tr>
-                <td>${i + 1}</td>
-                <td>${d.setoran || '-'}</td>
-                <td>${d.ayat || '-'}</td>
-                <td>${d.kesalahan || '-'}</td>
-                <td>${d.nilai || '-'}</td>
-                <td>${d.ket || d.keterangan || '-'}</td>
-              </tr>
-            `).join('')}
+            ${tahfiz
+              .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
+              .flatMap(t => (t.data || [])
+                .filter(d => filterNama(d.nama))
+                .map((d, i) => `
+                  <tr>
+                    <td>${i + 1}</td>
+                    <td>${t.tanggal || '-'}</td>
+                    <td>${t.program || '-'}</td>
+                    <td>${t.kelompok || '-'}</td>
+                    <td>${d.setoran || '-'}</td>
+                    <td>${d.ayat || '-'}</td>
+                    <td>${d.kesalahan || '-'}</td>
+                    <td>${d.nilai || '-'}</td>
+                    <td>${d.ket || d.keterangan || '-'}</td>
+                  </tr>
+                `)
+              ).join('')}
           </tbody>
         </table>`
       : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
   }
 </div>`;
-
 
 
     <div class="section">
