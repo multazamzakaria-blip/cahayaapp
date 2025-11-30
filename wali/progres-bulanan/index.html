@@ -221,14 +221,48 @@ async function generateLaporan() {
     </div>
 
     <div class="section">
-      <h2>📖 Setoran Tahfiz</h2>
-      ${
-        tahfizData.length
-        ? `<table><tr><th>No</th><th>Surat</th><th>Ayat</th><th>Halaman</th><th>Nilai</th><th>Keterangan</th></tr>
-          ${tahfizData.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||"-"}</td><td>${d.ayat||"-"}</td><td>${d.halaman||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>`).join("")}</table>`
-        : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
-      }
-    </div>
+  <h2>📖 Setoran Tahfiz</h2>
+  ${
+    tahfizData.length
+      ? `<table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Program</th>
+              <th>Kelompok</th>
+              <th>Setoran Hari Ini</th>
+              <th>Jumlah Ayat</th>
+              <th>Kesalahan</th>
+              <th>Nilai</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tahfiz
+              .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
+              .flatMap(t => (t.data || [])
+                .filter(d => filterNama(d.nama))
+                .map((d, i) => `
+                  <tr>
+                    <td>${i + 1}</td>
+                    <td>${t.tanggal || '-'}</td>
+                    <td>${t.program || '-'}</td>
+                    <td>${t.kelompok || '-'}</td>
+                    <td>${d.setoran || '-'}</td>
+                    <td>${d.ayat || '-'}</td>
+                    <td>${d.kesalahan || '-'}</td>
+                    <td>${d.nilai || '-'}</td>
+                    <td>${d.ket || d.keterangan || '-'}</td>
+                  </tr>
+                `)
+              ).join('')}
+          </tbody>
+        </table>`
+      : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
+  }
+</div>
+
 
     <div class="section">
       <h2>⚠️ Pelanggaran</h2>
