@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progres Bulanan Santri - CAHAYA APP</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>📊 Progres Bulanan Santri</h1>
+    <button id="backBtn">⬅️ Kembali</button>
+  </header>
+
+  <main>
+    <section class="info-box">
+      <h2>Assalamu’alaikum, <span id="waliNama">Wali Santri</span></h2>
+      <p>Rekap perkembangan santri Anda selama bulan tertentu.</p>
+    </section>
+
+    <section class="filter-box">
+      <label for="bulan">Pilih Bulan:</label>
+      <input type="month" id="bulan" />
+      <button id="filterBtn">Tampilkan</button>
+    </section>
+
+    <section class="tabel-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Minggu ke-</th>
+            <th>Kedisiplinan</th>
+            <th>Akademik</th>
+            <th>Tahfiz</th>
+            <th>Akhlak</th>
+            <th>Catatan</th>
+          </tr>
+        </thead>
+        <tbody id="tabelData">
+          <tr><td colspan="6" class="empty">Silakan pilih bulan untuk melihat data.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 CAHAYA APP | Pesantren Fajrul Islam</p>
+  </footer>
+</body>
+</html>
