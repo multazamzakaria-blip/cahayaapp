@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // === 1️⃣ Proteksi halaman: hanya wali yang bisa masuk ===
   const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
   if (!currentUser || currentUser.role !== "wali") {
-    window.location.href = "../../login.html";
+    window.location.href = "../../index.html";
     return;
   }
 
