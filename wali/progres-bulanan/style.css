@@ -1,3 +1,8 @@
+.hadir-cell { background: #dcfce7; color: #065f46; font-weight: 600; text-align:center; }
+.izin-cell { background: #dbeafe; color: #1e40af; font-weight: 600; text-align:center; }
+.sakit-cell { background: #fef9c3; color: #854d0e; font-weight: 600; text-align:center; }
+.alfa-cell { background: #fee2e2; color: #991b1b; font-weight: 600; text-align:center; }
+
 * {
   box-sizing: border-box;
   margin: 0;
