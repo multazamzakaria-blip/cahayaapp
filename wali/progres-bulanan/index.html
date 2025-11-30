@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laporan Bulanan Anak - CAHAYA APP</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
   body {
     font-family: 'Noto Sans', sans-serif;
@@ -131,17 +132,44 @@
 
   /* === MOBILE RESPONSIVE === */
   @media (max-width: 768px) {
-    header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
     main { padding: 14px; }
     .card, .laporan-card { padding: 14px; }
     select, button { width: 100%; font-size: 15px; }
     .controls { flex-direction: column; align-items: stretch; }
+
     .laporan-header h1 { font-size: 20px; }
     .laporan-header h3 { font-size: 15px; }
     .section h2 { font-size: 15px; }
-    .section table { font-size: 10px; min-width: 100%; }
-    th, td { padding: 3px 4px; }
+
+    .section table {
+      font-size: 10px;
+      min-width: 100%;
+    }
+
+    th, td {
+      padding: 3px 4px;
+    }
   }
+
+  #downloadBtn {
+    display: block;
+    background: #1d4ed8;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 25px auto 5px;
+    cursor: pointer;
+  }
+  #downloadBtn:hover { background: #1e40af; }
   </style>
 </head>
 
@@ -251,7 +279,6 @@ async function generateLaporan(){
   const asesGuru=assesmentGuru.find(a=>filterNama(a.namaSantri)&&isSameMonthYear(a.tanggal,bulan,tahun))||{};
   const asesNaqib=assesmentNaqib.find(a=>filterNama(a.namaSantri)&&isSameMonthYear(a.tanggal,bulan,tahun))||{};
 
-  // === KEHADIRAN ===
   const hadirData={};
   function tambahHadir(prog,stat){
     if(!hadirData[prog]) hadirData[prog]={hadir:0,izin:0,sakit:0,alfa:0,total:0};
@@ -267,22 +294,20 @@ async function generateLaporan(){
   hadirKeys.forEach(k=>{const v=hadirData[k];const pct=x=>v.total?Math.round((x/v.total)*100):0;avg.hadir+=pct(v.hadir);avg.izin+=pct(v.izin);avg.sakit+=pct(v.sakit);avg.alfa+=pct(v.alfa);});
   const n=hadirKeys.length||1;for(let k in avg)avg[k]=Math.round(avg[k]/n);
 
-  // === UJIAN ===
   const ujianData=ujian.filter(u=>filterNama(u.santri)&&isSameMonthYear(u.tanggal,bulan,tahun));
   const rata=ujianData.length?Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length):0;
 
-  // === TAHFIZ ===
   const tahfizData=tahfiz.filter(t=>isSameMonthYear(t.tanggal,bulan,tahun)).flatMap(t=>t.data||[]).filter(d=>filterNama(d.nama));
-
-  // === PELANGGARAN ===
   const pelanggaranData=pelanggaran.filter(p=>filterNama(p.santri)&&isSameMonthYear(p.tanggal,bulan,tahun));
 
+  const bulanNama=new Date(tahun,bulan).toLocaleString("id-ID",{month:"long",year:"numeric"});
+
   container.innerHTML=`
-  <div class="laporan-card">
+  <div class="laporan-card" id="laporanPDF">
     <div class="laporan-header">
       <h1>Laporan Bulanan Anak</h1>
       <h3>${namaAnak.toUpperCase()}</h3>
-      <p>${new Date(tahun,bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
+      <p>${bulanNama}</p>
     </div>
 
     <div class="section">
@@ -338,7 +363,21 @@ async function generateLaporan(){
           : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
       }
     </div>
+
+    <button id="downloadBtn" onclick="downloadPDF('${namaAnak}','${bulanNama}')">📄 Download PDF Laporan</button>
   </div>`;
+}
+
+function downloadPDF(nama, bulan){
+  const element=document.getElementById("laporanPDF");
+  const opt={
+    margin:0.5,
+    filename:`Laporan_${nama}_${bulan}.pdf`,
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2},
+    jsPDF:{unit:'in',format:'a4',orientation:'portrait'}
+  };
+  html2pdf().set(opt).from(element).save();
 }
 </script>
 </body>
