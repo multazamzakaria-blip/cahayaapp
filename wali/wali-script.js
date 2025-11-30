@@ -1,32 +1,45 @@
-// === Fungsi untuk cek apakah wali sudah login ===
+// === CEK LOGIN WALI ===
 export function checkWaliLogin() {
-  // Ambil data wali dari localStorage (pakai key global unified)
+  // Ambil data wali dari localStorage (support format lama & baru)
   const data =
     localStorage.getItem("cahayaCurrentUser") ||
-    localStorage.getItem("waliSantri"); // untuk kompatibilitas lama
+    localStorage.getItem("waliSantri");
 
   if (!data) {
-    window.location.href = "../index.html"; // arahkan ke portal utama
+    window.location.href = "../index.html"; // kalau belum login, kembalikan ke portal
     return null;
   }
 
-  const user = JSON.parse(data);
+  let user;
+  try {
+    user = JSON.parse(data);
+  } catch (e) {
+    console.error("Data login wali rusak:", e);
+    localStorage.removeItem("cahayaCurrentUser");
+    localStorage.removeItem("waliSantri");
+    window.location.href = "../index.html";
+    return null;
+  }
 
-  // Pastikan role-nya wali agar tidak salah akses
+  // Pastikan role-nya benar-benar wali
   if (user.role !== "wali") {
     window.location.href = "../index.html";
+    return null;
+  }
+
+  // Pastikan ada nama anak (karena laporan bulanan bergantung padanya)
+  if (!user.namaAnak || user.namaAnak.trim() === "") {
+    alert("Data nama santri tidak ditemukan. Silakan login ulang.");
+    logoutWali();
     return null;
   }
 
   return user;
 }
 
-// === Fungsi logout untuk wali ===
+// === LOGOUT WALI ===
 export function logoutWali() {
-  // Hapus data login wali di semua kemungkinan key
   localStorage.removeItem("cahayaCurrentUser");
   localStorage.removeItem("waliSantri");
-
-  // Arahkan ke portal utama
   window.location.href = "../index.html";
 }
