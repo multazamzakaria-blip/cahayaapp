@@ -364,17 +364,29 @@ input {
       }
     }
 
-    /* === AUTO LOGIN === */
-    (function autoLogin() {
-      const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-      if (!user) return;
-      switch (user.role) {
-        case "guru": location.href = "guru/fitur.html"; break;
-        case "naqib": location.href = "naqib/dashboard.html"; break;
-        case "wali": location.href = "wali/wali-dashboard.html"; break;
-        case "admin": location.href = "admin/index.html"; break;
-      }
-    })();
+    /* === AUTO LOGIN (VERSI AMAN & TERBARU) === */
+(function autoLogin() {
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if (!user) return;
+
+  switch (user.role) {
+    case "guru":
+      window.location.href = "guru/fitur.html";
+      break;
+    case "naqib":
+      window.location.href = "naqib/dashboard.html";
+      break;
+    case "admin":
+      window.location.href = "admin/index.html";
+      break;
+    case "wali":
+      window.location.href = "wali/dashboard/index.html"; // ✅ sudah disesuaikan
+      break;
+    default:
+      localStorage.removeItem("cahayaCurrentUser"); // kalau data rusak
+      break;
+  }
+})();
   </script>
 </body>
 </html>
