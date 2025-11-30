@@ -5,30 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Laporan Bulanan Anak - CAHAYA APP</title>
 
-  <link rel="stylesheet" href="../wali-style.css">
-
   <style>
-    /* ====== TAMBAHAN SPESIFIK HALAMAN ====== */
-    main {
-      max-width: 1100px;
-      margin: 1rem auto 3rem;
-      padding: 1rem;
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+      margin: 0;
     }
 
-    .card header {
-      background: none;
-      padding: 0;
-      box-shadow: none;
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 1rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .filter-box {
-      justify-content: center;
-      margin-bottom: 1.5rem;
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
     }
+
+    .nav-buttons button {
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .btn-danger:hover { background: #dc2626; }
+
+    main { max-width: 1100px; margin: 1rem auto 3rem; padding: 1rem; }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .filter-box { display: flex; justify-content: center; flex-wrap: wrap; gap: .7rem; }
+
+    select, button {
+      padding: .6rem .8rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: .95rem;
+    }
+
+    button {
+      background: #0f766e;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    button:hover { background: #115e59; }
 
     .laporan-card {
       background: #ffffff;
@@ -45,94 +92,46 @@
       margin-bottom: 1rem;
     }
 
-    .laporan-header h2 {
-      font-size: 1.3rem;
-      color: #0f172a;
-      font-weight: 700;
-    }
-
-    .laporan-header h3 {
-      font-size: 1.1rem;
-      color: #334155;
-      font-weight: 600;
-    }
+    .laporan-header h2 { font-size: 1.3rem; color: #0f172a; font-weight: 700; }
+    .laporan-header h3 { font-size: 1.1rem; color: #334155; font-weight: 600; }
 
     .section-title {
       margin-top: 1.5rem;
-      margin-bottom: 0.6rem;
+      margin-bottom: .6rem;
       color: #0f766e;
       font-weight: 700;
       font-size: 1.1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: .5rem;
     }
 
     .dim-card {
       background: #f9fafb;
       border-radius: 12px;
       border: 1px solid #e5e7eb;
-      padding: 0.9rem 1rem;
-      margin-bottom: 0.8rem;
+      padding: .9rem 1rem;
+      margin-bottom: .8rem;
     }
 
-    .dim-card h4 {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #0f172a;
-    }
+    .dim-card h4 { margin: 0; font-size: 1rem; font-weight: 600; color: #0f172a; }
+    .dim-card p { font-size: .93rem; color: #374151; margin-top: .3rem; white-space: pre-line; }
 
-    .dim-card p {
-      font-size: 0.95rem;
-      color: #374151;
-      margin-top: 0.3rem;
-      white-space: pre-line;
-    }
+    table { width: 100%; border-collapse: collapse; margin-top: .5rem; background: white; border-radius: 8px; overflow: hidden; }
+    th, td { border: 1px solid #e5e7eb; padding: 10px; font-size: .9rem; text-align: center; }
+    th { background: #f3f4f6; color: #1f2937; font-weight: 600; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 0.5rem;
-      background: white;
-    }
-
-    th, td {
-      border: 1px solid #e5e7eb;
-      padding: 10px;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    th {
-      background: #f3f4f6;
-      color: #1f2937;
-    }
-
-    /* === Kehadiran Cell Warna === */
     .hadir-cell { background: #dcfce7; color: #065f46; font-weight: 600; }
     .izin-cell  { background: #dbeafe; color: #1e40af; font-weight: 600; }
     .sakit-cell { background: #fef9c3; color: #854d0e; font-weight: 600; }
     .alfa-cell  { background: #fee2e2; color: #991b1b; font-weight: 600; }
 
-    /* === Responsif Mobile === */
+    footer { text-align: center; padding: 1.5rem; font-size: .9rem; color: #6b7280; }
+
     @media (max-width: 768px) {
-      .laporan-card {
-        padding: 1rem;
-        border-radius: 12px;
-      }
-
-      table, th, td {
-        font-size: 0.8rem;
-        padding: 6px;
-      }
-
-      .section-title {
-        font-size: 1rem;
-      }
-
-      .dim-card h4 { font-size: 0.95rem; }
-      .dim-card p { font-size: 0.85rem; }
+      .filter-box { flex-direction: column; align-items: center; }
+      select, button { width: 100%; }
+      table, th, td { font-size: .8rem; }
     }
   </style>
 </head>
@@ -150,24 +149,19 @@
     <div class="card">
       <h2 class="section-title">📅 Pilih Bulan Laporan</h2>
       <div class="filter-box">
-        <select id="bulanSelect">
-          <option value="">Bulan</option>
-        </select>
-        <select id="tahunSelect">
-          <option value="">Tahun</option>
-        </select>
+        <select id="bulanSelect"><option value="">Bulan</option></select>
+        <select id="tahunSelect"><option value="">Tahun</option></select>
         <button onclick="generateReport()">Tampilkan Laporan</button>
       </div>
     </div>
 
     <div id="laporanContainer">
-      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan anak.</p>
+      <p style="text-align:center;color:#6b7280;">Silakan pilih bulan dan tahun untuk melihat laporan anak.</p>
     </div>
   </main>
 
   <footer>© 2025 Pesantren Fajrul Islam — CAHAYA APP</footer>
 
-  <!-- 🔥 Firebase dan Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -185,50 +179,31 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const dbRef = ref(db);
-
-    // === Ambil user wali dari localStorage ===
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-    if (!user || user.role !== "wali") {
-      window.location.href = "../../index.html";
-    }
+    if (!user || user.role !== "wali") window.location.href = "../../index.html";
 
-    const anak = user.namaAnak;
+    const anak = user.nama || user.santri || user.namaAnak;
+
+    const bulanNama = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
     const bulanSelect = document.getElementById("bulanSelect");
     const tahunSelect = document.getElementById("tahunSelect");
 
-    // isi dropdown bulan & tahun
-    const bulanNama = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-    bulanNama.forEach((b,i)=>{
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = b;
-      if (i === new Date().getMonth()) opt.selected = true;
-      bulanSelect.appendChild(opt);
-    });
+    bulanNama.forEach((b,i)=>{ const o=document.createElement("option");o.value=i;o.textContent=b;if(i===new Date().getMonth())o.selected=true;bulanSelect.appendChild(o); });
+    const thn=new Date().getFullYear();
+    for(let t=thn-1;t<=thn+1;t++){const o=document.createElement("option");o.value=t;o.textContent=t;if(t===thn)o.selected=true;tahunSelect.appendChild(o);}
 
-    const tahunSekarang = new Date().getFullYear();
-    for(let t=tahunSekarang-1; t<=tahunSekarang+1; t++){
-      const opt=document.createElement("option");
-      opt.value=t;
-      opt.textContent=t;
-      if(t===tahunSekarang) opt.selected=true;
-      tahunSelect.appendChild(opt);
-    }
+    function parseDate(s){if(!s)return null;const p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+    function isSameMonthYear(t,b,y){const d=parseDate(t);return d&&d.getMonth()===b&&d.getFullYear()===y;}
 
-    // fungsi bantu
-    function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
-    function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
-
-    // ambil data firebase
-    async function getData() {
+    async function getData(){
       const snaps = await Promise.all([
-        get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
-        get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
-        get(child(dbRef, "cahaya_app/absensi_program_harian")),
-        get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
-        get(child(dbRef, "cahaya_app/nilai_ujian")),
-        get(child(dbRef, "cahaya_app/setoran_tahfiz")),
-        get(child(dbRef, "cahaya_app/pelanggaran_santri")),
+        get(child(dbRef,"cahaya_app/assesment_cahaya_santri")),
+        get(child(dbRef,"cahaya_app/assesment_cahaya_naqib")),
+        get(child(dbRef,"cahaya_app/absensi_program_harian")),
+        get(child(dbRef,"cahaya_app/absensi_pembelajaran")),
+        get(child(dbRef,"cahaya_app/nilai_ujian")),
+        get(child(dbRef,"cahaya_app/setoran_tahfiz")),
+        get(child(dbRef,"cahaya_app/pelanggaran_santri")),
       ]);
       return {
         assesmentGuru: snaps[0].exists()?Object.values(snaps[0].val()):[],
@@ -241,57 +216,31 @@
       };
     }
 
-    // tampil laporan
-   async function generateReport(){
-  const bulan = +bulanSelect.value;
-  const tahun = +tahunSelect.value;
-  const container = document.getElementById("laporanContainer");
-  container.innerHTML = "<p class='muted'>⏳ Mengambil data...</p>";
+    async function generateReport(){
+      const bulan=+bulanSelect.value,tahun=+tahunSelect.value;
+      const container=document.getElementById("laporanContainer");
+      container.innerHTML="<p style='text-align:center'>⏳ Mengambil data...</p>";
+      const data=await getData();
+      const {assesmentGuru,assesmentNaqib,absensiNaqib,absensiKbm,ujian,tahfiz,pelanggaran}=data;
+      const narasiGuru=assesmentGuru.find(a=>a.namaSantri===anak&&isSameMonthYear(a.tanggal,bulan,tahun))||{};
+      const narasiNaqib=assesmentNaqib.find(a=>a.namaSantri===anak&&isSameMonthYear(a.tanggal,bulan,tahun))||{};
+      const namaBulan=bulanNama[bulan];
+      const card=document.createElement("div");
+      card.className="laporan-card";
+      card.innerHTML=`
+      <div class="laporan-header"><h2>Laporan Bulanan Anak</h2><h3>${anak}</h3><p>${namaBulan} ${tahun}</p></div>
+      <div class="section-title">🌈 Dimensi CAHAYA</div>
+      <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiGuru.narasiSpiritual||"Belum ada catatan."}</p></div>
+      <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiNaqib.narasiRelational||"Belum ada catatan."}</p></div>
+      <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiNaqib.narasiEmotional||"Belum ada catatan."}</p></div>
+      <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiGuru.narasiIntellectual||"Belum ada catatan."}</p></div>
+      <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiNaqib.narasiPhysical||"Belum ada catatan."}</p></div>`;
+      container.innerHTML="";
+      container.appendChild(card);
+    }
 
-  const data = await getData();
-  const { assesmentGuru, assesmentNaqib } = data;
-
-  const anak = user.nama || user.santri || user.namaAnak;
-  console.log("🧠 Anak:", anak);
-  console.log("📚 Data Guru:", assesmentGuru);
-  console.log("📘 Data Naqib:", assesmentNaqib);
-
-  const narasiGuru = assesmentGuru.find(a =>
-    (a.namaSantri || "").toLowerCase().trim() === anak.toLowerCase().trim() &&
-    isSameMonthYear(a.tanggal || a.tgl, bulan, tahun)
-  ) || {};
-
-  const narasiNaqib = assesmentNaqib.find(a =>
-    (a.namaSantri || "").toLowerCase().trim() === anak.toLowerCase().trim() &&
-    isSameMonthYear(a.tanggal || a.tgl, bulan, tahun)
-  ) || {};
-
-  const namaBulan = bulanNama[bulan];
-  const card = document.createElement("div");
-  card.className = "laporan-card";
-  card.innerHTML = `
-    <div class="laporan-header">
-      <h2>Laporan Bulanan Anak</h2>
-      <h3>${anak}</h3>
-      <p>${namaBulan} ${tahun}</p>
-    </div>
-
-    <div class="section-title">🌈 Dimensi CAHAYA</div>
-    <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiGuru.narasiSpiritual || narasiGuru.catatanSpiritual || "Belum ada catatan."}</p></div>
-    <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiNaqib.narasiRelational || narasiNaqib.catatanRelasi || "Belum ada catatan."}</p></div>
-    <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiNaqib.narasiEmotional || narasiNaqib.catatanHati || "Belum ada catatan."}</p></div>
-    <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiGuru.narasiIntellectual || narasiGuru.catatanAkal || "Belum ada catatan."}</p></div>
-    <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiNaqib.narasiPhysical || narasiNaqib.catatanFisik || "Belum ada catatan."}</p></div>
-  `;
-
-  container.innerHTML = "";
-  container.appendChild(card);
-}
-
-
-    // tombol navigasi
-    window.goDashboard = () => window.location.href = "../dashboard/";
-    window.logout = () => { localStorage.removeItem("cahayaCurrentUser"); window.location.href = "../../index.html"; };
+    window.goDashboard=()=>window.location.href="../dashboard/";
+    window.logout=()=>{localStorage.removeItem("cahayaCurrentUser");window.location.href="../../index.html";};
   </script>
 </body>
 </html>
