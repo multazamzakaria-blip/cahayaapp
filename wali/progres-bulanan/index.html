@@ -242,40 +242,52 @@
     }
 
     // tampil laporan
-    async function generateReport(){
-      const bulan = +bulanSelect.value;
-      const tahun = +tahunSelect.value;
-      const container = document.getElementById("laporanContainer");
-      container.innerHTML = "<p class='muted'>⏳ Mengambil data...</p>";
+   async function generateReport(){
+  const bulan = +bulanSelect.value;
+  const tahun = +tahunSelect.value;
+  const container = document.getElementById("laporanContainer");
+  container.innerHTML = "<p class='muted'>⏳ Mengambil data...</p>";
 
-      const data = await getData();
-      const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaran } = data;
+  const data = await getData();
+  const { assesmentGuru, assesmentNaqib } = data;
 
-      // Filter data anak ini saja
-      const narasiGuru = assesmentGuru.find(a => a.namaSantri === anak && isSameMonthYear(a.tanggal, bulan, tahun)) || {};
-      const narasiNaqib = assesmentNaqib.find(a => a.namaSantri === anak && isSameMonthYear(a.tanggal, bulan, tahun)) || {};
+  const anak = user.nama || user.santri || user.namaAnak;
+  console.log("🧠 Anak:", anak);
+  console.log("📚 Data Guru:", assesmentGuru);
+  console.log("📘 Data Naqib:", assesmentNaqib);
 
-      const namaBulan = bulanNama[bulan];
-      const card = document.createElement("div");
-      card.className = "laporan-card";
-      card.innerHTML = `
-        <div class="laporan-header">
-          <h2>Laporan Bulanan Anak</h2>
-          <h3>${anak}</h3>
-          <p>${namaBulan} ${tahun}</p>
-        </div>
+  const narasiGuru = assesmentGuru.find(a =>
+    (a.namaSantri || "").toLowerCase().trim() === anak.toLowerCase().trim() &&
+    isSameMonthYear(a.tanggal || a.tgl, bulan, tahun)
+  ) || {};
 
-        <div class="section-title">🌈 Dimensi CAHAYA</div>
-        <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiGuru.narasiSpiritual || "Belum ada catatan."}</p></div>
-        <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiNaqib.narasiRelational || "Belum ada catatan."}</p></div>
-        <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiNaqib.narasiEmotional || "Belum ada catatan."}</p></div>
-        <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiGuru.narasiIntellectual || "Belum ada catatan."}</p></div>
-        <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiNaqib.narasiPhysical || "Belum ada catatan."}</p></div>
-      `;
+  const narasiNaqib = assesmentNaqib.find(a =>
+    (a.namaSantri || "").toLowerCase().trim() === anak.toLowerCase().trim() &&
+    isSameMonthYear(a.tanggal || a.tgl, bulan, tahun)
+  ) || {};
 
-      container.innerHTML = "";
-      container.appendChild(card);
-    }
+  const namaBulan = bulanNama[bulan];
+  const card = document.createElement("div");
+  card.className = "laporan-card";
+  card.innerHTML = `
+    <div class="laporan-header">
+      <h2>Laporan Bulanan Anak</h2>
+      <h3>${anak}</h3>
+      <p>${namaBulan} ${tahun}</p>
+    </div>
+
+    <div class="section-title">🌈 Dimensi CAHAYA</div>
+    <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiGuru.narasiSpiritual || narasiGuru.catatanSpiritual || "Belum ada catatan."}</p></div>
+    <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiNaqib.narasiRelational || narasiNaqib.catatanRelasi || "Belum ada catatan."}</p></div>
+    <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiNaqib.narasiEmotional || narasiNaqib.catatanHati || "Belum ada catatan."}</p></div>
+    <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiGuru.narasiIntellectual || narasiGuru.catatanAkal || "Belum ada catatan."}</p></div>
+    <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiNaqib.narasiPhysical || narasiNaqib.catatanFisik || "Belum ada catatan."}</p></div>
+  `;
+
+  container.innerHTML = "";
+  container.appendChild(card);
+}
+
 
     // tombol navigasi
     window.goDashboard = () => window.location.href = "../dashboard/";
