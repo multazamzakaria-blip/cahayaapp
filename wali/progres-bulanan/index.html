@@ -176,8 +176,7 @@
 <body>
 <header>
   <h1>📊 Laporan Bulanan Santri</h1>
-  <h1>📊 Pesantren Cahaya Fajrul Islam</h1>
-  <div>
+    <div>
     <button class="btn-secondary" onclick="goDashboard()">⬅️ Dashboard</button>
     <button onclick="logout()">Keluar</button>
   </div>
@@ -303,12 +302,13 @@ async function generateLaporan(){
 
   const bulanNama=new Date(tahun,bulan).toLocaleString("id-ID",{month:"long",year:"numeric"});
 
-  container.innerHTML=`
+    container.innerHTML=`
   <div class="laporan-card" id="laporanPDF">
     <div class="laporan-header">
       <h1>Laporan Bulanan Anak</h1>
       <h3>${namaAnak.toUpperCase()}</h3>
-      <p>${bulanNama}</p>
+      <p>${new Date(tahun,bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
+      <button id="downloadBtn" onclick="downloadPDF('${namaAnak}','${bulanNama}')">📄 Download PDF</button>
     </div>
 
     <div class="section">
@@ -364,15 +364,13 @@ async function generateLaporan(){
           : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
       }
     </div>
-
-    <button id="downloadBtn" onclick="downloadPDF('${namaAnak}','${bulanNama}')">📄 Download PDF Laporan</button>
   </div>`;
 }
 
 function downloadPDF(nama, bulan) {
   const element = document.getElementById("laporanPDF");
   const opt = {
-    margin: [0.2, 0.2, 0.2, 0.2], // margin lebih kecil
+    margin: [0.2, 0.2, 0.2, 0.2],
     filename: `Laporan_${nama}_${bulan}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 3, useCORS: true },
