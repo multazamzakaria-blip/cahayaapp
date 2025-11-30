@@ -448,7 +448,7 @@ async function generateLaporan(){
 function downloadPDF(nama, bulan) {
   const element = document.getElementById("laporanPDF");
   const opt = {
-    margin: [1.0, 1.0, 1.0, 1.0],
+    margin: [0.5, 0.5, 0.5, 0.5],
     filename: `Laporan_${nama}_${bulan}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 3, useCORS: true },
