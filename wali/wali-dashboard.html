@@ -215,6 +215,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script type="module" src="./wali-dashboard-script.js"></script>
+<script type="module">
+  import('./wali-dashboard-script.js').catch(err => {
+    console.error('Gagal memuat wali-dashboard-script.js:', err);
+    alert('Script tidak bisa dimuat. Pastikan file wali-dashboard-script.js ada di folder yang sama.');
+  });
+</script>
+
 </body>
 </html>
