@@ -1,380 +1,285 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Wali - CAHAYA APP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Bulanan Anak - CAHAYA APP</title>
 
-  <!-- 🌈 Gaya Global Wali -->
   <link rel="stylesheet" href="../wali-style.css">
+
   <style>
-    /* tambahan minor spesifik dashboard */
-    .logo {
-      display: block;
-      margin: 1rem auto 0.5rem auto;
-      width: 110px;
+    /* ====== TAMBAHAN SPESIFIK HALAMAN ====== */
+    main {
+      max-width: 1100px;
+      margin: 1rem auto 3rem;
+      padding: 1rem;
     }
 
-    .welcome {
-      text-align: center;
+    .card header {
+      background: none;
+      padding: 0;
+      box-shadow: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .filter-box {
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .laporan-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 1.5rem;
       margin-bottom: 2rem;
     }
 
-    .welcome h2 {
-      font-size: 1.4rem;
+    .laporan-header {
+      text-align: center;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .laporan-header h2 {
+      font-size: 1.3rem;
       color: #0f172a;
       font-weight: 700;
     }
 
-    .welcome p {
-      color: #475569;
-      font-size: 1rem;
+    .laporan-header h3 {
+      font-size: 1.1rem;
+      color: #334155;
+      font-weight: 600;
     }
 
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    }
-
-    .feature-card i {
-      font-size: 2rem;
+    .section-title {
+      margin-top: 1.5rem;
+      margin-bottom: 0.6rem;
       color: #0f766e;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dim-card {
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 0.9rem 1rem;
       margin-bottom: 0.8rem;
     }
 
-    .feature-card h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
+    .dim-card h4 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
       color: #0f172a;
-      margin-bottom: 0.5rem;
     }
 
-    .feature-card p {
+    .dim-card p {
       font-size: 0.95rem;
-      color: #475569;
+      color: #374151;
+      margin-top: 0.3rem;
+      white-space: pre-line;
     }
 
-    @media (max-width: 600px) {
-      .welcome h2 { font-size: 1.2rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    th {
+      background: #f3f4f6;
+      color: #1f2937;
+    }
+
+    /* === Kehadiran Cell Warna === */
+    .hadir-cell { background: #dcfce7; color: #065f46; font-weight: 600; }
+    .izin-cell  { background: #dbeafe; color: #1e40af; font-weight: 600; }
+    .sakit-cell { background: #fef9c3; color: #854d0e; font-weight: 600; }
+    .alfa-cell  { background: #fee2e2; color: #991b1b; font-weight: 600; }
+
+    /* === Responsif Mobile === */
+    @media (max-width: 768px) {
+      .laporan-card {
+        padding: 1rem;
+        border-radius: 12px;
+      }
+
+      table, th, td {
+        font-size: 0.8rem;
+        padding: 6px;
+      }
+
+      .section-title {
+        font-size: 1rem;
+      }
+
+      .dim-card h4 { font-size: 0.95rem; }
+      .dim-card p { font-size: 0.85rem; }
     }
   </style>
 </head>
 
 <body>
-<header>
-  <h1>📊 Laporan Bulanan Anak</h1>
-  <div>
-    <button class="btn-secondary" onclick="goDashboard()">⬅️ Dashboard</button>
-    <button onclick="logout()">Keluar</button>
-  </div>
-</header>
-
-<main>
-  <div class="card">
-    <h2>📅 Pilih Bulan Laporan</h2>
-    <div class="controls">
-      <select id="bulanSelect">
-        <option value="">-- Pilih Bulan --</option>
-        <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
-        <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
-        <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
-        <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
-      </select>
-      <select id="tahunSelect"></select>
-      <button onclick="generateLaporan()">Tampilkan Laporan</button>
+  <header>
+    <h1>📊 Laporan Bulanan Anak</h1>
+    <div class="nav-buttons">
+      <button class="btn-secondary" onclick="goDashboard()">⬅️ Dashboard</button>
+      <button class="btn-danger" onclick="logout()">Logout</button>
     </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2 class="section-title">📅 Pilih Bulan Laporan</h2>
+      <div class="filter-box">
+        <select id="bulanSelect">
+          <option value="">Bulan</option>
+        </select>
+        <select id="tahunSelect">
+          <option value="">Tahun</option>
+        </select>
+        <button onclick="generateReport()">Tampilkan Laporan</button>
+      </div>
+    </div>
+
     <div id="laporanContainer">
-      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan anak Anda.</p>
+      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan anak.</p>
     </div>
-  </div>
-</main>
+  </main>
 
-<!-- ===== FIREBASE ===== -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  <footer>© 2025 Pesantren Fajrul Islam — CAHAYA APP</footer>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
-    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
-    projectId: "absensi-santri-fajrul-islam",
-    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
-    messagingSenderId: "739928369926",
-    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
-  };
+  <!-- 🔥 Firebase dan Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const dbRef = ref(db);
-
-  window.getFirebaseData = async function() {
-    const [
-      assesGuruSnap, assesNaqibSnap, absNaqibSnap, absKbmSnap, ujianSnap, tahfizSnap, pelanggaranSnap
-    ] = await Promise.all([
-      get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
-      get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
-      get(child(dbRef, "cahaya_app/absensi_program_harian")),
-      get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
-      get(child(dbRef, "cahaya_app/nilai_ujian")),
-      get(child(dbRef, "cahaya_app/setoran_tahfiz")),
-      get(child(dbRef, "cahaya_app/pelanggaran_santri")),
-    ]);
-
-    return {
-      assesmentGuru: assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [],
-      assesmentNaqib: assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [],
-      absensiNaqib: absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [],
-      absensiKbm: absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [],
-      ujian: ujianSnap.exists() ? Object.values(ujianSnap.val()) : [],
-      tahfiz: tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [],
-      pelanggaranAll: pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [],
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+      messagingSenderId: "739928369926",
+      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
     };
-  };
-</script>
 
-<script>
-window.addEventListener("load", () => {
-  const tahunSelect = document.getElementById("tahunSelect");
-  const now = new Date().getFullYear();
-  for (let i = now - 2; i <= now + 1; i++) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = i;
-    if (i === now) opt.selected = true;
-    tahunSelect.appendChild(opt);
-  }
-});
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const dbRef = ref(db);
 
-function logout(){
-  localStorage.removeItem("cahayaCurrentUser");
-  window.location.href = "../../index.html";
-}
-function goDashboard(){
-  window.location.href = "../dashboard/";
-}
+    // === Ambil user wali dari localStorage ===
+    const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+    if (!user || user.role !== "wali") {
+      window.location.href = "../../index.html";
+    }
 
-function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
-function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
+    const anak = user.namaAnak;
+    const bulanSelect = document.getElementById("bulanSelect");
+    const tahunSelect = document.getElementById("tahunSelect");
 
-async function generateLaporan() {
-  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!user || user.role !== "wali") return (window.location.href="../../index.html");
+    // isi dropdown bulan & tahun
+    const bulanNama = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    bulanNama.forEach((b,i)=>{
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = b;
+      if (i === new Date().getMonth()) opt.selected = true;
+      bulanSelect.appendChild(opt);
+    });
 
-  const namaAnak = user.namaAnak || user.nama || user.label?.replace(/^Wali\s+/i, "") || "";
-  const bulan = +document.getElementById("bulanSelect").value;
-  const tahun = +document.getElementById("tahunSelect").value;
-  const container = document.getElementById("laporanContainer");
-  container.innerHTML = "<p class='muted'>🔄 Memuat data dari Firebase...</p>";
+    const tahunSekarang = new Date().getFullYear();
+    for(let t=tahunSekarang-1; t<=tahunSekarang+1; t++){
+      const opt=document.createElement("option");
+      opt.value=t;
+      opt.textContent=t;
+      if(t===tahunSekarang) opt.selected=true;
+      tahunSelect.appendChild(opt);
+    }
 
-  if (isNaN(bulan) || isNaN(tahun))
-    return (container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>");
+    // fungsi bantu
+    function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+    function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
 
-  const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = await window.getFirebaseData();
+    // ambil data firebase
+    async function getData() {
+      const snaps = await Promise.all([
+        get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
+        get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
+        get(child(dbRef, "cahaya_app/absensi_program_harian")),
+        get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
+        get(child(dbRef, "cahaya_app/nilai_ujian")),
+        get(child(dbRef, "cahaya_app/setoran_tahfiz")),
+        get(child(dbRef, "cahaya_app/pelanggaran_santri")),
+      ]);
+      return {
+        assesmentGuru: snaps[0].exists()?Object.values(snaps[0].val()):[],
+        assesmentNaqib: snaps[1].exists()?Object.values(snaps[1].val()):[],
+        absensiNaqib: snaps[2].exists()?Object.values(snaps[2].val()):[],
+        absensiKbm: snaps[3].exists()?Object.values(snaps[3].val()):[],
+        ujian: snaps[4].exists()?Object.values(snaps[4].val()):[],
+        tahfiz: snaps[5].exists()?Object.values(snaps[5].val()):[],
+        pelanggaran: snaps[6].exists()?Object.values(snaps[6].val()):[],
+      };
+    }
 
-  // === Filter sesuai nama dan bulan ===
-  const filterNama = (n) => (n || "").trim().toLowerCase() === namaAnak.toLowerCase();
-  const asesGuru = assesmentGuru.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
-  const asesNaqib = assesmentNaqib.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
+    // tampil laporan
+    async function generateReport(){
+      const bulan = +bulanSelect.value;
+      const tahun = +tahunSelect.value;
+      const container = document.getElementById("laporanContainer");
+      container.innerHTML = "<p class='muted'>⏳ Mengambil data...</p>";
 
-  if (!asesGuru.namaSantri && !asesNaqib.namaSantri)
-    return container.innerHTML = `<p class="muted">Tidak ada data bulan ini untuk <b>${namaAnak}</b>.</p>`;
+      const data = await getData();
+      const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaran } = data;
 
-  // === Kehadiran ===
-  const hadirData = {};
-  function tambahHadir(program, status){
-    if(!hadirData[program]) hadirData[program] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
-    status = (status||"").toLowerCase();
-    if(hadirData[program][status]!==undefined) hadirData[program][status]++;
-    hadirData[program].total++;
-  }
-  absensiNaqib.forEach(log=>{
-    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.program||"Program Harian", d.status); });
-  });
-  absensiKbm.forEach(log=>{
-    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.mapel||"KBM", d.status); });
-  });
-  const hadirRows = Object.entries(hadirData).map(([prog,v],i)=>{
-    const pct = (x)=> v.total?Math.round((x/v.total)*100):0;
-    return `<tr><td>${i+1}</td><td>${prog}</td><td>${pct(v.hadir)}%</td><td>${pct(v.izin)}%</td><td>${pct(v.sakit)}%</td><td>${pct(v.alfa)}%</td></tr>`;
-  });
+      // Filter data anak ini saja
+      const narasiGuru = assesmentGuru.find(a => a.namaSantri === anak && isSameMonthYear(a.tanggal, bulan, tahun)) || {};
+      const narasiNaqib = assesmentNaqib.find(a => a.namaSantri === anak && isSameMonthYear(a.tanggal, bulan, tahun)) || {};
 
-  // === Ujian ===
-  const ujianData = ujian.filter(u => filterNama(u.santri) && isSameMonthYear(u.tanggal, bulan, tahun));
-  const rata = ujianData.length ? Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length) : 0;
+      const namaBulan = bulanNama[bulan];
+      const card = document.createElement("div");
+      card.className = "laporan-card";
+      card.innerHTML = `
+        <div class="laporan-header">
+          <h2>Laporan Bulanan Anak</h2>
+          <h3>${anak}</h3>
+          <p>${namaBulan} ${tahun}</p>
+        </div>
 
-  // === Tahfiz ===
-  const tahfizData = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-    .flatMap(t => t.data||[]).filter(d => filterNama(d.nama));
+        <div class="section-title">🌈 Dimensi CAHAYA</div>
+        <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiGuru.narasiSpiritual || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiNaqib.narasiRelational || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiNaqib.narasiEmotional || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiGuru.narasiIntellectual || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiNaqib.narasiPhysical || "Belum ada catatan."}</p></div>
+      `;
 
-  // === Pelanggaran ===
-  const pelanggaran = pelanggaranAll.filter(p => filterNama(p.santri) && isSameMonthYear(p.tanggal, bulan, tahun));
+      container.innerHTML = "";
+      container.appendChild(card);
+    }
 
-  // === Cetak HTML ===
-  container.innerHTML = `
-  <div class="laporan-card">
-    <div class="laporan-header">
-      <h1>Laporan Bulanan Anak</h1>
-      <h3>${namaAnak.toUpperCase()}</h3>
-      <p>${new Date(tahun, bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
-    </div>
-
-    <div class="section">
-      <h2>🌈 Dimensi CAHAYA</h2>
-      <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual || "Belum ada catatan."}</p>
-      <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational || "Belum ada catatan."}</p>
-      <p><b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional || "Belum ada catatan."}</p>
-      <p><b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual || "Belum ada catatan."}</p>
-      <p><b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical || "Belum ada catatan."}</p>
-    </div>
-
-    <div class="section">
-  <h2>📅 Kehadiran</h2>
-  ${
-    hadirRows.length
-      ? (() => {
-          // hitung rata-rata kehadiran
-          const keys = Object.keys(hadirData);
-          const totalProg = keys.length;
-          const avg = { hadir:0, izin:0, sakit:0, alfa:0 };
-          keys.forEach(k => {
-            const v = hadirData[k];
-            const pct = (x)=> v.total?Math.round((x/v.total)*100):0;
-            avg.hadir += pct(v.hadir);
-            avg.izin += pct(v.izin);
-            avg.sakit += pct(v.sakit);
-            avg.alfa += pct(v.alfa);
-          });
-          avg.hadir = Math.round(avg.hadir / totalProg);
-          avg.izin = Math.round(avg.izin / totalProg);
-          avg.sakit = Math.round(avg.sakit / totalProg);
-          avg.alfa = Math.round(avg.alfa / totalProg);
-
-          return `
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Program</th>
-                <th>Hadir</th>
-                <th>Izin</th>
-                <th>Sakit</th>
-                <th>Alfa</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${Object.entries(hadirData).map(([prog,v],i)=>{
-                const pct = (x)=> v.total?Math.round((x/v.total)*100):0;
-                return `
-                  <tr>
-                    <td>${i+1}</td>
-                    <td>${prog}</td>
-                    <td class="hadir-cell">${pct(v.hadir)}%</td>
-                    <td class="izin-cell">${pct(v.izin)}%</td>
-                    <td class="sakit-cell">${pct(v.sakit)}%</td>
-                    <td class="alfa-cell">${pct(v.alfa)}%</td>
-                  </tr>`;
-              }).join("")}
-              <tr style="font-weight:bold;background:#f3f4f6;">
-                <td colspan="2">Rata-rata</td>
-                <td class="hadir-cell">${avg.hadir}%</td>
-                <td class="izin-cell">${avg.izin}%</td>
-                <td class="sakit-cell">${avg.sakit}%</td>
-                <td class="alfa-cell">${avg.alfa}%</td>
-              </tr>
-            </tbody>
-          </table>`;
-        })()
-      : `<p class='muted'>Belum ada data kehadiran bulan ini.</p>`
-  }
-</div>
-
-
-    <div class="section">
-      <h2>🧾 Nilai Ujian</h2>
-      ${
-        ujianData.length
-        ? `<table><tr><th>No</th><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr>
-        ${ujianData.map((u,i)=>`<tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>`).join("")}
-        <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rata}</td></tr></table>`
-        : `<p class='muted'>Belum ada nilai ujian bulan ini.</p>`
-      }
-    </div>
-
-    <div class="section">
-  <h2>📖 Setoran Tahfiz</h2>
-  ${
-    tahfizData.length
-      ? `<table>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Tanggal</th>
-              <th>Program</th>
-              <th>Kelompok</th>
-              <th>Setoran Hari Ini</th>
-              <th>Jumlah Ayat</th>
-              <th>Kesalahan</th>
-              <th>Nilai</th>
-              <th>Keterangan</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${tahfiz
-              .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-              .flatMap(t => (t.data || [])
-                .filter(d => filterNama(d.nama))
-                .map((d, i) => `
-                  <tr>
-                    <td>${i + 1}</td>
-                    <td>${t.tanggal || '-'}</td>
-                    <td>${t.program || '-'}</td>
-                    <td>${t.kelompok || '-'}</td>
-                    <td>${d.setoran || '-'}</td>
-                    <td>${d.ayat || '-'}</td>
-                    <td>${d.kesalahan || '-'}</td>
-                    <td>${d.nilai || '-'}</td>
-                    <td>${d.ket || d.keterangan || '-'}</td>
-                  </tr>
-                `)
-              ).join('')}
-          </tbody>
-        </table>`
-      : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
-  }
-</div>
-
-    <div class="section">
-      <h2>⚠️ Pelanggaran</h2>
-      ${
-        pelanggaran.length
-        ? `<table><tr><th>No</th><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr>
-        ${pelanggaran.map((p,i)=>`<tr><td>${i+1}</td><td>${p.tanggal||"-"}</td><td>${p.namaPelanggaran||"-"}</td><td>${p.kategori||"-"}</td><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td><td>${p.konsekuensi||"-"}</td></tr>`).join("")}</table>`
-        : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
-      }
-    </div>
-  </div>`;
-}
-</script>
+    // tombol navigasi
+    window.goDashboard = () => window.location.href = "../dashboard/";
+    window.logout = () => { localStorage.removeItem("cahayaCurrentUser"); window.location.href = "../../index.html"; };
+  </script>
 </body>
 </html>
