@@ -87,6 +87,11 @@ main {
   transform: translateY(-5px);
   background: rgba(255, 255, 255, 0.25);
 }
+.splash.hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease;
+}
 
 footer {
   text-align: center;
