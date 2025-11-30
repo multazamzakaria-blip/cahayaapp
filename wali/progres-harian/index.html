@@ -23,6 +23,21 @@
     .page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px; }
 
     /* HEADER */
+    .app-title {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .app-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .app-title p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
     .top-bar {
       display: flex; justify-content: space-between; align-items: center;
       flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
@@ -151,8 +166,14 @@
 </head>
 <body>
 <div class="page">
+
+  <div class="app-title">
+    <h1>🌞 CAHAYA APP</h1>
+    <p>🕌 Pesantren Cahaya Fajrul Islam</p>
+  </div>
+
   <div class="top-bar">
-    <div class="top-left-label">📊 Laporan Harian</div>
+    <div class="top-left-label">📊 Progres Harian</div>
     <div class="filter-area">
       <span>Tanggal:</span>
       <input type="date" id="tanggalInput">
