@@ -260,11 +260,31 @@
 
   /* === MOBILE RESPONSIVE === */
   @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  header h1 {
+    width: 100%;
+    text-align: left;
+  }
+
+  header div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+  }
+
+  header button {
+    flex: 1;
+    font-size: 14px;
+    padding: 8px 0;
+  }
+}
+
 
     main { padding: 14px; }
     .card, .laporan-card { padding: 14px; }
