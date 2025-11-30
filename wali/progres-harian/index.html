@@ -3,285 +3,255 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Progres Bulanan Santri - CAHAYA APP</title>
+  <title>Laporan Harian Santri - CAHAYA APP</title>
   <style>
     body {
       font-family: "Poppins", sans-serif;
       background: linear-gradient(135deg, #0f766e, #134e4a);
-      color: white;
       margin: 0;
-      padding: 0;
+      color: #e2e8f0;
     }
 
-    /* === HEADER & SLIDE === */
-    .welcome-slide {
-      background: linear-gradient(90deg, #0d9488, #0f766e);
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    .slide-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-    .logo-slide {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-      border-radius: 50%;
-      background: white;
-      padding: 4px;
-    }
-    .dashboard {
+    .container {
       max-width: 900px;
-      margin: auto;
-      padding: 10px 20px 60px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    header h1 {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-    }
-    #greeting {
-      font-size: 1rem;
-      margin-bottom: 12px;
+      margin: 20px auto;
+      padding: 20px;
     }
 
-    /* === FILTER TOOLBAR === */
-    .toolbar {
+    /* === HEADER === */
+    .header {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-      text-align: center;
+      margin-bottom: 16px;
     }
-    .toolbar input {
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      border-radius: 6px;
-      color: white;
-      padding: 6px 10px;
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    .toolbar input::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-    }
-    .toolbar button {
+
+    .tab-btn {
       background: #0d9488;
-      color: white;
       border: none;
-      border-radius: 6px;
-      padding: 6px 12px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
       cursor: pointer;
       transition: 0.3s;
-      font-weight: 600;
     }
-    .toolbar button:hover { background: #115e59; }
 
-    /* === CARD & TABLE === */
-    .card {
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 14px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-      overflow-x: auto;
-      background: white;
-      color: #111827;
+    .tab-btn.active {
+      background: #10b981;
+      color: white;
     }
+
+    .tab-btn:hover {
+      background: #14b8a6;
+    }
+
+    .header input {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .header input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
+    /* === CARD === */
+    .card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      color: #fff;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
+      color: #e2e8f0;
+      font-size: 0.9rem;
     }
+
     th, td {
-      border: 1px solid #e5e7eb;
-      padding: 6px;
-      text-align: center;
-      word-break: break-word;
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    th { background: #f3f4f6; }
 
-    .hadir { background: #dcfce7; color: #065f46; font-weight: 600; }
-    .izin  { background: #dbeafe; color: #1e40af; font-weight: 600; }
-    .sakit { background: #fef9c3; color: #854d0e; font-weight: 600; }
-    .alfa  { background: #fee2e2; color: #991b1b; font-weight: 600; }
+    th {
+      background: rgba(255,255,255,0.08);
+      color: #f1f5f9;
+    }
 
-    /* === BUTTON BAWAH === */
-    .bottom-buttons { text-align: center; margin-top: 30px; }
-    .bottom-buttons button {
-      background: #0d9488;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      margin: 5px;
-      cursor: pointer;
+    /* === STATUS BADGES === */
+    .status {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
       font-weight: 600;
+      font-size: 0.8rem;
+      color: white;
     }
-    .bottom-buttons button:hover { background: #115e59; }
-    .logout { background: #dc2626; }
-    .logout:hover { background: #b91c1c; }
 
-    footer { text-align: center; margin-top: 20px; font-size: 0.8rem; opacity: 0.8; }
+    .hadir { background: #16a34a; }
+    .izin { background: #0ea5e9; }
+    .sakit { background: #eab308; color: #111; }
+    .alfa { background: #dc2626; }
 
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.3rem; }
-      .toolbar { flex-direction: row; gap: 5px; }
-      .toolbar input { font-size: 0.85rem; }
-      .toolbar button { font-size: 0.85rem; padding: 6px 10px; }
-      table { font-size: 0.7rem; }
-      th, td { padding: 3px; }
+    /* === FOOTER === */
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 640px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      table { font-size: 0.78rem; }
+      th, td { padding: 6px; }
     }
   </style>
 </head>
 
 <body>
-<div class="dashboard">
-  <div class="welcome-slide">
-    <div class="slide-content">
-      <img src="../logofi.png" alt="Logo Pesantren" class="logo-slide" />
-      <div>
-        <h2>Selamat Datang di <b>Cahaya App</b></h2>
-        <p>Pesantren Cahaya Fajrul Islam</p>
+  <div class="container">
+    <div class="header">
+      <div class="tabs">
+        <button class="tab-btn active" id="btnHarian">Laporan Harian</button>
+        <button class="tab-btn" id="btnBulanan">Laporan Bulanan</button>
       </div>
+      <label for="tanggal">Tanggal: </label>
+      <input type="date" id="tanggal" value="${new Date().toISOString().split('T')[0]}">
     </div>
+
+    <div id="laporan">
+      <p style="text-align:center;opacity:0.8;">Pilih tanggal untuk melihat laporan harian santri.</p>
+    </div>
+
+    <footer>© 2025 Pesantren Cahaya Fajrul Islam — CAHAYA APP</footer>
   </div>
 
-  <header>
-    <h1>📅 Progres Bulanan Santri</h1>
-    <div id="greeting"></div>
-  </header>
+  <script type="module">
+    import { checkWaliLogin, logoutWali } from "../wali-script.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  <div class="toolbar" id="filterToolbar">
-    <input type="month" id="bulan" value="${new Date().toISOString().slice(0,7)}" />
-    <button id="lihatProgresBulanan">Lihat Progres</button>
-  </div>
+    const app = initializeApp({
+      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+      messagingSenderId: "739928369926",
+      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+    });
 
-  <main id="content">
-    <p style="text-align:center;opacity:0.8;">Silakan pilih bulan untuk melihat rekap santri.</p>
-  </main>
+    const db = getDatabase(app);
+    const user = checkWaliLogin();
+    if (!user) window.location.href = "../index.html";
+    const nama = user.namaAnak.toUpperCase().trim();
 
-  <div class="bottom-buttons">
-    <button onclick="scrollToTop()">⬆️ Kembali ke Atas</button>
-    <button class="logout" onclick="logoutWali()">Keluar</button>
-  </div>
+    const laporanDiv = document.getElementById("laporan");
+    const tanggalInput = document.getElementById("tanggal");
 
-  <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
-</div>
+    tanggalInput.addEventListener("change", () => loadProgresHarian(tanggalInput.value));
+    document.getElementById("btnBulanan").addEventListener("click", ()=>window.location.href="../progres-bulanan/");
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script type="module">
-  import { checkWaliLogin, logoutWali } from "../wali-script.js";
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-  const app = initializeApp({
-    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
-    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
-    projectId: "absensi-santri-fajrul-islam",
-    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
-    messagingSenderId: "739928369926",
-    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
-  });
-  const db = getDatabase(app);
-  const user = checkWaliLogin();
-  if (!user) window.location.href = "../index.html";
-
-  document.getElementById("greeting").innerHTML =
-    `👋 Assalamu’alaikum Ayah/Bunda <b>${user.namaAnak}</b>`;
-
-  const content = document.getElementById("content");
-  document.getElementById("lihatProgresBulanan").addEventListener("click", async () => {
-    const bulan = document.getElementById("bulan").value;
-    if (!bulan) return alert("Pilih bulan terlebih dahulu.");
-    await loadProgresBulanan(bulan);
-  });
-
-  async function loadProgresBulanan(bulan) {
-    const namaSantri = user.namaAnak.trim();
-    const namaUpper = namaSantri.toUpperCase();
-    const [tahunStr, bulanStr] = bulan.split("-");
-    const tahun = parseInt(tahunStr, 10);
-    const bulanIdx = parseInt(bulanStr, 10) - 1;
-
-    content.innerHTML = `
-      <div class="card" id="laporanCard">
-        <h2 style="text-align:center;color:#1e3a8a;">📊 Laporan Bulanan Santri</h2>
-        <h3 style="text-align:center;color:#d97706;">${namaUpper}</h3>
-        <p style="text-align:center;margin-bottom:10px;">
-          ${new Date(tahun, bulanIdx).toLocaleString("id-ID", { month: "long", year: "numeric" })}
-        </p>
-        <div id="laporanBody" style="text-align:left;"><p style="opacity:0.7;">Memuat data...</p></div>
-        <div style="text-align:center;margin-top:15px;">
-          <button id="btnDownload" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;">⬇️ Download PDF</button>
-        </div>
-      </div>
-    `;
-
-    const laporanBody = document.getElementById("laporanBody");
-
-    try {
-      const [assesGuruSnap, assesNaqibSnap] = await Promise.all([
-        get(child(ref(db), "cahaya_app/assesment_cahaya_santri")),
-        get(child(ref(db), "cahaya_app/assesment_cahaya_naqib")),
-      ]);
-
-      const assesmentGuru = assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [];
-      const assesmentNaqib = assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [];
-
-      const asesGuru = assesmentGuru.find(a => a.namaSantri === namaSantri) || {};
-      const asesNaqib = assesmentNaqib.find(a => a.namaSantri === namaSantri) || {};
-
-      laporanBody.innerHTML = `
-        <div class="card" style="background:#dcfce7;">
-          <b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual || "Belum ada catatan"}
-        </div>
-        <div class="card" style="background:#dbeafe;">
-          <b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational || "Belum ada catatan"}
-        </div>
-        <div class="card" style="background:#fef9c3;">
-          <b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional || "Belum ada catatan"}
-        </div>
-        <div class="card" style="background:#ede9fe;">
-          <b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual || "Belum ada catatan"}
-        </div>
-        <div class="card" style="background:#fee2e2;">
-          <b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical || "Belum ada catatan"}
-        </div>
+    async function loadProgresHarian(tanggal) {
+      laporanDiv.innerHTML = `
+        <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
+        <div class="card"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
+        <div class="card"><h2>📖 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
+        <div class="card"><h2>⚠️ Pelanggaran</h2><div id="pelanggaran">Memuat...</div></div>
       `;
 
-      // tombol PDF
-      document.getElementById("btnDownload").onclick = async () => {
-        const card = document.getElementById("laporanCard");
-        const canvas = await html2canvas(card, { scale: 2 });
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new window.jspdf.jsPDF("p", "mm", "a4");
-        const width = pdf.internal.pageSize.getWidth() - 20;
-        const height = (canvas.height * width) / canvas.width;
-        pdf.addImage(imgData, "PNG", 10, 10, width, height);
-        pdf.save(`Laporan_${namaUpper}_${bulan}.pdf`);
-      };
-
-    } catch (err) {
-      laporanBody.innerHTML = `<p style="color:red;">Gagal memuat laporan: ${err.message}</p>`;
+      await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog", "program", "status");
+      await loadData("cahaya_app/absensi_pembelajaran", tanggal, nama, "pemb", "mapel", "status");
+      await loadData("cahaya_app/setoran_tahfiz", tanggal, nama, "tahfiz", "setoran", "nilai");
+      await loadPelanggaran(tanggal, nama);
     }
-  }
 
-  window.scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-  window.logoutWali = logoutWali;
-</script>
+    async function loadData(path, tanggal, nama, targetId, col1, col2) {
+      const target = document.getElementById(targetId);
+      try {
+        const snap = await get(child(ref(db), path));
+        let html = `<table><tr><th>${capitalize(col1)}</th><th>${capitalize(col2)}</th></tr>`;
+        let ditemukan = false;
+
+        if (snap.exists()) {
+          Object.values(snap.val()).forEach(d => {
+            if (d.tanggal === tanggal && d.data) {
+              d.data.forEach(s => {
+                if ((s.nama || "").trim().toUpperCase() === nama) {
+                  ditemukan = true;
+                  const val = (s[col2] || d[col2] || "-").toLowerCase();
+                  const kelas =
+                    val.includes("hadir") ? "hadir" :
+                    val.includes("izin") ? "izin" :
+                    val.includes("sakit") ? "sakit" :
+                    val.includes("alfa") ? "alfa" : "";
+                  html += `<tr><td>${s[col1] || d[col1] || "-"}</td><td><span class="status ${kelas}">${s[col2] || "-"}</span></td></tr>`;
+                }
+              });
+            }
+          });
+        }
+
+        html += "</table>";
+        target.innerHTML = ditemukan ? html : "Belum ada data.";
+      } catch (err) {
+        target.innerHTML = `❌ Gagal memuat data: ${err.message}`;
+      }
+    }
+
+    async function loadPelanggaran(tanggal, nama) {
+      const target = document.getElementById("pelanggaran");
+      try {
+        const snap = await get(child(ref(db), "cahaya_app/pelanggaran_santri"));
+        if (!snap.exists()) return target.textContent = "Belum ada data pelanggaran.";
+        let html = `<table><tr><th>Pelanggaran</th><th>Keterangan</th><th>Tindak Lanjut</th></tr>`;
+        let ditemukan = false;
+        Object.values(snap.val()).forEach(p => {
+          if (p.tanggal === tanggal && (p.santri || "").trim().toUpperCase() === nama) {
+            ditemukan = true;
+            html += `<tr><td>${p.namaPelanggaran || "-"}</td><td>${p.keterangan || "-"}</td><td>${p.tindakLanjut || "-"}</td></tr>`;
+          }
+        });
+        html += "</table>";
+        target.innerHTML = ditemukan ? html : "Tidak ada pelanggaran hari ini.";
+      } catch (err) {
+        target.textContent = "❌ Gagal memuat pelanggaran: " + err.message;
+      }
+    }
+
+    function capitalize(str) {
+      if (!str) return "";
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
 </body>
 </html>
