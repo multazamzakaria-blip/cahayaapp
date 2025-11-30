@@ -21,9 +21,8 @@
     .laporan-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px; }
     .laporan-header h1 { font-size: 26px; color: #1e3a8a; margin: 0; font-weight: 800; }
     .laporan-header h3 { font-size: 20px; margin: 8px 0; color: #111827; }
-    .section { margin-top: 24px; }
-    .section h2 { color: #0f766e; font-size: 20px; margin-bottom: 10px; }
-    .dimensi p { margin: 0 0 12px; line-height: 1.7; }
+    .section { margin-top: 28px; }
+    .section h2 { color: #0f766e; font-size: 20px; margin-bottom: 10px; display:flex;align-items:center;gap:6px;}
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 17px; }
     th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
     th { background: #f3f4f6; font-weight: 700; }
@@ -143,18 +142,47 @@ async function generateLaporan() {
 
   const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = await window.getFirebaseData();
 
-  // filter berdasarkan bulan & tahun
-  const asesGuru = assesmentGuru.find(a => a.namaSantri?.toLowerCase() === namaAnak.toLowerCase() && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)) || {};
-  const asesNaqib = assesmentNaqib.find(a => a.namaSantri?.toLowerCase() === namaAnak.toLowerCase() && isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)) || {};
+  // === Filter sesuai nama dan bulan ===
+  const filterNama = (n) => (n || "").trim().toLowerCase() === namaAnak.toLowerCase();
+  const asesGuru = assesmentGuru.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
+  const asesNaqib = assesmentNaqib.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
 
   if (!asesGuru.namaSantri && !asesNaqib.namaSantri)
     return container.innerHTML = `<p class="muted">Tidak ada data bulan ini untuk <b>${namaAnak}</b>.</p>`;
 
-  // ambil laporan lain bulan & tahun sama
-  const ujianData = ujian.filter(u => u.santri?.toLowerCase() === namaAnak.toLowerCase() && isSameMonthYear(u.tanggal, bulan, tahun));
-  const tahfizData = tahfiz.flatMap(t => t.data||[]).filter(d => d.nama?.toLowerCase() === namaAnak.toLowerCase() && isSameMonthYear(tahfiz.find(t2 => t2.data?.includes(d))?.tanggal, bulan, tahun));
-  const pelanggaran = pelanggaranAll.filter(p => p.santri?.toLowerCase() === namaAnak.toLowerCase() && isSameMonthYear(p.tanggal, bulan, tahun));
+  // === Kehadiran ===
+  const hadirData = {};
+  function tambahHadir(program, status){
+    if(!hadirData[program]) hadirData[program] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+    status = (status||"").toLowerCase();
+    if(hadirData[program][status]!==undefined) hadirData[program][status]++;
+    hadirData[program].total++;
+  }
+  absensiNaqib.forEach(log=>{
+    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.program||"Program Harian", d.status); });
+  });
+  absensiKbm.forEach(log=>{
+    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.mapel||"KBM", d.status); });
+  });
+  const hadirRows = Object.entries(hadirData).map(([prog,v],i)=>{
+    const pct = (x)=> v.total?Math.round((x/v.total)*100):0;
+    return `<tr><td>${i+1}</td><td>${prog}</td><td>${pct(v.hadir)}%</td><td>${pct(v.izin)}%</td><td>${pct(v.sakit)}%</td><td>${pct(v.alfa)}%</td></tr>`;
+  });
 
+  // === Ujian ===
+  const ujianData = ujian.filter(u => filterNama(u.santri) && isSameMonthYear(u.tanggal, bulan, tahun));
+  const rata = ujianData.length ? Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length) : 0;
+
+  // === Tahfiz ===
+  const tahfizData = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
+    .flatMap(t => t.data||[]).filter(d => filterNama(d.nama));
+
+  // === Pelanggaran ===
+  const pelanggaran = pelanggaranAll.filter(p => filterNama(p.santri) && isSameMonthYear(p.tanggal, bulan, tahun));
+
+  // === Cetak HTML ===
   container.innerHTML = `
   <div class="laporan-card">
     <div class="laporan-header">
@@ -163,7 +191,7 @@ async function generateLaporan() {
       <p>${new Date(tahun, bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
     </div>
 
-    <div class="section dimensi">
+    <div class="section">
       <h2>🌈 Dimensi CAHAYA</h2>
       <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual || "Belum ada catatan."}</p>
       <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational || "Belum ada catatan."}</p>
@@ -173,11 +201,22 @@ async function generateLaporan() {
     </div>
 
     <div class="section">
+      <h2>🗓️ Kehadiran</h2>
+      ${
+        hadirRows.length
+        ? `<table><tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr>${hadirRows.join("")}</table>`
+        : `<p class='muted'>Belum ada data kehadiran bulan ini.</p>`
+      }
+    </div>
+
+    <div class="section">
       <h2>🧾 Nilai Ujian</h2>
       ${
         ujianData.length
-          ? `<table><tr><th>No</th><th>Mapel</th><th>Materi</th><th>Nilai</th></tr>${ujianData.map((u,i)=>`<tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td></tr>`).join("")}</table>`
-          : `<p class='muted'>Belum ada nilai ujian bulan ini.</p>`
+        ? `<table><tr><th>No</th><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr>
+        ${ujianData.map((u,i)=>`<tr><td>${i+1}</td><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>`).join("")}
+        <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rata}</td></tr></table>`
+        : `<p class='muted'>Belum ada nilai ujian bulan ini.</p>`
       }
     </div>
 
@@ -185,8 +224,9 @@ async function generateLaporan() {
       <h2>📖 Setoran Tahfiz</h2>
       ${
         tahfizData.length
-          ? `<table><tr><th>No</th><th>Surat/Setoran</th><th>Nilai</th><th>Keterangan</th></tr>${tahfizData.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>`).join("")}</table>`
-          : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
+        ? `<table><tr><th>No</th><th>Surat</th><th>Ayat</th><th>Halaman</th><th>Nilai</th><th>Keterangan</th></tr>
+          ${tahfizData.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||"-"}</td><td>${d.ayat||"-"}</td><td>${d.halaman||"-"}</td><td>${d.nilai||"-"}</td><td>${d.keterangan||"-"}</td></tr>`).join("")}</table>`
+        : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
       }
     </div>
 
@@ -194,8 +234,9 @@ async function generateLaporan() {
       <h2>⚠️ Pelanggaran</h2>
       ${
         pelanggaran.length
-          ? `<table><tr><th>No</th><th>Tanggal</th><th>Pelanggaran</th><th>Keterangan</th></tr>${pelanggaran.map((p,i)=>`<tr><td>${i+1}</td><td>${p.tanggal||"-"}</td><td>${p.namaPelanggaran||"-"}</td><td>${p.keterangan||"-"}</td></tr>`).join("")}</table>`
-          : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
+        ? `<table><tr><th>No</th><th>Tanggal</th><th>Pelanggaran</th><th>Kategori</th><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr>
+        ${pelanggaran.map((p,i)=>`<tr><td>${i+1}</td><td>${p.tanggal||"-"}</td><td>${p.namaPelanggaran||"-"}</td><td>${p.kategori||"-"}</td><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td><td>${p.konsekuensi||"-"}</td></tr>`).join("")}</table>`
+        : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
       }
     </div>
   </div>`;
