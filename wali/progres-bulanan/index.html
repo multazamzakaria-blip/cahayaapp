@@ -103,18 +103,8 @@
     color: #111827;
   }
 
-  .section {
-    margin-top: 22px;
-  }
-
-  .section h2 {
-    color: #0f766e;
-    font-size: 18px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .section { margin-top: 22px; }
+  .section h2 { color: #0f766e; font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
 
   /* === TABLE === */
   .section table {
@@ -131,11 +121,7 @@
     word-break: break-word;
   }
 
-  th {
-    background: #f3f4f6;
-    font-weight: 700;
-  }
-
+  th { background: #f3f4f6; font-weight: 700; }
   .hadir-cell { background: #dcfce7; color: #065f46; font-weight: 600; }
   .izin-cell  { background: #dbeafe; color: #1e40af; font-weight: 600; }
   .sakit-cell { background: #fef9c3; color: #854d0e; font-weight: 600; }
@@ -161,12 +147,12 @@
     .section h2 { font-size: 15px; }
 
     .section table {
-      font-size: 11px;
+      font-size: 10px;
       min-width: 100%;
     }
 
     th, td {
-      padding: 4px 5px;
+      padding: 3px 4px;
     }
   }
   </style>
@@ -192,9 +178,7 @@
         <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
         <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
       </select>
-      <select id="tahunSelect">
-        <option value="">-- Pilih Tahun --</option>
-      </select>
+      <select id="tahunSelect"></select>
       <button onclick="generateLaporan()">Tampilkan Laporan</button>
     </div>
     <div id="laporanContainer">
@@ -222,9 +206,7 @@
   const dbRef = ref(db);
 
   window.getFirebaseData = async function() {
-    const [
-      assesGuruSnap, assesNaqibSnap, absNaqibSnap, absKbmSnap, ujianSnap, tahfizSnap, pelanggaranSnap
-    ] = await Promise.all([
+    const snaps = await Promise.all([
       get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
       get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
       get(child(dbRef, "cahaya_app/absensi_program_harian")),
@@ -235,26 +217,25 @@
     ]);
 
     return {
-      assesmentGuru: assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [],
-      assesmentNaqib: assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [],
-      absensiNaqib: absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [],
-      absensiKbm: absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [],
-      ujian: ujianSnap.exists() ? Object.values(ujianSnap.val()) : [],
-      tahfiz: tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [],
-      pelanggaranAll: pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [],
+      assesmentGuru: snaps[0].exists()?Object.values(snaps[0].val()):[],
+      assesmentNaqib: snaps[1].exists()?Object.values(snaps[1].val()):[],
+      absensiNaqib: snaps[2].exists()?Object.values(snaps[2].val()):[],
+      absensiKbm: snaps[3].exists()?Object.values(snaps[3].val()):[],
+      ujian: snaps[4].exists()?Object.values(snaps[4].val()):[],
+      tahfiz: snaps[5].exists()?Object.values(snaps[5].val()):[],
+      pelanggaran: snaps[6].exists()?Object.values(snaps[6].val()):[],
     };
   };
 </script>
 
 <script>
-window.addEventListener("DOMContentLoaded", () => {
-  const tahunSelect = document.getElementById("tahunSelect");
-  const now = new Date().getFullYear();
-  for (let i = now - 2; i <= now + 1; i++) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = i;
-    if (i === now) opt.selected = true;
+window.addEventListener("load", ()=>{
+  const tahunSelect=document.getElementById("tahunSelect");
+  const now=new Date().getFullYear();
+  for(let i=now-2;i<=now+1;i++){
+    const opt=document.createElement("option");
+    opt.value=i; opt.textContent=i;
+    if(i===now) opt.selected=true;
     tahunSelect.appendChild(opt);
   }
 });
@@ -265,79 +246,65 @@ function goDashboard(){ window.location.href="../dashboard/"; }
 function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
 function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
 
-async function generateLaporan() {
-  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!user || user.role !== "wali") return (window.location.href="../../index.html");
+async function generateLaporan(){
+  const user=JSON.parse(localStorage.getItem("cahayaCurrentUser")||"null");
+  if(!user||user.role!=="wali") return window.location.href="../../index.html";
 
-  const namaAnak = user.namaAnak || user.nama || user.label?.replace(/^Wali\s+/i, "") || "";
-  const bulan = +document.getElementById("bulanSelect").value;
-  const tahun = +document.getElementById("tahunSelect").value;
-  const container = document.getElementById("laporanContainer");
-  container.innerHTML = "<p class='muted'>🔄 Memuat data dari Firebase...</p>";
+  const namaAnak=user.namaAnak||user.nama||user.label?.replace(/^Wali\s+/i,"")||"";
+  const bulan=+document.getElementById("bulanSelect").value;
+  const tahun=+document.getElementById("tahunSelect").value;
+  const container=document.getElementById("laporanContainer");
+  container.innerHTML="<p class='muted'>🔄 Memuat data dari Firebase...</p>";
 
-  if (isNaN(bulan) || isNaN(tahun))
-    return (container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>");
+  if(isNaN(bulan)||isNaN(tahun)) return container.innerHTML="<p class='muted'>Pilih bulan dan tahun.</p>";
 
-  const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = await window.getFirebaseData();
+  const {assesmentGuru,assesmentNaqib,absensiNaqib,absensiKbm,ujian,tahfiz,pelanggaran}=await window.getFirebaseData();
 
-  const filterNama = (n) => (n || "").trim().toLowerCase() === namaAnak.toLowerCase();
-  const asesGuru = assesmentGuru.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
-  const asesNaqib = assesmentNaqib.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
+  const filterNama=n=>(n||"").trim().toLowerCase()===namaAnak.toLowerCase();
+  const asesGuru=assesmentGuru.find(a=>filterNama(a.namaSantri)&&isSameMonthYear(a.tanggal,bulan,tahun))||{};
+  const asesNaqib=assesmentNaqib.find(a=>filterNama(a.namaSantri)&&isSameMonthYear(a.tanggal,bulan,tahun))||{};
 
-  // === Kehadiran ===
-  const hadirData = {};
-  function tambahHadir(program, status){
-    if(!hadirData[program]) hadirData[program] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
-    status = (status||"").toLowerCase();
-    if(hadirData[program][status]!==undefined) hadirData[program][status]++;
-    hadirData[program].total++;
+  // === KEHADIRAN ===
+  const hadirData={};
+  function tambahHadir(prog,stat){
+    if(!hadirData[prog]) hadirData[prog]={hadir:0,izin:0,sakit:0,alfa:0,total:0};
+    stat=(stat||"").toLowerCase();
+    if(hadirData[prog][stat]!=undefined) hadirData[prog][stat]++;
+    hadirData[prog].total++;
   }
-  absensiNaqib.forEach(log=>{
-    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.program||"Program Harian", d.status); });
-  });
-  absensiKbm.forEach(log=>{
-    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.mapel||"KBM", d.status); });
-  });
+  absensiNaqib.forEach(l=>{if(!isSameMonthYear(l.tanggal,bulan,tahun))return;(l.data||[]).forEach(d=>{if(filterNama(d.nama))tambahHadir(l.program||"Program Harian",d.status);});});
+  absensiKbm.forEach(l=>{if(!isSameMonthYear(l.tanggal,bulan,tahun))return;(l.data||[]).forEach(d=>{if(filterNama(d.nama))tambahHadir(l.mapel||"KBM",d.status);});});
 
-  const hadirKeys = Object.keys(hadirData);
-  const avg = {hadir:0, izin:0, sakit:0, alfa:0};
-  hadirKeys.forEach(k=>{
-    const v=hadirData[k];
-    const pct=x=>v.total?Math.round((x/v.total)*100):0;
-    avg.hadir+=pct(v.hadir); avg.izin+=pct(v.izin); avg.sakit+=pct(v.sakit); avg.alfa+=pct(v.alfa);
-  });
-  const totalProg=hadirKeys.length||1;
-  avg.hadir=Math.round(avg.hadir/totalProg); avg.izin=Math.round(avg.izin/totalProg);
-  avg.sakit=Math.round(avg.sakit/totalProg); avg.alfa=Math.round(avg.alfa/totalProg);
+  const hadirKeys=Object.keys(hadirData);
+  const avg={hadir:0,izin:0,sakit:0,alfa:0};
+  hadirKeys.forEach(k=>{const v=hadirData[k];const pct=x=>v.total?Math.round((x/v.total)*100):0;avg.hadir+=pct(v.hadir);avg.izin+=pct(v.izin);avg.sakit+=pct(v.sakit);avg.alfa+=pct(v.alfa);});
+  const n=hadirKeys.length||1;for(let k in avg)avg[k]=Math.round(avg[k]/n);
 
-  // === Ujian ===
-  const ujianData = ujian.filter(u => filterNama(u.santri) && isSameMonthYear(u.tanggal, bulan, tahun));
-  const rata = ujianData.length ? Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length) : 0;
+  // === UJIAN ===
+  const ujianData=ujian.filter(u=>filterNama(u.santri)&&isSameMonthYear(u.tanggal,bulan,tahun));
+  const rata=ujianData.length?Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length):0;
 
-  // === Tahfiz ===
-  const tahfizData = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-    .flatMap(t => t.data||[]).filter(d => filterNama(d.nama));
+  // === TAHFIZ ===
+  const tahfizData=tahfiz.filter(t=>isSameMonthYear(t.tanggal,bulan,tahun)).flatMap(t=>t.data||[]).filter(d=>filterNama(d.nama));
 
-  // === Pelanggaran ===
-  const pelanggaran = pelanggaranAll.filter(p => filterNama(p.santri) && isSameMonthYear(p.tanggal, bulan, tahun));
+  // === PELANGGARAN ===
+  const pelanggaranData=pelanggaran.filter(p=>filterNama(p.santri)&&isSameMonthYear(p.tanggal,bulan,tahun));
 
-  container.innerHTML = `
+  container.innerHTML=`
   <div class="laporan-card">
     <div class="laporan-header">
       <h1>Laporan Bulanan Anak</h1>
       <h3>${namaAnak.toUpperCase()}</h3>
-      <p>${new Date(tahun, bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
+      <p>${new Date(tahun,bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
     </div>
 
     <div class="section">
       <h2>🌈 Dimensi CAHAYA</h2>
-      <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual || "Belum ada catatan."}</p>
-      <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational || "Belum ada catatan."}</p>
-      <p><b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional || "Belum ada catatan."}</p>
-      <p><b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual || "Belum ada catatan."}</p>
-      <p><b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical || "Belum ada catatan."}</p>
+      <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual||"Belum ada catatan."}</p>
+      <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational||"Belum ada catatan."}</p>
+      <p><b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional||"Belum ada catatan."}</p>
+      <p><b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual||"Belum ada catatan."}</p>
+      <p><b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical||"Belum ada catatan."}</p>
     </div>
 
     <div class="section">
@@ -345,14 +312,11 @@ async function generateLaporan() {
       ${
         hadirKeys.length
           ? `<table><thead><tr><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead>
-            <tbody>
-              ${hadirKeys.map(k=>{
-                const v=hadirData[k];
-                const pct=x=>v.total?Math.round((x/v.total)*100):0;
-                return `<tr><td>${k}</td><td class='hadir-cell'>${pct(v.hadir)}%</td><td class='izin-cell'>${pct(v.izin)}%</td><td class='sakit-cell'>${pct(v.sakit)}%</td><td class='alfa-cell'>${pct(v.alfa)}%</td></tr>`;
-              }).join("")}
-              <tr style='font-weight:bold;background:#f3f4f6;'><td>Rata-rata</td><td>${avg.hadir}%</td><td>${avg.izin}%</td><td>${avg.sakit}%</td><td>${avg.alfa}%</td></tr>
-            </tbody></table>`
+            <tbody>${hadirKeys.map(k=>{
+              const v=hadirData[k];const pct=x=>v.total?Math.round((x/v.total)*100):0;
+              return `<tr><td>${k}</td><td class='hadir-cell'>${pct(v.hadir)}%</td><td class='izin-cell'>${pct(v.izin)}%</td><td class='sakit-cell'>${pct(v.sakit)}%</td><td class='alfa-cell'>${pct(v.alfa)}%</td></tr>`;
+            }).join("")}
+            <tr style='font-weight:bold;background:#f3f4f6;'><td>Rata-rata</td><td>${avg.hadir}%</td><td>${avg.izin}%</td><td>${avg.sakit}%</td><td>${avg.alfa}%</td></tr></tbody></table>`
           : `<p class='muted'>Belum ada data kehadiran bulan ini.</p>`
       }
     </div>
@@ -363,7 +327,7 @@ async function generateLaporan() {
         ujianData.length
         ? `<table><tr><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr>
         ${ujianData.map(u=>`<tr><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>`).join("")}
-                <tr><td colspan="2"><b>Rata-rata</b></td><td colspan="2">${rata}</td></tr></table>`
+        <tr><td colspan="2"><b>Rata-rata</b></td><td colspan="2">${rata}</td></tr></table>`
         : `<p class='muted'>Belum ada nilai ujian bulan ini.</p>`
       }
     </div>
@@ -372,25 +336,8 @@ async function generateLaporan() {
       <h2>📖 Setoran Tahfiz</h2>
       ${
         tahfizData.length
-          ? `<table>
-              <thead>
-                <tr>
-                  <th>Setoran Hari Ini</th>
-                  <th>Jumlah Ayat</th>
-                  <th>Kesalahan</th>
-                  <th>Nilai</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${tahfizData.map(d => `
-                  <tr>
-                    <td>${d.setoran || '-'}</td>
-                    <td>${d.ayat || '-'}</td>
-                    <td>${d.kesalahan || '-'}</td>
-                    <td>${d.nilai || '-'}</td>
-                  </tr>`).join("")}
-              </tbody>
-            </table>`
+          ? `<table><thead><tr><th>Setoran Hari Ini</th><th>Jumlah Ayat</th><th>Kesalahan</th><th>Nilai</th></tr></thead>
+            <tbody>${tahfizData.map(d=>`<tr><td>${d.setoran||'-'}</td><td>${d.ayat||'-'}</td><td>${d.kesalahan||'-'}</td><td>${d.nilai||'-'}</td></tr>`).join("")}</tbody></table>`
           : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
       }
     </div>
@@ -398,28 +345,9 @@ async function generateLaporan() {
     <div class="section">
       <h2>⚠️ Pelanggaran</h2>
       ${
-        pelanggaran.length
-          ? `<table>
-              <thead>
-                <tr>
-                  <th>Tanggal</th>
-                  <th>Pelanggaran</th>
-                  <th>Kategori</th>
-                  <th>Keterangan</th>
-                  <th>Tindak Lanjut</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${pelanggaran.map(p => `
-                  <tr>
-                    <td>${p.tanggal || '-'}</td>
-                    <td>${p.namaPelanggaran || '-'}</td>
-                    <td>${p.kategori || '-'}</td>
-                    <td>${p.keterangan || '-'}</td>
-                    <td>${p.tindakLanjut || '-'}</td>
-                  </tr>`).join("")}
-              </tbody>
-            </table>`
+        pelanggaranData.length
+          ? `<table><thead><tr><th>Tanggal</th><th>Pelanggaran</th><th>Keterangan</th><th>Tindak Lanjut</th></tr></thead>
+            <tbody>${pelanggaranData.map(p=>`<tr><td>${p.tanggal||'-'}</td><td>${p.namaPelanggaran||'-'}</td><td>${p.keterangan||'-'}</td><td>${p.tindakLanjut||'-'}</td></tr>`).join("")}</tbody></table>`
           : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
       }
     </div>
@@ -428,4 +356,3 @@ async function generateLaporan() {
 </script>
 </body>
 </html>
-
