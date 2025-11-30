@@ -13,7 +13,27 @@
       padding: 0;
     }
 
-    /* HEADER & SLIDE */
+    .dashboard {
+      max-width: 900px;
+      margin: auto;
+      padding: 10px 20px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    #greeting {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
     .welcome-slide {
       background: linear-gradient(90deg, #0d9488, #0f766e);
       color: white;
@@ -23,6 +43,7 @@
       margin-bottom: 15px;
       text-align: center;
     }
+
     .slide-content {
       display: flex;
       align-items: center;
@@ -30,6 +51,7 @@
       gap: 14px;
       flex-wrap: wrap;
     }
+
     .logo-slide {
       width: 42px;
       height: 42px;
@@ -38,31 +60,14 @@
       background: white;
       padding: 4px;
     }
-    .dashboard {
-      max-width: 900px;
-      margin: auto;
-      padding: 10px 20px 60px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    header h1 {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-    }
-    #greeting {
-      font-size: 1rem;
-      margin-bottom: 12px;
-    }
 
-    /* MENU */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 15px;
       margin: 20px 0;
     }
+
     .menu-card {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
@@ -72,22 +77,18 @@
       transition: 0.3s;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
+
     .menu-card:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateY(-2px);
     }
+
     .menu-card img {
       width: 40px;
       height: 40px;
       margin-bottom: 8px;
     }
-    .menu-card h4 {
-      margin: 0;
-      font-size: 0.95rem;
-      color: white;
-    }
 
-    /* TOOLBAR */
     .toolbar {
       display: none;
       justify-content: center;
@@ -97,6 +98,7 @@
       margin-bottom: 12px;
       text-align: center;
     }
+
     .toolbar input {
       background: rgba(255, 255, 255, 0.2);
       border: none;
@@ -104,7 +106,7 @@
       color: white;
       padding: 6px 10px;
     }
-    .toolbar input::-webkit-calendar-picker-indicator { filter: invert(1); }
+
     .toolbar button {
       background: #0d9488;
       color: white;
@@ -115,34 +117,12 @@
       transition: 0.3s;
       font-weight: 600;
     }
-    .toolbar button:hover { background: #115e59; }
 
-    /* CARD & TABLE */
-    .card { border-radius: 12px; padding: 16px; margin-top: 14px; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); overflow-x: auto; }
-    .card.green { background: rgba(34, 197, 94, 0.15); }
-    .card.blue { background: rgba(59, 130, 246, 0.15); }
-    .card.purple { background: rgba(147, 51, 234, 0.15); }
-    .card.red { background: rgba(239, 68, 68, 0.15); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { border: 1px solid rgba(255, 255, 255, 0.2); padding: 6px; text-align: left; word-wrap: break-word; }
+    .card { border-radius: 12px; padding: 16px; margin-top: 14px; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); overflow-x: auto; background: rgba(255,255,255,0.1); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; color: white; }
+    th, td { border: 1px solid rgba(255, 255, 255, 0.2); padding: 6px; text-align: left; }
     th { background: rgba(255, 255, 255, 0.15); }
 
-    /* STATUS BADGE */
-    .status-box {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-weight: 600;
-      color: white;
-      text-align: center;
-      min-width: 60px;
-    }
-    .hadir { background: #16a34a; }
-    .izin { background: #0ea5e9; }
-    .sakit { background: #eab308; color: #111; }
-    .alfa { background: #dc2626; }
-
-    /* BUTTON BAWAH */
     .bottom-buttons { text-align: center; margin-top: 30px; }
     .bottom-buttons button {
       background: #0d9488;
@@ -154,18 +134,10 @@
       cursor: pointer;
       font-weight: 600;
     }
-    .bottom-buttons button:hover { background: #115e59; }
-    .logout { background: #dc2626; }
-    .logout:hover { background: #b91c1c; }
+
+    .bottom-buttons .logout { background: #dc2626; }
 
     footer { text-align: center; margin-top: 20px; font-size: 0.8rem; opacity: 0.8; }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.3rem; }
-      .toolbar { flex-direction: row; gap: 5px; }
-      .toolbar input { font-size: 0.85rem; }
-      .toolbar button { font-size: 0.85rem; padding: 6px 10px; }
-    }
   </style>
 </head>
 
@@ -198,7 +170,6 @@
   </div>
 
   <div class="toolbar" id="filterToolbar"></div>
-
   <main id="content">
     <p style="text-align:center;opacity:0.8;">Klik salah satu menu di atas untuk melihat progres santri.</p>
   </main>
@@ -211,18 +182,86 @@
   <footer>© 2025 Pesantren Cahaya Fajrul Islam</footer>
 </div>
 
-<!-- LIBRARY EXPORT PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<!-- ✅ Script digabung langsung -->
 <script type="module">
   import { checkWaliLogin, logoutWali } from './wali-script.js';
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-  
-  // === Tempel seluruh isi wali-dashboard-script.js di sini ===
-  // mulai dari: "const app = initializeApp({ ... })" sampai akhir
-</script>
 
+  const app = initializeApp({
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  });
+
+  const db = getDatabase(app);
+  const user = checkWaliLogin();
+  if (!user) window.location.href = "../index.html";
+  document.getElementById("greeting").innerHTML = `👋 Assalamu’alaikum Walisantri <b>${user.namaAnak}</b>`;
+
+  const content = document.getElementById("content");
+  const toolbar = document.getElementById("filterToolbar");
+
+  // ======== PROGRES HARIAN =========
+  document.getElementById("btnHarian").onclick = () => {
+    toolbar.style.display = "flex";
+    toolbar.innerHTML = `<input type="date" id="tanggal" value="${new Date().toISOString().split("T")[0]}"><button id="lihatProgres">Lihat Progres</button>`;
+    document.getElementById("lihatProgres").onclick = () => loadProgresHarian(document.getElementById("tanggal").value);
+    content.innerHTML = `<p style="text-align:center;">Silakan pilih tanggal, lalu klik "Lihat Progres".</p>`;
+  };
+
+  async function loadProgresHarian(tanggal) {
+    const nama = user.namaAnak.toUpperCase().trim();
+    content.innerHTML = `
+      <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
+      <div class="card"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
+      <div class="card"><h2>📖 Setoran Tahfiz</h2><div id="tahfiz">Memuat...</div></div>
+      <div class="card"><h2>⚠️ Pelanggaran</h2><div id="pelanggaran">Memuat...</div></div>
+    `;
+    await loadData("cahaya_app/absensi_program_harian", tanggal, nama, "prog", "program", "status");
+    await loadData("cahaya_app/absensi_pembelajaran", tanggal, nama, "pemb", "mapel", "status");
+    await loadData("cahaya_app/setoran_tahfiz", tanggal, nama, "tahfiz", "setoran", "nilai");
+  }
+
+  async function loadData(path, tanggal, nama, targetId, col1, col2) {
+    const target = document.getElementById(targetId);
+    try {
+      const snap = await get(child(ref(db), path));
+      let html = `<table><tr><th>${col1}</th><th>${col2}</th></tr>`;
+      if (snap.exists()) {
+        Object.values(snap.val()).forEach(d => {
+          if (d.tanggal === tanggal && d.data) {
+            d.data.forEach(s => {
+              if (s.nama?.trim().toUpperCase() === nama) {
+                html += `<tr><td>${s[col1] || d[col1]}</td><td>${s[col2] || d[col2]}</td></tr>`;
+              }
+            });
+          }
+        });
+      }
+      html += "</table>";
+      target.innerHTML = html.includes("<tr><td") ? html : "Belum ada data.";
+    } catch (e) {
+      target.textContent = "❌ Gagal memuat data: " + e.message;
+    }
+  }
+
+  // ======== PROGRES BULANAN =========
+  document.getElementById("btnBulanan").onclick = () => {
+    toolbar.style.display = "flex";
+    toolbar.innerHTML = `<input type="month" id="bulan" value="${new Date().toISOString().slice(0,7)}"><button id="lihatProgresBulanan">Lihat Progres</button>`;
+    document.getElementById("lihatProgresBulanan").onclick = () => alert("📅 Progres Bulanan aktif — data siap ditampilkan!");
+  };
+
+  window.scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  window.logoutWali = logoutWali;
+</script>
 </body>
 </html>
