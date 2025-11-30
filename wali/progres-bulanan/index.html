@@ -131,29 +131,16 @@
 
   /* === MOBILE RESPONSIVE === */
   @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
+    header { flex-direction: column; align-items: flex-start; gap: 8px; }
     main { padding: 14px; }
     .card, .laporan-card { padding: 14px; }
     select, button { width: 100%; font-size: 15px; }
     .controls { flex-direction: column; align-items: stretch; }
-
     .laporan-header h1 { font-size: 20px; }
     .laporan-header h3 { font-size: 15px; }
     .section h2 { font-size: 15px; }
-
-    .section table {
-      font-size: 10px;
-      min-width: 100%;
-    }
-
-    th, td {
-      padding: 3px 4px;
-    }
+    .section table { font-size: 10px; min-width: 100%; }
+    th, td { padding: 3px 4px; }
   }
   </style>
 </head>
@@ -336,8 +323,8 @@ async function generateLaporan(){
       <h2>📖 Setoran Tahfiz</h2>
       ${
         tahfizData.length
-          ? `<table><thead><tr><th>Setoran Hari Ini</th><th>Jumlah Ayat</th><th>Kesalahan</th><th>Nilai</th></tr></thead>
-            <tbody>${tahfizData.map(d=>`<tr><td>${d.setoran||'-'}</td><td>${d.ayat||'-'}</td><td>${d.kesalahan||'-'}</td><td>${d.nilai||'-'}</td></tr>`).join("")}</tbody></table>`
+          ? `<table><thead><tr><th>Setoran Hari Ini</th><th>Jumlah Ayat</th><th>Nilai</th></tr></thead>
+            <tbody>${tahfizData.map(d=>`<tr><td>${d.setoran||'-'}</td><td>${d.ayat||'-'}</td><td>${d.nilai||'-'}</td></tr>`).join("")}</tbody></table>`
           : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
       }
     </div>
