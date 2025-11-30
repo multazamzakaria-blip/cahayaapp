@@ -201,13 +201,66 @@ async function generateLaporan() {
     </div>
 
     <div class="section">
-      <h2>🗓️ Kehadiran</h2>
-      ${
-        hadirRows.length
-        ? `<table><tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr>${hadirRows.join("")}</table>`
-        : `<p class='muted'>Belum ada data kehadiran bulan ini.</p>`
-      }
-    </div>
+  <h2>📅 Kehadiran</h2>
+  ${
+    hadirRows.length
+      ? (() => {
+          // hitung rata-rata kehadiran
+          const keys = Object.keys(hadirData);
+          const totalProg = keys.length;
+          const avg = { hadir:0, izin:0, sakit:0, alfa:0 };
+          keys.forEach(k => {
+            const v = hadirData[k];
+            const pct = (x)=> v.total?Math.round((x/v.total)*100):0;
+            avg.hadir += pct(v.hadir);
+            avg.izin += pct(v.izin);
+            avg.sakit += pct(v.sakit);
+            avg.alfa += pct(v.alfa);
+          });
+          avg.hadir = Math.round(avg.hadir / totalProg);
+          avg.izin = Math.round(avg.izin / totalProg);
+          avg.sakit = Math.round(avg.sakit / totalProg);
+          avg.alfa = Math.round(avg.alfa / totalProg);
+
+          return `
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Program</th>
+                <th>Hadir</th>
+                <th>Izin</th>
+                <th>Sakit</th>
+                <th>Alfa</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Object.entries(hadirData).map(([prog,v],i)=>{
+                const pct = (x)=> v.total?Math.round((x/v.total)*100):0;
+                return `
+                  <tr>
+                    <td>${i+1}</td>
+                    <td>${prog}</td>
+                    <td class="hadir-cell">${pct(v.hadir)}%</td>
+                    <td class="izin-cell">${pct(v.izin)}%</td>
+                    <td class="sakit-cell">${pct(v.sakit)}%</td>
+                    <td class="alfa-cell">${pct(v.alfa)}%</td>
+                  </tr>`;
+              }).join("")}
+              <tr style="font-weight:bold;background:#f3f4f6;">
+                <td colspan="2">Rata-rata</td>
+                <td class="hadir-cell">${avg.hadir}%</td>
+                <td class="izin-cell">${avg.izin}%</td>
+                <td class="sakit-cell">${avg.sakit}%</td>
+                <td class="alfa-cell">${avg.alfa}%</td>
+              </tr>
+            </tbody>
+          </table>`;
+        })()
+      : `<p class='muted'>Belum ada data kehadiran bulan ini.</p>`
+  }
+</div>
+
 
     <div class="section">
       <h2>🧾 Nilai Ujian</h2>
