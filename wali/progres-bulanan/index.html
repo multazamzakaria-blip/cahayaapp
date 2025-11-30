@@ -284,11 +284,43 @@ async function generateLaporan() {
   const asesGuru = assesmentGuru.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
   const asesNaqib = assesmentNaqib.find(a => filterNama(a.namaSantri) && isSameMonthYear(a.tgl||a.tanggal, bulan, tahun)) || {};
 
-  // === Tahfiz (hapus kolom no, program, kelompok, keterangan)
+  // === Kehadiran ===
+  const hadirData = {};
+  function tambahHadir(program, status){
+    if(!hadirData[program]) hadirData[program] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+    status = (status||"").toLowerCase();
+    if(hadirData[program][status]!==undefined) hadirData[program][status]++;
+    hadirData[program].total++;
+  }
+  absensiNaqib.forEach(log=>{
+    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.program||"Program Harian", d.status); });
+  });
+  absensiKbm.forEach(log=>{
+    if(!isSameMonthYear(log.tanggal, bulan, tahun)) return;
+    (log.data||[]).forEach(d=>{ if(filterNama(d.nama)) tambahHadir(log.mapel||"KBM", d.status); });
+  });
+
+  const hadirKeys = Object.keys(hadirData);
+  const avg = {hadir:0, izin:0, sakit:0, alfa:0};
+  hadirKeys.forEach(k=>{
+    const v=hadirData[k];
+    const pct=x=>v.total?Math.round((x/v.total)*100):0;
+    avg.hadir+=pct(v.hadir); avg.izin+=pct(v.izin); avg.sakit+=pct(v.sakit); avg.alfa+=pct(v.alfa);
+  });
+  const totalProg=hadirKeys.length||1;
+  avg.hadir=Math.round(avg.hadir/totalProg); avg.izin=Math.round(avg.izin/totalProg);
+  avg.sakit=Math.round(avg.sakit/totalProg); avg.alfa=Math.round(avg.alfa/totalProg);
+
+  // === Ujian ===
+  const ujianData = ujian.filter(u => filterNama(u.santri) && isSameMonthYear(u.tanggal, bulan, tahun));
+  const rata = ujianData.length ? Math.round(ujianData.reduce((a,b)=>a+(+b.nilai||0),0)/ujianData.length) : 0;
+
+  // === Tahfiz ===
   const tahfizData = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
     .flatMap(t => t.data||[]).filter(d => filterNama(d.nama));
 
-  // === Pelanggaran (hapus kolom no & konsekuensi)
+  // === Pelanggaran ===
   const pelanggaran = pelanggaranAll.filter(p => filterNama(p.santri) && isSameMonthYear(p.tanggal, bulan, tahun));
 
   container.innerHTML = `
@@ -300,62 +332,35 @@ async function generateLaporan() {
     </div>
 
     <div class="section">
-      <h2>📖 Setoran Tahfiz</h2>
+      <h2>🌈 Dimensi CAHAYA</h2>
+      <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual || "Belum ada catatan."}</p>
+      <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational || "Belum ada catatan."}</p>
+      <p><b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional || "Belum ada catatan."}</p>
+      <p><b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual || "Belum ada catatan."}</p>
+      <p><b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical || "Belum ada catatan."}</p>
+    </div>
+
+    <div class="section">
+      <h2>📅 Kehadiran</h2>
       ${
-        tahfizData.length
-          ? `<table>
-              <thead>
-                <tr>
-                  <th>Setoran Hari Ini</th>
-                  <th>Jumlah Ayat</th>
-                  <th>Kesalahan</th>
-                  <th>Nilai</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${tahfizData.map(d => `
-                  <tr>
-                    <td>${d.setoran || '-'}</td>
-                    <td>${d.ayat || '-'}</td>
-                    <td>${d.kesalahan || '-'}</td>
-                    <td>${d.nilai || '-'}</td>
-                  </tr>`).join("")}
-              </tbody>
-            </table>`
-          : `<p class='muted'>Belum ada setoran tahfiz bulan ini.</p>`
+        hadirKeys.length
+          ? `<table><thead><tr><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead>
+            <tbody>
+              ${hadirKeys.map(k=>{
+                const v=hadirData[k];
+                const pct=x=>v.total?Math.round((x/v.total)*100):0;
+                return `<tr><td>${k}</td><td class='hadir-cell'>${pct(v.hadir)}%</td><td class='izin-cell'>${pct(v.izin)}%</td><td class='sakit-cell'>${pct(v.sakit)}%</td><td class='alfa-cell'>${pct(v.alfa)}%</td></tr>`;
+              }).join("")}
+              <tr style='font-weight:bold;background:#f3f4f6;'><td>Rata-rata</td><td>${avg.hadir}%</td><td>${avg.izin}%</td><td>${avg.sakit}%</td><td>${avg.alfa}%</td></tr>
+            </tbody></table>`
+          : `<p class='muted'>Belum ada data kehadiran bulan ini.</p>`
       }
     </div>
 
     <div class="section">
-      <h2>⚠️ Pelanggaran</h2>
+      <h2>🧾 Nilai Ujian</h2>
       ${
-        pelanggaran.length
-          ? `<table>
-              <thead>
-                <tr>
-                  <th>Tanggal</th>
-                  <th>Pelanggaran</th>
-                  <th>Kategori</th>
-                  <th>Keterangan</th>
-                  <th>Tindak Lanjut</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${pelanggaran.map(p => `
-                  <tr>
-                    <td>${p.tanggal || '-'}</td>
-                    <td>${p.namaPelanggaran || '-'}</td>
-                    <td>${p.kategori || '-'}</td>
-                    <td>${p.keterangan || '-'}</td>
-                    <td>${p.tindakLanjut || '-'}</td>
-                  </tr>`).join("")}
-              </tbody>
-            </table>`
-          : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
-      }
-    </div>
-  </div>`;
-}
-</script>
-</body>
-</html>
+        ujianData.length
+        ? `<table><tr><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Keterangan</th></tr>
+        ${ujianData.map(u=>`<tr><td>${u.mapel||"-"}</td><td>${u.materi||"-"}</td><td>${u.nilai||"-"}</td><td>${u.nilai>=75?"✅ Tuntas":"❌ Belum Tuntas"}</td></tr>`).join("")}
+        <tr><td colspan="2"><b>Rata-rata</b></td><td colspan
