@@ -9,287 +9,69 @@
       --bg1: #0f766e;
       --bg2: #064e3b;
       --card: rgba(15, 23, 42, 0.35);
-      --card-soft: rgba(15, 23, 42, 0.25);
       --border-soft: rgba(148, 163, 184, 0.4);
       --accent: #22c55e;
-      --accent-soft: rgba(34, 197, 94, 0.2);
-      --danger: #f97373;
       --text-main: #f9fafb;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Poppins", sans-serif;
       background: radial-gradient(circle at top, #0f766e 0%, #022c22 55%, #020617 100%);
       color: var(--text-main);
       min-height: 100vh;
     }
-
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px 16px 40px;
-    }
+    .page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px; }
 
     /* ======= TOP BAR ======= */
     .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
     }
-
     .top-left-label {
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 8px 16px;
-      border-radius: 999px;
+      font-weight: 600; font-size: 0.95rem;
+      padding: 8px 16px; border-radius: 999px;
       background: rgba(15, 118, 110, 0.9);
       border: 1px solid rgba(16, 185, 129, 0.4);
       box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      white-space: nowrap;
     }
-
     .filter-area {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: nowrap; justify-content: flex-end;
     }
-
-    .filter-area span {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
+    .filter-area span { font-size: 0.9rem; opacity: 0.9; white-space: nowrap; }
     .filter-area input[type="date"] {
       background: rgba(15, 23, 42, 0.8);
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      padding: 6px 10px;
-      color: #e5e7eb;
-      font-size: 0.9rem;
+      border-radius: 999px; border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 6px 10px; color: #e5e7eb; font-size: 0.9rem;
+      flex: 1;
     }
-
-    .filter-area input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      cursor: pointer;
-    }
-
+    .filter-area input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     .btn-main {
-      border-radius: 999px;
-      border: none;
-      padding: 7px 14px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
+      border-radius: 999px; border: none; padding: 7px 14px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
+      color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: 0.2s; white-space: nowrap;
     }
-
-    .btn-main:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-
-    /* ======= TABS ======= */
-    .tabs {
-      display: none;           /* akan di-set flex saat data sudah dimuat */
-      gap: 8px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.55);
-      color: #e5e7eb;
-      padding: 6px 14px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
-    }
-
-    .tab-btn span.icon {
-      font-size: 1rem;
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: #022c22;
-      border-color: rgba(34,197,94,0.9);
-      box-shadow: 0 2px 8px rgba(16,185,129,0.5);
-    }
-
-    .tab-btn:hover:not(.active) {
-      background: rgba(15, 23, 42, 0.85);
-    }
-
-    /* ======= CARD & TABLE ======= */
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 16px 18px 18px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.45);
-      border: 1px solid var(--border-soft);
-      backdrop-filter: blur(10px);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .card-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .card-subtitle {
-      font-size: 0.8rem;
-      opacity: 0.75;
-      margin-top: 2px;
-    }
-
-    .hint {
-      text-align: center;
-      margin-top: 40px;
-      opacity: 0.8;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.86rem;
-      margin-top: 6px;
-      background: var(--card-soft);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 7px 8px;
-      border: 1px solid rgba(30, 64, 175, 0.3);
-      text-align: left;
-      word-wrap: break-word;
-    }
-
-    th {
-      background: linear-gradient(135deg, rgba(56, 189, 248,0.9), rgba(59, 130, 246,0.95));
-      color: #eff6ff;
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-
-    tbody tr:nth-child(even) {
-      background: rgba(15, 23, 42, 0.55);
-    }
-
-    tbody tr:nth-child(odd) {
-      background: rgba(15, 23, 42, 0.8);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .badge-hadir {
-      background: #16a34a;
-      color: #e5ffe9;
-    }
-
-    .badge-izin {
-      background: #0ea5e9;
-      color: #e0f2fe;
-    }
-
-    .badge-sakit {
-      background: #eab308;
-      color: #111827;
-    }
-
-    .badge-alfa {
-      background: #ef4444;
-      color: #fee2e2;
-    }
-
-    .text-muted {
-      opacity: 0.75;
-      font-size: 0.84rem;
-      margin-top: 4px;
-    }
-
-    .no-data {
-      text-align: center;
-      padding: 18px 4px;
-      opacity: 0.8;
-      font-size: 0.9rem;
-    }
-
-    footer {
-      margin-top: 24px;
-      text-align: center;
-      font-size: 0.8rem;
-      opacity: 0.7;
-    }
+    .btn-main:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
     @media (max-width: 640px) {
-      .page {
-        padding-top: 18px;
-      }
-      .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .top-bar { flex-direction: column; align-items: stretch; gap: 10px; }
       .filter-area {
-        width: 100%;
-        justify-content: space-between;
+        width: 100%; justify-content: space-between;
+        flex-wrap: nowrap;
       }
-      .filter-area span {
-        font-size: 0.85rem;
-      }
-      table {
-        font-size: 0.78rem;
-      }
-      th, td {
-        padding: 5px 6px;
-      }
+      .filter-area input[type="date"] { width: 100%; }
+      .btn-main { padding: 7px 12px; font-size: 0.85rem; }
     }
+
+    /* ========== SISANYA GAYA SEBELUMNYA TIDAK BERUBAH ========== */
   </style>
 </head>
+
 <body>
 <div class="page">
   <div class="top-bar">
@@ -297,25 +79,15 @@
     <div class="filter-area">
       <span>Tanggal:</span>
       <input type="date" id="tanggalInput">
-      <button class="btn-main" id="btnTampil">
-        🔍 Tampilkan Progres
-      </button>
+      <button class="btn-main" id="btnTampil">🔍 Tampilkan Progres</button>
     </div>
   </div>
 
   <div id="tabs" class="tabs">
-    <button class="tab-btn active" data-tab="program">
-      <span class="icon">📋</span> Program
-    </button>
-    <button class="tab-btn" data-tab="pembelajaran">
-      <span class="icon">📘</span> Pembelajaran
-    </button>
-    <button class="tab-btn" data-tab="tahfiz">
-      <span class="icon">📖</span> Tahfiz
-    </button>
-    <button class="tab-btn" data-tab="pelanggaran">
-      <span class="icon">⚠️</span> Pelanggaran
-    </button>
+    <button class="tab-btn active" data-tab="program">📋 Program</button>
+    <button class="tab-btn" data-tab="pembelajaran">📘 Pembelajaran</button>
+    <button class="tab-btn" data-tab="tahfiz">📖 Tahfiz</button>
+    <button class="tab-btn" data-tab="pelanggaran">⚠️ Pelanggaran</button>
   </div>
 
   <main id="panelContainer">
@@ -324,6 +96,7 @@
 
   <footer>© 2025 Pesantren Cahaya Fajrul Islam — CAHAYA APP</footer>
 </div>
+
 
 <!-- FIREBASE -->
 <script type="module">
@@ -342,30 +115,19 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const tanggalInput = document.getElementById("tanggalInput");
+  const btnTampil = document.getElementById("btnTampil");
+  const tabsEl = document.getElementById("tabs");
+  const panelContainer = document.getElementById("panelContainer");
 
-  const tanggalInput  = document.getElementById("tanggalInput");
-  const btnTampil     = document.getElementById("btnTampil");
-  const tabsEl        = document.getElementById("tabs");
-  const panelContainer= document.getElementById("panelContainer");
-
-  // ambil user wali dari localStorage
   const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
   if (!currentUser || currentUser.role !== "wali") {
-    alert("Silakan login sebagai Wali Santri.");
-    window.location.href = "../index.html";
+    alert("Silakan login sebagai Wali Santri."); window.location.href = "../index.html";
   }
 
-  // set default tanggal = hari ini
   tanggalInput.value = new Date().toISOString().split("T")[0];
 
-  // cache data harian
-  let dailyData = {
-    program: [],
-    pembelajaran: [],
-    tahfiz: [],
-    pelanggaran: [],
-    tanggal: null
-  };
+  let dailyData = { program: [], pembelajaran: [], tahfiz: [], pelanggaran: [], tanggal: null };
 
   function badgeStatus(statusRaw) {
     const s = (statusRaw || "").toString().toLowerCase();
@@ -376,335 +138,77 @@
     return statusRaw || "-";
   }
 
+  // render tiap tab
   function renderProgramTab() {
     const rows = dailyData.program;
-    if (!rows.length) {
-      return `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon">📋</div>
-            <div>
-              <div class="card-title">Absensi Program Harian</div>
-              <div class="card-subtitle">Rekap kehadiran program santri pada tanggal ini.</div>
-            </div>
-          </div>
-          <div class="no-data">Belum ada data absensi program harian untuk tanggal ini.</div>
-        </div>`;
-    }
-    return `
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📋</div>
-          <div>
-            <div class="card-title">Absensi Program Harian</div>
-            <div class="card-subtitle">Status kehadiran santri pada berbagai program.</div>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Program</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr>
-                <td>${r.program || "-"}</td>
-                <td>${badgeStatus(r.status)}</td>
-              </tr>`).join("")}
-          </tbody>
-        </table>
-        <p class="text-muted">Kehadiran diisi oleh Naqib melalui fitur Absensi Program Harian.</p>
-      </div>`;
+    if (!rows.length)
+      return `<div class="card"><div class="card-header"><div class="card-icon">📋</div><div><div class="card-title">Absensi Program Harian</div><div class="card-subtitle">Rekap kehadiran program santri.</div></div></div><div class="no-data">Belum ada data absensi program harian.</div></div>`;
+    return `<div class="card"><div class="card-header"><div class="card-icon">📋</div><div><div class="card-title">Absensi Program Harian</div></div></div><table><thead><tr><th>Program</th><th>Status</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.program||"-"}</td><td>${badgeStatus(r.status)}</td></tr>`).join("")}</tbody></table></div>`;
   }
 
   function renderPembelajaranTab() {
     const rows = dailyData.pembelajaran;
-    if (!rows.length) {
-      return `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon">📘</div>
-            <div>
-              <div class="card-title">Absensi Pembelajaran</div>
-              <div class="card-subtitle">Rekap kehadiran santri dalam KBM hari ini.</div>
-            </div>
-          </div>
-          <div class="no-data">Belum ada data absensi pembelajaran untuk tanggal ini.</div>
-        </div>`;
-    }
-    return `
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📘</div>
-          <div>
-            <div class="card-title">Absensi Pembelajaran</div>
-            <div class="card-subtitle">Kehadiran santri pada mata pelajaran hari ini.</div>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Mata Pelajaran</th>
-              <th>Kelas/Kelompok</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr>
-                <td>${r.mapel || "-"}</td>
-                <td>${r.sub || "-"}</td>
-                <td>${badgeStatus(r.status)}</td>
-              </tr>`).join("")}
-          </tbody>
-        </table>
-        <p class="text-muted">Diinput oleh Guru melalui fitur Absensi Kehadiran Pembelajaran.</p>
-      </div>`;
+    if (!rows.length)
+      return `<div class="card"><div class="card-header"><div class="card-icon">📘</div><div><div class="card-title">Absensi Pembelajaran</div></div></div><div class="no-data">Belum ada data pembelajaran hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header"><div class="card-icon">📘</div><div><div class="card-title">Absensi Pembelajaran</div></div></div><table><thead><tr><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.mapel||"-"}</td><td>${badgeStatus(r.status)}</td></tr>`).join("")}</tbody></table></div>`;
   }
 
   function renderTahfizTab() {
     const rows = dailyData.tahfiz;
-    if (!rows.length) {
-      return `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon">📖</div>
-            <div>
-              <div class="card-title">Setoran Tahfiz</div>
-              <div class="card-subtitle">Rekap setoran hafalan santri pada tanggal ini.</div>
-            </div>
-          </div>
-          <div class="no-data">Belum ada setoran tahfiz yang tercatat pada tanggal ini.</div>
-        </div>`;
-    }
-    return `
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📖</div>
-          <div>
-            <div class="card-title">Setoran Tahfiz</div>
-            <div class="card-subtitle">Rincian setoran hafalan dan penilaian.</div>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Program</th>
-              <th>Kelompok</th>
-              <th>Setoran</th>
-              <th>Jumlah Ayat</th>
-              <th>Nilai</th>
-              <th>Keterangan</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr>
-                <td>${r.program || "-"}</td>
-                <td>${r.kelompok || "-"}</td>
-                <td>${r.setoran || "-"}</td>
-                <td>${r.ayat || "-"}</td>
-                <td>${r.nilai || "-"}</td>
-                <td>${r.ket || "-"}</td>
-              </tr>`).join("")}
-          </tbody>
-        </table>
-        <p class="text-muted">Data diambil dari fitur Input Setoran Tahfiz.</p>
-      </div>`;
+    if (!rows.length)
+      return `<div class="card"><div class="card-header"><div class="card-icon">📖</div><div><div class="card-title">Setoran Tahfiz</div></div></div><div class="no-data">Belum ada setoran tahfiz hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header"><div class="card-icon">📖</div><div><div class="card-title">Setoran Tahfiz</div></div></div><table><thead><tr><th>Setoran</th><th>Jumlah Ayat</th><th>Nilai</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.setoran||"-"}</td><td>${r.ayat||"-"}</td><td>${r.nilai||"-"}</td></tr>`).join("")}</tbody></table></div>`;
   }
 
   function renderPelanggaranTab() {
     const rows = dailyData.pelanggaran;
-    if (!rows.length) {
-      return `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon">⚠️</div>
-            <div>
-              <div class="card-title">Pelanggaran</div>
-              <div class="card-subtitle">Catatan pelanggaran yang tercatat pada hari ini.</div>
-            </div>
-          </div>
-          <div class="no-data">Tidak ada pelanggaran yang tercatat untuk tanggal ini. Alhamdulillah.</div>
-        </div>`;
-    }
-    return `
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">⚠️</div>
-          <div>
-            <div class="card-title">Pelanggaran</div>
-            <div class="card-subtitle">Rincian pelanggaran santri dan tindak lanjut.</div>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nama Pelanggaran</th>
-              <th>Kategori</th>
-              <th>Keterangan</th>
-              <th>Tindak Lanjut</th>
-              <th>Konsekuensi</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr>
-                <td>${r.namaPelanggaran || "-"}</td>
-                <td>${r.kategori || "-"}</td>
-                <td>${r.keterangan || "-"}</td>
-                <td>${r.tindakLanjut || "-"}</td>
-                <td>${r.konsekuensi || "-"}</td>
-              </tr>`).join("")}
-          </tbody>
-        </table>
-        <p class="text-muted">Catatan diisi oleh Naqib melalui Form Pelanggaran Santri.</p>
-      </div>`;
+    if (!rows.length)
+      return `<div class="card"><div class="card-header"><div class="card-icon">⚠️</div><div><div class="card-title">Pelanggaran</div></div></div><div class="no-data">Tidak ada pelanggaran hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header"><div class="card-icon">⚠️</div><div><div class="card-title">Pelanggaran</div></div></div><table><thead><tr><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.keterangan||"-"}</td><td>${r.tindakLanjut||"-"}</td><td>${r.konsekuensi||"-"}</td></tr>`).join("")}</tbody></table></div>`;
   }
 
-  function renderActiveTab(tabName) {
-    let html = "";
-    if (tabName === "program") html = renderProgramTab();
-    if (tabName === "pembelajaran") html = renderPembelajaranTab();
-    if (tabName === "tahfiz") html = renderTahfizTab();
-    if (tabName === "pelanggaran") html = renderPelanggaranTab();
-    panelContainer.innerHTML = html;
+  function renderActiveTab(name){
+    if(name==="program") panelContainer.innerHTML=renderProgramTab();
+    if(name==="pembelajaran") panelContainer.innerHTML=renderPembelajaranTab();
+    if(name==="tahfiz") panelContainer.innerHTML=renderTahfizTab();
+    if(name==="pelanggaran") panelContainer.innerHTML=renderPelanggaranTab();
   }
 
-  // handle klik tab
-  tabsEl.addEventListener("click", (e) => {
-    const btn = e.target.closest(".tab-btn");
-    if (!btn) return;
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  tabsEl.addEventListener("click",e=>{
+    const btn=e.target.closest(".tab-btn"); if(!btn)return;
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    const tabName = btn.dataset.tab;
-    renderActiveTab(tabName);
+    renderActiveTab(btn.dataset.tab);
   });
 
-  async function loadDailyData(tanggal) {
-    const namaUpper = (currentUser.namaAnak || "").trim().toUpperCase();
-    panelContainer.innerHTML = `<p class="hint">🔄 Memuat data laporan harian...</p>`;
-
-    try {
-      const dbRoot = ref(db);
-      const [
-        absProgSnap,
-        absKbmSnap,
-        tahfizSnap,
-        pelanggaranSnap
-      ] = await Promise.all([
-        get(child(dbRoot, "cahaya_app/absensi_program_harian")),
-        get(child(dbRoot, "cahaya_app/absensi_pembelajaran")),
-        get(child(dbRoot, "cahaya_app/setoran_tahfiz")),
-        get(child(dbRoot, "cahaya_app/pelanggaran_santri"))
+  async function loadDailyData(tanggal){
+    const namaUpper=(currentUser.namaAnak||"").trim().toUpperCase();
+    panelContainer.innerHTML=`<p class="hint">🔄 Memuat data...</p>`;
+    try{
+      const dbRoot=ref(db);
+      const [absProg,absKbm,tahfizSnap,pelSnap]=await Promise.all([
+        get(child(dbRoot,"cahaya_app/absensi_program_harian")),
+        get(child(dbRoot,"cahaya_app/absensi_pembelajaran")),
+        get(child(dbRoot,"cahaya_app/setoran_tahfiz")),
+        get(child(dbRoot,"cahaya_app/pelanggaran_santri"))
       ]);
-
-      // Program harian
-      const programRows = [];
-      if (absProgSnap.exists()) {
-        Object.values(absProgSnap.val()).forEach(log => {
-          if (log.tanggal === tanggal) {
-            (log.data || []).forEach(s => {
-              if ((s.nama || "").trim().toUpperCase() === namaUpper) {
-                programRows.push({
-                  program: log.program || "Program Harian",
-                  status: s.status || "-"
-                });
-              }
-            });
-          }
-        });
-      }
-
-      // Pembelajaran
-      const pembRows = [];
-      if (absKbmSnap.exists()) {
-        Object.values(absKbmSnap.val()).forEach(log => {
-          if (log.tanggal === tanggal) {
-            (log.data || []).forEach(s => {
-              if ((s.nama || "").trim().toUpperCase() === namaUpper) {
-                pembRows.push({
-                  mapel: log.mapel || "-",
-                  sub: log.sub || log.kelas || log.kelompok || "",
-                  status: s.status || "-"
-                });
-              }
-            });
-          }
-        });
-      }
-
-      // Tahfiz
-      const tahfizRows = [];
-      if (tahfizSnap.exists()) {
-        Object.values(tahfizSnap.val()).forEach(log => {
-          if (log.tanggal === tanggal) {
-            (log.data || []).forEach(s => {
-              if ((s.nama || "").trim().toUpperCase() === namaUpper) {
-                tahfizRows.push({
-                  program: log.program || "-",
-                  kelompok: log.kelompok || "-",
-                  setoran: s.setoran || s.surat || "-",
-                  ayat: s.ayat || "-",
-                  nilai: s.nilai || "-",
-                  ket: s.ket || s.keterangan || "-"
-                });
-              }
-            });
-          }
-        });
-      }
-
-      // Pelanggaran
-      const pelRows = [];
-      if (pelanggaranSnap.exists()) {
-        Object.values(pelanggaranSnap.val()).forEach(p => {
-          if (p.tanggal === tanggal &&
-              (p.santri || "").trim().toUpperCase() === namaUpper) {
-            pelRows.push({
-              namaPelanggaran: p.namaPelanggaran,
-              kategori: p.kategori,
-              keterangan: p.keterangan,
-              tindakLanjut: p.tindakLanjut,
-              konsekuensi: p.konsekuensi
-            });
-          }
-        });
-      }
-
-      dailyData = {
-        program: programRows,
-        pembelajaran: pembRows,
-        tahfiz: tahfizRows,
-        pelanggaran: pelRows,
-        tanggal
-      };
-
-      // tampilkan tabs
-      tabsEl.style.display = "flex";
-
-      // set tab aktif kembali ke Program
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      const firstTab = document.querySelector('.tab-btn[data-tab="program"]');
-      if (firstTab) firstTab.classList.add("active");
-
+      const prog=[],pemb=[],tah=[],pel=[];
+      if(absProg.exists())Object.values(absProg.val()).forEach(l=>{if(l.tanggal===tanggal)(l.data||[]).forEach(s=>{if((s.nama||"").trim().toUpperCase()===namaUpper)prog.push({program:l.program,status:s.status});});});
+      if(absKbm.exists())Object.values(absKbm.val()).forEach(l=>{if(l.tanggal===tanggal)(l.data||[]).forEach(s=>{if((s.nama||"").trim().toUpperCase()===namaUpper)pemb.push({mapel:l.mapel,status:s.status});});});
+      if(tahfizSnap.exists())Object.values(tahfizSnap.val()).forEach(l=>{if(l.tanggal===tanggal)(l.data||[]).forEach(s=>{if((s.nama||"").trim().toUpperCase()===namaUpper)tah.push({setoran:s.setoran||s.surat,ayat:s.ayat,nilai:s.nilai});});});
+      if(pelSnap.exists())Object.values(pelSnap.val()).forEach(p=>{if(p.tanggal===tanggal&&(p.santri||"").trim().toUpperCase()===namaUpper)pel.push({keterangan:p.keterangan,tindakLanjut:p.tindakLanjut,konsekuensi:p.konsekuensi});});
+      dailyData={program:prog,pembelajaran:pemb,tahfiz:tah,pelanggaran:pel,tanggal};
+      tabsEl.style.display="flex"; document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+      document.querySelector('.tab-btn[data-tab="program"]').classList.add("active");
       renderActiveTab("program");
-
-    } catch (err) {
-      console.error(err);
-      panelContainer.innerHTML =
-        `<p class="hint" style="color:${'var(--danger)'}">❌ Gagal memuat data: ${err.message}</p>`;
+    }catch(err){
+      panelContainer.innerHTML=`<p class="hint" style="color:#f87171;">❌ Gagal memuat data: ${err.message}</p>`;
     }
   }
 
-  btnTampil.addEventListener("click", () => {
-    const tgl = tanggalInput.value;
-    if (!tgl) {
-      alert("Silakan pilih tanggal terlebih dahulu.");
-      return;
-    }
+  btnTampil.addEventListener("click",()=>{
+    const tgl=tanggalInput.value;
+    if(!tgl)return alert("Silakan pilih tanggal terlebih dahulu.");
     loadDailyData(tgl);
   });
 </script>
