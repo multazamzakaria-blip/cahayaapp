@@ -1,118 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Laporan Bulanan Anak - CAHAYA APP</title>
 
   <link rel="stylesheet" href="../wali-style.css">
 
   <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background: #f9fafb;
-      color: #1f2937;
-      margin: 0;
-    }
-
-    header {
-      background: #0f766e;
-      color: #fff;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    header h1 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-buttons button {
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: 0.2s;
-    }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .btn-secondary:hover { background: #cbd5e1; }
-    .btn-danger {
-      background: #ef4444;
-      color: #fff;
-    }
-
-    .btn-danger:hover { background: #dc2626; }
-
+    /* ====== TAMBAHAN SPESIFIK HALAMAN ====== */
     main {
       max-width: 1100px;
       margin: 1rem auto 3rem;
       padding: 1rem;
     }
 
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .section-title {
-      font-weight: 700;
-      color: #0f766e;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
+    .card header {
+      background: none;
+      padding: 0;
+      box-shadow: none;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
+      margin-bottom: 1rem;
     }
 
     .filter-box {
-      display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-    }
-
-    select {
-      padding: 0.6rem 0.8rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 0.95rem;
-    }
-
-    button {
-      padding: 0.6rem 1.2rem;
-      background: #0f766e;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #115e59;
-      transform: translateY(-1px);
+      margin-bottom: 1.5rem;
     }
 
     .laporan-card {
@@ -142,12 +57,12 @@
       font-weight: 600;
     }
 
-    .section-sub {
+    .section-title {
       margin-top: 1.5rem;
       margin-bottom: 0.6rem;
       color: #0f766e;
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -169,7 +84,7 @@
     }
 
     .dim-card p {
-      font-size: 0.93rem;
+      font-size: 0.95rem;
       color: #374151;
       margin-top: 0.3rem;
       white-space: pre-line;
@@ -180,8 +95,6 @@
       border-collapse: collapse;
       margin-top: 0.5rem;
       background: white;
-      border-radius: 8px;
-      overflow: hidden;
     }
 
     th, td {
@@ -194,49 +107,32 @@
     th {
       background: #f3f4f6;
       color: #1f2937;
-      font-weight: 600;
     }
 
-    /* === Warna Kehadiran === */
+    /* === Kehadiran Cell Warna === */
     .hadir-cell { background: #dcfce7; color: #065f46; font-weight: 600; }
     .izin-cell  { background: #dbeafe; color: #1e40af; font-weight: 600; }
     .sakit-cell { background: #fef9c3; color: #854d0e; font-weight: 600; }
     .alfa-cell  { background: #fee2e2; color: #991b1b; font-weight: 600; }
 
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-
-    /* === Responsif === */
+    /* === Responsif Mobile === */
     @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .filter-box {
-        flex-direction: column;
-        align-items: center;
+      .laporan-card {
+        padding: 1rem;
+        border-radius: 12px;
       }
 
       table, th, td {
         font-size: 0.8rem;
+        padding: 6px;
       }
 
-      .card {
-        padding: 1.2rem;
+      .section-title {
+        font-size: 1rem;
       }
 
-      .laporan-card {
-        padding: 1rem;
-      }
-
-      button, select {
-        width: 100%;
-      }
+      .dim-card h4 { font-size: 0.95rem; }
+      .dim-card p { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -254,20 +150,129 @@
     <div class="card">
       <h2 class="section-title">📅 Pilih Bulan Laporan</h2>
       <div class="filter-box">
-        <select id="bulanSelect"></select>
-        <select id="tahunSelect"></select>
+        <select id="bulanSelect">
+          <option value="">Bulan</option>
+        </select>
+        <select id="tahunSelect">
+          <option value="">Tahun</option>
+        </select>
         <button onclick="generateReport()">Tampilkan Laporan</button>
       </div>
     </div>
 
     <div id="laporanContainer">
-      <p style="text-align:center;color:#6b7280;">Silakan pilih bulan dan tahun untuk melihat laporan anak.</p>
+      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan anak.</p>
     </div>
   </main>
 
   <footer>© 2025 Pesantren Fajrul Islam — CAHAYA APP</footer>
 
-  <!-- SCRIPT ASLI KAMU -->
-  <script type="module" src="./progres-bulanan-script.js"></script>
+  <!-- 🔥 Firebase dan Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+      messagingSenderId: "739928369926",
+      appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const dbRef = ref(db);
+
+    const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+    if (!user || user.role !== "wali") {
+      window.location.href = "../../index.html";
+    }
+
+    const anak = user.nama || user.santri || user.namaAnak;
+    const bulanSelect = document.getElementById("bulanSelect");
+    const tahunSelect = document.getElementById("tahunSelect");
+
+    const bulanNama = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    bulanNama.forEach((b,i)=>{
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = b;
+      if (i === new Date().getMonth()) opt.selected = true;
+      bulanSelect.appendChild(opt);
+    });
+
+    const tahunSekarang = new Date().getFullYear();
+    for(let t=tahunSekarang-1; t<=tahunSekarang+1; t++){
+      const opt=document.createElement("option");
+      opt.value=t;
+      opt.textContent=t;
+      if(t===tahunSekarang) opt.selected=true;
+      tahunSelect.appendChild(opt);
+    }
+
+    function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+    function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
+
+    async function getData() {
+      const snaps = await Promise.all([
+        get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
+        get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
+        get(child(dbRef, "cahaya_app/absensi_program_harian")),
+        get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
+        get(child(dbRef, "cahaya_app/nilai_ujian")),
+        get(child(dbRef, "cahaya_app/setoran_tahfiz")),
+        get(child(dbRef, "cahaya_app/pelanggaran_santri")),
+      ]);
+      return {
+        assesmentGuru: snaps[0].exists()?Object.values(snaps[0].val()):[],
+        assesmentNaqib: snaps[1].exists()?Object.values(snaps[1].val()):[],
+        absensiNaqib: snaps[2].exists()?Object.values(snaps[2].val()):[],
+        absensiKbm: snaps[3].exists()?Object.values(snaps[3].val()):[],
+        ujian: snaps[4].exists()?Object.values(snaps[4].val()):[],
+        tahfiz: snaps[5].exists()?Object.values(snaps[5].val()):[],
+        pelanggaran: snaps[6].exists()?Object.values(snaps[6].val()):[],
+      };
+    }
+
+    async function generateReport(){
+      const bulan = +bulanSelect.value;
+      const tahun = +tahunSelect.value;
+      const container = document.getElementById("laporanContainer");
+      container.innerHTML = "<p class='muted'>⏳ Mengambil data...</p>";
+
+      const data = await getData();
+      const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaran } = data;
+
+      const narasiGuru = assesmentGuru.find(a => a.namaSantri === anak && isSameMonthYear(a.tanggal, bulan, tahun)) || {};
+      const narasiNaqib = assesmentNaqib.find(a => a.namaSantri === anak && isSameMonthYear(a.tanggal, bulan, tahun)) || {};
+
+      const namaBulan = bulanNama[bulan];
+      const card = document.createElement("div");
+      card.className = "laporan-card";
+      card.innerHTML = `
+        <div class="laporan-header">
+          <h2>Laporan Bulanan Anak</h2>
+          <h3>${anak}</h3>
+          <p>${namaBulan} ${tahun}</p>
+        </div>
+
+        <div class="section-title">🌈 Dimensi CAHAYA</div>
+        <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiGuru.narasiSpiritual || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiNaqib.narasiRelational || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiNaqib.narasiEmotional || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiGuru.narasiIntellectual || "Belum ada catatan."}</p></div>
+        <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiNaqib.narasiPhysical || "Belum ada catatan."}</p></div>
+      `;
+
+      container.innerHTML = "";
+      container.appendChild(card);
+    }
+
+    window.goDashboard = () => window.location.href = "../dashboard/";
+    window.logout = () => { localStorage.removeItem("cahayaCurrentUser"); window.location.href = "../../index.html"; };
+  </script>
 </body>
 </html>
