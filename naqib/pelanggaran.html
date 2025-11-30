@@ -2,127 +2,334 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP - Form Pelanggaran Santri</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Harian Santri – CAHAYA APP</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef2ff;
-      margin: 0;
-      padding: 20px;
-      color: #1f2933;
+    :root {
+      --bg1: #0f766e;
+      --bg2: #064e3b;
+      --card: rgba(15, 23, 42, 0.35);
+      --card-soft: rgba(15, 23, 42, 0.25);
+      --border-soft: rgba(148, 163, 184, 0.4);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
+      --danger: #f97373;
+      --text-main: #f9fafb;
     }
-    header {
-      background: #2563eb;
-      color: white;
-      padding: 12px 20px;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f766e 0%, #022c22 55%, #020617 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* ======= TOP BAR ======= */
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius: 10px;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
     }
-    header h1 { margin: 0; font-size: 1.2rem; }
-    main {
-      background: #fff;
-      margin-top: 20px;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 5px 15px rgba(15,23,42,0.15);
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
+
+    .top-left-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.9);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
     }
-    h2 { margin-top: 0; }
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      box-sizing: border-box;
+
+    .filter-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
-    textarea { resize: vertical; min-height: 70px; }
-    button {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
+
+    .filter-area span {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .filter-area input[type="date"] {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 6px 10px;
+      color: #e5e7eb;
       font-size: 0.9rem;
     }
-    button:hover { background: #1d4ed8; }
-    .btn-secondary { background: #6b7280; }
-    .btn-secondary:hover { background:#4b5563; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background: #f3f4f6; }
+
+    .filter-area input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
+    .btn-main {
+      border-radius: 999px;
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    /* ======= TABS ======= */
+    .tabs {
+      display: none;           /* akan di-set flex saat data sudah dimuat */
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.55);
+      color: #e5e7eb;
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .tab-btn span.icon {
+      font-size: 1rem;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #022c22;
+      border-color: rgba(34,197,94,0.9);
+      box-shadow: 0 2px 8px rgba(16,185,129,0.5);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    /* ======= CARD & TABLE ======= */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px 18px 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+      border: 1px solid var(--border-soft);
+      backdrop-filter: blur(10px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    .hint {
+      text-align: center;
+      margin-top: 40px;
+      opacity: 0.8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-top: 6px;
+      background: var(--card-soft);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 7px 8px;
+      border: 1px solid rgba(30, 64, 175, 0.3);
+      text-align: left;
+      word-wrap: break-word;
+    }
+
+    th {
+      background: linear-gradient(135deg, rgba(56, 189, 248,0.9), rgba(59, 130, 246,0.95));
+      color: #eff6ff;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    tbody tr:nth-child(odd) {
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-hadir {
+      background: #16a34a;
+      color: #e5ffe9;
+    }
+
+    .badge-izin {
+      background: #0ea5e9;
+      color: #e0f2fe;
+    }
+
+    .badge-sakit {
+      background: #eab308;
+      color: #111827;
+    }
+
+    .badge-alfa {
+      background: #ef4444;
+      color: #fee2e2;
+    }
+
+    .text-muted {
+      opacity: 0.75;
+      font-size: 0.84rem;
+      margin-top: 4px;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 18px 4px;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding-top: 18px;
+      }
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .filter-area {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .filter-area span {
+        font-size: 0.85rem;
+      }
+      table {
+        font-size: 0.78rem;
+      }
+      th, td {
+        padding: 5px 6px;
+      }
+    }
   </style>
 </head>
 <body>
-
-<header>
-  <h1>CAHAYA APP – Form Pelanggaran Santri</h1>
-  <div>
-    <button class="btn-secondary" onclick="goBack()">⬅️ Dashboard</button>
-    <button onclick="logout()">Keluar</button>
+<div class="page">
+  <div class="top-bar">
+    <div class="top-left-label">📊 Laporan Harian</div>
+    <div class="filter-area">
+      <span>Tanggal:</span>
+      <input type="date" id="tanggalInput">
+      <button class="btn-main" id="btnTampil">
+        🔍 Tampilkan Progres
+      </button>
+    </div>
   </div>
-</header>
 
-<main>
-  <h2 id="naqibTitle">Form Pelanggaran Santri</h2>
-  <p id="naqibInfo"></p>
+  <div id="tabs" class="tabs">
+    <button class="tab-btn active" data-tab="program">
+      <span class="icon">📋</span> Program
+    </button>
+    <button class="tab-btn" data-tab="pembelajaran">
+      <span class="icon">📘</span> Pembelajaran
+    </button>
+    <button class="tab-btn" data-tab="tahfiz">
+      <span class="icon">📖</span> Tahfiz
+    </button>
+    <button class="tab-btn" data-tab="pelanggaran">
+      <span class="icon">⚠️</span> Pelanggaran
+    </button>
+  </div>
 
-  <label>Tanggal Kejadian:</label>
-  <input type="date" id="tanggal">
+  <main id="panelContainer">
+    <p class="hint">Pilih tanggal, lalu klik <b>Tampilkan Progres</b> untuk melihat laporan harian santri.</p>
+  </main>
 
-  <label>Nama Santri:</label>
-  <select id="namaSantri"></select>
+  <footer>© 2025 Pesantren Cahaya Fajrul Islam — CAHAYA APP</footer>
+</div>
 
-  <label>Nama Pelanggaran:</label>
-  <select id="namaPelanggaran"></select>
-
-  <label>Kategori Pelanggaran:</label>
-  <select id="kategori" disabled></select>
-
-  <label>Keterangan Pelanggaran:</label>
-  <textarea id="keterangan" placeholder="Tuliskan kronologi singkat pelanggaran..."></textarea>
-
-  <label>Tindak Lanjut Naqib:</label>
-  <textarea id="tindakLanjut" placeholder="Tuliskan tindakan Naqib dalam menangani pelanggaran..."></textarea>
-
-  <label>Konsekuensi yang diberikan:</label>
-  <textarea id="konsekuensi" placeholder="Misalnya: Push Up 20x, skorsing, tidak ada konsekuensi, dll..."></textarea>
-
-  <button id="btnSimpan">💾 Simpan Laporan Pelanggaran</button>
-
-  <h3>📋 Riwayat Pelanggaran Hari Ini</h3>
-  <table id="tabelPelanggaran">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Tanggal</th>
-        <th>Santri</th>
-        <th>Pelanggaran</th>
-        <th>Kategori</th>
-        <th>Keterangan</th>
-        <th>Tindak Lanjut</th>
-        <th>Konsekuensi</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</main>
-
-<!-- === FIREBASE MODULE === -->
+<!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  // Konfigurasi Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
     authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
@@ -135,229 +342,371 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
-  // === Data Santri (lengkapkan/ubah sesuai kebutuhan) ===
-  const dataSantri = {
-    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
-    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
-    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
-    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
-    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMADHAN","IHZA TRINANDI","ILHAM","M.ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD RAYYAN HAFIZ","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
-    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
-    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
+  const tanggalInput  = document.getElementById("tanggalInput");
+  const btnTampil     = document.getElementById("btnTampil");
+  const tabsEl        = document.getElementById("tabs");
+  const panelContainer= document.getElementById("panelContainer");
+
+  // ambil user wali dari localStorage
+  const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if (!currentUser || currentUser.role !== "wali") {
+    alert("Silakan login sebagai Wali Santri.");
+    window.location.href = "../index.html";
+  }
+
+  // set default tanggal = hari ini
+  tanggalInput.value = new Date().toISOString().split("T")[0];
+
+  // cache data harian
+  let dailyData = {
+    program: [],
+    pembelajaran: [],
+    tahfiz: [],
+    pelanggaran: [],
+    tanggal: null
   };
 
-  // === Data Pelanggaran (No, Nama, Kategori) ===
-  const daftarPelanggaran = [
-    { no:1,  nama:"Terlambat bangun tidur setelah bel/alarm.", kategori:"Ringan" },
-    { no:2,  nama:"Terlambat mengikuti shalat berjamaah/kegiatan wajib.", kategori:"Ringan" },
-    { no:3,  nama:"Berbicara tidak menggunakan bahasa wajib (Arab/Inggris/Indonesia).", kategori:"Ringan" },
-    { no:4,  nama:"Berpakaian tidak rapi saat keluar kamar.", kategori:"Ringan" },
-    { no:5,  nama:"Menggantung pakaian basah atau kotor di kamar/asrama.", kategori:"Ringan" },
-    { no:6,  nama:"Meletakkan sepatu atau sandal tidak pada raknya.", kategori:"Ringan" },
-    { no:7,  nama:"Meninggalkan barang-barang pribadi berserakan di tempat umum.", kategori:"Ringan" },
-    { no:8,  nama:"Lalai dalam tugas piket kebersihan umum.", kategori:"Ringan" },
-    { no:9,  nama:"Membuang sampah kecil tidak pada tempatnya.", kategori:"Ringan" },
-    { no:10, nama:"Berisik atau ribut di asrama saat jam istirahat atau belajar.", kategori:"Ringan" },
-    { no:11, nama:"Tidur saat jam pelajaran sekolah atau pengajian.", kategori:"Ringan" },
-    { no:12, nama:"Mencoret-coret buku atau peralatan belajar milik sendiri.", kategori:"Ringan" },
-    { no:13, nama:"Membaca majalah/komik yang tidak mendidik.", kategori:"Ringan" },
-    { no:14, nama:"Berada di kamar pada jam-jam kegiatan wajib di luar kamar.", kategori:"Ringan" },
-    { no:15, nama:"Tidak membawa perlengkapan shalat saat pergi ke masjid/mushalla.", kategori:"Ringan" },
-    { no:16, nama:"Memotong rambut tanpa izin atau tidak sesuai model.", kategori:"Ringan" },
-    { no:17, nama:"Memakai pakaian yang terlalu ketat atau mencolok.", kategori:"Ringan" },
-    { no:18, nama:"Tidak mencuci piring/alat makan setelah selesai makan.", kategori:"Ringan" },
-    { no:19, nama:"Membiarkan tempat tidur tidak dirapikan setelah bangun.", kategori:"Ringan" },
-    { no:20, nama:"Mengunjungi kamar/asrama lawan jenis di luar waktu yang diizinkan.", kategori:"Ringan" },
+  function badgeStatus(statusRaw) {
+    const s = (statusRaw || "").toString().toLowerCase();
+    if (s.includes("hadir")) return `<span class="badge badge-hadir">Hadir</span>`;
+    if (s.includes("izin"))  return `<span class="badge badge-izin">Izin</span>`;
+    if (s.includes("sakit")) return `<span class="badge badge-sakit">Sakit</span>`;
+    if (s.includes("alfa"))  return `<span class="badge badge-alfa">Alfa</span>`;
+    return statusRaw || "-";
+  }
 
-    { no:21, nama:"Keluar dari lingkungan pondok tanpa izin tertulis (Bolos Harian).", kategori:"Sedang" },
-    { no:22, nama:"Merokok atau membawa segala jenis produk tembakau/rokok elektrik.", kategori:"Sedang" },
-    { no:23, nama:"Membawa dan menggunakan ponsel pintar (smartphone) atau elektronik terlarang.", kategori:"Sedang" },
-    { no:24, nama:"Mencorat-coret, merusak ringan, atau mengotori fasilitas umum pondok.", kategori:"Sedang" },
-    { no:25, nama:"Terlibat dalam perkelahian ringan atau cekcok fisik/verbal.", kategori:"Sedang" },
-    { no:26, nama:"Berbohong atau memberikan keterangan palsu kepada pengurus/guru.", kategori:"Sedang" },
-    { no:27, nama:"Membaca, menonton, atau menyimpan konten asusila/pornografi.", kategori:"Sedang" },
-    { no:28, nama:"Mengganggu santri lain secara fisik (menjahili hingga menangis).", kategori:"Sedang" },
-    { no:29, nama:"Membawa uang saku berlebihan melebihi batas yang ditentukan.", kategori:"Sedang" },
-    { no:30, nama:"Tidak mengikuti ujian atau kegiatan belajar wajib tanpa alasan yang jelas (alpa).", kategori:"Sedang" },
-    { no:31, nama:"Mencukur rambut gondrong atau tidak rapi (melebihi batas yang ditentukan).", kategori:"Sedang" },
-    { no:32, nama:"Membawa atau menggunakan kosmetik berlebihan/tidak pantas (bagi putri).", kategori:"Sedang" },
-    { no:33, nama:"Membawa alat masak, pemanas air, atau barang bahaya api.", kategori:"Sedang" },
-    { no:34, nama:"Melakukan perundungan verbal (mengejek, menghina).", kategori:"Sedang" },
-    { no:35, nama:"Memalsukan tanda tangan surat izin atau pengumuman.", kategori:"Sedang" },
-    { no:36, nama:"Berada di luar asrama/lingkungan pondok setelah jam malam.", kategori:"Sedang" },
-    { no:37, nama:"Melakukan aktivitas yang membahayakan diri sendiri/orang lain.", kategori:"Sedang" },
-    { no:38, nama:"Menyebarkan isu atau gosip yang menyebabkan kegaduhan di pondok.", kategori:"Sedang" },
-    { no:39, nama:"Menggunakan media sosial tanpa izin (jika dilarang).", kategori:"Sedang" },
-    { no:40, nama:"Melakukan pelanggaran ringan berulang kali (tiga kali atau lebih) setelah diberi peringatan.", kategori:"Sedang" },
+  function renderProgramTab() {
+    const rows = dailyData.program;
+    if (!rows.length) {
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">📋</div>
+            <div>
+              <div class="card-title">Absensi Program Harian</div>
+              <div class="card-subtitle">Rekap kehadiran program santri pada tanggal ini.</div>
+            </div>
+          </div>
+          <div class="no-data">Belum ada data absensi program harian untuk tanggal ini.</div>
+        </div>`;
+    }
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <div>
+            <div class="card-title">Absensi Program Harian</div>
+            <div class="card-subtitle">Status kehadiran santri pada berbagai program.</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.program || "-"}</td>
+                <td>${badgeStatus(r.status)}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+        <p class="text-muted">Kehadiran diisi oleh Naqib melalui fitur Absensi Program Harian.</p>
+      </div>`;
+  }
 
-    { no:41, nama:"Mencuri atau mengambil barang berharga milik orang lain/pondok.", kategori:"Berat" },
-    { no:42, nama:"Menggunakan, membawa, atau mengedarkan narkotika dan obat-obatan terlarang.", kategori:"Berat" },
-    { no:43, nama:"Melakukan perbuatan zina, hubungan seks, atau tindakan asusila berat.", kategori:"Berat" },
-    { no:44, nama:"Membawa, membuat, atau mengonsumsi minuman keras/beralkohol.", kategori:"Berat" },
-    { no:45, nama:"Terlibat dalam perjudian atau taruhan dalam bentuk apapun.", kategori:"Berat" },
-    { no:46, nama:"Melakukan perkelahian berat yang mengakibatkan cedera serius.", kategori:"Berat" },
-    { no:47, nama:"Membawa, menyimpan, atau menggunakan senjata tajam atau senjata api.", kategori:"Berat" },
-    { no:48, nama:"Melarikan diri dari pondok dalam jangka waktu lama tanpa kabar.", kategori:"Berat" },
-    { no:49, nama:"Melakukan perundungan atau kekerasan yang bersifat sistematis (Bullying berat).", kategori:"Berat" },
-    { no:50, nama:"Melawan, mengancam, atau bertindak fisik terhadap Guru, Kiai, atau Pengurus.", kategori:"Berat" },
-    { no:51, nama:"Merusak fasilitas pondok secara sengaja dengan kerusakan parah dan besar.", kategori:"Berat" },
-    { no:52, nama:"Terlibat dalam demonstrasi atau gerakan yang merusak nama baik pondok di luar.", kategori:"Berat" },
-    { no:53, nama:"Membawa atau menyebarkan ajaran/paham yang bertentangan (Radikalisme).", kategori:"Berat" },
-    { no:54, nama:"Membujuk santri lain untuk melakukan tindakan kriminal atau pelanggaran berat.", kategori:"Berat" },
-    { no:55, nama:"Melakukan pemerasan atau pengancaman untuk meminta uang/barang.", kategori:"Berat" },
-    { no:56, nama:"Menipu orang tua atau pihak pondok untuk mendapatkan izin pulang/uang saku.", kategori:"Berat" },
-    { no:57, nama:"Memalsukan surat-surat penting (rapor atau surat keterangan dokter).", kategori:"Berat" },
-    { no:58, nama:"Melakukan hubungan sejenis (homoseksual) di lingkungan pondok.", kategori:"Berat" },
-    { no:59, nama:"Menghasut atau memimpin pemberontakan yang mengganggu ketertiban umum pondok.", kategori:"Berat" },
-    { no:60, nama:"Melakukan pelanggaran sedang berulang kali (setelah Skorsing/Pemanggilan Ortu).", kategori:"Berat" }
-  ];
+  function renderPembelajaranTab() {
+    const rows = dailyData.pembelajaran;
+    if (!rows.length) {
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">📘</div>
+            <div>
+              <div class="card-title">Absensi Pembelajaran</div>
+              <div class="card-subtitle">Rekap kehadiran santri dalam KBM hari ini.</div>
+            </div>
+          </div>
+          <div class="no-data">Belum ada data absensi pembelajaran untuk tanggal ini.</div>
+        </div>`;
+    }
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📘</div>
+          <div>
+            <div class="card-title">Absensi Pembelajaran</div>
+            <div class="card-subtitle">Kehadiran santri pada mata pelajaran hari ini.</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Mata Pelajaran</th>
+              <th>Kelas/Kelompok</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.mapel || "-"}</td>
+                <td>${r.sub || "-"}</td>
+                <td>${badgeStatus(r.status)}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+        <p class="text-muted">Diinput oleh Guru melalui fitur Absensi Kehadiran Pembelajaran.</p>
+      </div>`;
+  }
 
-  // === Inisialisasi ===
-  function init() {
-    if (!user || user.role !== 'naqib') {
-      alert('Silakan login sebagai Naqib terlebih dahulu.');
-      window.location.href = '../index.html';
+  function renderTahfizTab() {
+    const rows = dailyData.tahfiz;
+    if (!rows.length) {
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">📖</div>
+            <div>
+              <div class="card-title">Setoran Tahfiz</div>
+              <div class="card-subtitle">Rekap setoran hafalan santri pada tanggal ini.</div>
+            </div>
+          </div>
+          <div class="no-data">Belum ada setoran tahfiz yang tercatat pada tanggal ini.</div>
+        </div>`;
+    }
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📖</div>
+          <div>
+            <div class="card-title">Setoran Tahfiz</div>
+            <div class="card-subtitle">Rincian setoran hafalan dan penilaian.</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>Kelompok</th>
+              <th>Setoran</th>
+              <th>Jumlah Ayat</th>
+              <th>Nilai</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.program || "-"}</td>
+                <td>${r.kelompok || "-"}</td>
+                <td>${r.setoran || "-"}</td>
+                <td>${r.ayat || "-"}</td>
+                <td>${r.nilai || "-"}</td>
+                <td>${r.ket || "-"}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+        <p class="text-muted">Data diambil dari fitur Input Setoran Tahfiz.</p>
+      </div>`;
+  }
+
+  function renderPelanggaranTab() {
+    const rows = dailyData.pelanggaran;
+    if (!rows.length) {
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">⚠️</div>
+            <div>
+              <div class="card-title">Pelanggaran</div>
+              <div class="card-subtitle">Catatan pelanggaran yang tercatat pada hari ini.</div>
+            </div>
+          </div>
+          <div class="no-data">Tidak ada pelanggaran yang tercatat untuk tanggal ini. Alhamdulillah.</div>
+        </div>`;
+    }
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">⚠️</div>
+          <div>
+            <div class="card-title">Pelanggaran</div>
+            <div class="card-subtitle">Rincian pelanggaran santri dan tindak lanjut.</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Pelanggaran</th>
+              <th>Kategori</th>
+              <th>Keterangan</th>
+              <th>Tindak Lanjut</th>
+              <th>Konsekuensi</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.namaPelanggaran || "-"}</td>
+                <td>${r.kategori || "-"}</td>
+                <td>${r.keterangan || "-"}</td>
+                <td>${r.tindakLanjut || "-"}</td>
+                <td>${r.konsekuensi || "-"}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+        <p class="text-muted">Catatan diisi oleh Naqib melalui Form Pelanggaran Santri.</p>
+      </div>`;
+  }
+
+  function renderActiveTab(tabName) {
+    let html = "";
+    if (tabName === "program") html = renderProgramTab();
+    if (tabName === "pembelajaran") html = renderPembelajaranTab();
+    if (tabName === "tahfiz") html = renderTahfizTab();
+    if (tabName === "pelanggaran") html = renderPelanggaranTab();
+    panelContainer.innerHTML = html;
+  }
+
+  // handle klik tab
+  tabsEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab-btn");
+    if (!btn) return;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const tabName = btn.dataset.tab;
+    renderActiveTab(tabName);
+  });
+
+  async function loadDailyData(tanggal) {
+    const namaUpper = (currentUser.namaAnak || "").trim().toUpperCase();
+    panelContainer.innerHTML = `<p class="hint">🔄 Memuat data laporan harian...</p>`;
+
+    try {
+      const dbRoot = ref(db);
+      const [
+        absProgSnap,
+        absKbmSnap,
+        tahfizSnap,
+        pelanggaranSnap
+      ] = await Promise.all([
+        get(child(dbRoot, "cahaya_app/absensi_program_harian")),
+        get(child(dbRoot, "cahaya_app/absensi_pembelajaran")),
+        get(child(dbRoot, "cahaya_app/setoran_tahfiz")),
+        get(child(dbRoot, "cahaya_app/pelanggaran_santri"))
+      ]);
+
+      // Program harian
+      const programRows = [];
+      if (absProgSnap.exists()) {
+        Object.values(absProgSnap.val()).forEach(log => {
+          if (log.tanggal === tanggal) {
+            (log.data || []).forEach(s => {
+              if ((s.nama || "").trim().toUpperCase() === namaUpper) {
+                programRows.push({
+                  program: log.program || "Program Harian",
+                  status: s.status || "-"
+                });
+              }
+            });
+          }
+        });
+      }
+
+      // Pembelajaran
+      const pembRows = [];
+      if (absKbmSnap.exists()) {
+        Object.values(absKbmSnap.val()).forEach(log => {
+          if (log.tanggal === tanggal) {
+            (log.data || []).forEach(s => {
+              if ((s.nama || "").trim().toUpperCase() === namaUpper) {
+                pembRows.push({
+                  mapel: log.mapel || "-",
+                  sub: log.sub || log.kelas || log.kelompok || "",
+                  status: s.status || "-"
+                });
+              }
+            });
+          }
+        });
+      }
+
+      // Tahfiz
+      const tahfizRows = [];
+      if (tahfizSnap.exists()) {
+        Object.values(tahfizSnap.val()).forEach(log => {
+          if (log.tanggal === tanggal) {
+            (log.data || []).forEach(s => {
+              if ((s.nama || "").trim().toUpperCase() === namaUpper) {
+                tahfizRows.push({
+                  program: log.program || "-",
+                  kelompok: log.kelompok || "-",
+                  setoran: s.setoran || s.surat || "-",
+                  ayat: s.ayat || "-",
+                  nilai: s.nilai || "-",
+                  ket: s.ket || s.keterangan || "-"
+                });
+              }
+            });
+          }
+        });
+      }
+
+      // Pelanggaran
+      const pelRows = [];
+      if (pelanggaranSnap.exists()) {
+        Object.values(pelanggaranSnap.val()).forEach(p => {
+          if (p.tanggal === tanggal &&
+              (p.santri || "").trim().toUpperCase() === namaUpper) {
+            pelRows.push({
+              namaPelanggaran: p.namaPelanggaran,
+              kategori: p.kategori,
+              keterangan: p.keterangan,
+              tindakLanjut: p.tindakLanjut,
+              konsekuensi: p.konsekuensi
+            });
+          }
+        });
+      }
+
+      dailyData = {
+        program: programRows,
+        pembelajaran: pembRows,
+        tahfiz: tahfizRows,
+        pelanggaran: pelRows,
+        tanggal
+      };
+
+      // tampilkan tabs
+      tabsEl.style.display = "flex";
+
+      // set tab aktif kembali ke Program
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      const firstTab = document.querySelector('.tab-btn[data-tab="program"]');
+      if (firstTab) firstTab.classList.add("active");
+
+      renderActiveTab("program");
+
+    } catch (err) {
+      console.error(err);
+      panelContainer.innerHTML =
+        `<p class="hint" style="color:${'var(--danger)'}">❌ Gagal memuat data: ${err.message}</p>`;
+    }
+  }
+
+  btnTampil.addEventListener("click", () => {
+    const tgl = tanggalInput.value;
+    if (!tgl) {
+      alert("Silakan pilih tanggal terlebih dahulu.");
       return;
     }
-    document.getElementById('naqibTitle').textContent = user.label || 'Naqib';
-    document.getElementById('naqibInfo').textContent = `Naqib: ${user.naqibName || '-'}`;
-    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-
-    isiSantri(user.naqibName);
-    isiPelanggaran();
-
-    document.getElementById('namaPelanggaran').addEventListener('change', onPelanggaranChange);
-    document.getElementById('btnSimpan').addEventListener('click', simpan);
-  }
-
-  function isiSantri(naqibName) {
-    const list = dataSantri[naqibName] || [];
-    const select = document.getElementById('namaSantri');
-    select.innerHTML = '';
-
-    const optDefault = document.createElement('option');
-    optDefault.value = '';
-    optDefault.textContent = '-- pilih santri --';
-    select.appendChild(optDefault);
-
-    list.forEach(nama => {
-      const opt = document.createElement('option');
-      opt.textContent = nama;
-      opt.value = nama;
-      select.appendChild(opt);
-    });
-  }
-
-  function isiPelanggaran() {
-    const select = document.getElementById('namaPelanggaran');
-    const kategoriSelect = document.getElementById('kategori');
-    select.innerHTML = '';
-
-    const optDefault = document.createElement('option');
-    optDefault.value = '';
-    optDefault.textContent = '-- pilih pelanggaran --';
-    select.appendChild(optDefault);
-
-    daftarPelanggaran.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.nama;
-      opt.textContent = `${p.no}. ${p.nama}`;
-      opt.dataset.kategori = p.kategori;
-      select.appendChild(opt);
-    });
-
-    kategoriSelect.innerHTML = '';
-    ['Ringan','Sedang','Berat'].forEach(k => {
-      const o = document.createElement('option');
-      o.value = k;
-      o.textContent = k;
-      kategoriSelect.appendChild(o);
-    });
-    kategoriSelect.value = '';
-  }
-
-  function onPelanggaranChange() {
-    const select = document.getElementById('namaPelanggaran');
-    const kategoriSelect = document.getElementById('kategori');
-    const selected = select.options[select.selectedIndex];
-    const kat = selected.dataset.kategori || '';
-    kategoriSelect.value = kat;
-  }
-
-  // === Simpan ke Firebase ===
-  function simpan() {
-    const tanggal = document.getElementById('tanggal').value;
-    const santri = document.getElementById('namaSantri').value;
-    const namaPelanggaran = document.getElementById('namaPelanggaran').value;
-    const kategori = document.getElementById('kategori').value;
-    const ket = document.getElementById('keterangan').value.trim();
-    const tindakLanjut = document.getElementById('tindakLanjut').value.trim();
-    const konsekuensi = document.getElementById('konsekuensi').value.trim();
-
-    if (!santri || !namaPelanggaran || !kategori) {
-      alert('Lengkapi: santri, nama pelanggaran, dan kategori.');
-      return;
-    }
-
-    const entry = {
-      tanggal,
-      santri,
-      namaPelanggaran,
-      kategori,
-      keterangan: ket,
-      tindakLanjut,
-      konsekuensi,
-      naqib: user.naqibName,
-      waktuSimpan: new Date().toISOString()
-    };
-
-    const pelanggaranRef = ref(db, 'cahaya_app/pelanggaran_santri');
-    push(pelanggaranRef, entry)
-      .then(() => {
-        alert(`✅ Laporan pelanggaran tersimpan untuk ${santri}.`);
-        tampilkan(entry);
-        document.getElementById('keterangan').value = '';
-        document.getElementById('tindakLanjut').value = '';
-        document.getElementById('konsekuensi').value = '';
-      })
-      .catch(err => {
-        alert('❌ Gagal menyimpan ke Firebase: ' + err.message);
-      });
-  }
-
-  // === Tampilkan pada tabel lokal ===
-  function tampilkan(entry) {
-    const tbody = document.querySelector('#tabelPelanggaran tbody');
-    const tr = document.createElement('tr');
-    const no = tbody.children.length + 1;
-    tr.innerHTML = `
-      <td>${no}</td>
-      <td>${entry.tanggal}</td>
-      <td>${entry.santri}</td>
-      <td>${entry.namaPelanggaran}</td>
-      <td>${entry.kategori}</td>
-      <td>${entry.keterangan}</td>
-      <td>${entry.tindakLanjut}</td>
-      <td>${entry.konsekuensi}</td>
-    `;
-    tbody.appendChild(tr);
-  }
-
-  // === Navigasi (global) ===
-  window.goBack = function() {
-    window.location.href = 'dashboard.html';
-  };
-
-  window.logout = function() {
-    localStorage.removeItem('cahayaCurrentUser');
-    window.location.href = '../index.html';
-  };
-
-  document.addEventListener('DOMContentLoaded', init);
+    loadDailyData(tgl);
+  });
 </script>
-
 </body>
 </html>
-
