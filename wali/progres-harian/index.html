@@ -25,35 +25,39 @@
       align-items: center;
       flex-wrap: wrap;
       margin-bottom: 16px;
+      gap: 10px;
     }
 
-    .tabs {
+    .header-left {
       display: flex;
+      align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      background: #0d9488;
+      background: #10b981;
       border: none;
       padding: 8px 16px;
       border-radius: 8px;
       color: white;
       font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
+      cursor: default;
     }
 
-    .tab-btn.active {
-      background: #10b981;
-      color: white;
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .tab-btn:hover {
-      background: #14b8a6;
+    .header-right label {
+      font-weight: 500;
+      color: #fff;
     }
 
-    .header input {
+    .header-right input {
       background: rgba(255,255,255,0.15);
       border: none;
       padding: 8px 10px;
@@ -62,8 +66,23 @@
       font-weight: 500;
     }
 
-    .header input::-webkit-calendar-picker-indicator {
+    .header-right input::-webkit-calendar-picker-indicator {
       filter: invert(1);
+    }
+
+    .header-right button {
+      background: #0d9488;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .header-right button:hover {
+      background: #14b8a6;
     }
 
     /* === CARD === */
@@ -129,7 +148,10 @@
       .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+      }
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
       }
       table { font-size: 0.78rem; }
       th, td { padding: 6px; }
@@ -140,16 +162,18 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="tabs">
-        <button class="tab-btn active" id="btnHarian">Laporan Harian</button>
-        <button class="tab-btn" id="btnBulanan">Laporan Bulanan</button>
+      <div class="header-left">
+        <button class="tab-btn">📅 Laporan Harian</button>
       </div>
-      <label for="tanggal">Tanggal: </label>
-      <input type="date" id="tanggal" value="${new Date().toISOString().split('T')[0]}">
+      <div class="header-right">
+        <label for="tanggal">Tanggal:</label>
+        <input type="date" id="tanggal" value="${new Date().toISOString().split('T')[0]}">
+        <button id="tampilkan">Tampilkan Progres</button>
+      </div>
     </div>
 
     <div id="laporan">
-      <p style="text-align:center;opacity:0.8;">Pilih tanggal untuk melihat laporan harian santri.</p>
+      <p style="text-align:center;opacity:0.8;">Pilih tanggal, lalu klik <b>Tampilkan Progres</b> untuk melihat laporan harian santri.</p>
     </div>
 
     <footer>© 2025 Pesantren Cahaya Fajrul Islam — CAHAYA APP</footer>
@@ -177,11 +201,12 @@
 
     const laporanDiv = document.getElementById("laporan");
     const tanggalInput = document.getElementById("tanggal");
+    const btnTampilkan = document.getElementById("tampilkan");
 
-    tanggalInput.addEventListener("change", () => loadProgresHarian(tanggalInput.value));
-    document.getElementById("btnBulanan").addEventListener("click", ()=>window.location.href="../progres-bulanan/");
+    btnTampilkan.addEventListener("click", () => loadProgresHarian(tanggalInput.value));
 
     async function loadProgresHarian(tanggal) {
+      if (!tanggal) return alert("Pilih tanggal terlebih dahulu!");
       laporanDiv.innerHTML = `
         <div class="card"><h2>📋 Absensi Program Harian</h2><div id="prog">Memuat...</div></div>
         <div class="card"><h2>📘 Absensi Pembelajaran</h2><div id="pemb">Memuat...</div></div>
