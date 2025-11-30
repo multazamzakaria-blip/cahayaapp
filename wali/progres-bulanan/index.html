@@ -138,8 +138,17 @@ function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth(
 
 async function generateLaporan() {
   const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!user || user.role !== "wali") return window.location.href = "../../index.html";
-  const namaAnak = user.namaAnak; // dari portal login utama
+  if (!user || user.role !== "wali") 
+    return (window.location.href = "../../index.html");
+
+  // ✅ Pastikan nama anak terbaca, apapun key-nya
+  const namaAnak = user.namaAnak || user.nama || user.label?.replace(/^Wali\s+/i, "") || "";
+
+  if (!namaAnak) {
+    alert("Nama anak tidak ditemukan di data login. Silakan login ulang.");
+    localStorage.removeItem("cahayaCurrentUser");
+    return (window.location.href = "../../index.html");
+  }
 
   const bulan = +document.getElementById("bulanSelect").value;
   const tahun = +document.getElementById("tahunSelect").value;
@@ -147,12 +156,11 @@ async function generateLaporan() {
   container.innerHTML = "";
 
   if (isNaN(bulan) || isNaN(tahun))
-    return container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>";
+    return (container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>");
 
   const data = await window.getFirebaseData();
   const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = data;
 
-  // Buat satu laporan saja untuk anak wali
   container.appendChild(
     buatLaporanSantri({
       nama: namaAnak,
@@ -168,6 +176,7 @@ async function generateLaporan() {
     })
   );
 }
+
 
 function logout(){
   localStorage.removeItem("cahayaCurrentUser");
