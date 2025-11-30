@@ -9,8 +9,10 @@
       --bg1: #0f766e;
       --bg2: #064e3b;
       --card: rgba(15, 23, 42, 0.35);
+      --card-soft: rgba(15, 23, 42, 0.25);
       --border-soft: rgba(148, 163, 184, 0.4);
       --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
       --text-main: #f9fafb;
     }
     * { box-sizing: border-box; }
@@ -23,7 +25,7 @@
     }
     .page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px; }
 
-    /* ======= TOP BAR ======= */
+    /* HEADER */
     .top-bar {
       display: flex; justify-content: space-between; align-items: center;
       flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
@@ -31,47 +33,96 @@
     .top-left-label {
       font-weight: 600; font-size: 0.95rem;
       padding: 8px 16px; border-radius: 999px;
-      background: rgba(15, 118, 110, 0.9);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-      white-space: nowrap;
+      background: linear-gradient(135deg, #0d9488, #0f766e);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+      color: #fff; white-space: nowrap;
     }
     .filter-area {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 8px;
       flex-wrap: nowrap; justify-content: flex-end;
     }
     .filter-area span { font-size: 0.9rem; opacity: 0.9; white-space: nowrap; }
     .filter-area input[type="date"] {
-      background: rgba(15, 23, 42, 0.8);
-      border-radius: 999px; border: 1px solid rgba(148, 163, 184, 0.6);
-      padding: 6px 10px; color: #e5e7eb; font-size: 0.9rem;
-      flex: 1;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff; border-radius: 8px;
+      padding: 6px 10px; font-size: 0.9rem;
     }
     .filter-area input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     .btn-main {
-      border-radius: 999px; border: none; padding: 7px 14px;
+      border-radius: 8px; border: none; padding: 7px 14px;
       font-size: 0.9rem; font-weight: 600; cursor: pointer;
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      display: inline-flex; align-items: center; gap: 6px;
+      color: white; box-shadow: 0 3px 6px rgba(0,0,0,0.4);
       transition: 0.2s; white-space: nowrap;
     }
-    .btn-main:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .btn-main:hover { transform: translateY(-1px); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
 
     @media (max-width: 640px) {
-      .top-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+      .top-bar { flex-direction: column; align-items: stretch; gap: 8px; }
       .filter-area {
-        width: 100%; justify-content: space-between;
+        width: 100%;
+        justify-content: space-between;
         flex-wrap: nowrap;
       }
-      .filter-area input[type="date"] { width: 100%; }
-      .btn-main { padding: 7px 12px; font-size: 0.85rem; }
+      .btn-main { font-size: 0.85rem; padding: 7px 12px; }
     }
 
-    /* ========== SISANYA GAYA SEBELUMNYA TIDAK BERUBAH ========== */
+    /* TABS */
+    .tabs { display: none; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #f1f5f9; border-radius: 8px;
+      padding: 6px 14px; font-size: 0.9rem;
+      cursor: pointer; transition: 0.2s;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: transparent; color: #fff;
+      box-shadow: 0 3px 10px rgba(16,185,129,0.5);
+    }
+    .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.15); }
+
+    /* CARD */
+    .card {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      padding: 16px 20px; margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .card-header { font-weight: 600; font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.86rem; background: rgba(15,23,42,0.4);
+      border-radius: 12px; overflow: hidden;
+    }
+    th, td {
+      padding: 8px 10px; border: 1px solid rgba(255,255,255,0.15);
+      text-align: left; color: #f8fafc;
+    }
+    th {
+      background: rgba(255,255,255,0.15);
+      font-weight: 600; text-transform: capitalize;
+    }
+    .badge {
+      display: inline-block; padding: 3px 8px;
+      border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-hadir { background: #16a34a; color: #e5ffe9; }
+    .badge-izin { background: #0ea5e9; color: #e0f2fe; }
+    .badge-sakit { background: #eab308; color: #111827; }
+    .badge-alfa { background: #ef4444; color: #fee2e2; }
+    .no-data { text-align: center; opacity: 0.8; padding: 20px; font-size: 0.9rem; }
+    footer { text-align: center; font-size: 0.8rem; opacity: 0.75; margin-top: 20px; }
+
+    @media (max-width: 640px) {
+      table { font-size: 0.75rem; }
+      th, td { padding: 6px; }
+    }
   </style>
 </head>
-
 <body>
 <div class="page">
   <div class="top-bar">
@@ -91,14 +142,13 @@
   </div>
 
   <main id="panelContainer">
-    <p class="hint">Pilih tanggal, lalu klik <b>Tampilkan Progres</b> untuk melihat laporan harian santri.</p>
+    <p style="text-align:center;opacity:0.8;">Pilih tanggal, lalu klik <b>Tampilkan Progres</b> untuk melihat laporan harian santri.</p>
   </main>
 
   <footer>© 2025 Pesantren Cahaya Fajrul Islam — CAHAYA APP</footer>
 </div>
 
-
-<!-- FIREBASE -->
+<!-- 🔥 SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -121,95 +171,94 @@
   const panelContainer = document.getElementById("panelContainer");
 
   const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!currentUser || currentUser.role !== "wali") {
-    alert("Silakan login sebagai Wali Santri."); window.location.href = "../index.html";
-  }
+  if (!currentUser || currentUser.role !== "wali") window.location.href = "../index.html";
 
   tanggalInput.value = new Date().toISOString().split("T")[0];
+  let dailyData = { program: [], pembelajaran: [], tahfiz: [], pelanggaran: [] };
 
-  let dailyData = { program: [], pembelajaran: [], tahfiz: [], pelanggaran: [], tanggal: null };
-
-  function badgeStatus(statusRaw) {
-    const s = (statusRaw || "").toString().toLowerCase();
-    if (s.includes("hadir")) return `<span class="badge badge-hadir">Hadir</span>`;
-    if (s.includes("izin"))  return `<span class="badge badge-izin">Izin</span>`;
-    if (s.includes("sakit")) return `<span class="badge badge-sakit">Sakit</span>`;
-    if (s.includes("alfa"))  return `<span class="badge badge-alfa">Alfa</span>`;
-    return statusRaw || "-";
+  function badgeStatus(s) {
+    s = (s||"").toLowerCase();
+    if(s.includes("hadir")) return `<span class="badge badge-hadir">Hadir</span>`;
+    if(s.includes("izin")) return `<span class="badge badge-izin">Izin</span>`;
+    if(s.includes("sakit")) return `<span class="badge badge-sakit">Sakit</span>`;
+    if(s.includes("alfa")) return `<span class="badge badge-alfa">Alfa</span>`;
+    return s || "-";
   }
 
-  // render tiap tab
-  function renderProgramTab() {
-    const rows = dailyData.program;
-    if (!rows.length)
-      return `<div class="card"><div class="card-header"><div class="card-icon">📋</div><div><div class="card-title">Absensi Program Harian</div><div class="card-subtitle">Rekap kehadiran program santri.</div></div></div><div class="no-data">Belum ada data absensi program harian.</div></div>`;
-    return `<div class="card"><div class="card-header"><div class="card-icon">📋</div><div><div class="card-title">Absensi Program Harian</div></div></div><table><thead><tr><th>Program</th><th>Status</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.program||"-"}</td><td>${badgeStatus(r.status)}</td></tr>`).join("")}</tbody></table></div>`;
+  function renderProgram() {
+    if (!dailyData.program.length) return `<div class="card"><div class="card-header">📋 Absensi Program Harian</div><div class="no-data">Belum ada data program hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header">📋 Absensi Program Harian</div><table><tr><th>Program</th><th>Status</th></tr>${dailyData.program.map(p=>`<tr><td>${p.program}</td><td>${badgeStatus(p.status)}</td></tr>`).join("")}</table></div>`;
+  }
+  function renderPembelajaran() {
+    if (!dailyData.pembelajaran.length) return `<div class="card"><div class="card-header">📘 Absensi Pembelajaran</div><div class="no-data">Belum ada data pembelajaran hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header">📘 Absensi Pembelajaran</div><table><tr><th>Mata Pelajaran</th><th>Status</th></tr>${dailyData.pembelajaran.map(p=>`<tr><td>${p.mapel}</td><td>${badgeStatus(p.status)}</td></tr>`).join("")}</table></div>`;
+  }
+  function renderTahfiz() {
+    if (!dailyData.tahfiz.length) return `<div class="card"><div class="card-header">📖 Setoran Tahfiz</div><div class="no-data">Belum ada setoran hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header">📖 Setoran Tahfiz</div><table><tr><th>Setoran</th><th>Jumlah Ayat</th><th>Nilai</th></tr>${dailyData.tahfiz.map(t=>`<tr><td>${t.setoran||"-"}</td><td>${t.ayat||"-"}</td><td>${t.nilai||"-"}</td></tr>`).join("")}</table></div>`;
+  }
+  function renderPelanggaran() {
+    if (!dailyData.pelanggaran.length) return `<div class="card"><div class="card-header">⚠️ Pelanggaran</div><div class="no-data">Tidak ada pelanggaran hari ini.</div></div>`;
+    return `<div class="card"><div class="card-header">⚠️ Pelanggaran</div><table><tr><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr>${dailyData.pelanggaran.map(p=>`<tr><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td><td>${p.konsekuensi||"-"}</td></tr>`).join("")}</table></div>`;
   }
 
-  function renderPembelajaranTab() {
-    const rows = dailyData.pembelajaran;
-    if (!rows.length)
-      return `<div class="card"><div class="card-header"><div class="card-icon">📘</div><div><div class="card-title">Absensi Pembelajaran</div></div></div><div class="no-data">Belum ada data pembelajaran hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header"><div class="card-icon">📘</div><div><div class="card-title">Absensi Pembelajaran</div></div></div><table><thead><tr><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.mapel||"-"}</td><td>${badgeStatus(r.status)}</td></tr>`).join("")}</tbody></table></div>`;
+  function renderTab(name){
+    panelContainer.innerHTML =
+      name==="program" ? renderProgram() :
+      name==="pembelajaran" ? renderPembelajaran() :
+      name==="tahfiz" ? renderTahfiz() : renderPelanggaran();
   }
 
-  function renderTahfizTab() {
-    const rows = dailyData.tahfiz;
-    if (!rows.length)
-      return `<div class="card"><div class="card-header"><div class="card-icon">📖</div><div><div class="card-title">Setoran Tahfiz</div></div></div><div class="no-data">Belum ada setoran tahfiz hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header"><div class="card-icon">📖</div><div><div class="card-title">Setoran Tahfiz</div></div></div><table><thead><tr><th>Setoran</th><th>Jumlah Ayat</th><th>Nilai</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.setoran||"-"}</td><td>${r.ayat||"-"}</td><td>${r.nilai||"-"}</td></tr>`).join("")}</tbody></table></div>`;
-  }
-
-  function renderPelanggaranTab() {
-    const rows = dailyData.pelanggaran;
-    if (!rows.length)
-      return `<div class="card"><div class="card-header"><div class="card-icon">⚠️</div><div><div class="card-title">Pelanggaran</div></div></div><div class="no-data">Tidak ada pelanggaran hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header"><div class="card-icon">⚠️</div><div><div class="card-title">Pelanggaran</div></div></div><table><thead><tr><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.keterangan||"-"}</td><td>${r.tindakLanjut||"-"}</td><td>${r.konsekuensi||"-"}</td></tr>`).join("")}</tbody></table></div>`;
-  }
-
-  function renderActiveTab(name){
-    if(name==="program") panelContainer.innerHTML=renderProgramTab();
-    if(name==="pembelajaran") panelContainer.innerHTML=renderPembelajaranTab();
-    if(name==="tahfiz") panelContainer.innerHTML=renderTahfizTab();
-    if(name==="pelanggaran") panelContainer.innerHTML=renderPelanggaranTab();
-  }
-
-  tabsEl.addEventListener("click",e=>{
-    const btn=e.target.closest(".tab-btn"); if(!btn)return;
+  tabsEl.addEventListener("click", e=>{
+    const btn = e.target.closest(".tab-btn");
+    if(!btn) return;
     document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    renderActiveTab(btn.dataset.tab);
+    renderTab(btn.dataset.tab);
   });
 
-  async function loadDailyData(tanggal){
-    const namaUpper=(currentUser.namaAnak||"").trim().toUpperCase();
-    panelContainer.innerHTML=`<p class="hint">🔄 Memuat data...</p>`;
-    try{
-      const dbRoot=ref(db);
-      const [absProg,absKbm,tahfizSnap,pelSnap]=await Promise.all([
-        get(child(dbRoot,"cahaya_app/absensi_program_harian")),
-        get(child(dbRoot,"cahaya_app/absensi_pembelajaran")),
-        get(child(dbRoot,"cahaya_app/setoran_tahfiz")),
-        get(child(dbRoot,"cahaya_app/pelanggaran_santri"))
-      ]);
-      const prog=[],pemb=[],tah=[],pel=[];
-      if(absProg.exists())Object.values(absProg.val()).forEach(l=>{if(l.tanggal===tanggal)(l.data||[]).forEach(s=>{if((s.nama||"").trim().toUpperCase()===namaUpper)prog.push({program:l.program,status:s.status});});});
-      if(absKbm.exists())Object.values(absKbm.val()).forEach(l=>{if(l.tanggal===tanggal)(l.data||[]).forEach(s=>{if((s.nama||"").trim().toUpperCase()===namaUpper)pemb.push({mapel:l.mapel,status:s.status});});});
-      if(tahfizSnap.exists())Object.values(tahfizSnap.val()).forEach(l=>{if(l.tanggal===tanggal)(l.data||[]).forEach(s=>{if((s.nama||"").trim().toUpperCase()===namaUpper)tah.push({setoran:s.setoran||s.surat,ayat:s.ayat,nilai:s.nilai});});});
-      if(pelSnap.exists())Object.values(pelSnap.val()).forEach(p=>{if(p.tanggal===tanggal&&(p.santri||"").trim().toUpperCase()===namaUpper)pel.push({keterangan:p.keterangan,tindakLanjut:p.tindakLanjut,konsekuensi:p.konsekuensi});});
-      dailyData={program:prog,pembelajaran:pemb,tahfiz:tah,pelanggaran:pel,tanggal};
-      tabsEl.style.display="flex"; document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-      document.querySelector('.tab-btn[data-tab="program"]').classList.add("active");
-      renderActiveTab("program");
-    }catch(err){
-      panelContainer.innerHTML=`<p class="hint" style="color:#f87171;">❌ Gagal memuat data: ${err.message}</p>`;
-    }
+  async function loadData(tanggal) {
+    const nama = (currentUser.namaAnak||"").trim().toUpperCase();
+    panelContainer.innerHTML = `<p style="text-align:center;opacity:0.8;">⏳ Memuat data...</p>`;
+    const root = ref(db);
+    const [prog, kbm, tah, pel] = await Promise.all([
+      get(child(root,"cahaya_app/absensi_program_harian")),
+      get(child(root,"cahaya_app/absensi_pembelajaran")),
+      get(child(root,"cahaya_app/setoran_tahfiz")),
+      get(child(root,"cahaya_app/pelanggaran_santri"))
+    ]);
+    const progs=[], kbms=[], tahfizs=[], pels=[];
+    if(prog.exists()) Object.values(prog.val()).forEach(a=>{
+      if(a.tanggal===tanggal)(a.data||[]).forEach(s=>{
+        if((s.nama||"").trim().toUpperCase()===nama) progs.push({program:a.program,status:s.status});
+      });
+    });
+    if(kbm.exists()) Object.values(kbm.val()).forEach(a=>{
+      if(a.tanggal===tanggal)(a.data||[]).forEach(s=>{
+        if((s.nama||"").trim().toUpperCase()===nama) kbms.push({mapel:a.mapel,status:s.status});
+      });
+    });
+    if(tah.exists()) Object.values(tah.val()).forEach(a=>{
+      if(a.tanggal===tanggal)(a.data||[]).forEach(s=>{
+        if((s.nama||"").trim().toUpperCase()===nama)tahfizs.push({setoran:s.setoran||s.surat,ayat:s.ayat,nilai:s.nilai});
+      });
+    });
+    if(pel.exists()) Object.values(pel.val()).forEach(p=>{
+      if(p.tanggal===tanggal&&(p.santri||"").trim().toUpperCase()===nama)
+        pels.push({keterangan:p.keterangan,tindakLanjut:p.tindakLanjut,konsekuensi:p.konsekuensi});
+    });
+
+    dailyData={program:progs,pembelajaran:kbms,tahfiz:tahfizs,pelanggaran:pels};
+    tabsEl.style.display="flex";
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelector('.tab-btn[data-tab="program"]').classList.add("active");
+    renderTab("program");
   }
 
-  btnTampil.addEventListener("click",()=>{
-    const tgl=tanggalInput.value;
-    if(!tgl)return alert("Silakan pilih tanggal terlebih dahulu.");
-    loadDailyData(tgl);
+  btnTampil.addEventListener("click", ()=>{
+    const tgl = tanggalInput.value;
+    if(!tgl) return alert("Pilih tanggal terlebih dahulu");
+    loadData(tgl);
   });
 </script>
 </body>
