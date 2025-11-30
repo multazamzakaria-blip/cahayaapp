@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wali Santri - Laporan Bulanan Anak</title>
+  <title>Laporan Bulanan Anak - CAHAYA APP</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -24,17 +24,8 @@
     .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px; margin-bottom: 30px; background: white; }
     .laporan-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px; }
     .laporan-header h1 { font-size: 28px; color: #1e3a8a; margin: 0; font-weight: 800; }
-    .laporan-header h2 { font-size: 22px; color: #1e3a8a; margin: 6px 0 12px 0; font-weight: 700; }
     .laporan-header h3 { font-size: 20px; color: #111827; margin: 6px 0 16px 0; font-weight: 700; }
-    .identitas-grid { display: flex; justify-content: space-between; max-width: 650px; margin: 0 auto; font-size: 18px; }
-    .section-title { margin-top: 28px; margin-bottom: 8px; font-weight: bold; color: #0f766e; display: flex; align-items: center; gap: 8px; font-size: 20px; }
-    .dim-card { border-radius: 12px; padding: 14px 16px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 18px; margin-bottom: 12px; }
-    .dim-card h4 { margin: 0 0 6px; font-size: 18px; color: #0f172a; }
-    .dim-card p { margin: 0; white-space: pre-line; font-size: 18px; }
     .muted { color: #6b7280; font-size: 17px; }
-    .export-buttons { text-align: right; margin-top: 16px; }
-    .export-buttons button { background: #2563eb; margin-left: 8px; padding: 12px 18px; font-size: 17px; }
-    .export-buttons button:hover { background: #1e40af; }
   </style>
 </head>
 
@@ -61,18 +52,15 @@
       <select id="tahunSelect"></select>
       <button onclick="generateLaporan()">Tampilkan Laporan</button>
     </div>
-
     <div id="laporanContainer">
       <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan anak Anda.</p>
     </div>
   </div>
 </main>
 
-<!-- ====== LIBRARY PDF ====== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- ====== FIREBASE CONFIG ====== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -92,91 +80,30 @@
   const dbRef = ref(db);
   window.dbRef = dbRef;
 
-  // ====== Fungsi ambil data Firebase ======
   window.getFirebaseData = async function() {
-    const [
-      assesGuruSnap, assesNaqibSnap, absNaqibSnap, absKbmSnap, ujianSnap, tahfizSnap, pelanggaranSnap
-    ] = await Promise.all([
+    const [assesGuruSnap, assesNaqibSnap] = await Promise.all([
       get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
       get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
-      get(child(dbRef, "cahaya_app/absensi_program_harian")),
-      get(child(dbRef, "cahaya_app/absensi_pembelajaran")),
-      get(child(dbRef, "cahaya_app/nilai_ujian")),
-      get(child(dbRef, "cahaya_app/setoran_tahfiz")),
-      get(child(dbRef, "cahaya_app/pelanggaran_santri")),
     ]);
-
     return {
       assesmentGuru: assesGuruSnap.exists() ? Object.values(assesGuruSnap.val()) : [],
       assesmentNaqib: assesNaqibSnap.exists() ? Object.values(assesNaqibSnap.val()) : [],
-      absensiNaqib: absNaqibSnap.exists() ? Object.values(absNaqibSnap.val()) : [],
-      absensiKbm: absKbmSnap.exists() ? Object.values(absKbmSnap.val()) : [],
-      ujian: ujianSnap.exists() ? Object.values(ujianSnap.val()) : [],
-      tahfiz: tahfizSnap.exists() ? Object.values(tahfizSnap.val()) : [],
-      pelanggaranAll: pelanggaranSnap.exists() ? Object.values(pelanggaranSnap.val()) : [],
     };
   };
 </script>
 
-<!-- ====== SCRIPT UTAMA ====== -->
 <script>
-let jsPDFLib;
-
 window.addEventListener("load", () => {
-  if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
   const tahunSelect = document.getElementById("tahunSelect");
-  const tNow = new Date().getFullYear();
-  for (let t = tNow - 2; t <= tNow + 1; t++) {
+  const now = new Date().getFullYear();
+  for (let i = now - 2; i <= now + 1; i++) {
     const opt = document.createElement("option");
-    opt.value = t; opt.textContent = t; if (t === tNow) opt.selected = true;
+    opt.value = i;
+    opt.textContent = i;
+    if (i === now) opt.selected = true;
     tahunSelect.appendChild(opt);
   }
 });
-
-function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
-function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
-
-async function generateLaporan() {
-  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!user || user.role !== "wali") 
-    return (window.location.href = "../../index.html");
-
-  // ✅ Pastikan nama anak terbaca, apapun key-nya
-  const namaAnak = user.namaAnak || user.nama || user.label?.replace(/^Wali\s+/i, "") || "";
-
-  if (!namaAnak) {
-    alert("Nama anak tidak ditemukan di data login. Silakan login ulang.");
-    localStorage.removeItem("cahayaCurrentUser");
-    return (window.location.href = "../../index.html");
-  }
-
-  const bulan = +document.getElementById("bulanSelect").value;
-  const tahun = +document.getElementById("tahunSelect").value;
-  const container = document.getElementById("laporanContainer");
-  container.innerHTML = "";
-
-  if (isNaN(bulan) || isNaN(tahun))
-    return (container.innerHTML = "<p class='muted'>Pilih bulan dan tahun.</p>");
-
-  const data = await window.getFirebaseData();
-  const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = data;
-
-  container.appendChild(
-    buatLaporanSantri({
-      nama: namaAnak,
-      bulan,
-      tahun,
-      assesmentGuru,
-      assesmentNaqib,
-      absensiNaqib,
-      absensiKbm,
-      ujian,
-      tahfiz,
-      pelanggaranAll
-    })
-  );
-}
-
 
 function logout(){
   localStorage.removeItem("cahayaCurrentUser");
@@ -184,6 +111,49 @@ function logout(){
 }
 function goDashboard(){
   window.location.href = "../dashboard/";
+}
+
+function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+function isSameMonthYear(t,b,t2){ const d=parseDate(t); return d&&d.getMonth()===b&&d.getFullYear()===t2; }
+
+async function generateLaporan() {
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if (!user || user.role !== "wali") return (window.location.href="../../index.html");
+
+  const namaAnak = user.namaAnak || user.nama || user.label?.replace(/^Wali\s+/i, "") || "";
+  const bulan = +document.getElementById("bulanSelect").value;
+  const tahun = +document.getElementById("tahunSelect").value;
+  const container = document.getElementById("laporanContainer");
+  container.innerHTML = "<p class='muted'>🔄 Memuat data dari Firebase...</p>";
+
+  const data = await window.getFirebaseData();
+  const { assesmentGuru, assesmentNaqib } = data;
+
+  const guruData = assesmentGuru.filter(a => (a.namaSantri||"").toLowerCase() === namaAnak.toLowerCase());
+  const naqibData = assesmentNaqib.filter(a => (a.namaSantri||"").toLowerCase() === namaAnak.toLowerCase());
+
+  if (!guruData.length && !naqibData.length) {
+    container.innerHTML = `<p class='muted'>Belum ada data untuk <b>${namaAnak}</b>.</p>`;
+    return;
+  }
+
+  const asesGuru = guruData.at(-1) || {};
+  const asesNaqib = naqibData.at(-1) || {};
+
+  container.innerHTML = `
+    <div class="laporan-card">
+      <div class="laporan-header">
+        <h1>Laporan Bulanan Anak</h1>
+        <h3>${namaAnak.toUpperCase()}</h3>
+        <p>${new Date(tahun, bulan).toLocaleString("id-ID",{month:"long",year:"numeric"})}</p>
+      </div>
+      <p><b>🕋 Cinta Allah:</b> ${asesGuru.narasiSpiritual || "Belum ada catatan."}</p>
+      <p><b>🤝 Akhlak Mulia:</b> ${asesNaqib.narasiRelational || "Belum ada catatan."}</p>
+      <p><b>💓 Hati Bersih:</b> ${asesNaqib.narasiEmotional || "Belum ada catatan."}</p>
+      <p><b>🧠 Akal Cerdas:</b> ${asesGuru.narasiIntellectual || "Belum ada catatan."}</p>
+      <p><b>🏃‍♂️ Fisik Berdaya:</b> ${asesNaqib.narasiPhysical || "Belum ada catatan."}</p>
+    </div>
+  `;
 }
 </script>
 </body>
