@@ -126,5 +126,6 @@ export const waliList = [
       {nama:"Shelena",username:"shelena937",password:"Cahaya@5284"},
       {nama:"Fitrah Kirana",username:"fitrah607",password:"Cahaya@7839"},
       {nama:"Naufal Akbar Alkhatiri",username:"naufal500",password:"Cahaya@5000"},
+  {nama:"Santri FI",username:"santri111",password:"Cahaya@1111"},
     ];
 
