@@ -216,7 +216,7 @@
     const salam = document.getElementById("salamWali");
     const logoutBtn = document.getElementById("logoutBtn");
     if (!user || user.role !== "wali") window.location.href = "../index.html";
-    else salam.innerHTML = `Assalamu’alaikum Walisantri <b>${user.namaAnak || "Santri Anda"}</b>`;
+    else salam.innerHTML = `Assalamu’alaikum Walisantri <b>${user.namaSantri || user.namaAnak || "Santri Anda"}</b>`;
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("cahayaCurrentUser");
