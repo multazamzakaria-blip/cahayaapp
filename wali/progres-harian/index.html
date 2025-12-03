@@ -23,25 +23,11 @@
     .page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px; }
 
     /* HEADER */
-    .app-title {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .app-title h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .app-title p {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
+    .app-title { text-align: center; margin-bottom: 10px; }
+    .app-title h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+    .app-title p { font-size: 1rem; opacity: 0.9; }
 
-    .top-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
-    }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
     .top-left-label {
       font-weight: 600; font-size: 0.95rem;
       padding: 8px 16px; border-radius: 999px;
@@ -51,68 +37,36 @@
     }
 
     /* BUTTON BAR */
-    .button-bar {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
+    .button-bar { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
     .btn-top {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.25s;
-      color: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      padding: 8px 16px; border: none; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      transition: 0.25s; color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
-    .btn-dashboard {
-      background: linear-gradient(135deg, var(--accent2), #0284c7);
-    }
-    .btn-logout {
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
-    }
-    .btn-top:hover {
-      transform: translateY(-1px);
-      opacity: 0.9;
-    }
+    .btn-dashboard { background: linear-gradient(135deg, var(--accent2), #0284c7); }
+    .btn-logout { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+    .btn-top:hover { transform: translateY(-1px); opacity: 0.9; }
 
     /* FILTER */
-    .filter-area {
-      display: flex; align-items: center; gap: 8px;
-      flex-wrap: nowrap; justify-content: flex-end;
-    }
+    .filter-area { display: flex; align-items: center; gap: 8px; justify-content: flex-end; flex-wrap: nowrap; }
     .filter-area span { font-size: 0.9rem; opacity: 0.9; white-space: nowrap; }
     .filter-area input[type="date"] {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff; border-radius: 8px;
-      padding: 6px 10px; font-size: 0.9rem;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; border-radius: 8px; padding: 6px 10px; font-size: 0.9rem;
     }
     .filter-area input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     .btn-main {
       border-radius: 8px; border: none; padding: 7px 14px;
       font-size: 0.9rem; font-weight: 600; cursor: pointer;
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white; box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-      transition: 0.2s; white-space: nowrap;
+      color: white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); transition: 0.2s;
     }
     .btn-main:hover { transform: translateY(-1px); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
 
-    @media (max-width: 640px) {
-      .top-bar { flex-direction: column; align-items: stretch; gap: 8px; }
-      .filter-area { width: 100%; justify-content: space-between; }
-      .btn-main, .btn-top { width: 100%; font-size: 0.9rem; padding: 8px 0; }
-      .button-bar { justify-content: center; }
-    }
-
-    /* TABS */
+    /* TABS & CARD */
     .tabs { display: none; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
     .tab-btn {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.3);
       color: #f1f5f9; border-radius: 8px;
       padding: 6px 14px; font-size: 0.9rem;
@@ -123,34 +77,20 @@
       border-color: transparent; color: #fff;
       box-shadow: 0 3px 10px rgba(16,185,129,0.5);
     }
-    .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.15); }
-
-    /* CARD */
     .card {
       background: rgba(15, 23, 42, 0.5);
-      border-radius: 14px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-      padding: 16px 20px; margin-bottom: 20px;
-      backdrop-filter: blur(10px);
+      border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      padding: 16px 20px; margin-bottom: 20px; backdrop-filter: blur(10px);
     }
-    .card-header { font-weight: 600; font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .card-header { font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
     table {
-      width: 100%; border-collapse: collapse;
-      font-size: 0.86rem; background: rgba(15,23,42,0.4);
-      border-radius: 12px; overflow: hidden;
+      width: 100%; border-collapse: collapse; font-size: 0.86rem;
+      background: rgba(15,23,42,0.4); border-radius: 12px; overflow: hidden;
     }
-    th, td {
-      padding: 8px 10px; border: 1px solid rgba(255,255,255,0.15);
-      text-align: left; color: #f8fafc;
-    }
-    th {
-      background: rgba(255,255,255,0.15);
-      font-weight: 600; text-transform: capitalize;
-    }
-    .badge {
-      display: inline-block; padding: 3px 8px;
-      border-radius: 999px; font-size: 0.75rem; font-weight: 600;
-    }
+    th, td { padding: 8px 10px; border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; }
+    th { background: rgba(255,255,255,0.15); font-weight: 600; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
     .badge-hadir { background: #16a34a; color: #e5ffe9; }
     .badge-izin { background: #0ea5e9; color: #e0f2fe; }
     .badge-sakit { background: #eab308; color: #111827; }
@@ -159,14 +99,17 @@
     footer { text-align: center; font-size: 0.8rem; opacity: 0.75; margin-top: 20px; }
 
     @media (max-width: 640px) {
+      .top-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+      .filter-area { width: 100%; justify-content: space-between; }
+      .btn-main, .btn-top { width: 100%; font-size: 0.9rem; padding: 8px 0; }
       table { font-size: 0.75rem; }
       th, td { padding: 6px; }
     }
   </style>
 </head>
+
 <body>
 <div class="page">
-
   <div class="app-title">
     <h1>🌞 CAHAYA APP</h1>
     <p>🕌 Pesantren Cahaya Fajrul Islam</p>
@@ -200,10 +143,16 @@
   <footer>© 2025 Pesantren Cahaya Fajrul Islam — CAHAYA APP</footer>
 </div>
 
-<!-- 🔥 SCRIPT -->
+<!-- SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const cacheVersion = "v3";
+  if (localStorage.getItem("cahayaCacheVersion") !== cacheVersion) {
+    localStorage.clear();
+    localStorage.setItem("cahayaCacheVersion", cacheVersion);
+  }
 
   const firebaseConfig = {
     apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
@@ -217,25 +166,25 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+
+  const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if (!currentUser || currentUser.role !== "wali") window.location.href = "../../index.html";
+
+  const namaSantri = (currentUser.namaSantri || currentUser.namaAnak || currentUser.nama || "").trim().toUpperCase();
+
   const tanggalInput = document.getElementById("tanggalInput");
   const btnTampil = document.getElementById("btnTampil");
   const tabsEl = document.getElementById("tabs");
   const panelContainer = document.getElementById("panelContainer");
-
-  const currentUser = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!currentUser || currentUser.role !== "wali") window.location.href = "../index.html";
-
   tanggalInput.value = new Date().toISOString().split("T")[0];
+
   let dailyData = { program: [], pembelajaran: [], tahfiz: [], pelanggaran: [] };
 
-  // === Tombol Navigasi ===
   window.logout = () => {
-  localStorage.removeItem("cahayaCurrentUser");
-  window.location.href = "https://multazamzakaria-blip.github.io/cahayaapp/";
-};
-  window.goDashboard = () => {
-    window.location.href = "../dashboard/";
+    localStorage.removeItem("cahayaCurrentUser");
+    window.location.href = "https://multazamzakaria-blip.github.io/cahayaapp/";
   };
+  window.goDashboard = () => window.location.href = "../dashboard/";
 
   function badgeStatus(s) {
     s = (s||"").toLowerCase();
@@ -246,28 +195,27 @@
     return s || "-";
   }
 
-  function renderProgram() {
-    if (!dailyData.program.length) return `<div class="card"><div class="card-header">📋 Absensi Program Harian</div><div class="no-data">Belum ada data program hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header">📋 Absensi Program Harian</div><table><tr><th>Program</th><th>Status</th></tr>${dailyData.program.map(p=>`<tr><td>${p.program}</td><td>${badgeStatus(p.status)}</td></tr>`).join("")}</table></div>`;
-  }
-  function renderPembelajaran() {
-    if (!dailyData.pembelajaran.length) return `<div class="card"><div class="card-header">📘 Absensi Pembelajaran</div><div class="no-data">Belum ada data pembelajaran hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header">📘 Absensi Pembelajaran</div><table><tr><th>Mata Pelajaran</th><th>Status</th></tr>${dailyData.pembelajaran.map(p=>`<tr><td>${p.mapel}</td><td>${badgeStatus(p.status)}</td></tr>`).join("")}</table></div>`;
-  }
-  function renderTahfiz() {
-    if (!dailyData.tahfiz.length) return `<div class="card"><div class="card-header">📖 Setoran Tahfiz</div><div class="no-data">Belum ada setoran hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header">📖 Setoran Tahfiz</div><table><tr><th>Setoran</th><th>Jumlah Ayat</th><th>Nilai</th></tr>${dailyData.tahfiz.map(t=>`<tr><td>${t.setoran||"-"}</td><td>${t.ayat||"-"}</td><td>${t.nilai||"-"}</td></tr>`).join("")}</table></div>`;
-  }
-  function renderPelanggaran() {
-    if (!dailyData.pelanggaran.length) return `<div class="card"><div class="card-header">⚠️ Pelanggaran</div><div class="no-data">Tidak ada pelanggaran hari ini.</div></div>`;
-    return `<div class="card"><div class="card-header">⚠️ Pelanggaran</div><table><tr><th>Keterangan</th><th>Tindak Lanjut</th><th>Konsekuensi</th></tr>${dailyData.pelanggaran.map(p=>`<tr><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td><td>${p.konsekuensi||"-"}</td></tr>`).join("")}</table></div>`;
+  function renderCard(title, rows, emptyText) {
+    if (!rows.length) return `<div class="card"><div class="card-header">${title}</div><div class="no-data">${emptyText}</div></div>`;
+    return `<div class="card"><div class="card-header">${title}</div><table>${rows}</table></div>`;
   }
 
-  function renderTab(name){
-    panelContainer.innerHTML =
-      name==="program" ? renderProgram() :
-      name==="pembelajaran" ? renderPembelajaran() :
-      name==="tahfiz" ? renderTahfiz() : renderPelanggaran();
+  function renderTab(tab){
+    const sections = {
+      program: renderCard("📋 Absensi Program Harian",
+        dailyData.program.map(p=>`<tr><td>${p.program}</td><td>${badgeStatus(p.status)}</td></tr>`),
+        "Belum ada data program hari ini."),
+      pembelajaran: renderCard("📘 Absensi Pembelajaran",
+        dailyData.pembelajaran.map(p=>`<tr><td>${p.mapel}</td><td>${badgeStatus(p.status)}</td></tr>`),
+        "Belum ada data pembelajaran hari ini."),
+      tahfiz: renderCard("📖 Setoran Tahfiz",
+        dailyData.tahfiz.map(t=>`<tr><td>${t.setoran||"-"}</td><td>${t.ayat||"-"}</td><td>${t.nilai||"-"}</td></tr>`),
+        "Belum ada setoran hari ini."),
+      pelanggaran: renderCard("⚠️ Pelanggaran",
+        dailyData.pelanggaran.map(p=>`<tr><td>${p.keterangan||"-"}</td><td>${p.tindakLanjut||"-"}</td><td>${p.konsekuensi||"-"}</td></tr>`),
+        "Tidak ada pelanggaran hari ini.")
+    };
+    panelContainer.innerHTML = sections[tab];
   }
 
   tabsEl.addEventListener("click", e=>{
@@ -279,7 +227,6 @@
   });
 
   async function loadData(tanggal) {
-    const nama = (currentUser.namaAnak||"").trim().toUpperCase();
     panelContainer.innerHTML = `<p style="text-align:center;opacity:0.8;">⏳ Memuat data...</p>`;
     const root = ref(db);
     const [prog, kbm, tah, pel] = await Promise.all([
@@ -288,24 +235,25 @@
       get(child(root,"cahaya_app/setoran_tahfiz")),
       get(child(root,"cahaya_app/pelanggaran_santri"))
     ]);
+
     const progs=[], kbms=[], tahfizs=[], pels=[];
     if(prog.exists()) Object.values(prog.val()).forEach(a=>{
       if(a.tanggal===tanggal)(a.data||[]).forEach(s=>{
-        if((s.nama||"").trim().toUpperCase()===nama) progs.push({program:a.program,status:s.status});
+        if((s.nama||"").trim().toUpperCase()===namaSantri) progs.push({program:a.program,status:s.status});
       });
     });
     if(kbm.exists()) Object.values(kbm.val()).forEach(a=>{
       if(a.tanggal===tanggal)(a.data||[]).forEach(s=>{
-        if((s.nama||"").trim().toUpperCase()===nama) kbms.push({mapel:a.mapel,status:s.status});
+        if((s.nama||"").trim().toUpperCase()===namaSantri) kbms.push({mapel:a.mapel,status:s.status});
       });
     });
     if(tah.exists()) Object.values(tah.val()).forEach(a=>{
       if(a.tanggal===tanggal)(a.data||[]).forEach(s=>{
-        if((s.nama||"").trim().toUpperCase()===nama)tahfizs.push({setoran:s.setoran||s.surat,ayat:s.ayat,nilai:s.nilai});
+        if((s.nama||"").trim().toUpperCase()===namaSantri)tahfizs.push({setoran:s.setoran||s.surat,ayat:s.ayat,nilai:s.nilai});
       });
     });
     if(pel.exists()) Object.values(pel.val()).forEach(p=>{
-      if(p.tanggal===tanggal&&(p.santri||"").trim().toUpperCase()===nama)
+      if(p.tanggal===tanggal&&(p.santri||"").trim().toUpperCase()===namaSantri)
         pels.push({keterangan:p.keterangan,tindakLanjut:p.tindakLanjut,konsekuensi:p.konsekuensi});
     });
 
