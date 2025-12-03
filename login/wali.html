@@ -1,3 +1,4 @@
+langsung masukkan ke sini:
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -47,16 +48,7 @@
   </div>
 
   <script>
-    // =====================================================
-    // 🔁 Auto reset cache lama jika versi data berubah
-    // =====================================================
-    const cacheVersion = "v2"; // ubah ke v3 kalau ada update data wali
-    if (localStorage.getItem("cahayaCacheVersion") !== cacheVersion) {
-      localStorage.clear();
-      localStorage.setItem("cahayaCacheVersion", cacheVersion);
-    }
-
-    // === DATA LOGIN WALISANTRI ===
+    // === DATA LOGIN WALISANTRI (123 Akun) ===
     const waliList = [
       {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
       {nama:"Juanda Nur Ilham",username:"juanda491",password:"Cahaya@1049"},
@@ -201,7 +193,7 @@
       };
 
       localStorage.setItem("cahayaCurrentUser", JSON.stringify(currentUser));
-      location.href = "../wali/dashboard/index.html";
+      location.href = "../wali/index.html";
     }
   </script>
 </body>
