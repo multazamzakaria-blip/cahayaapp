@@ -10,7 +10,6 @@
       --green2: #064e3b;
       --accent: #22c55e;
       --text-light: #f8fafc;
-      --card-bg: rgba(255,255,255,0.1);
       --shadow: 0 8px 20px rgba(0,0,0,0.25);
     }
 
@@ -23,37 +22,24 @@
       overflow-x: hidden;
     }
 
-    /* === SPLASH SCREEN === */
+    /* SPLASH */
     .splash {
       position: fixed; inset: 0;
       background: radial-gradient(circle at center, #0f766e, #022c22 90%);
       display: flex; align-items: center; justify-content: center;
       z-index: 999; animation: fadeOut 1.2s ease-out 1.5s forwards;
     }
-    .splash .logo {
-      width: 130px; height: auto;
-      animation: zoomIn 1.2s ease-in-out;
-    }
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
+    .splash .logo { width: 130px; animation: zoomIn 1.2s ease-in-out; }
+    @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
-    /* === HEADER === */
+    /* HEADER */
     header {
       width: 100%; max-width: 1100px;
       display: flex; justify-content: space-between; align-items: center;
       padding: 20px 20px 10px;
     }
-    header h1 {
-      font-size: 1.3rem;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-      display: flex; align-items: center; gap: 8px;
-    }
+    header h1 { font-size: 1.3rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
     #logoutBtn {
       background: linear-gradient(135deg, #dc2626, #b91c1c);
       color: white; border: none; border-radius: 8px;
@@ -62,29 +48,14 @@
     }
     #logoutBtn:hover { transform: translateY(-1px); opacity: 0.9; }
 
-    /* === MAIN CONTENT === */
+    /* MAIN */
     main {
       width: 100%; max-width: 900px;
       display: flex; flex-direction: column; align-items: center;
       padding: 10px 20px 50px;
     }
-
-    .intro-box {
-      text-align: center;
-      margin-top: 20px;
-      margin-bottom: 25px;
-    }
-    .intro-box h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .intro-box p {
-      font-size: 1rem;
-      font-weight: 500;
-      opacity: 0.9;
-    }
-
+    .intro-box { text-align: center; margin-top: 20px; margin-bottom: 25px; }
+    .intro-box h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
     .info-box {
       background: rgba(15, 23, 42, 0.4);
       border: 1px solid rgba(255,255,255,0.2);
@@ -95,16 +66,7 @@
       backdrop-filter: blur(10px);
       margin-bottom: 24px;
     }
-    .info-box h2 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #fcd34d;
-    }
-    .info-box p {
-      font-size: 0.9rem;
-      opacity: 0.85;
-    }
+    .info-box h2 { color: #fcd34d; margin-bottom: 6px; }
 
     .menu-grid {
       display: grid;
@@ -112,7 +74,6 @@
       gap: 18px;
       width: 100%;
     }
-
     .menu-card {
       display: block;
       border-radius: 16px;
@@ -124,18 +85,7 @@
       transition: 0.25s ease;
       backdrop-filter: blur(10px);
     }
-    .menu-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(16,185,129,0.4);
-    }
-    .menu-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 10px;
-    }
-    .menu-card p {
-      font-size: 0.9rem;
-      opacity: 0.85;
-    }
+    .menu-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(16,185,129,0.4); }
     .menu-card.harian {
       background: linear-gradient(145deg, rgba(16,185,129,0.2), rgba(22,163,74,0.3));
       border: 1px solid rgba(16,185,129,0.4);
@@ -144,86 +94,99 @@
       background: linear-gradient(145deg, rgba(37,99,235,0.25), rgba(29,78,216,0.3));
       border: 1px solid rgba(37,99,235,0.4);
     }
-    .menu-icon {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      display: block;
-    }
 
-    /* === CHAT PENGURUS === */
-    .chat-box {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 24px;
-      margin-top: 30px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-    }
-    .chat-box h2 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #bbf7d0;
-    }
-    .chat-box p {
-      font-size: 0.85rem;
-      opacity: 0.9;
-      margin-bottom: 14px;
-    }
-    .chat-section {
-      margin-bottom: 18px;
-    }
-    .chat-section h3 {
-      font-size: 0.9rem;
-      color: #fcd34d;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-    .chat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 8px;
-    }
-    .chat-btn {
+    /* CHAT MENU */
+    .chat-menu {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 10px;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #ecfdf5;
-      font-size: 0.85rem;
-      background: rgba(16,185,129,0.25);
-      border: 1px solid rgba(16,185,129,0.4);
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 35px;
+    }
+    .chat-card {
+      flex: 1 1 250px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 14px;
+      text-align: center;
+      padding: 24px 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
       transition: 0.25s;
     }
-    .chat-btn:hover {
-      background: rgba(16,185,129,0.45);
-      transform: translateY(-2px);
+    .chat-card:hover {
+      background: rgba(16,185,129,0.3);
+      transform: translateY(-3px);
     }
+    .chat-card h3 { font-size: 1.1rem; margin-top: 10px; }
 
-    /* === FOOTER === */
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal-content {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 16px;
+      padding: 25px;
+      width: 90%;
+      max-width: 400px;
+      color: #ecfdf5;
+      box-shadow: var(--shadow);
+      animation: slideUp 0.35s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 15px;
+    }
+    .modal-header h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #bbf7d0;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      color: #fcd34d;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .wa-btn {
+      display: flex; justify-content: space-between; align-items: center;
+      text-decoration: none;
+      color: #ecfdf5;
+      background: rgba(16,185,129,0.25);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(16,185,129,0.4);
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .wa-btn:hover { background: rgba(16,185,129,0.45); }
+
     footer {
-      width: 100%;
-      text-align: center;
-      font-size: 0.8rem;
-      padding: 15px 10px;
-      opacity: 0.8;
-    }
-
-    @media (max-width: 640px) {
-      header { flex-direction: column; gap: 8px; }
-      .intro-box h2 { font-size: 1.2rem; }
-      .menu-card { padding: 22px 18px; }
-      .menu-icon { font-size: 2.2rem; }
+      width: 100%; text-align: center; font-size: 0.8rem; padding: 15px 10px; opacity: 0.8;
     }
   </style>
 </head>
 <body>
-  <div class="splash">
-    <img src="../../logofi.png" alt="Logo Pesantren" class="logo">
-  </div>
+  <div class="splash"><img src="../../logofi.png" alt="Logo Pesantren" class="logo"></div>
 
   <header>
     <h1>📊 Dashboard Wali Santri</h1>
@@ -238,7 +201,7 @@
 
     <section class="info-box">
       <h2 id="salamWali">Assalamu’alaikum Walisantri</h2>
-      <p>Semoga selalu dalam lindungan Allah. Berikut dua fitur utama untuk memantau perkembangan ananda tercinta.</p>
+      <p>Semoga selalu dalam lindungan Allah. Berikut fitur untuk memantau dan berkomunikasi dengan pengurus.</p>
     </section>
 
     <section class="menu-grid">
@@ -247,7 +210,6 @@
         <h3>Progres Harian</h3>
         <p>Lihat aktivitas dan absensi harian santri.</p>
       </a>
-
       <a href="../progres-bulanan/index.html" class="menu-card bulanan">
         <span class="menu-icon">📊</span>
         <h3>Progres Bulanan</h3>
@@ -255,40 +217,68 @@
       </a>
     </section>
 
-    <!-- === FITUR CHAT PENGURUS === -->
-    <section class="chat-box">
-      <h2>💬 Chat Pengurus</h2>
-      <p>Pilih kontak untuk terhubung langsung via WhatsApp.</p>
+    <!-- === CHAT PENGURUS POP-UP === -->
+    <div class="chat-menu">
+      <div class="chat-card" data-modal="modalNaqib">
+        <span style="font-size:2rem;">🧑‍🏫</span>
+        <h3>Chat Naqib/Naqibah</h3>
+      </div>
+      <div class="chat-card" data-modal="modalSupervisor">
+        <span style="font-size:2rem;">🧕</span>
+        <h3>Chat Supervisor</h3>
+      </div>
+      <div class="chat-card" data-modal="modalCallCenter">
+        <span style="font-size:2rem;">☎️</span>
+        <h3>Call Center</h3>
+      </div>
+    </div>
 
-      <div class="chat-section">
-        <h3>Nomor WhatsApp Naqib</h3>
-        <div class="chat-grid">
-          <a href="https://wa.me/6287838723032" target="_blank" class="chat-btn"><span>Fatimah</span><span>WA</span></a>
-          <a href="https://wa.me/6287785171967" target="_blank" class="chat-btn"><span>Evita</span><span>WA</span></a>
-          <a href="https://wa.me/6281943294096" target="_blank" class="chat-btn"><span>Dimas</span><span>WA</span></a>
-          <a href="https://wa.me/6283872135645" target="_blank" class="chat-btn"><span>Regen</span><span>WA</span></a>
-          <a href="https://wa.me/6287893123488" target="_blank" class="chat-btn"><span>Favian</span><span>WA</span></a>
-          <a href="https://wa.me/6287755120842" target="_blank" class="chat-btn"><span>Kamal</span><span>WA</span></a>
-          <a href="https://wa.me/6281915565741" target="_blank" class="chat-btn"><span>Shafwan</span><span>WA</span></a>
+    <!-- MODAL NAQIB -->
+    <div id="modalNaqib" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Nomor WhatsApp Naqib</h4>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="contact-list">
+          <a href="https://wa.me/6287838723032" class="wa-btn" target="_blank"><span>Fatimah</span><span>WA</span></a>
+          <a href="https://wa.me/6287785171967" class="wa-btn" target="_blank"><span>Evita</span><span>WA</span></a>
+          <a href="https://wa.me/6281943294096" class="wa-btn" target="_blank"><span>Dimas</span><span>WA</span></a>
+          <a href="https://wa.me/6283872135645" class="wa-btn" target="_blank"><span>Regen</span><span>WA</span></a>
+          <a href="https://wa.me/6287893123488" class="wa-btn" target="_blank"><span>Favian</span><span>WA</span></a>
+          <a href="https://wa.me/6287755120842" class="wa-btn" target="_blank"><span>Kamal</span><span>WA</span></a>
+          <a href="https://wa.me/6281915565741" class="wa-btn" target="_blank"><span>Shafwan</span><span>WA</span></a>
         </div>
       </div>
+    </div>
 
-      <div class="chat-section">
-        <h3>Nomor WhatsApp Supervisor</h3>
-        <div class="chat-grid">
-          <a href="https://wa.me/6281929623700" target="_blank" class="chat-btn"><span>Umi Dini (Putri)</span><span>WA</span></a>
-          <a href="https://wa.me/6287797340185" target="_blank" class="chat-btn"><span>Pak Doni (Putra)</span><span>WA</span></a>
+    <!-- MODAL SUPERVISOR -->
+    <div id="modalSupervisor" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Nomor WhatsApp Supervisor</h4>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="contact-list">
+          <a href="https://wa.me/6281929623700" class="wa-btn" target="_blank"><span>Umi Dini (Putri)</span><span>WA</span></a>
+          <a href="https://wa.me/6287797340185" class="wa-btn" target="_blank"><span>Pak Doni (Putra)</span><span>WA</span></a>
         </div>
       </div>
+    </div>
 
-      <div class="chat-section">
-        <h3>Call Center Pesantren</h3>
-        <div class="chat-grid">
-          <a href="https://wa.me/6281818189322" target="_blank" class="chat-btn"><span>Call Center WA</span><span>Chat</span></a>
-          <a href="tel:+6281818189322" class="chat-btn"><span>Telepon Langsung</span><span>Call</span></a>
+    <!-- MODAL CALL CENTER -->
+    <div id="modalCallCenter" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Call Center Pesantren</h4>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="contact-list">
+          <a href="https://wa.me/6281818189322" class="wa-btn" target="_blank"><span>Call Center WA</span><span>Chat</span></a>
+          <a href="tel:+6281818189322" class="wa-btn"><span>Telepon Langsung</span><span>Call</span></a>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
   <footer>
@@ -296,20 +286,34 @@
   </footer>
 
   <script type="module">
+    // login check
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
     const salam = document.getElementById("salamWali");
     const logoutBtn = document.getElementById("logoutBtn");
-
-    if (!user || user.role !== "wali") {
-      window.location.href = "../index.html";
-    } else {
-      const namaAnak = user.namaAnak || "Santri Anda";
-      salam.innerHTML = `Assalamu’alaikum Walisantri <b>${namaAnak}</b>`;
-    }
+    if (!user || user.role !== "wali") window.location.href = "../index.html";
+    else salam.innerHTML = `Assalamu’alaikum Walisantri <b>${user.namaAnak || "Santri Anda"}</b>`;
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("cahayaCurrentUser");
       window.location.href = "https://multazamzakaria-blip.github.io/cahayaapp/";
+    });
+
+    // modal logic
+    const modals = document.querySelectorAll(".modal");
+    const cards = document.querySelectorAll(".chat-card");
+    const closeBtns = document.querySelectorAll(".close-btn");
+
+    cards.forEach(card => {
+      card.addEventListener("click", () => {
+        const modal = document.getElementById(card.dataset.modal);
+        modal.style.display = "flex";
+      });
+    });
+    closeBtns.forEach(btn => {
+      btn.addEventListener("click", () => btn.closest(".modal").style.display = "none");
+    });
+    window.addEventListener("click", (e) => {
+      if (e.target.classList.contains("modal")) e.target.style.display = "none";
     });
   </script>
 </body>
