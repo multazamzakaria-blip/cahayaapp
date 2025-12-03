@@ -99,7 +99,7 @@
       font-size: 1.05rem;
       font-weight: 600;
       margin-bottom: 6px;
-      color: #fcd34d; /* emas lembut */
+      color: #fcd34d;
     }
     .info-box p {
       font-size: 0.9rem;
@@ -148,6 +148,59 @@
       font-size: 2.5rem;
       margin-bottom: 10px;
       display: block;
+    }
+
+    /* === CHAT PENGURUS === */
+    .chat-box {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 30px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+    .chat-box h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #bbf7d0;
+    }
+    .chat-box p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+    .chat-section {
+      margin-bottom: 18px;
+    }
+    .chat-section h3 {
+      font-size: 0.9rem;
+      color: #fcd34d;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .chat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+    .chat-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #ecfdf5;
+      font-size: 0.85rem;
+      background: rgba(16,185,129,0.25);
+      border: 1px solid rgba(16,185,129,0.4);
+      transition: 0.25s;
+    }
+    .chat-btn:hover {
+      background: rgba(16,185,129,0.45);
+      transform: translateY(-2px);
     }
 
     /* === FOOTER === */
@@ -201,6 +254,41 @@
         <p>Analisis perkembangan karakter dan prestasi tiap bulan.</p>
       </a>
     </section>
+
+    <!-- === FITUR CHAT PENGURUS === -->
+    <section class="chat-box">
+      <h2>💬 Chat Pengurus</h2>
+      <p>Pilih kontak untuk terhubung langsung via WhatsApp.</p>
+
+      <div class="chat-section">
+        <h3>Nomor WhatsApp Naqib</h3>
+        <div class="chat-grid">
+          <a href="https://wa.me/6287838723032" target="_blank" class="chat-btn"><span>Fatimah</span><span>WA</span></a>
+          <a href="https://wa.me/6287785171967" target="_blank" class="chat-btn"><span>Evita</span><span>WA</span></a>
+          <a href="https://wa.me/6281943294096" target="_blank" class="chat-btn"><span>Dimas</span><span>WA</span></a>
+          <a href="https://wa.me/6283872135645" target="_blank" class="chat-btn"><span>Regen</span><span>WA</span></a>
+          <a href="https://wa.me/6287893123488" target="_blank" class="chat-btn"><span>Favian</span><span>WA</span></a>
+          <a href="https://wa.me/6287755120842" target="_blank" class="chat-btn"><span>Kamal</span><span>WA</span></a>
+          <a href="https://wa.me/6281915565741" target="_blank" class="chat-btn"><span>Shafwan</span><span>WA</span></a>
+        </div>
+      </div>
+
+      <div class="chat-section">
+        <h3>Nomor WhatsApp Supervisor</h3>
+        <div class="chat-grid">
+          <a href="https://wa.me/6281929623700" target="_blank" class="chat-btn"><span>Umi Dini (Putri)</span><span>WA</span></a>
+          <a href="https://wa.me/6287797340185" target="_blank" class="chat-btn"><span>Pak Doni (Putra)</span><span>WA</span></a>
+        </div>
+      </div>
+
+      <div class="chat-section">
+        <h3>Call Center Pesantren</h3>
+        <div class="chat-grid">
+          <a href="https://wa.me/6281818189322" target="_blank" class="chat-btn"><span>Call Center WA</span><span>Chat</span></a>
+          <a href="tel:+6281818189322" class="chat-btn"><span>Telepon Langsung</span><span>Call</span></a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -220,10 +308,9 @@
     }
 
     logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("cahayaCurrentUser");
-  window.location.href = "https://multazamzakaria-blip.github.io/cahayaapp/";
-});
-
+      localStorage.removeItem("cahayaCurrentUser");
+      window.location.href = "https://multazamzakaria-blip.github.io/cahayaapp/";
+    });
   </script>
 </body>
 </html>
