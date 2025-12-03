@@ -204,19 +204,11 @@
   </footer>
 
   <script type="module">
-    // 🔁 Auto reset cache kalau ada perubahan data
-    const cacheVersion = "v2"; // kalau nanti Abah ubah data wali, ganti jadi "v3"
-    if (localStorage.getItem("cahayaCacheVersion") !== cacheVersion) {
-      localStorage.clear();
-      localStorage.setItem("cahayaCacheVersion", cacheVersion);
-      console.log("Cache lama dihapus. Versi baru:", cacheVersion);
-    }
-
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
     const salam = document.getElementById("salamWali");
     const logoutBtn = document.getElementById("logoutBtn");
     if (!user || user.role !== "wali") window.location.href = "../index.html";
-    else salam.innerHTML = `Assalamu’alaikum Walisantri <b>${user.namaSantri || user.namaAnak || "Santri Anda"}</b>`;
+    else salam.innerHTML = `Assalamu’alaikum Walisantri <b>${user.namaAnak || "Santri Anda"}</b>`;
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("cahayaCurrentUser");
