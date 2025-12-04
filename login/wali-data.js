@@ -75,7 +75,7 @@ export const waliList = [
       {nama:"Dedi Setiadi",username:"dedi204",password:"Cahaya@5561"},
       {nama:"Fakhri Al Muzakki",username:"fakhri623",password:"Cahaya@8854"},
       {nama:"Ilham Mukmin Al Farabi",username:"ilham432",password:"Cahaya@7119"},
-      {nama:"Muhammad Allam Nur Husain",username:"allam365",password:"Cahaya@5640"},
+      {nama:"Muhammad Allam Nur Hushain",username:"allam365",password:"Cahaya@5640"},
       {nama:"Muhammad Firaas Al Insyiroh",username:"firaas999",password:"Cahaya@7238"},
       {nama:"Nabil Najmi",username:"nabil815",password:"Cahaya@1822"},
       {nama:"Satrio Abimayu",username:"satrio304",password:"Cahaya@9992"},
