@@ -27,7 +27,6 @@
       text-align: center;
     }
 
-    /* === SPLASH LOGO === */
     #splash {
       position: fixed;
       top: 0; left: 0;
@@ -40,19 +39,21 @@
       animation: fadeOut 1.5s ease forwards;
       animation-delay: 1.6s;
     }
+
     #splash img {
       width: 130px;
       animation: zoomIn 1.3s ease;
     }
+
     @keyframes zoomIn {
       0% { transform: scale(0); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+
     @keyframes fadeOut {
       to { opacity: 0; visibility: hidden; }
     }
 
-    /* === LOGO AREA === */
     .logo-area {
       display: flex;
       flex-direction: column;
@@ -61,50 +62,53 @@
       margin-top: -20px;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
+
     .logo-area img {
       width: 130px;
       margin-bottom: 10px;
       filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
     }
+
     .logo-area h1 {
       font-size: 2rem;
       font-weight: 700;
       margin: 0;
       letter-spacing: 1px;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
     }
+
     .logo-area p {
       font-size: 1rem;
       opacity: 0.9;
       margin-top: 4px;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
     }
 
-    /* === LOGIN BOX === */
     .login-box {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 25px 22px;
-  width: 85%;
-  max-width: 300px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  animation: fadeInUp 1s ease 1.7s both;
-  box-sizing: border-box; /* 💥 Tambahan penting */
-}
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px 22px;
+      width: 85%;
+      max-width: 300px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      box-sizing: border-box;
+      animation: fadeInUp 1s ease 1.7s both;
+    }
 
-input {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 12px;
-  border: none;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.95);
-  color: #1f2937;
-  box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
-  box-sizing: border-box; /* 💥 Tambahan penting */
-}
+    @keyframes fadeInUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.95);
+      color: #1f2937;
+    }
 
     button {
       width: 100%;
@@ -122,14 +126,12 @@ input {
     button:hover {
       background: #fde68a;
       transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .footer-text {
       font-size: 0.9rem;
       margin-top: 20px;
       opacity: 0.9;
-      text-shadow: 0 0 5px rgba(255,255,255,0.25);
     }
 
     @media (max-width: 480px) {
@@ -161,42 +163,56 @@ input {
   </div>
 
   <div class="footer-text">Baca “Bismillah” terlebih dahulu</div>
+  <!-- === Firebase SDK Setup (versi kompatibel) === -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    /* === DAFTAR USER === */
-    const users = [
-      // --- Guru ---
-      { username: "multazam", password: "guru123", role: "guru", label: "Abah Multazam Zakaria" },
-      { username: "alvin", password: "guru123", role: "guru", label: "Mu'allim Alvin Dwianto" },
-      { username: "kamal", password: "guru123", role: "guru", label: "Mu'allim Kamal" },
-      { username: "favian", password: "guru123", role: "guru", label: "Mu'allim Favian" },
-      { username: "fatimah", password: "guru123", role: "guru", label: "Mu'allimah Fatimah" },
-      { username: "evita", password: "guru123", role: "guru", label: "Mrs Evita" },
-      { username: "shafwan", password: "guru123", role: "guru", label: "Mu'allim Shafwan" },
-      { username: "alzam", password: "guru123", role: "guru", label: "Mu'allim Alzam" },
-      { username: "faiq", password: "guru123", role: "guru", label: "Mu'allim Faiq" },
-      { username: "khaizuran", password: "guru123", role: "guru", label: "Mu'allim Khaizuran" },
-      { username: "favian", password: "guru123", role: "guru", label: "Mu'allim Favian" },
-      { username: "mulia", password: "guru123", role: "guru", label: "Mu'allim Mulia" },
-      { username: "fahmi", password: "guru123", role: "guru", label: "Mu'allim Fahmi" },
-      { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
+    // === Konfigurasi Firebase ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.firebasestorage.app",
+      messagingSenderId: "739982369926",
+      appId: "1:739982369926:web:7e5375c3ddbaf0584cdd07"
+    };
+    firebase.initializeApp(firebaseConfig);
+    console.log("✅ Firebase terhubung (versi kompatibel)");
+  </script>
 
-      // --- Naqib / Naqibah ---
-      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas" },
-      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen" },
-      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian" },
-      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan" },
-      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal" },
-      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita" },
-      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah" },
+  <script>
+  /* === DAFTAR USER PETUGAS === */
+  const users = [
+    { username: "multazam", password: "guru123", role: "guru", label: "Abah Multazam Zakaria" },
+    { username: "alvin", password: "guru123", role: "guru", label: "Mu'allim Alvin Dwianto" },
+    { username: "alzam", password: "guru123", role: "guru", label: "Mu'allim Alzam" },
+    { username: "faiq", password: "guru123", role: "guru", label: "Mu'allim Faiq" },
+    { username: "khaizuran", password: "guru123", role: "guru", label: "Mu'allim Khaizuran" },
+    { username: "mulia", password: "guru123", role: "guru", label: "Mu'allim Mulia" },
+    { username: "fahmi", password: "guru123", role: "guru", label: "Mu'allim Fahmi" },
+    { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
 
-      // --- Admin ---
-      { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
-    ];
+    // Guru + Naqib
+    { username: "kamal", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Kamal" },
+    { username: "favian", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Favian" },
+    { username: "fatimah", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allimah Fatimah" },
+    { username: "evita", password: "guru123", roles: ["guru", "naqib"], label: "Mrs Evita" },
+    { username: "shafwan", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Shafwan" },
 
-    /* === WALI SANTRI === */
-    const waliList = [
-      {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
+    // Naqib saja
+    { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas" },
+    { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen" },
+
+    // Admin
+    { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
+  ];
+
+  /* === DAFTAR WALI SANTRI (versi lokal, tetap dipertahankan) === */
+  const waliList = [
+    {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
       {nama:"Juanda Nur Ilham",username:"juanda491",password:"Cahaya@1049"},
       {nama:"Najmihadi Syauqii Tamaam",username:"najmi827",password:"Cahaya@7721"},
       {nama:"Nizam Kabisat",username:"nizam643",password:"Cahaya@6605"},
@@ -319,96 +335,272 @@ input {
       {nama:"Inayah Nourah Anindya",username:"inayah220",password:"Cahaya@6197"},
       {nama:"Shelena",username:"shelena937",password:"Cahaya@5284"},
       {nama:"Fitrah Kirana",username:"fitrah607",password:"Cahaya@7839"}
-    ];
+    // dst... (tetap lengkap seperti versi Abah)
+  ];
+  /* === LOGIN UTAMA (Firebase untuk petugas + lokal untuk wali) === */
+  async function login() {
+    let u = username.value.trim().toLowerCase();
+    const p = password.value.trim();
 
-    /* === LOGIN UTAMA === */
-    function login() {
-      const u = username.value.trim().toLowerCase();
-      const p = password.value.trim();
+    // Tambahkan domain jika belum ada
+    if (!u.includes("@") && !waliList.some(w => w.username.toLowerCase() === u)) {
+      u = u + "@cahayaapp.id";
+    }
 
-      let found = users.find(a => a.username === u && a.password === p);
-
-      // Jika bukan petugas, cek wali santri
-      if (!found) {
-        const wali = waliList.find(w => w.username.toLowerCase() === u && w.password === p);
-        if (wali) {
-          found = {
-            role: "wali",
-            namaAnak: wali.nama,
-            username: wali.username,
-            label: `Wali ${wali.nama}`
-          };
-        }
-      }
-
-      if (!found) {
+    // === LOGIN WALI SANTRI (versi lokal) ===
+    if (!u.endsWith("@cahayaapp.id")) {
+      const wali = waliList.find(w => w.username.toLowerCase() === u && w.password === p);
+      if (!wali) {
         alert("❌ Username atau password salah.");
         return;
       }
 
-      // === FIX UTAMA: Simpan nama naqib tanpa awalan "Naqib" ===
-      if (found.role === "naqib") {
-        const cleanName = found.label.replace(/^Naqib(ah)?\s+/i, "").trim();
-        found.naqibName = cleanName; // contoh: "Naqib Kamal" → "Kamal"
-      }
-
-      // Simpan ke localStorage
+      const found = {
+        role: "wali",
+        namaAnak: wali.nama,
+        username: wali.username,
+        label: `Wali ${wali.nama}`
+      };
       localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
-
-      // Redirect sesuai role
-      switch (found.role) {
-        case "guru": location.href = "guru/fitur.html"; break;
-        case "naqib": location.href = "naqib/dashboard.html"; break;
-        case "wali": location.href = "wali/dashboard/index.html"; break;
-        case "admin": location.href = "admin/index.html"; break;
-      }
+      location.href = "wali/dashboard/index.html";
+      return;
     }
 
-    /* === AUTO LOGIN (VERSI AMAN & TERBARU) === */
-(function autoLogin() {
-  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
-  if (!user) return;
+    // === LOGIN PETUGAS (Firebase Auth) ===
+    try {
+      const email = u;
+      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, p);
+      const user = userCredential.user;
 
-  switch (user.role) {
-    case "guru":
-      window.location.href = "guru/fitur.html";
-      break;
-    case "naqib":
-      window.location.href = "naqib/dashboard.html";
-      break;
-    case "admin":
-      window.location.href = "admin/index.html";
-      break;
-    case "wali":
-      window.location.href = "wali/dashboard/index.html"; // ✅ sudah disesuaikan
-      break;
-    default:
-      localStorage.removeItem("cahayaCurrentUser"); // kalau data rusak
-      break;
+      const uname = email.split("@")[0];
+      const localUser = users.find(a => a.username === uname);
+
+      if (!localUser) {
+        alert("❌ Akun ini belum terdaftar di daftar petugas lokal.");
+        await firebase.auth().signOut();
+        return;
+      }
+
+      // Jika punya dua peran (Guru & Naqib)
+      if (localUser.roles && localUser.roles.length > 1) {
+        tampilModalPeran(localUser);
+        return;
+      }
+
+      const role = localUser.role;
+
+      // Simpan ke localStorage
+      const found = {
+        role,
+        email: user.email,
+        username: uname,
+        label: localUser.label,
+        uid: user.uid
+      };
+      localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
+
+      // Catat login ke Realtime Database
+      const db = firebase.database();
+      await db.ref("users/" + user.uid).set({
+        nama: localUser.label,
+        username: uname,
+        email: user.email,
+        role: role,
+        waktu_login: new Date().toISOString()
+      });
+
+      alert(`✅ Login berhasil sebagai ${localUser.label} (${role.toUpperCase()})`);
+
+      // Redirect
+      switch (role) {
+        case "guru": location.href = "guru/fitur.html"; break;
+        case "naqib": location.href = "naqib/dashboard.html"; break;
+        case "admin": location.href = "admin/index.html"; break;
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("❌ Gagal login via Firebase: " + error.message);
+    }
   }
-})();
+
+  /* === AUTO LOGIN (VERSI AMAN) === */
+  (function autoLogin() {
+    const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+    if (!user) return;
+
+    switch (user.role) {
+      case "guru": window.location.href = "guru/fitur.html"; break;
+      case "naqib": window.location.href = "naqib/dashboard.html"; break;
+      case "admin": window.location.href = "admin/index.html"; break;
+      case "wali": window.location.href = "wali/dashboard/index.html"; break;
+      default: localStorage.removeItem("cahayaCurrentUser"); break;
+    }
+  })();
   </script>
-<!-- === Firebase SDK Setup (versi kompatibel) === -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
-<script>
-  // Konfigurasi Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
-    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
-    projectId: "absensi-santri-fajrul-islam",
-    storageBucket: "absensi-santri-fajrul-islam.firebasestorage.app",
-    messagingSenderId: "739982369926",
-    appId: "1:739982369926:web:7e5375c3ddbaf0584cdd07"
-  };
+  <!-- === Modal Pilihan Peran === -->
+  <div id="roleModal" class="modal">
+    <div class="modal-content">
+      <img src="logofi.png" alt="Logo Cahaya" class="modal-logo">
+      <h2>Pilih Peran Login</h2>
+      <p>Anda terdaftar sebagai <b>Guru</b> dan <b>Naqib</b>.<br>Silakan pilih salah satu:</p>
 
-  // Inisialisasi Firebase
-  firebase.initializeApp(firebaseConfig);
-  console.log("✅ Firebase terhubung (versi kompatibel)");
-</script>
+      <div class="role-buttons">
+        <button class="role-btn guru" onclick="pilihPeran('guru')">👨‍🏫 Guru</button>
+        <button class="role-btn naqib" onclick="pilihPeran('naqib')">🕌 Naqib</button>
+      </div>
+    </div>
+  </div>
+  <style>
+  /* === Modal Container === */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+  /* === Modal Box === */
+  .modal-content {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 36px 28px 32px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    animation: scaleIn 0.3s ease;
+  }
+  @keyframes scaleIn {
+    from {transform: scale(0.85); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+  }
+
+  .modal-logo {
+    width: 70px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 6px rgba(37,99,235,0.25));
+  }
+
+  .modal-content h2 {
+    color: #2563eb;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .modal-content p {
+    color: #475569;
+    font-size: 0.95rem;
+    margin: 12px 0 22px;
+    line-height: 1.5;
+  }
+
+  /* === Tombol Pilihan === */
+  .role-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .role-btn {
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    transition: all 0.25s;
+  }
+
+  .role-btn.guru {
+    background: linear-gradient(90deg,#3b82f6,#2563eb);
+    box-shadow: 0 4px 15px rgba(37,99,235,0.35);
+  }
+
+  .role-btn.naqib {
+    background: linear-gradient(90deg,#10b981,#059669);
+    box-shadow: 0 4px 15px rgba(5,150,105,0.35);
+  }
+
+  .role-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+
+  @media (max-width: 480px) {
+    .modal-content { padding: 30px 22px; }
+    .modal-logo { width: 60px; }
+  }
+  </style>
+
+  <script>
+  let pendingUser = null;
+
+  // Tampilkan modal pilihan peran
+  function tampilModalPeran(user) {
+    pendingUser = user;
+    document.getElementById('roleModal').style.display = 'flex';
+  }
+
+  // Saat peran dipilih
+  async function pilihPeran(role) {
+    document.getElementById('roleModal').style.display = 'none';
+
+    const uname = pendingUser.username;
+    const label = pendingUser.label;
+    const email = uname + "@cahayaapp.id";
+
+    // Simpan ke localStorage
+    const found = { role, email, username: uname, label };
+    localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
+
+    // Sinkronkan ke Firebase
+    try {
+      const db = firebase.database();
+      const currentUser = firebase.auth().currentUser;
+
+      if (currentUser) {
+        await db.ref("users/" + currentUser.uid).update({
+          nama: label,
+          role,
+          email,
+          username: uname,
+          waktu_login: new Date().toISOString()
+        });
+        console.log("✅ Data user tersinkron ke Firebase");
+      } else {
+        console.warn("⚠️ Tidak ada user aktif di Firebase Auth.");
+      }
+    } catch (err) {
+      console.error("❌ Gagal sinkronisasi user:", err);
+    }
+
+    // Efek loading
+    const loading = document.createElement('div');
+    loading.innerHTML = `
+      <div style="
+        position:fixed;inset:0;
+        display:flex;justify-content:center;align-items:center;
+        background:rgba(255,255,255,0.85);z-index:9999;
+        font-family:Poppins,Arial,sans-serif;font-size:1.2rem;color:#2563eb;
+      ">⏳ Sedang memuat dashboard ${role}...</div>`;
+    document.body.appendChild(loading);
+
+    // Redirect
+    setTimeout(() => {
+      if (role === 'guru') window.location.href = 'guru/fitur.html';
+      else if (role === 'naqib') window.location.href = 'naqib/dashboard.html';
+    }, 1000);
+  }
+  </script>
 </body>
 </html>
-
-
