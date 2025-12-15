@@ -254,7 +254,7 @@
   <button type="button" class="primary" onclick="simpan()">💾 Simpan Absensi</button>
 </main>
 
-<!-- === FIREBASE + LOGIKA ABSENSI (VERSI STABIL) === -->
+<!-- === FIREBASE + LOGIKA ABSENSI (VERSI FIX) === -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -280,32 +280,25 @@
   ];
   const programPekanan = ["Puasa Kamis","Jemur Kasur"];
 
-  const dataSantri = {
-    "Regen":[ "AHMAD MAULANA","JUANDA NUR ILHAM","NAJMIHADI SYAUQII TAMAAM","NIZAM KABISAT","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","EZA FEBRI AL FADZRI","HAFIDZ AL ROZI","ANDES AFENDRA","FEBRI GHALIH AL FAROBI","DANANG PRASDITYA SANTOSO","MUHAMMAD RAID MAHRUS","MUHAMMAD DIRGATAMA","CANZA RYANDA HUTASUHUT","FALIZH DAFFA QATRUNNADA","DAFFA AL MUSYARI","RAFI RAMADHAN","WAHYU REYDINATA","AKBAR PRAYOGA","VERY SYACH","MUHAMMAD AL FALAH"],
-    "Kamal":[ "ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","MUHAMMAD ALMISKY PRATAMA","MUHAMMAD AQIL RIDHO","MUHAMMAD IZAM SAPUTRA","MUHAMMAD SYAKIR HUTABARAT","MUHAMMAD ZIYAD ZHAZHA","MUHAMMAD YASIR AL FAZAR JHIRA","RAFA"],
-    "Favian":[ "ANGGA PRATAMA PUTRA","PRAWIRO PUJO TUNGGAL JATI","MUHAMMAD MARPIN","MARFEL SAPUTRA","MELDI NOVRIANSYAH","FAUZAN IBNI JABAR","MUHAMMAD FADHIL BUANA","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","MIKA RAHEL YUSUF","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","ARYA DIFA ALSYA","REYNALDI MALIK IBRAHIM ALFARIDZI","MUHAMMAD XAVI NF","MUHAMMAD FAISAL FIKRIANSYAH","HAFIDZ ALRIZKY","NAUFAL AKBAR ALKHATIRI","FARAZH SAYYID PUTRA KENEGA","SYAHRUL RAMADHAN","LUTHFAN ADZAKI","MUHAMMAD ABIL IRWANSYAH","ALIF SAMUDRA","FAHRIE OKTAVIRANO FITRIS"],
-    "Dimas":[ "DIKKI KURNIAWAN","GHOZY FATURRAHMAN","MUHAMMAD THOORIQ","AHMAD RIYADI","ALIF MUHAMMAD YUSUF","BASRI AL HAZIQ ZULFAHMI","MUHAMMAD FAQIH HAFIDZALLAH","ABDULLAH MUKTI HAFIDZALLAH","DEDI SETIADI","FAKHRI AL MUZAKKI","ILHAM MUKMIN AL FARABI","MUHAMMAD ALLAM NUR HUSHAIN","MUHAMMAD FIRAAS AL INSYIROH","NABIL NAJMI","SATRIO ABIMAYU","TEGAR HIDAYAT","WAFII FADHLURROHMAN","MUHAMMAD RIJALUL KAMIL","ALVIN HERFIANTINO","ZAHIR ZIBRAN","RADEN AZAA PANCA PUTRA","ZULFAKIH HAERUNNASIHIN"],
-    "Shafwan":[ "AHMAD FARHAAN","ANUGRAH PRATAMA","CAHYIS ISZAM","FAHRY AKBAR RAMDHANI","HABIB RAMDHAN","IHZA TRINANDI","ILHAM","M. ARYA MAHDI WAFI EL-FAUZANI","MAHESA AULIA GIFFARI","MUHAMAD YUSUF ARROSIYD","MUHAMMAD USAMAH","NAFIS","RAKA SEPTIAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","ROID AFDAL"],
-    "Fatimah":[ "NILAM CAHYA","QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
-    "Evita":[ "BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
-  };
-
-  window.init = function() {
+  // === Inisialisasi halaman ===
+  document.addEventListener('DOMContentLoaded', () => {
     if (!currentUser || currentUser.role !== 'naqib') {
       alert('Silakan login sebagai Naqib melalui portal utama.');
       window.location.href = '../index.html';
       return;
     }
 
-    document.getElementById('naqibTitle').textContent =
-      currentUser.label || `Absensi Program Harian (${currentUser.naqibName || ''})`;
+    // Ambil nama naqib dari localStorage
+    const namaNaqib = localStorage.getItem("namaNaqib") || currentUser.naqibName || "Tidak diketahui";
+    const kelompok = JSON.parse(localStorage.getItem("kelompokNaqib") || "[]");
 
-    document.getElementById('tanggal').value =
-      new Date().toISOString().split('T')[0];
+    // Tampilkan nama
+    document.getElementById('naqibTitle').textContent = `Mu'allim ${namaNaqib}`;
+    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
 
     isiProgram();
-    renderSantri(currentUser.naqibName);
-  };
+    renderSantri(kelompok);
+  });
 
   function isiProgram() {
     const select = document.getElementById('program');
@@ -332,25 +325,21 @@
     select.appendChild(group2);
   }
 
-  function renderSantri(naqibName) {
-    const list = dataSantri[naqibName] || [];
+  function renderSantri(kelompok) {
     const tbody = document.querySelector('#tabelSantri tbody');
     tbody.innerHTML = '';
 
-    if (!list.length) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="5" style="text-align:center;color:#6b7280">
-            Belum ada data santri untuk naqib ini.
-          </td>
-        </tr>`;
+    if (!kelompok.length) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#6b7280">
+        Belum ada data santri untuk naqib ini.
+      </td></tr>`;
       return;
     }
 
-    list.forEach((nama, i) => {
+    kelompok.forEach((nama, i) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${nama}</td>
+        <td>${i + 1}. ${nama}</td>
         <td><input type="radio" name="s_${i}" value="Hadir" checked></td>
         <td><input type="radio" name="s_${i}" value="Izin"></td>
         <td><input type="radio" name="s_${i}" value="Sakit"></td>
@@ -358,7 +347,6 @@
       `;
       tbody.appendChild(tr);
 
-      // default warna Hadir
       tr.classList.add('status-hadir');
       tr.querySelectorAll('input[type="radio"]').forEach(r => {
         r.addEventListener('change', () => {
@@ -386,6 +374,8 @@
   window.simpan = function() {
     const tanggal = document.getElementById('tanggal').value;
     const program = document.getElementById('program').value;
+    const namaNaqib = localStorage.getItem("namaNaqib") || currentUser.naqibName || "Tidak diketahui";
+
     if (!tanggal || !program) {
       alert('Mohon pilih tanggal dan program terlebih dahulu.');
       return;
@@ -393,7 +383,7 @@
 
     const hasil = [];
     document.querySelectorAll('#tabelSantri tbody tr').forEach((tr, i) => {
-      const nama = tr.children[0].textContent;
+      const nama = tr.children[0].textContent.replace(/^\d+\.\s*/, "");
       const status = document.querySelector(`input[name="s_${i}"]:checked`)?.value || 'Hadir';
       hasil.push({ nama, status });
     });
@@ -401,7 +391,7 @@
     const log = {
       tanggal,
       program,
-      naqib: currentUser.naqibName,
+      naqib: namaNaqib,
       data: hasil,
       waktuSimpan: new Date().toISOString()
     };
@@ -418,13 +408,12 @@
 
   window.logout = function() {
     localStorage.removeItem('cahayaCurrentUser');
+    localStorage.removeItem('kelompokNaqib');
+    localStorage.removeItem('namaNaqib');
     window.location.href = '../index.html';
   };
-
-  document.addEventListener('DOMContentLoaded', init);
 </script>
+
 
 </body>
 </html>
-
-
