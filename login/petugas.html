@@ -13,86 +13,77 @@
     }
     .box {
       background: rgba(255,255,255,0.1);
-      padding: 36px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      text-align: center;
+      padding: 36px; border-radius: 20px;
+      backdrop-filter: blur(10px); text-align: center;
       width: 90%; max-width: 380px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
-    img { width: 80px; border-radius: 50%; margin-bottom: 12px; }
-    input {
+    input, button {
       width: 100%; padding: 10px; margin-bottom: 10px;
-      border: none; border-radius: 10px;
-      font-size: 14px; background: rgba(255,255,255,0.95); color: #111;
+      border-radius: 10px; border: none;
     }
     button {
-      background: #facc15; color: #1f2937; border: none; border-radius: 10px;
-      width: 100%; padding: 10px; font-weight: bold; cursor: pointer;
+      background: #facc15; color: #1f2937; font-weight: bold; cursor: pointer;
     }
-    button:hover { background: #fde68a; }
-    a { color: #fff; display: block; margin-top: 12px; text-decoration: none; }
   </style>
 </head>
 <body>
   <div class="box">
-    <img src="../logofi.png">
+    <img src="../logofi.png" width="80" style="border-radius:50%">
     <h2>Login Petugas</h2>
-    <p>Masuk sebagai Admin, Supervisor, Guru, atau Naqib</p>
+    <p>Masukkan akun petugas resmi</p>
 
-    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="username" placeholder="Email (contoh: multazam@cahayaapp.id)">
     <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Masuk</button>
-    <a href="../index.html">⬅️ Kembali</a>
+    <button id="loginBtn">Masuk</button>
   </div>
 
-  <script>
-    const users = [
-      // === GURU ===
-      { username: "multazam", password: "guru123", role: "guru", label: "Abah Multazam Zakaria" },
-      { username: "alvin", password: "guru123", role: "guru", label: "Mu'allim Alvin Dwianto" },
-      { username: "alzam", password: "guru123", role: "guru", label: "Mu'alim Alzam Abdullah" },
-      { username: "haidar", password: "guru123", role: "guru", label: "Mu'allim Haidar" },
-      { username: "faiq", password: "guru123", role: "guru", label: "Mu'allim Faiq" },
-      { username: "shafwan", password: "guru123", role: "guru", label: "Mu'allim Shafwan" },
-      { username: "favian", password: "guru123", role: "guru", label: "Mu'allim Favian" },
-      { username: "khaizuran", password: "guru123", role: "guru", label: "Mu'allim Khaizuran" },
-      { username: "mulia", password: "guru123", role: "guru", label: "Mu'allim Mulia" },
-      { username: "fahmi", password: "guru123", role: "guru", label: "Mu'allim Fahmi" },
-      { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
-      { username: "fatimah", password: "guru123", role: "guru", label: "Mu'allimah Fatimah" },
-      { username: "kamal", password: "guru123", role: "guru", label: "Mu'allim Kamal" },
-      { username: "evita", password: "guru123", role: "guru", label: "Mrs Evita" },
+  <script type="module">
+    // Import Firebase SDK modular
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-      // === NAQIB & NAQIBAH ===
-      { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas Bayu Aditya", naqibName: "Dimas" },
-      { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen Prayitno", naqibName: "Regen" },
-      { username: "favian", password: "favian123", role: "naqib", label: "Naqib Favian", naqibName: "Favian" },
-      { username: "shafwan", password: "shafwan123", role: "naqib", label: "Naqib Shafwan", naqibName: "Shafwan" },
-      { username: "kamal", password: "kamal123", role: "naqib", label: "Naqib Kamal", naqibName: "Kamal" },
-      { username: "evita", password: "evita123", role: "naqib", label: "Naqibah Evita", naqibName: "Evita" },
-      { username: "fatimah", password: "fatimah123", role: "naqib", label: "Naqibah Fatimah", naqibName: "Fatimah" },
+    // 🔧 Konfigurasi Firebase kamu
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
+      authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+      databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+      projectId: "absensi-santri-fajrul-islam",
+      storageBucket: "absensi-santri-fajrul-islam.firebasestorage.app",
+      messagingSenderId: "739982369926",
+      appId: "1:739982369926:web:7e5375c3ddbaf0584cdd07"
+    };
 
-      // === ADMIN ===
-      { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
-    ];
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    function login(){
-      const u = username.value.trim().toLowerCase();
-      const p = password.value.trim();
-      const found = users.find(a => a.username === u && a.password === p);
+    const loginBtn = document.getElementById("loginBtn");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
 
-      if(!found){
-        alert("❌ Username atau password salah.");
-        return;
+    loginBtn.addEventListener("click", async () => {
+      const email = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Simpan data pengguna
+        localStorage.setItem("cahayaCurrentUser", JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          role: "petugas"
+        }));
+
+        alert("✅ Login berhasil!");
+        location.href = "../petugas/index.html"; // arahkan ke dashboard petugas
+
+      } catch (error) {
+        alert("❌ Login gagal: periksa email & password.");
+        console.error(error);
       }
-
-      localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
-
-      if(found.role === "guru") location.href = "../guru/fitur.html";
-      else if(found.role === "naqib") location.href = "../naqib/dashboard.html";
-      else if(found.role === "admin") location.href = "../admin/index.html";
-    }
+    });
   </script>
 </body>
 </html>
