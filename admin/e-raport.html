@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Raport Semester CAHAYA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:'Noto Sans',sans-serif;
+  background:#f4f6fa;
+  margin:0;
+  color:#1f2937;
+  font-size:18px;
+  line-height:1.8;
+}
+header{
+  background:#0f766e;
+  color:white;
+  padding:18px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h1{margin:0;font-size:22px;font-weight:700}
+main{padding:30px;max-width:1200px;margin:auto}
+
+.card{
+  background:white;
+  padding:28px;
+  border-radius:16px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+  margin-bottom:30px;
+}
+
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+select,button{
+  padding:12px 16px;
+  border-radius:10px;
+  font-size:18px;
+  border:1px solid #cbd5e1;
+}
+button{
+  background:#0f766e;
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
+}
+button:hover{background:#115e59}
+
+.laporan-card{
+  border:1px solid #e5e7eb;
+  border-radius:18px;
+  padding:30px;
+  margin-bottom:40px;
+  background:white;
+}
+
+.laporan-header{
+  text-align:center;
+  border-bottom:3px solid #e5e7eb;
+  padding-bottom:14px;
+  margin-bottom:26px;
+}
+.laporan-header h1{font-size:28px;color:#1e3a8a;margin:0}
+.laporan-header h2{font-size:22px;margin:6px 0}
+.laporan-header h3{font-size:20px;margin:6px 0}
+
+.identitas-grid{
+  display:flex;
+  justify-content:space-between;
+  max-width:700px;
+  margin:10px auto 0;
+}
+
+.section-title{
+  margin-top:36px;
+  margin-bottom:14px;
+  font-weight:700;
+  color:#0f766e;
+  font-size:22px;
+}
+
+/* ===== DIMENSI ===== */
+.dimensi-wrapper{
+  background:linear-gradient(135deg,#ecfeff,#f0fdf4);
+  border-radius:18px;
+  padding:26px;
+  border:2px solid #99f6e4;
+}
+.dim-card{
+  background:white;
+  border-left:6px solid #0f766e;
+  border-radius:14px;
+  padding:18px 20px;
+  margin-bottom:16px;
+}
+.dim-summary{
+  background:#064e3b;
+  color:white;
+  border-radius:16px;
+  padding:22px;
+}
+
+/* ===== AKADEMIK ===== */
+.mapel-card{
+  background:#f0f4ff;
+  border:2px solid #c7d2fe;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:24px;
+}
+.mapel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.mapel-header h4{margin:0;color:#1e3a8a}
+.badge-nilai{
+  background:#1e40af;
+  color:white;
+  padding:6px 14px;
+  border-radius:999px;
+  font-weight:700;
+}
+
+/* ===== TAHFIZ ===== */
+.tahfiz-card{
+  background:linear-gradient(135deg,#fdf4ff,#ecfeff);
+  border:2px solid #d946ef;
+}
+.tahfiz-card .badge-nilai{background:#7e22ce}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+}
+th,td{
+  border:1px solid #e5e7eb;
+  padding:10px;
+  text-align:center;
+}
+th{background:#f1f5f9}
+
+/* ===== RINGKASAN AKADEMIK ===== */
+.akademik-summary{
+  background:#e0e7ff;
+  border:2px dashed #4338ca;
+  border-radius:16px;
+  padding:20px;
+}
+
+/* ===== TANDA TANGAN ===== */
+.signature-box{
+  display:flex;
+  justify-content:space-between;
+  margin-top:60px;
+  text-align:center;
+}
+.signature{
+  width:45%;
+}
+.signature .line{
+  margin-top:80px;
+  border-top:2px solid #1f2937;
+  padding-top:8px;
+  font-weight:700;
+}
+.muted{color:#6b7280}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CAHAYA APP – E-Raport</h1>
+  <button onclick="window.location.href='index.html'">⬅️ Kembali</button>
+</header>
+
+<main>
+<div class="card">
+  <h2>📘 E-Raport Semester Santri</h2>
+  <div class="controls">
+    <select id="semesterSelect">
+      <option value="">-- Pilih Semester --</option>
+      <option>Ganjil 2025/2026</option>
+      <option>Genap 2025/2026</option>
+    </select>
+    <button onclick="loadRaport()">Tampilkan Raport</button>
+    <button onclick="exportPDFSatuan()">📄 Export PDF (Santri Ini)</button>
+<button onclick="exportPDFMassal()">📚 Export PDF Massal</button>
+
+  </div>
+  <div id="raportContainer">
+    <p class="muted">Pilih semester untuk menampilkan E-Raport santri.</p>
+  </div>
+</div>
+</main>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain:"absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL:"https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId:"absensi-santri-fajrul-islam"
+};
+firebase.initializeApp(firebaseConfig);
+const fs=firebase.firestore();
+const app=initializeApp(firebaseConfig);
+const rtdb=getDatabase(app);
+
+const norm = s => (s||"").toString().trim().toLowerCase();
+
+/* ===== LOAD ===== */
+window.loadRaport = async () => {
+  const semester = semesterSelect.value;
+  raportContainer.innerHTML = "";
+  if(!semester) return;
+
+  const asesSnap = await fs.collection("asesmenSemester").get();
+  const ases = asesSnap.docs.map(d=>d.data())
+    .filter(d=>norm(d.semester) === norm(semester));
+
+  const rawNilai = Object.values(
+  (await get(child(ref(rtdb),"cahaya_app/nilai_semester"))).val() || {}
+);
+
+// 🔑 ambil nilai TERAKHIR per santri + mapel + semester
+const nilaiMap = {};
+rawNilai.forEach(n => {
+  const key =
+    n.santri.toLowerCase() + "|" +
+    n.mapel.toLowerCase() + "|" +
+    n.semester.toLowerCase();
+
+  if (!nilaiMap[key] || n.timestamp > nilaiMap[key].timestamp) {
+    nilaiMap[key] = n;
+  }
+});
+
+const nilaiAll = Object.values(nilaiMap);
+
+
+  const tahfizAll = Object.values(
+  (await get(child(ref(rtdb),"cahaya_app/tahfiz_semester"))).val() || {}
+);
+
+
+
+  ases.forEach(a=>{
+    const nilai = nilaiAll.filter(n =>
+      norm(n.santri) === norm(a.santri) &&
+      norm(n.semester) === norm(semester)
+    );
+
+    const tahfizList = tahfizAll.filter(t =>
+  norm(t.santri) === norm(a.santri) &&
+  norm(t.semester) === norm(semester)
+);
+
+// gabungkan semua capaian + ambil nilai terakhir
+let tahfiz = null;
+if(tahfizList.length){
+  tahfiz = {
+    nilaiUjian: tahfizList[tahfizList.length - 1].nilaiUjian,
+    capaian: tahfizList.flatMap(t =>
+      Array.isArray(t.capaian)
+        ? t.capaian
+        : Object.values(t.capaian || {})
+    )
+  };
+}
+
+
+    raportContainer.appendChild(renderRaport(a, nilai, tahfiz));
+  });
+};
+
+/* ===== RENDER ===== */
+function renderRaport(d, nilai, tahfiz){
+  const dimensi=[
+    ["Cinta Allah","Spiritual"],
+    ["Akhlak Mulia","Relasional"],
+    ["Hati Bersih","Emosional"],
+    ["Akal Cerdas","Intelektual"],
+    ["Fisik Berdaya","Physical"]
+  ];
+
+  let bagus=[], perlu=[];
+  const capaianTahfiz = tahfiz
+    ? (Array.isArray(tahfiz.capaian)
+        ? tahfiz.capaian
+        : Object.values(tahfiz.capaian || {}))
+    : [];
+
+  const el=document.createElement("div");
+  el.className="laporan-card";
+
+  el.innerHTML=`
+  <div class="laporan-header">
+    <h1>📋 RAPORT SEMESTER</h1>
+    <h2>PESANTREN CAHAYA FAJRUL ISLAM</h2>
+    <h3>${d.santri.toUpperCase()}</h3>
+    <div class="identitas-grid">
+      <div><b>Naqib:</b> ${d.naqib}</div>
+      <div><b>Semester:</b> ${d.semester}</div>
+    </div>
+  </div>
+
+  <div class="section-title">🌈 Dimensi CAHAYA</div>
+  <div class="dimensi-wrapper">
+    ${dimensi.map(([k,l])=>`
+      <div class="dim-card">
+        <b>${k} (${l})</b>
+        <p>${d.narasiPerDimensi?.[k] || "-"}</p>
+      </div>
+    `).join("")}
+    <div class="dim-summary">
+      <b>Kesimpulan Naqib:</b><br>${d.kesimpulan || "-"}
+    </div>
+  </div>
+
+  <div class="section-title">📚 Nilai Akademik</div>
+  ${nilai.map(n=>{
+    (n.nilaiAkhir>=75?bagus:perlu).push(n.mapel);
+    return `
+    <div class="mapel-card">
+      <div class="mapel-header">
+        <h4>${n.mapel}</h4>
+        <div class="badge-nilai">${n.nilaiAkhir}</div>
+      </div>
+      <b>Cakupan Materi:</b><br>
+      ${(n.bab||[]).map(b=>`
+        <b>${b.nama}:</b> ${(b.subBab||[]).join(" • ")}
+      `).join("<br>")}
+      ${(() => {
+  const mapel = n.mapel.toLowerCase();
+  const isBahasa =
+    mapel.includes("bahasa arab") ||
+    mapel.includes("arab") ||
+    mapel.includes("bahasa inggris") ||
+    mapel.includes("inggris");
+
+  if(isBahasa){
+    return `
+      <table>
+        <tr>
+          <th>Ujian Tulis</th>
+          <th>Nilai Akhir</th>
+        </tr>
+        <tr>
+          <td>${n.ujianTulis}</td>
+          <td><b>${n.nilaiAkhir}</b></td>
+        </tr>
+      </table>
+    `;
+  }
+
+  return `
+    <table>
+      <tr>
+        <th>Tashnif/Karya Ilmiah (70%)</th>
+        <th>Ujian Tulis (20%)</th>
+        <th>Praktek Mengajar (10%)</th>
+        <th>Nilai Akhir</th>
+      </tr>
+      <tr>
+        <td>${n.tahsnif}</td>
+        <td>${n.ujianTulis}</td>
+        <td>${n.praktekMengajar}</td>
+        <td><b>${n.nilaiAkhir}</b></td>
+      </tr>
+    </table>
+  `;
+})()}
+
+    </div>`;
+  }).join("")}
+
+  <div class="akademik-summary">
+    <b>Mapel Sudah Baik:</b>
+    <ul>${bagus.length?bagus.map(m=>`<li>${m}</li>`).join(""):"<li>-</li>"}</ul>
+    <b>Mapel Perlu Ditingkatkan:</b>
+    <ul>${perlu.length?perlu.map(m=>`<li>${m}</li>`).join(""):"<li>-</li>"}</ul>
+  </div>
+
+  <div class="section-title">📖 Tahfiz Al-Qur’an</div>
+  <div class="mapel-card tahfiz-card">
+    ${tahfiz && capaianTahfiz.length ? `
+      <div class="mapel-header">
+        <h4>Capaian Hafalan</h4>
+        <div class="badge-nilai">${tahfiz.nilaiUjian || "-"}</div>
+      </div>
+      <table>
+        <tr><th>Surat</th><th>Ayat</th></tr>
+        ${capaianTahfiz.map(c=>`
+          <tr>
+            <td>${c.surat}</td>
+            <td>${c.ayatAwal} – ${c.ayatAkhir}</td>
+          </tr>
+        `).join("")}
+      </table>
+    ` : `
+      <p class="muted">Belum ada data tahfiz semester ini.</p>
+    `}
+  </div>
+
+  <div class="signature-box">
+    <div class="signature">
+      <div class="line">${d.naqib}</div>
+      Naqib
+    </div>
+    <div class="signature">
+      <div class="line">Abah Multazam Zakaria</div>
+      Direktur
+    </div>
+  </div>
+  `;
+  return el;
+}
+</script>
+<!-- PDF EXPORT -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+const { jsPDF } = window.jspdf;
+
+const A4_WIDTH = 210;
+const A4_HEIGHT = 297;
+const MARGIN = 12;
+const FOOTER_SPACE = 15;
+
+/* ================= EXPORT SATU SANTRI ================= */
+async function exportPDFSatuan(){
+  const laporan = document.querySelector(".laporan-card");
+  if(!laporan){
+    alert("Raport belum ditampilkan.");
+    return;
+  }
+
+  const nama = laporan.querySelector("h3")?.innerText || "SANTRI";
+  const semester = laporan.querySelector(".identitas-grid div:last-child")
+    ?.innerText.replace("Semester:","").trim() || "SEMESTER";
+
+  const namaFile = `${nama}_${semester}.pdf`
+    .replace(/\s+/g,"_")
+    .toUpperCase();
+
+  await renderRaportKePDF(laporan, namaFile);
+}
+
+/* ================= EXPORT MASSAL ================= */
+async function exportPDFMassal(){
+  const semua = document.querySelectorAll(".laporan-card");
+  if(!semua.length){
+    alert("Raport belum ditampilkan.");
+    return;
+  }
+
+  for(const laporan of semua){
+    const nama = laporan.querySelector("h3")?.innerText || "SANTRI";
+    const semester = laporan.querySelector(".identitas-grid div:last-child")
+      ?.innerText.replace("Semester:","").trim() || "SEMESTER";
+
+    const namaFile = `${nama}_${semester}.pdf`
+      .replace(/\s+/g,"_")
+      .toUpperCase();
+
+    await renderRaportKePDF(laporan, namaFile);
+  }
+}
+
+/* ================= CORE ENGINE ================= */
+async function renderRaportKePDF(laporan, namaFile){
+  const pdf = new jsPDF("p","mm","a4");
+  let yPos = MARGIN;
+
+  const blocks = laporan.querySelectorAll(`
+    .laporan-header,
+    .section-title,
+    .dim-card,
+    .dim-summary,
+    .mapel-card,
+    .akademik-summary,
+    .tahfiz-card,
+    .signature-box
+  `);
+
+  for(const block of blocks){
+    const canvas = await html2canvas(block,{
+  scale:1.5,
+  useCORS:true,
+  backgroundColor:"#ffffff"
+});
+
+
+    const imgWidth = A4_WIDTH - MARGIN*2;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+
+    // ❗ cek cukup halaman (sisakan footer)
+    if(yPos + imgHeight > A4_HEIGHT - FOOTER_SPACE){
+      pdf.addPage();
+      yPos = MARGIN;
+    }
+
+    pdf.addImage(
+  canvas.toDataURL("image/jpeg", 0.85),
+  "JPEG",
+  MARGIN,
+  yPos,
+  imgWidth,
+  imgHeight,
+  undefined,
+  "FAST"
+);
+
+
+    yPos += imgHeight + 4;
+  }
+
+  /* ===== FOOTER PAGE NUMBER ===== */
+  const totalPages = pdf.getNumberOfPages();
+
+  for(let i=1;i<=totalPages;i++){
+    pdf.setPage(i);
+    pdf.setFontSize(10);
+    pdf.setTextColor(100);
+
+    pdf.text(
+      `Halaman ${i} dari ${totalPages} halaman`,
+      A4_WIDTH / 2,
+      A4_HEIGHT - 8,
+      { align:"center" }
+    );
+  }
+
+  pdf.save(namaFile);
+}
+</script>
+
+</body>
+</html>
