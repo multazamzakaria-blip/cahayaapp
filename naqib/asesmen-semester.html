@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Asesmen Akhir Semester CAHAYA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Poppins,Arial;background:#f1f5f9;padding:20px}
+h1{text-align:center;color:#1e3a8a}
+.card{background:#fff;padding:18px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+select,button,textarea{width:100%;padding:10px;margin-top:6px;border-radius:8px}
+button{background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
+button:hover{background:#1e40af}
+.indikator{margin:10px 0;font-size:14px}
+.ket{font-size:12px;color:#475569;margin-top:4px}
+textarea{min-height:140px}
+</style>
+</head>
+
+<body>
+
+<h1>📘 Asesmen Akhir Semester CAHAYA</h1>
+
+<div class="card">
+  <select id="semester">
+    <option value="">Pilih Semester</option>
+    <option>Ganjil 2025/2026</option>
+    <option>Genap 2025/2026</option>
+  </select>
+
+  <select id="santri">
+    <option value="">Pilih Santri</option>
+  </select>
+</div>
+
+<div id="form" style="display:none">
+
+<!-- ================= DIMENSI ================= -->
+
+<div class="card" data-dim="Cinta Allah">
+<h3>🌿 Dimensi Cinta Allah (Spiritual)</h3>
+
+<div class="indikator">Kesadaran dan niat beribadah
+<select class="skor" data-i="kesadaran dan niat beribadah"></select><div class="ket"></div></div>
+
+<div class="indikator">Kedisiplinan dalam ibadah wajib
+<select class="skor" data-i="kedisiplinan ibadah wajib"></select><div class="ket"></div></div>
+
+<div class="indikator">Kesungguhan pembinaan ruhani
+<select class="skor" data-i="kesungguhan pembinaan ruhani"></select><div class="ket"></div></div>
+
+<textarea class="narasi-dim" readonly></textarea>
+</div>
+
+<div class="card" data-dim="Akhlak Mulia">
+<h3>🤝 Dimensi Akhlak Mulia (Relasional)</h3>
+
+<div class="indikator">Adab kepada guru dan pengurus
+<select class="skor" data-i="adab kepada guru dan pengurus"></select><div class="ket"></div></div>
+
+<div class="indikator">Sikap terhadap teman
+<select class="skor" data-i="sikap terhadap teman"></select><div class="ket"></div></div>
+
+<div class="indikator">Tanggung jawab amanah
+<select class="skor" data-i="tanggung jawab amanah"></select><div class="ket"></div></div>
+
+<div class="indikator">Empati dan kepedulian
+<select class="skor" data-i="empati dan kepedulian"></select><div class="ket"></div></div>
+
+<div class="indikator">Kerja sama sosial
+<select class="skor" data-i="kerja sama sosial"></select><div class="ket"></div></div>
+
+<textarea class="narasi-dim" readonly></textarea>
+</div>
+
+<div class="card" data-dim="Hati Bersih">
+<h3>💜 Dimensi Hati Bersih (Emosional)</h3>
+
+<div class="indikator">Mengelola emosi negatif
+<select class="skor" data-i="mengelola emosi negatif"></select><div class="ket"></div></div>
+
+<div class="indikator">Syukur dan refleksi
+<select class="skor" data-i="syukur dan refleksi"></select><div class="ket"></div></div>
+
+<div class="indikator">Ketenangan emosi
+<select class="skor" data-i="ketenangan emosi"></select><div class="ket"></div></div>
+
+<div class="indikator">Keterbukaan bimbingan
+<select class="skor" data-i="keterbukaan bimbingan"></select><div class="ket"></div></div>
+
+<textarea class="narasi-dim" readonly></textarea>
+</div>
+
+<div class="card" data-dim="Akal Cerdas">
+<h3>🧠 Dimensi Akal Cerdas (Intelektual)</h3>
+
+<div class="indikator">Motivasi belajar
+<select class="skor" data-i="motivasi belajar"></select><div class="ket"></div></div>
+
+<div class="indikator">Pemahaman materi
+<select class="skor" data-i="pemahaman materi"></select><div class="ket"></div></div>
+
+<div class="indikator">Keaktifan diskusi
+<select class="skor" data-i="keaktifan diskusi"></select><div class="ket"></div></div>
+
+<div class="indikator">Menjelaskan kembali materi
+<select class="skor" data-i="menjelaskan kembali materi"></select><div class="ket"></div></div>
+
+<textarea class="narasi-dim" readonly></textarea>
+</div>
+
+<div class="card" data-dim="Fisik Berdaya">
+<h3>💪 Dimensi Fisik Berdaya (Physical)</h3>
+
+<div class="indikator">Kebersihan diri
+<select class="skor" data-i="kebersihan diri"></select><div class="ket"></div></div>
+
+<div class="indikator">Perawatan kesehatan
+<select class="skor" data-i="perawatan kesehatan"></select><div class="ket"></div></div>
+
+<div class="indikator">Pola makan sehat
+<select class="skor" data-i="pola makan sehat"></select><div class="ket"></div></div>
+
+<textarea class="narasi-dim" readonly></textarea>
+</div>
+
+<div class="card">
+<h3>📌 Kesimpulan Akhir Semester</h3>
+<textarea id="kesimpulan" readonly></textarea>
+</div>
+
+<button id="btnSimpan">💾 Simpan Asesmen Semester</button>
+
+</div>
+
+<script>
+/* ================= FIREBASE ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  projectId: "absensi-santri-fajrul-islam"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+db.settings({ ignoreUndefinedProperties: true });
+
+/* ================= INIT ================= */
+const semester=document.getElementById("semester");
+const santri=document.getElementById("santri");
+const form=document.getElementById("form");
+const kesimpulan=document.getElementById("kesimpulan");
+
+/* ================= SANTRI ================= */
+(JSON.parse(localStorage.getItem("kelompokNaqib")||"[]"))
+.forEach(n=>santri.add(new Option(n,n)));
+
+semester.onchange=santri.onchange=()=>{
+  form.style.display=(semester.value&&santri.value)?"block":"none";
+};
+
+/* ================= SKOR ================= */
+const ket={
+1:"(1) Masih perlu bimbingan",
+2:"(2) Mulai berkembang",
+3:"(3) Cukup baik dan mulai konsisten",
+4:"(4) Kuat dan relatif stabil"
+};
+
+document.querySelectorAll(".skor").forEach(s=>{
+  s.innerHTML='<option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option>';
+  s.onchange=()=>{ s.nextElementSibling.textContent=ket[s.value]||""; buatNarasi(); };
+});
+
+/* ================= NARASI REFLEKTIF–POSISIONAL ================= */
+function buatNarasi(){
+  let avgDim={};
+
+  document.querySelectorAll(".card[data-dim]").forEach(card=>{
+    const dim=card.dataset.dim;
+    let kuat=[],lemah=[],nilai=[];
+
+    card.querySelectorAll(".skor").forEach(s=>{
+      const v=parseInt(s.value||0);
+      if(!v) return;
+      nilai.push(v);
+      (v>=3?kuat:lemah).push(s.dataset.i);
+    });
+
+    avgDim[dim]=nilai.reduce((a,b)=>a+b,0)/nilai.length||0;
+
+    card.querySelector(".narasi-dim").value=
+`Pada dimensi ${dim}, santri berada pada posisi perkembangan yang ${
+avgDim[dim]>=3?"cukup stabil":"masih perlu penguatan lebih lanjut"
+}. ${
+kuat.length
+? `Aspek yang relatif sudah tampak lebih kuat meliputi ${kuat.join(", ")}, meskipun masih perlu dijaga konsistensinya.`
+: `Belum tampak aspek yang benar-benar kuat dan stabil pada dimensi ini.`
+} ${
+lemah.length
+? `Adapun aspek yang masih memerlukan perhatian dan pendampingan lebih serius adalah ${lemah.join(", ")}. Dimensi ini menjadi area penting yang perlu mendapat penguatan terarah pada semester berikutnya.`
+: `Secara umum, dimensi ini telah berkembang cukup baik dan perlu dilanjutkan dengan pembiasaan yang konsisten.`
+}`;
+  });
+
+  const max=Object.keys(avgDim).reduce((a,b)=>avgDim[a]>avgDim[b]?a:b);
+  const min=Object.keys(avgDim).reduce((a,b)=>avgDim[a]<avgDim[b]?a:b);
+
+  kesimpulan.value=
+`Berdasarkan hasil asesmen semester ini, dimensi yang menunjukkan kekuatan relatif paling menonjol adalah ${max}. 
+Sementara itu, dimensi yang masih membutuhkan perhatian dan pendampingan lebih serius adalah ${min}. 
+Diperlukan sinergi antara santri, naqib, dan wali santri dalam membangun pembiasaan yang konsisten, agar proses perkembangan santri pada semester berikutnya dapat berlangsung lebih seimbang dan berkelanjutan.`;
+}
+
+/* ================= SIMPAN ================= */
+document.getElementById("btnSimpan").onclick=async()=>{
+  buatNarasi();
+  if(!semester.value||!santri.value){
+    alert("Pilih semester dan santri terlebih dahulu.");
+    return;
+  }
+  const docId=`${santri.value}_${semester.value.replace(/\//g,"-")}`;
+  try{
+    await db.collection("asesmenSemester").doc(docId).set({
+      santri:santri.value,
+      semester:semester.value,
+      naqib:localStorage.getItem("namaNaqib"),
+      narasiPerDimensi:Object.fromEntries(
+        Array.from(document.querySelectorAll(".card[data-dim]"))
+        .map(c=>[c.dataset.dim,c.querySelector(".narasi-dim").value])
+      ),
+      kesimpulan:kesimpulan.value,
+      waktu:new Date().toISOString()
+    });
+    alert("✅ Asesmen semester berhasil disimpan.");
+  }catch(err){
+    console.error(err);
+    alert("❌ Gagal menyimpan asesmen: "+err.message);
+  }
+};
+</script>
+
+</body>
+</html>
