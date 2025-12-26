@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Input Tahfiz Semester</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family:Poppins,Arial,sans-serif;
+  background:#f4f6fa;
+  margin:0;
+}
+header{
+  background:#0f766e;
+  color:#fff;
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h1{margin:0;font-size:1.3rem}
+button{
+  background:#0f766e;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:10px 18px;
+  font-weight:600;
+  cursor:pointer;
+}
+button:hover{background:#115e59}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:24px;
+}
+.card{
+  background:#fff;
+  padding:24px;
+  border-radius:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);
+  margin-bottom:22px;
+}
+label{font-weight:600;margin-top:12px;display:block}
+select,input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+  margin-top:6px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:12px;
+}
+.surat-block{
+  border:1px dashed #94a3b8;
+  padding:14px;
+  border-radius:14px;
+  margin-top:14px;
+}
+.muted{color:#6b7280;font-size:14px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>📖 Input Tahfiz Semester</h1>
+  <button onclick="history.back()">⬅️ Kembali</button>
+</header>
+
+<main>
+
+<div class="card">
+  <h3>Identitas Tahfiz Semester</h3>
+
+  <label>Semester</label>
+  <select id="semester">
+    <option value="">-- pilih semester --</option>
+    <option>Ganjil 2025/2026</option>
+    <option>Genap 2025/2026</option>
+  </select>
+
+  <label>Kelompok Tahfiz</label>
+  <select id="kelompok"></select>
+
+  <label>Santri</label>
+  <select id="santri"></select>
+</div>
+
+<div class="card">
+  <h3>📌 Capaian Tahfiz Semester</h3>
+  <div id="suratContainer"></div>
+  <br>
+  <button onclick="tambahSurat()">➕ Tambah Surat</button>
+</div>
+
+<div class="card">
+  <h3>📝 Nilai Ujian Tahfiz Semester</h3>
+  <input type="number" id="nilaiTahfiz" min="0" max="100" placeholder="Nilai 1–100">
+</div>
+
+<div class="card">
+  <button onclick="simpanTahfiz()">💾 Simpan Tahfiz Semester</button>
+</div>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="./dataSantri.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain:"absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL:"https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId:"absensi-santri-fajrul-islam"
+});
+const db = firebase.database();
+
+const kelompokSel = document.getElementById("kelompok");
+const santriSel   = document.getElementById("santri");
+
+/* ===== UTIL ===== */
+const slug = s => s.toLowerCase().trim().replace(/\s+/g,"_").replace(/[^a-z0-9_]/g,"");
+
+/* ===== SURAT ===== */
+const daftarSurat = [...`Al-Fatihah,Al-Baqarah,Ali Imran,An-Nisa,Al-Maidah,Al-An'am,Al-A'raf,Al-Anfal,At-Taubah,Yunus,Hud,Yusuf,Ar-Ra'd,Ibrahim,Al-Hijr,An-Nahl,Al-Isra,Al-Kahfi,Maryam,Ta-Ha,Al-Anbiya,Al-Hajj,Al-Mu'minun,An-Nur,Al-Furqan,Asy-Syu'ara,An-Naml,Al-Qasas,Al-Ankabut,Ar-Rum,Luqman,As-Sajdah,Al-Ahzab,Saba,Fatir,Ya-Sin,As-Saffat,Sad,Az-Zumar,Ghafir,Fussilat,Asy-Syura,Az-Zukhruf,Ad-Dukhan,Al-Jatsiyah,Al-Ahqaf,Muhammad,Al-Fath,Al-Hujurat,Qaf,Adz-Dzariyat,At-Tur,An-Najm,Al-Qamar,Ar-Rahman,Al-Waqi'ah,Al-Hadid,Al-Mujadilah,Al-Hasyr,Al-Mumtahanah,As-Saff,Al-Jumu'ah,Al-Munafiqun,At-Taghabun,At-Talaq,At-Tahrim,Al-Mulk,Al-Qalam,Al-Haqqah,Al-Ma'arij,Nuh,Al-Jinn,Al-Muzzammil,Al-Muddatstsir,Al-Qiyamah,Al-Insan,Al-Mursalat,An-Naba,An-Nazi'at,'Abasa,At-Takwir,Al-Infitar,Al-Muthaffifin,Al-Insyiqaq,Al-Buruj,At-Tariq,Al-A'la,Al-Ghasyiyah,Al-Fajr,Al-Balad,Asy-Syams,Al-Lail,Ad-Dhuha,Asy-Syarh,At-Tin,Al-'Alaq,Al-Qadr,Al-Bayyinah,Az-Zalzalah,Al-'Adiyat,Al-Qari'ah,At-Takatsur,Al-'Asr,Al-Humazah,Al-Fil,Quraisy,Al-Ma'un,Al-Kautsar,Al-Kafirun,An-Nashr,Al-Lahab,Al-Ikhlas,Al-Falaq,An-Nas`.split(",")];
+
+/* ===== LOAD KELOMPOK ===== */
+const kelompokTahfiz = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+kelompokSel.innerHTML = `<option value="">-- pilih kelompok --</option>`;
+Object.keys(kelompokTahfiz).forEach(k=>{
+  kelompokSel.innerHTML += `<option>${k}</option>`;
+});
+
+/* ===== LOAD SANTRI ===== */
+kelompokSel.onchange = ()=>{
+  santriSel.innerHTML = `<option value="">-- pilih santri --</option>`;
+  (kelompokTahfiz[kelompokSel.value]||[]).forEach(n=>{
+    santriSel.innerHTML += `<option>${n}</option>`;
+  });
+};
+
+/* ===== TAMBAH SURAT ===== */
+function tambahSurat(){
+  const d=document.createElement("div");
+  d.className="surat-block";
+  d.innerHTML=`
+    <div class="grid">
+      <select class="surat">
+        <option value="">-- Surat --</option>
+        ${daftarSurat.map(s=>`<option>${s}</option>`).join("")}
+      </select>
+      <input type="number" class="ayatAwal" placeholder="Ayat Awal">
+      <input type="number" class="ayatAkhir" placeholder="Ayat Akhir">
+    </div>`;
+  suratContainer.appendChild(d);
+}
+
+/* ===== SIMPAN ===== */
+function simpanTahfiz(){
+  const capaian=[];
+  document.querySelectorAll(".surat-block").forEach(b=>{
+    const s=b.querySelector(".surat").value;
+    const a1=b.querySelector(".ayatAwal").value;
+    const a2=b.querySelector(".ayatAkhir").value;
+    if(s&&a1&&a2) capaian.push({surat:s,ayatAwal:+a1,ayatAkhir:+a2});
+  });
+
+  if(!semester.value||!kelompok.value||!santri.value||!nilaiTahfiz.value||!capaian.length){
+    alert("Lengkapi semua data.");
+    return;
+  }
+
+  const key = `${slug(santri.value)}__${slug(semester.value)}`;
+
+  db.ref(`cahaya_app/tahfiz_semester/${key}`).set({
+    santri: santri.value,
+    kelompok: kelompok.value,
+    semester: semester.value,
+    nilaiUjian: +nilaiTahfiz.value,
+    capaian,
+    timestamp: Date.now()
+  }).then(()=>{
+    alert("✅ Tahfiz semester berhasil disimpan.");
+    location.reload();
+  }).catch(e=>{
+    alert("❌ Gagal: "+e.message);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Input Nilai Akhir Semester – CAHAYA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --primary:#0f766e;
+  --primary-dark:#115e59;
+  --bg:#f4f6fa;
+  --border:#e5e7eb;
+}
+body{
+  font-family:Poppins,Arial;
+  background:var(--bg);
+  margin:0;
+  color:#1f2937;
+}
+header{
+  background:var(--primary);
+  color:#fff;
+  padding:14px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h1{margin:0;font-size:1.2rem}
+button{
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:8px 14px;
+  font-weight:600;
+  cursor:pointer;
+}
+button:hover{background:var(--primary-dark)}
+.small-btn{
+  background:#64748b;
+  margin-top:8px;
+}
+main{padding:24px;max-width:1100px;margin:auto}
+
+.card{
+  background:white;
+  padding:24px;
+  border-radius:16px;
+  box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+label{font-weight:600;display:block;margin-top:12px}
+select,input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #cbd5e1;
+  margin-top:6px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:16px;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
+th{background:#f9fafb}
+
+.readonly{
+  background:#e5e7eb;
+  font-weight:700;
+}
+
+/* ===== BAB ===== */
+.bab-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin-top:14px;
+  background:#f9fafb;
+}
+.bab-card label{
+  margin-top:0;
+}
+.subbab-container{
+  margin-left:28px; /* INI KUNCI: SUB BAB MASUK KE DALAM */
+  margin-top:8px;
+}
+.subbab-input{
+  margin-top:6px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>📊 Input Nilai Akhir Semester</h1>
+  <button onclick="location.href='fitur.html'">⬅️ Kembali</button>
+</header>
+
+<main>
+<div class="card">
+
+<label>Semester</label>
+<select id="semester">
+  <option value="">-- pilih semester --</option>
+  <option>Ganjil 2025/2026</option>
+  <option>Genap 2025/2026</option>
+</select>
+
+<label>Kelas</label>
+<select id="kelas" onchange="updateKelompok()">
+  <option value="">-- pilih kelas --</option>
+  <option>Keilmuan Islam & Umum</option>
+  <option>Bahasa Internasional</option>
+  <option>Tahsin & Tahfiz Al-Qur'an</option>
+</select>
+
+<label>Kelompok</label>
+<select id="kelompok" onchange="loadSantri()"></select>
+
+<label>Mata Pelajaran</label>
+<select id="mapel" onchange="aturBobot()"></select>
+
+<!-- BAB -->
+<h3 style="margin-top:24px">📚 Bab & Sub Bab</h3>
+<div id="babContainer"></div>
+<button type="button" class="small-btn" onclick="tambahBab()">➕ Tambah Bab</button>
+
+<!-- TABEL -->
+<h3 style="margin-top:24px">📋 Daftar Santri</h3>
+<table>
+<thead>
+<tr>
+  <th>No</th>
+  <th>Nama</th>
+  <th>Tahsnif</th>
+  <th>Ujian Tulis</th>
+  <th>Praktik</th>
+  <th>Nilai Akhir</th>
+</tr>
+</thead>
+<tbody id="santriBody">
+<tr><td colspan="6">Pilih kelas & kelompok</td></tr>
+</tbody>
+</table>
+
+<br>
+<button onclick="simpanNilai()">💾 Simpan Nilai Semester</button>
+
+</div>
+</main>
+
+<script src="./dataSantri.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain:"absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL:"https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId:"absensi-santri-fajrul-islam"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+
+/* MAPEL */
+function updateMapel(){
+  const kelas=kelasSel.value;
+  mapelSel.innerHTML='<option value="">-- pilih mapel --</option>';
+
+  if(kelas==="Keilmuan Islam & Umum"){
+    ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran']
+      .forEach(m=>mapelSel.add(new Option(m,m)));
+  }
+  if(kelas==="Bahasa Internasional"){
+    ['Bahasa Arab','Bahasa Inggris']
+      .forEach(m=>mapelSel.add(new Option(m,m)));
+  }
+  if(kelas==="Tahsin & Tahfiz Al-Qur\'an"){
+    ['Tahsin','Tahfiz']
+      .forEach(m=>mapelSel.add(new Option(m,m)));
+  }
+}
+
+/* KELOMPOK */
+window.updateKelompok=function(){
+  updateMapel();
+  kelompokSel.innerHTML='<option value="">-- pilih kelompok --</option>';
+  (Object.keys(dataSantri[kelasSel.value]||{}))
+    .forEach(k=>kelompokSel.add(new Option(k,k)));
+};
+
+/* SANTRI */
+window.loadSantri=function(){
+  const list=(dataSantri[kelasSel.value]||{})[kelompokSel.value]||[];
+  santriBody.innerHTML="";
+  list.forEach((n,i)=>{
+    santriBody.innerHTML+=`
+    <tr>
+      <td>${i+1}</td>
+      <td>${n}</td>
+      <td><input class="tahsnif"></td>
+      <td><input class="ujian"></td>
+      <td><input class="praktek"></td>
+      <td><input class="akhir readonly" readonly></td>
+    </tr>`;
+  });
+  aturBobot();
+  document.querySelectorAll("input").forEach(i=>i.oninput=hitung);
+};
+
+/* BOBOT */
+window.aturBobot=function(){
+  const bahasa = ['Bahasa Arab','Bahasa Inggris'].includes(mapelSel.value);
+  document.querySelectorAll("#santriBody tr").forEach(r=>{
+    r.querySelector(".tahsnif").disabled=bahasa;
+    r.querySelector(".praktek").disabled=bahasa;
+    if(bahasa){
+      r.querySelector(".tahsnif").value="Tidak ada";
+      r.querySelector(".praktek").value="Tidak ada";
+    }
+  });
+  hitung();
+};
+
+function hitung(){
+  document.querySelectorAll("#santriBody tr").forEach(r=>{
+    const t=+r.querySelector(".tahsnif").value||0;
+    const u=+r.querySelector(".ujian").value||0;
+    const p=+r.querySelector(".praktek").value||0;
+    const bahasa = ['Bahasa Arab','Bahasa Inggris'].includes(mapelSel.value);
+    r.querySelector(".akhir").value = bahasa ? u : Math.round(t*0.7+u*0.2+p*0.1);
+  });
+}
+
+/* BAB */
+window.tambahBab=function(){
+  const d=document.createElement("div");
+  d.className="bab-card";
+  d.innerHTML=`
+    <label>Judul Bab</label>
+    <input class="nama-bab" placeholder="Contoh: Thaharah">
+    <div class="subbab-container"></div>
+    <button type="button" class="small-btn" onclick="tambahSubBab(this)">➕ Tambah Sub Bab</button>
+  `;
+  babContainer.appendChild(d);
+};
+window.tambahSubBab=function(btn){
+  const c=btn.previousElementSibling;
+  const i=document.createElement("input");
+  i.className="subbab-input";
+  i.placeholder="Judul Sub Bab";
+  c.appendChild(i);
+};
+
+/* SIMPAN */
+window.simpanNilai=async function(){
+  if(!semester.value||!kelasSel.value||!kelompokSel.value||!mapelSel.value){
+    alert("Lengkapi data utama");
+    return;
+  }
+
+  const bab=[];
+  document.querySelectorAll(".bab-card").forEach(b=>{
+    const nama=b.querySelector(".nama-bab").value;
+    const sub=[...b.querySelectorAll(".subbab-input")].map(x=>x.value).filter(Boolean);
+    if(nama) bab.push({nama,subBab:sub});
+  });
+
+  for(const r of santriBody.querySelectorAll("tr")){
+    await push(ref(db,"cahaya_app/nilai_semester"),{
+      santri:r.children[1].innerText,
+      semester:semester.value,
+      kelas:kelasSel.value,
+      kelompok:kelompokSel.value,
+      mapel:mapelSel.value,
+      tahsnif:r.querySelector(".tahsnif").value,
+      ujianTulis:r.querySelector(".ujian").value,
+      praktekMengajar:r.querySelector(".praktek").value,
+      nilaiAkhir:r.querySelector(".akhir").value,
+      bab,
+      timestamp:Date.now()
+    });
+  }
+  alert("✅ Nilai berhasil disimpan");
+  location.href="fitur.html";
+};
+
+const semester=document.getElementById("semester");
+const kelasSel=document.getElementById("kelas");
+const kelompokSel=document.getElementById("kelompok");
+const mapelSel=document.getElementById("mapel");
+const santriBody=document.getElementById("santriBody");
+const babContainer=document.getElementById("babContainer");
+</script>
+
+</body>
+</html>
