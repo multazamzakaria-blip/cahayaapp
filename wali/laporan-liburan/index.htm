@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Liburan Santri - CAHAYA APP</title>
+
+<style>
+:root{
+  --green1:#0f766e;
+  --green2:#064e3b;
+  --light:#f8fafc;
+  --card:rgba(255,255,255,0.12);
+  --border:rgba(255,255,255,0.25);
+  --shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+*{box-sizing:border-box;font-family:Poppins,sans-serif}
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--green1),var(--green2));
+  color:var(--light);
+  display:flex;
+  justify-content:center;
+}
+.container{
+  width:100%;
+  max-width:820px;
+  padding:20px;
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+header h1{font-size:1.2rem}
+.back{
+  color:#fcd34d;
+  text-decoration:none;
+  font-weight:600;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(10px);
+  margin-bottom:18px;
+}
+.card h2{
+  font-size:1.05rem;
+  color:#fcd34d;
+  margin-bottom:10px;
+}
+label{
+  display:flex;
+  gap:10px;
+  margin-bottom:8px;
+  font-size:.95rem;
+}
+input[type=checkbox]{transform:scale(1.2)}
+textarea{
+  width:100%;
+  min-height:80px;
+  border-radius:10px;
+  border:none;
+  padding:10px;
+  resize:vertical;
+}
+select{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  margin-bottom:12px;
+}
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  color:#1f2937;
+}
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-size:.9rem;
+  color:#bbf7d0;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <h1>📝 Laporan Liburan Santri</h1>
+  <a href="../dashboard/" class="back">⬅ Dashboard</a>
+</header>
+
+<div class="card">
+  <h2>📅 Pilih Hari</h2>
+  <select id="tanggal">
+    <option value="">-- Pilih Tanggal --</option>
+    <option value="2026-01-01">1 Januari 2026</option>
+    <option value="2026-01-02">2 Januari 2026</option>
+    <option value="2026-01-03">3 Januari 2026</option>
+    <option value="2026-01-04">4 Januari 2026</option>
+    <option value="2026-01-05">5 Januari 2026</option>
+    <option value="2026-01-06">6 Januari 2026</option>
+  </select>
+</div>
+
+<div class="card">
+  <h2>✅ Program Wajib</h2>
+  <label><input type="checkbox" id="shalat"> Shalat 5 Waktu Berjamaah</label>
+  <label><input type="checkbox" id="tilawah"> Tilawah / Muraja’ah ± 1 Juz</label>
+  <label><input type="checkbox" id="tashnif"> Mengajarkan Materi Tashnif</label>
+  <label><input type="checkbox" id="khidmat"> Khidmat kepada Orang Tua</label>
+  <label><input type="checkbox" id="tahajud"> Shalat Tahajjud</label>
+  <label><input type="checkbox" id="wirid"> Wirid Malam (Al-Mulk & Dzikir)</label>
+</div>
+
+<div class="card">
+  <h2>💬 Refleksi Wali Santri</h2>
+  <textarea id="refleksi" placeholder="Tuliskan refleksi singkat (2–3 kalimat)..."></textarea>
+</div>
+
+<div class="card">
+  <button id="simpanBtn">💾 Simpan Laporan</button>
+  <div class="status" id="status"></div>
+</div>
+
+</div>
+
+<!-- ================= FIREBASE ================= -->
+<script type="module">
+/* ===== CEK LOGIN WALI ===== */
+const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+if(!user || user.role !== "wali"){
+  window.location.href = "../index.html";
+}
+
+/* ===== FIREBASE IMPORT ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ===== FIREBASE CONFIG ASLI CAHAYA ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId: "absensi-santri-fajrul-islam",
+  storageBucket: "absensi-santri-fajrul-islam.firebasestorage.app",
+  messagingSenderId: "739982369926",
+  appId: "1:739982369926:web:7e5375c3ddbaf0584cdd07"
+};
+
+/* ===== INIT ===== */
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ===== SIMPAN LAPORAN ===== */
+document.getElementById("simpanBtn").addEventListener("click", async () => {
+  const tanggal = document.getElementById("tanggal").value;
+  if(!tanggal){
+    alert("Silakan pilih tanggal.");
+    return;
+  }
+
+  try{
+    await addDoc(collection(db,"laporan_liburan"),{
+      santriId: user.id || "",
+      namaSantri: user.namaAnak || "",
+      waliId: user.idWali || "",
+      tanggal: tanggal,
+      checklist:{
+        shalat: shalat.checked,
+        tilawah: tilawah.checked,
+        tashnif: tashnif.checked,
+        khidmat: khidmat.checked,
+        tahajud: tahajud.checked,
+        wirid: wirid.checked
+      },
+      refleksi: refleksi.value.trim(),
+      waktuSubmit: serverTimestamp()
+    });
+
+    document.getElementById("status").innerText =
+      "✅ Laporan berhasil tersimpan di sistem pesantren";
+  }catch(error){
+    console.error(error);
+    document.getElementById("status").innerText =
+      "❌ Gagal menyimpan laporan. Periksa koneksi atau izin Firebase.";
+  }
+});
+</script>
+
+</body>
+</html>
