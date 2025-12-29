@@ -87,9 +87,17 @@
     .menu-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(16,185,129,0.4); }
     .menu-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
     .menu-card p { font-size: 0.9rem; opacity: 0.85; }
+
     .harian { background: linear-gradient(145deg, rgba(16,185,129,0.3), rgba(22,163,74,0.4)); border: 1px solid rgba(16,185,129,0.4); }
     .bulanan { background: linear-gradient(145deg, rgba(37,99,235,0.3), rgba(29,78,216,0.4)); border: 1px solid rgba(37,99,235,0.4); }
     .chat { background: linear-gradient(145deg, rgba(245,158,11,0.25), rgba(234,179,8,0.35)); border: 1px solid rgba(250,204,21,0.4); }
+
+    /* ===== TAMBAHAN SAJA (TIDAK MENGUBAH KODE LAMA) ===== */
+    .liburan {
+      background: linear-gradient(145deg, rgba(236,72,153,0.25), rgba(190,24,93,0.35));
+      border: 1px solid rgba(236,72,153,0.45);
+    }
+    /* ================================================== */
 
     /* MODAL */
     .modal {
@@ -160,17 +168,26 @@
         <h3>📅 Progres Harian</h3>
         <p>Lihat aktivitas dan absensi harian santri.</p>
       </a>
+
       <a href="../progres-bulanan/" class="menu-card bulanan">
         <h3>📊 Progres Bulanan</h3>
         <p>Analisis perkembangan karakter dan prestasi tiap bulan.</p>
       </a>
+
+      <!-- ===== MENU BARU DITAMBAHKAN (TANPA MENGHAPUS APA PUN) ===== -->
+      <a href="../laporan-liburan/" class="menu-card liburan">
+        <h3>📝 Laporan Liburan Santri</h3>
+        <p>Pendampingan ibadah, adab, dan aktivitas santri selama liburan.</p>
+      </a>
+      <!-- ========================================================== -->
+
       <div class="menu-card chat" id="openChat">
         <h3>💬 Chat Pengurus</h3>
         <p>Hubungi Naqib, Supervisor, atau Call Center.</p>
       </div>
     </section>
 
-    <!-- MODAL CHAT -->
+    <!-- MODAL CHAT (UTUH) -->
     <div id="modalChat" class="modal">
       <div class="modal-content">
         <div class="modal-header">
