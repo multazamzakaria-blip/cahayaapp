@@ -6,56 +6,153 @@
 <title>Cek Laporan Liburan Santri</title>
 
 <style>
+:root{
+  --primary:#0f766e;
+  --primary-soft:#ecfdf5;
+  --success:#047857;
+  --danger:#b91c1c;
+  --bg:#f4f6fa;
+  --card:#ffffff;
+  --muted:#6b7280;
+}
+
+*{box-sizing:border-box}
 body{
-  font-family:Arial,sans-serif;
-  background:#f4f6fa;
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:var(--bg);
   margin:0;
   color:#1f2937;
 }
+
+/* HEADER */
 header{
-  background:#0f766e;
+  background:linear-gradient(135deg,#0f766e,#115e59);
   color:white;
-  padding:14px 24px;
+  padding:16px 26px;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
-header h1{margin:0;font-size:1.3rem}
-main{padding:30px;max-width:1200px;margin:auto}
+header h1{
+  margin:0;
+  font-size:1.35rem;
+}
 .back{
-  background:#e5e7eb;
-  color:#1f2937;
+  background:rgba(255,255,255,.15);
+  color:white;
   border:none;
-  padding:8px 14px;
-  border-radius:8px;
+  padding:8px 16px;
+  border-radius:999px;
   cursor:pointer;
-  font-weight:bold;
+  font-weight:600;
 }
+.back:hover{background:rgba(255,255,255,.25)}
+
+main{
+  padding:28px;
+  max-width:1350px;
+  margin:auto;
+}
+
+/* FILTER */
 .filter-box{
-  background:white;
-  padding:16px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
-  margin-bottom:20px;
+  background:var(--card);
+  padding:18px 20px;
+  border-radius:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  margin-bottom:22px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.filter-box label{
+  font-weight:700;
+  color:#065f46;
+}
+.filter-box select{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid #d1fae5;
+}
+.filter-box button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  background:var(--primary);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+.filter-box button:hover{opacity:.9}
+
+/* TABLE */
+.table-wrap{
+  background:var(--card);
+  border-radius:16px;
+  box-shadow:0 8px 22px rgba(0,0,0,.1);
+  overflow:auto;
 }
 table{
   width:100%;
   border-collapse:collapse;
-  background:white;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  min-width:1100px;
 }
 th,td{
-  padding:12px;
+  padding:14px 16px;
   border-bottom:1px solid #e5e7eb;
-  text-align:left;
-  font-size:0.9rem;
+  vertical-align:top;
+  font-size:.9rem;
 }
-th{background:#f0fdfa;color:#065f46}
-.status-ok{color:#047857;font-weight:bold}
-.status-no{color:#b91c1c;font-weight:bold}
-.small{font-size:0.8rem;color:#374151}
+th{
+  background:var(--primary-soft);
+  color:#065f46;
+  font-weight:800;
+}
+tr:hover td{background:#f9fafb}
+
+/* STATUS */
+.badge{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:.75rem;
+  font-weight:800;
+}
+.ok{background:#d1fae5;color:var(--success)}
+.no{background:#fee2e2;color:var(--danger)}
+
+/* CHECKLIST JELAS */
+.checklist{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(180px,auto));
+  gap:6px 16px;
+  font-size:.82rem;
+}
+.item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:600;
+}
+.yes{color:var(--success)}
+.noo{color:var(--danger)}
+
+/* REFLEKSI */
+.refleksi{
+  max-width:420px;
+  font-size:.85rem;
+  line-height:1.5;
+  color:#374151;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+}
 </style>
 </head>
 
@@ -68,9 +165,9 @@ th{background:#f0fdfa;color:#065f46}
 <main>
 
 <div class="filter-box">
-  <label>Filter Tanggal Liburan:</label>
+  <label>Filter Tanggal:</label>
   <select id="filterTanggal">
-    <option value="">Semua Tanggal</option>
+    <option value="">Semua</option>
     <option value="2026-01-01">1 Januari 2026</option>
     <option value="2026-01-02">2 Januari 2026</option>
     <option value="2026-01-03">3 Januari 2026</option>
@@ -81,25 +178,26 @@ th{background:#f0fdfa;color:#065f46}
   <button onclick="loadData()">🔄 Refresh</button>
 </div>
 
+<div class="table-wrap">
 <table>
 <thead>
 <tr>
   <th>Nama Santri</th>
   <th>Tanggal</th>
-  <th>Checklist</th>
+  <th>Kegiatan Wajib</th>
   <th>Refleksi Wali</th>
   <th>Status</th>
 </tr>
 </thead>
 <tbody id="dataBody">
-<tr><td colspan="5">Memuat data...</td></tr>
+<tr><td colspan="5" class="empty">Memuat data...</td></tr>
 </tbody>
 </table>
+</div>
 
 </main>
 
 <script type="module">
-/* ===== FIREBASE ===== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore,
@@ -109,11 +207,9 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* ===== FIREBASE CONFIG ASLI ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
   authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
   projectId: "absensi-santri-fajrul-islam",
   storageBucket: "absensi-santri-fajrul-islam.firebasestorage.app",
   messagingSenderId: "739982369926",
@@ -123,51 +219,59 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-/* ===== LOAD DATA ===== */
 window.loadData = async function(){
   const tbody = document.getElementById("dataBody");
-  tbody.innerHTML = "<tr><td colspan='5'>Memuat data...</td></tr>";
+  tbody.innerHTML = "<tr><td colspan='5' class='empty'>Memuat data...</td></tr>";
 
   const tgl = document.getElementById("filterTanggal").value;
-  let q = collection(db,"laporan_liburan");
-  if(tgl){
-    q = query(q, where("tanggal","==",tgl));
-  }
+  let qRef = collection(db,"laporan_liburan");
+  if(tgl) qRef = query(qRef, where("tanggal","==",tgl));
 
-  const snap = await getDocs(q);
+  const snap = await getDocs(qRef);
   if(snap.empty){
-    tbody.innerHTML = "<tr><td colspan='5'>Tidak ada data.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan='5' class='empty'>Tidak ada data.</td></tr>";
     return;
   }
 
-  tbody.innerHTML = "";
+  /* AMBIL LAPORAN TERAKHIR PER SANTRI + TANGGAL */
+  const latest = {};
   snap.forEach(doc=>{
     const d = doc.data();
+    const key = `${d.namaSantri}_${d.tanggal}`;
+    const w = d.waktuSubmit?.toDate ? d.waktuSubmit.toDate() : new Date(0);
+    if(!latest[key] || w > latest[key].w){
+      latest[key] = {...d,w};
+    }
+  });
+
+  tbody.innerHTML = "";
+  Object.values(latest).forEach(d=>{
     const c = d.checklist || {};
     const total = Object.values(c).filter(v=>v).length;
-    const status = total >= 5 ? 
-      `<span class="status-ok">Lengkap</span>` :
-      `<span class="status-no">Belum</span>`;
+    const status = total >= 5
+      ? `<span class="badge ok">Lengkap</span>`
+      : `<span class="badge no">Belum</span>`;
 
     tbody.innerHTML += `
-      <tr>
-        <td>${d.namaSantri || "-"}</td>
-        <td>${d.tanggal}</td>
-        <td class="small">
-          Shalat:${c.shalat?'✔':'✘'} |
-          Tilawah:${c.tilawah?'✔':'✘'} |
-          Tashnif:${c.tashnif?'✔':'✘'} |
-          Khidmat:${c.khidmat?'✔':'✘'} |
-          Tahajud:${c.tahajud?'✔':'✘'} |
-          Wirid:${c.wirid?'✔':'✘'}
-        </td>
-        <td class="small">${d.refleksi || "-"}</td>
-        <td>${status}</td>
-      </tr>`;
+    <tr>
+      <td><b>${d.namaSantri || "-"}</b></td>
+      <td>${d.tanggal}</td>
+      <td>
+        <div class="checklist">
+          <div class="item ${c.shalat?'yes':'noo'}">🕌 Shalat ${c.shalat?'✔':'✘'}</div>
+          <div class="item ${c.tilawah?'yes':'noo'}">📖 Tilawah ${c.tilawah?'✔':'✘'}</div>
+          <div class="item ${c.tashnif?'yes':'noo'}">✍️ Tashnif ${c.tashnif?'✔':'✘'}</div>
+          <div class="item ${c.khidmat?'yes':'noo'}">🤝 Khidmat ${c.khidmat?'✔':'✘'}</div>
+          <div class="item ${c.tahajud?'yes':'noo'}">🌙 Tahajud ${c.tahajud?'✔':'✘'}</div>
+          <div class="item ${c.wirid?'yes':'noo'}">📿 Wirid ${c.wirid?'✔':'✘'}</div>
+        </div>
+      </td>
+      <td class="refleksi">${d.refleksi || "-"}</td>
+      <td>${status}</td>
+    </tr>`;
   });
 };
 
-/* AUTO LOAD */
 loadData();
 </script>
 
