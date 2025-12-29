@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cek Laporan Liburan Santri</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f6fa;
+  margin:0;
+  color:#1f2937;
+}
+header{
+  background:#0f766e;
+  color:white;
+  padding:14px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h1{margin:0;font-size:1.3rem}
+main{padding:30px;max-width:1200px;margin:auto}
+.back{
+  background:#e5e7eb;
+  color:#1f2937;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.filter-box{
+  background:white;
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  margin-bottom:20px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+th,td{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  font-size:0.9rem;
+}
+th{background:#f0fdfa;color:#065f46}
+.status-ok{color:#047857;font-weight:bold}
+.status-no{color:#b91c1c;font-weight:bold}
+.small{font-size:0.8rem;color:#374151}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>📝 Cek Laporan Liburan Santri</h1>
+  <button class="back" onclick="window.location.href='index.html'">⬅ Kembali</button>
+</header>
+
+<main>
+
+<div class="filter-box">
+  <label>Filter Tanggal Liburan:</label>
+  <select id="filterTanggal">
+    <option value="">Semua Tanggal</option>
+    <option value="2026-01-01">1 Januari 2026</option>
+    <option value="2026-01-02">2 Januari 2026</option>
+    <option value="2026-01-03">3 Januari 2026</option>
+    <option value="2026-01-04">4 Januari 2026</option>
+    <option value="2026-01-05">5 Januari 2026</option>
+    <option value="2026-01-06">6 Januari 2026</option>
+  </select>
+  <button onclick="loadData()">🔄 Refresh</button>
+</div>
+
+<table>
+<thead>
+<tr>
+  <th>Nama Santri</th>
+  <th>Tanggal</th>
+  <th>Checklist</th>
+  <th>Refleksi Wali</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody id="dataBody">
+<tr><td colspan="5">Memuat data...</td></tr>
+</tbody>
+</table>
+
+</main>
+
+<script type="module">
+/* ===== FIREBASE ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ===== FIREBASE CONFIG ASLI ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Eza852WuQL2R8U-yHpVnM3o8NMxZolI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId: "absensi-santri-fajrul-islam",
+  storageBucket: "absensi-santri-fajrul-islam.firebasestorage.app",
+  messagingSenderId: "739982369926",
+  appId: "1:739982369926:web:7e5375c3ddbaf0584cdd07"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ===== LOAD DATA ===== */
+window.loadData = async function(){
+  const tbody = document.getElementById("dataBody");
+  tbody.innerHTML = "<tr><td colspan='5'>Memuat data...</td></tr>";
+
+  const tgl = document.getElementById("filterTanggal").value;
+  let q = collection(db,"laporan_liburan");
+  if(tgl){
+    q = query(q, where("tanggal","==",tgl));
+  }
+
+  const snap = await getDocs(q);
+  if(snap.empty){
+    tbody.innerHTML = "<tr><td colspan='5'>Tidak ada data.</td></tr>";
+    return;
+  }
+
+  tbody.innerHTML = "";
+  snap.forEach(doc=>{
+    const d = doc.data();
+    const c = d.checklist || {};
+    const total = Object.values(c).filter(v=>v).length;
+    const status = total >= 5 ? 
+      `<span class="status-ok">Lengkap</span>` :
+      `<span class="status-no">Belum</span>`;
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${d.namaSantri || "-"}</td>
+        <td>${d.tanggal}</td>
+        <td class="small">
+          Shalat:${c.shalat?'✔':'✘'} |
+          Tilawah:${c.tilawah?'✔':'✘'} |
+          Tashnif:${c.tashnif?'✔':'✘'} |
+          Khidmat:${c.khidmat?'✔':'✘'} |
+          Tahajud:${c.tahajud?'✔':'✘'} |
+          Wirid:${c.wirid?'✔':'✘'}
+        </td>
+        <td class="small">${d.refleksi || "-"}</td>
+        <td>${status}</td>
+      </tr>`;
+  });
+};
+
+/* AUTO LOAD */
+loadData();
+</script>
+
+</body>
+</html>
