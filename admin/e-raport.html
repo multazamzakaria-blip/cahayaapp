@@ -141,10 +141,10 @@ table{
 }
 th,td{
   border:1px solid #e5e7eb;
-  padding:10px;
+  padding:2px;
   text-align:center;
 }
-th{background:#f1f5f9}
+th{background:#b5faff}
 
 /* ===== RINGKASAN AKADEMIK ===== */
 .akademik-summary{
@@ -171,6 +171,29 @@ th{background:#f1f5f9}
   font-weight:700;
 }
 .muted{color:#6b7280}
+.btn-export-per-santri{
+  background:#1e40af;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.btn-export-per-santri:hover{
+  background:#1e3a8a;
+}
+/* ===== TABEL TAHFIZ RINGKAS ===== */
+.tahfiz-table{
+  font-size:14px;
+}
+
+.tahfiz-table th,
+.tahfiz-table td{
+  padding:4px 6px;
+  line-height:1.2;
+}
+
 </style>
 </head>
 
@@ -204,8 +227,27 @@ th{background:#f1f5f9}
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="aliasSantri.js"></script>
+<script>
+function normNamaSantri(nama){
+  if(!nama) return "";
+  const upper = nama.trim().toUpperCase();
+  return (window.aliasSantri && aliasSantri[upper]) || upper;
+}
+
+const norm = s =>
+  (s || "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+</script>
+
 
 <script type="module">
+  const semesterSelect = document.getElementById("semesterSelect");
+const raportContainer = document.getElementById("raportContainer");
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -220,7 +262,6 @@ const fs=firebase.firestore();
 const app=initializeApp(firebaseConfig);
 const rtdb=getDatabase(app);
 
-const norm = s => (s||"").toString().trim().toLowerCase();
 
 /* ===== LOAD ===== */
 window.loadRaport = async () => {
@@ -229,8 +270,13 @@ window.loadRaport = async () => {
   if(!semester) return;
 
   const asesSnap = await fs.collection("asesmenSemester").get();
-  const ases = asesSnap.docs.map(d=>d.data())
-    .filter(d=>norm(d.semester) === norm(semester));
+  const ases = asesSnap.docs
+  .map(d => d.data())
+  .filter(d =>
+    norm(d.semester) === norm(semester) &&
+    normNamaSantri(d.santri)
+  );
+
 
   const rawNilai = Object.values(
   (await get(child(ref(rtdb),"cahaya_app/nilai_semester"))).val() || {}
@@ -240,9 +286,10 @@ window.loadRaport = async () => {
 const nilaiMap = {};
 rawNilai.forEach(n => {
   const key =
-    n.santri.toLowerCase() + "|" +
-    n.mapel.toLowerCase() + "|" +
-    n.semester.toLowerCase();
+  normNamaSantri(n.santri).toLowerCase() + "|" +
+  n.mapel.toLowerCase() + "|" +
+  norm(n.semester);
+
 
   if (!nilaiMap[key] || n.timestamp > nilaiMap[key].timestamp) {
     nilaiMap[key] = n;
@@ -254,20 +301,27 @@ const nilaiAll = Object.values(nilaiMap);
 
   const tahfizAll = Object.values(
   (await get(child(ref(rtdb),"cahaya_app/tahfiz_semester"))).val() || {}
-);
+).map(t => ({
+  ...t,
+  santriNorm: normNamaSantri(t.santri)
+}));
+
 
 
 
   ases.forEach(a=>{
     const nilai = nilaiAll.filter(n =>
-      norm(n.santri) === norm(a.santri) &&
-      norm(n.semester) === norm(semester)
-    );
+  normNamaSantri(n.santri) === normNamaSantri(a.santri) &&
+  norm(n.semester) === norm(semester)
+);
+
 
     const tahfizList = tahfizAll.filter(t =>
-  norm(t.santri) === norm(a.santri) &&
+  t.santriNorm === normNamaSantri(a.santri) &&
   norm(t.semester) === norm(semester)
 );
+
+
 
 // gabungkan semua capaian + ambil nilai terakhir
 let tahfiz = null;
@@ -317,6 +371,13 @@ function renderRaport(d, nilai, tahfiz){
       <div><b>Semester:</b> ${d.semester}</div>
     </div>
   </div>
+<div style="text-align:right;margin:12px 0 22px;">
+  <button 
+    class="btn-export-per-santri"
+    onclick="exportPDFPerSantri(this)">
+    📄 Export PDF Raport
+  </button>
+</div>
 
   <div class="section-title">🌈 Dimensi CAHAYA</div>
   <div class="dimensi-wrapper">
@@ -402,15 +463,19 @@ function renderRaport(d, nilai, tahfiz){
         <h4>Capaian Hafalan</h4>
         <div class="badge-nilai">${tahfiz.nilaiUjian || "-"}</div>
       </div>
-      <table>
-        <tr><th>Surat</th><th>Ayat</th></tr>
-        ${capaianTahfiz.map(c=>`
-          <tr>
-            <td>${c.surat}</td>
-            <td>${c.ayatAwal} – ${c.ayatAkhir}</td>
-          </tr>
-        `).join("")}
-      </table>
+      <table class="tahfiz-table">
+  <tr>
+    <th>Surat</th>
+    <th>Ayat</th>
+  </tr>
+  ${capaianTahfiz.map(c=>`
+    <tr>
+      <td>${c.surat}</td>
+      <td>${c.ayatAwal} – ${c.ayatAkhir}</td>
+    </tr>
+  `).join("")}
+</table>
+
     ` : `
       <p class="muted">Belum ada data tahfiz semester ini.</p>
     `}
@@ -443,6 +508,30 @@ const MARGIN = 12;
 const FOOTER_SPACE = 15;
 
 /* ================= EXPORT SATU SANTRI ================= */
+async function exportPDFPerSantri(btn){
+  const laporan = btn.closest(".laporan-card");
+  if(!laporan){
+    alert("Raport tidak ditemukan.");
+    return;
+  }
+
+  // sembunyikan tombol agar tidak ikut PDF
+  btn.style.display = "none";
+
+  const nama = laporan.querySelector("h3")?.innerText || "SANTRI";
+  const semester = laporan.querySelector(".identitas-grid div:last-child")
+    ?.innerText.replace("Semester:","").trim() || "SEMESTER";
+
+  const namaFile = `${nama}_${semester}.pdf`
+    .replace(/\s+/g,"_")
+    .toUpperCase();
+
+  await renderRaportKePDF(laporan, namaFile);
+
+  // tampilkan kembali tombol
+  btn.style.display = "";
+}
+
 async function exportPDFSatuan(){
   const laporan = document.querySelector(".laporan-card");
   if(!laporan){
@@ -488,15 +577,15 @@ async function renderRaportKePDF(laporan, namaFile){
   let yPos = MARGIN;
 
   const blocks = laporan.querySelectorAll(`
-    .laporan-header,
-    .section-title,
-    .dim-card,
-    .dim-summary,
-    .mapel-card,
-    .akademik-summary,
-    .tahfiz-card,
-    .signature-box
-  `);
+  .laporan-header,
+  .section-title,
+  .dim-card,
+  .dim-summary,
+  .mapel-card:not(.tahfiz-card),
+  .akademik-summary
+`);
+
+
 
   for(const block of blocks){
     const canvas = await html2canvas(block,{
@@ -504,6 +593,7 @@ async function renderRaportKePDF(laporan, namaFile){
   useCORS:true,
   backgroundColor:"#ffffff"
 });
+
 
 
     const imgWidth = A4_WIDTH - MARGIN*2;
@@ -529,6 +619,54 @@ async function renderRaportKePDF(laporan, namaFile){
 
     yPos += imgHeight + 4;
   }
+async function renderBlock(el){
+  const canvas = await html2canvas(el,{
+    scale:1.3,
+    useCORS:true,
+    backgroundColor:"#ffffff"
+  });
+
+  const imgWidth = A4_WIDTH - MARGIN*2;
+  const imgHeight = canvas.height * imgWidth / canvas.width;
+
+  if(yPos + imgHeight > A4_HEIGHT - FOOTER_SPACE){
+    pdf.addPage();
+    yPos = MARGIN;
+  }
+
+  pdf.addImage(
+    canvas.toDataURL("image/jpeg", 0.75),
+    "JPEG",
+    MARGIN,
+    yPos,
+    imgWidth,
+    imgHeight,
+    undefined,
+    "FAST"
+  );
+
+  yPos += imgHeight + 2;
+}
+
+// ================= RENDER TAHFIZ KHUSUS =================
+const tahfizCard = laporan.querySelector(".tahfiz-card");
+if(tahfizCard){
+  const header = tahfizCard.querySelector(".mapel-header");
+  const table = tahfizCard.querySelector("table");
+
+  if(header) await renderBlock(header);
+
+  if(table){
+    const rows = table.querySelectorAll("tr");
+    for(const row of rows){
+      await renderBlock(row);
+    }
+  }
+}
+const signature = laporan.querySelector(".signature-box");
+if(signature){
+  await renderBlock(signature);
+}
 
   /* ===== FOOTER PAGE NUMBER ===== */
   const totalPages = pdf.getNumberOfPages();
