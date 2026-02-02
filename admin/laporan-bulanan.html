@@ -35,6 +35,130 @@
     .export-buttons { text-align: right; margin-top: 16px; }
     .export-buttons button { background: #2563eb; margin-left: 8px; padding: 12px 18px; font-size: 17px; }
     .export-buttons button:hover { background: #1e40af; }
+
+  /* ================= EXECUTIVE HEADER ================= */
+
+.laporan-header-executive{
+  background:linear-gradient(135deg,#fefcde,#fcfbef,#faffdb);
+  border-radius:28px;
+  padding:45px 45px 35px 45px;
+  box-shadow:0 25px 70px rgba(15,23,42,0.08);
+  position:relative;
+  overflow:hidden;
+  margin-bottom:35px;
+  border:1px solid #e5e7eb;
+}
+
+/* Decorative corner shape */
+.laporan-header-executive::before{
+  content:"";
+  position:absolute;
+  top:-60px;
+  right:-80px;
+  width:320px;
+  height:220px;
+  background:linear-gradient(135deg,#1e3a8a,#0f766e);
+  opacity:0.05;
+  border-radius:60px;
+  transform:rotate(-8deg);
+}
+
+/* Top layout */
+.header-exec-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:35px;
+}
+
+.logo-exec{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.logo-exec img{
+  width:95px;
+  height:auto;
+}
+
+.logo-text{
+  line-height:1.2;
+}
+
+.logo-text .line1{
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:1px;
+}
+
+.logo-text .line2{
+  font-weight:800;
+  font-size:24px;
+}
+
+.logo-text .line3{
+  font-size:13px;
+  color:#c17c1c;
+  letter-spacing:1px;
+}
+
+/* Big title right */
+.judul-exec{
+  text-align:right;
+}
+
+.judul-exec h1{
+  margin:0;
+  font-size:34px;
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:2px;
+  color:#c17c1c;
+}
+
+/* Gold divider */
+.exec-divider{
+  height:3px;
+  width:100%;
+  margin:20px 0 25px 0;
+  background:linear-gradient(to right,#c17c1c,#1e3a8a);
+  border-radius:4px;
+}
+
+/* Identity box */
+.identitas-exec{
+  background:#ffffff;
+  border-radius:20px;
+  padding:25px 35px;
+  box-shadow:0 12px 35px rgba(0,0,0,0.05);
+  display:flex;
+  justify-content:space-between;
+  font-size:16px;
+  border:1px solid #e5e7eb;
+}
+
+.identitas-exec span{
+  color:#64748b;
+  font-weight:500;
+}
+
+.identitas-exec b{
+  font-weight:700;
+  letter-spacing:.5px;
+}
+
+
+.dim-card{
+  text-align:left;
+}
+
+.dim-card p{
+  text-align:justify;
+  text-justify:inter-word;
+  line-height:1.9;
+}
+
   </style>
 </head>
 
@@ -241,50 +365,38 @@ function buatLaporanSantri(ctx) {
   ][bulan];
 
   // ---- Ambil asesmen terbaru ----
-  const asesGuru =
-    assesmentGuru
-      .filter(
-        (a) =>
-          a.namaSantri === nama &&
-          isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)
-      )
-      .at(-1) || {};
+  const ases = assesmentNaqib
+  .filter(a =>
+    a.namaSantri === nama &&
+    isSameMonthYear(a.tanggal, bulan, tahun)
+  )
+  .sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan))
+  .at(-1) || {};
 
-  const asesNaqib =
-    assesmentNaqib
-      .filter(
-        (a) =>
-          a.namaSantri === nama &&
-          isSameMonthYear(a.tgl || a.tanggal, bulan, tahun)
-      )
-      .at(-1) || {};
 
   const narasiSpiritual =
-    asesGuru.narasiSpiritual ||
-    asesGuru.catatanSpiritual ||
-    "Belum ada catatan asesmen Cinta Allah (Spiritual) bulan ini.";
+  ases.narasiSpiritual ||
+  "Belum ada catatan dimensi Cinta Allah (Spiritual) bulan ini.";
 
-  const narasiIntellectual =
-    asesGuru.narasiIntellectual ||
-    asesGuru.catatanAkal ||
-    "Belum ada catatan asesmen Akal Cerdas (Intellectual) bulan ini.";
+const narasiRel =
+  ases.narasiRelasional ||
+  "Belum ada catatan dimensi Akhlak Mulia (Relasional) bulan ini.";
 
-  const narasiRel =
-    asesNaqib.narasiRelational ||
-    asesNaqib.catatanRelasi ||
-    "Belum ada catatan dimensi Akhlak Mulia (Relational) bulan ini.";
+const narasiEmo =
+  ases.narasiEmosional ||
+  "Belum ada catatan dimensi Hati Bersih (Emosional) bulan ini.";
 
-  const narasiEmo =
-    asesNaqib.narasiEmotional ||
-    asesNaqib.catatanHati ||
-    "Belum ada catatan dimensi Hati Bersih (Emotional) bulan ini.";
+const narasiIntellectual =
+  ases.narasiIntelektual ||
+  "Belum ada catatan dimensi Akal Cerdas (Intelektual) bulan ini.";
 
-  const narasiFis =
-    asesNaqib.narasiPhysical ||
-    asesNaqib.catatanFisik ||
-    "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
+const narasiFis =
+  ases.narasiFisik ||
+  "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
 
-  const namaNaqib = asesNaqib.naqibName || asesNaqib.namaNaqib || "-";
+const namaNaqib = ases.naqib || "-";
+const namaNaqibUpper = namaNaqib.toUpperCase();
+const namaBulanUpper = (namaBulan || "").toUpperCase();
 
   const wrapper = document.createElement("div");
   wrapper.className = "laporan-card";
@@ -294,15 +406,41 @@ function buatLaporanSantri(ctx) {
 
   // === HEADER LAPORAN ===
   wrapper.innerHTML = `
-    <div class="laporan-header">
-      <h1>📋 LAPORAN BULANAN SANTRI</h1>
-      <h2>PESANTREN CAHAYA FAJRUL ISLAM</h2>
-      <h3>${namaUpper}</h3>
-      <div class="identitas-grid">
-        <div><b>Nama Naqib:</b> ${namaNaqib}</div>
-        <div><b>Bulan/Tahun:</b> ${namaBulan} ${tahun}</div>
+<div class="laporan-header-executive">
+
+  <div class="header-exec-top">
+
+    <div class="logo-exec">
+      <img src="logofi.png" alt="Logo Pesantren">
+      <div class="logo-text">
+        <div class="line1">PESANTREN CAHAYA</div>
+        <div class="line2">FAJRUL ISLAM</div>
+        <div class="line3">HOLISTIC ISLAMIC SCHOOL</div>
       </div>
     </div>
+
+    <div class="judul-exec">
+      <h1>LAPORAN<br>BULANAN SANTRI</h1>
+    </div>
+
+  </div>
+
+  <div class="exec-divider"></div>
+
+  <div class="identitas-exec">
+    <div>
+      <p><span>Nama Santri</span> : <b>${namaUpper}</b></p>
+      <p><span>Nama Naqib</span> : <b>${namaNaqibUpper}</b></p>
+    </div>
+
+    <div style="text-align:right">
+      <p><span>Bulan</span> : <b>${namaBulanUpper}</b></p>
+      <p><span>Tahun</span> : <b>${tahun}</b></p>
+    </div>
+  </div>
+
+</div>
+
 
     <div class="section-title">🌈 Dimensi CAHAYA</div>
     <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiSpiritual}</p></div>
@@ -311,7 +449,19 @@ function buatLaporanSantri(ctx) {
     <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiIntellectual}</p></div>
     <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiFis}</p></div>
   `;
+wrapper.innerHTML += `
+<div class="section-title">📈 Fokus Perbaikan Bulan Ini</div>
+<p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
+<p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
 
+<div class="section-title">📊 Hasil Perbaikan Bulan Ini</div>
+<p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
+<p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
+
+<div class="section-title">🚀 Fokus Perbaikan Bulan Berikutnya</div>
+<p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
+<p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
+`;
   // === Kehadiran ===
   const hadir = hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiKbm);
   wrapper.innerHTML += `
@@ -483,28 +633,125 @@ ${
 
 // ====== EXPORT PDF ======
 async function exportPDF(nama){
+
   const el = document.querySelector(`.laporan-card[data-santri="${nama}"]`);
   if (!el) {
     alert("Laporan tidak ditemukan.");
     return;
   }
+
   const bulan = el.dataset.bulan || "";
   const tahun = el.dataset.tahun || "";
 
   const canvas = await html2canvas(el,{
-    scale: 2,
+    scale: 1.2,
     useCORS: true,
     scrollY: 0
   });
-  const imgData = canvas.toDataURL("image/png");
+
   const pdf = new jsPDFLib("p","mm","a4");
+
   const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const margin = 10;
+  const footerSpace = 15;
+
+  const usableHeight = pageHeight - margin - footerSpace;
   const imgWidth = pageWidth - 20;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  pdf.addImage(imgData,"PNG",10,10,imgWidth,imgHeight);
-  const cleanName = nama.toUpperCase().replace(/\s+/g,"_");
-  pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
+
+  const ratio = imgWidth / canvas.width;
+  const pageCanvasHeight = usableHeight / ratio;
+
+  let renderedHeight = 0;
+  let pageCount = 0;
+
+  while (renderedHeight < canvas.height) {
+
+    const pageCanvas = document.createElement("canvas");
+    pageCanvas.width = canvas.width;
+    pageCanvas.height = Math.min(pageCanvasHeight, canvas.height - renderedHeight);
+
+    const ctx = pageCanvas.getContext("2d");
+
+    ctx.drawImage(
+      canvas,
+      0,
+      renderedHeight,
+      canvas.width,
+      pageCanvas.height,
+      0,
+      0,
+      canvas.width,
+      pageCanvas.height
+    );
+
+const imgData = pageCanvas.toDataURL("image/jpeg", 0.75);
+
+
+    if (pageCount > 0) pdf.addPage();
+
+    pdf.addImage(
+      imgData,
+      "PNG",
+      10,
+      margin,
+      imgWidth,
+      pageCanvas.height * ratio
+    );
+
+    renderedHeight += pageCanvas.height;
+    pageCount++;
+  }
+
+// ===== Tambahkan Tanda Tangan di Halaman Terakhir =====
+const totalPages = pdf.getNumberOfPages();
+pdf.setPage(totalPages);
+
+pdf.setFontSize(12);
+pdf.setTextColor(40);
+
+pdf.text("Mengetahui,", pageWidth / 2, pageHeight - 45, { align: "center" });
+pdf.text("Direktur Pesantren Cahaya Fajrul Islam", pageWidth / 2, pageHeight - 38, { align: "center" });
+
+pdf.setFont(undefined, "bold");
+pdf.text("Multazam Zakaria, M.Pd.", pageWidth / 2, pageHeight - 20, { align: "center" });
+pdf.setFont(undefined, "normal");
+
+
+// Pindah ke halaman terakhir
+pdf.setPage(totalPages);
+
+pdf.setFontSize(12);
+pdf.setTextColor(40);
+
+// Blok tanda tangan (center)
+pdf.text("Mengetahui,", pageWidth / 2, pageHeight - 45, { align: "center" });
+pdf.text("Direktur Pesantren Cahaya Fajrul Islam", pageWidth / 2, pageHeight - 38, { align: "center" });
+
+// Ruang tanda tangan (jarak kosong)
+pdf.setFont(undefined, "bold");
+pdf.text("Multazam Zakaria, M.Pd.", pageWidth / 2, pageHeight - 20, { align: "center" });
+pdf.setFont(undefined, "normal");
+
+
+// ===== Footer Nomor Halaman =====
+for(let i = 1; i <= totalPages; i++){
+  pdf.setPage(i);
+  pdf.setFontSize(10);
+  pdf.setTextColor(120);
+  pdf.text(
+    `Halaman ${i} dari ${totalPages} halaman`,
+    pageWidth / 2,
+    pageHeight - 10,
+    { align: "center" }
+  );
 }
+
+const cleanName = nama.toUpperCase().replace(/\s+/g,"_");
+pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
+}
+
 
 async function exportAllPDF(){
   const cards = document.querySelectorAll(".laporan-card");
