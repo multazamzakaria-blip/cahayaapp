@@ -7,139 +7,151 @@
   <link rel="icon" type="image/png" href="logofi.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --green-dark: #134e4a;
-      --green-light: #0f766e;
-      --yellow: #facc15;
-    }
+:root{
+  --primary:#0f172a;
+  --accent:#2563eb;
+  --accent-soft:#3b82f6;
+  --glass:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.15);
+}
 
-    body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, var(--green-light), var(--green-dark));
-      color: white;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      text-align: center;
-    }
+/* ===== BODY ENTERPRISE ===== */
+body{
+  font-family:"Poppins",sans-serif;
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(circle at 20% 20%, #1e3a8a, transparent 40%),
+    radial-gradient(circle at 80% 80%, #0f766e, transparent 40%),
+    linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  overflow:hidden;
+  text-align:center;
+}
 
-    #splash {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--green-dark);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-      animation: fadeOut 1.5s ease forwards;
-      animation-delay: 1.6s;
-    }
+/* ===== SPLASH ===== */
+#splash{
+  position:fixed;
+  inset:0;
+  background:#0f172a;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:100;
+  animation:fadeOut 1.4s ease forwards;
+  animation-delay:1.5s;
+}
+#splash img{
+  width:140px;
+  animation:zoomIn 1.2s ease;
+  filter:drop-shadow(0 0 20px rgba(59,130,246,.5));
+}
+@keyframes zoomIn{
+  from{transform:scale(.5);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+@keyframes fadeOut{
+  to{opacity:0;visibility:hidden}
+}
 
-    #splash img {
-      width: 130px;
-      animation: zoomIn 1.3s ease;
-    }
+/* ===== LOGO AREA ===== */
+.logo-area{
+  margin-bottom:30px;
+  animation:fadeInUp 1s ease 1.5s both;
+}
+.logo-area img{
+  width:120px;
+  margin-bottom:14px;
+  filter:drop-shadow(0 0 18px rgba(59,130,246,.4));
+}
+.logo-area h1{
+  margin:0;
+  font-size:2.2rem;
+  font-weight:700;
+  letter-spacing:2px;
+}
+.logo-area p{
+  margin-top:6px;
+  opacity:.8;
+  font-size:.95rem;
+}
 
-    @keyframes zoomIn {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+/* ===== LOGIN CARD ===== */
+.login-box{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(28px);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:28px;
+  padding:48px 40px;        /* lebih lega */
+  width:90%;
+  max-width:420px;
+  box-shadow:
+    0 40px 90px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  gap:20px;                 /* jarak konsisten antar elemen */
+}
 
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
+/* ===== INPUT FIELD ===== */
+input{
+  width:100%;
+  height:54px;              /* tinggi konsisten */
+  padding:0 18px;           /* horizontal padding saja */
+  border-radius:18px;       /* proporsional dengan card */
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.95);
+  font-size:.95rem;
+  box-sizing:border-box;
+  transition:.25s;
+}
 
-    .logo-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-      margin-top: -20px;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    }
+input:focus{
+  outline:none;
+  border-color:#3b82f6;
+  box-shadow:0 0 0 4px rgba(59,130,246,.25);
+}
 
-    .logo-area img {
-      width: 130px;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
-    }
+/* ===== BUTTON ===== */
+button{
+  height:54px;              /* sama tinggi dengan input */
+  border-radius:18px;       /* konsisten dengan input */
+  border:none;
+  font-weight:600;
+  font-size:1rem;
+  cursor:pointer;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:white;
+  transition:.25s;
+  box-shadow:0 14px 35px rgba(37,99,235,.45);
+}
 
-    .logo-area h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: 1px;
-    }
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 20px 45px rgba(37,99,235,.6);
+}
 
-    .logo-area p {
-      font-size: 1rem;
-      opacity: 0.9;
-      margin-top: 4px;
-    }
 
-    .login-box {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 25px 22px;
-      width: 85%;
-      max-width: 300px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      box-sizing: border-box;
-      animation: fadeInUp 1s ease 1.7s both;
-    }
+/* ===== FOOTER ===== */
+.footer-text{
+  margin-top:24px;
+  font-size:.85rem;
+  opacity:.6;
+  letter-spacing:.5px;
+}
 
-    @keyframes fadeInUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+/* ===== RESPONSIVE ===== */
+@media(max-width:480px){
+  .logo-area img{width:95px;}
+  .logo-area h1{font-size:1.7rem;}
+  .login-box{padding:32px 24px;}
+}
+</style>
 
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      background: rgba(255, 255, 255, 0.95);
-      color: #1f2937;
-    }
-
-    button {
-      width: 100%;
-      background: var(--yellow);
-      color: #1f2937;
-      font-weight: 600;
-      border: none;
-      border-radius: 10px;
-      padding: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-    }
-
-    button:hover {
-      background: #fde68a;
-      transform: translateY(-1px);
-    }
-
-    .footer-text {
-      font-size: 0.9rem;
-      margin-top: 20px;
-      opacity: 0.9;
-    }
-
-    @media (max-width: 480px) {
-      .logo-area img { width: 100px; }
-      .logo-area h1 { font-size: 1.6rem; }
-      .login-box { padding: 20px; max-width: 260px; }
-    }
-  </style>
 </head>
 
 <body>
@@ -194,6 +206,8 @@
     { username: "mulia", password: "guru123", role: "guru", label: "Mu'allim Mulia" },
     { username: "fahmi", password: "guru123", role: "guru", label: "Mu'allim Fahmi" },
     { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
+    { username: "rosyidin", password: "guru123", role: "guru", label: "Mu'allim Rosyidin" },
+    { username: "naqieb", password: "guru123", role: "guru", label: "Mu'allim Naqieb" },
 
     // Guru + Naqib
     { username: "kamal", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Kamal" },
