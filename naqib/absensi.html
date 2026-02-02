@@ -16,30 +16,31 @@
     }
 
     body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-      color: #1f2937;
-      margin: 0;
-      padding: 0;
-    }
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top left, #dbeafe, #eef2ff 40%, #f8fafc);
+  color: #0f172a;
+  margin: 0;
+}
+
 
     header {
-      background: var(--primary);
-      color: white;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      border-radius: 0 0 16px 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: white;
+  padding: 16px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.3);
+}
+
 
     header h1 {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 600;
-    }
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 
     header button {
       border: none;
@@ -59,13 +60,17 @@
     }
 
     main {
-      background: white;
-      margin: 15px auto;
-      padding: 16px;
-      border-radius: 16px;
-      max-width: 900px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  margin: 30px auto;
+  padding: 28px;
+  border-radius: 24px;
+  max-width: 1000px;
+  box-shadow:
+    0 30px 60px rgba(15, 23, 42, 0.08),
+    0 10px 20px rgba(37, 99, 235, 0.08);
+}
+
 
     h2 {
       color: var(--primary-dark);
@@ -118,38 +123,37 @@
 
     /* === TABEL === */
     table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  font-size: 0.9rem;
+}
 
-    th, td {
-      border: 1px solid var(--border);
-      padding: 6px;
-      text-align: center;
-    }
 
-    th {
-      background: linear-gradient(90deg, #7ab6ff, #5ea1ff);
-      color: white;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
+    tbody tr {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  border-radius: 10px;
+}
 
-    td:first-child {
-      text-align: left;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
+tbody tr td {
+  padding: 10px;
+}
 
-    /* Warna status */
-    tr.status-hadir  { background: var(--green) !important; }
-    tr.status-izin   { background: var(--blue) !important; }
-    tr.status-sakit  { background: var(--yellow) !important; }
-    tr.status-alfa   { background: var(--red) !important; }
+tbody tr td:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+tbody tr td:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+
+    tr.status-hadir  { box-shadow: 0 0 0 2px #22c55e inset; }
+tr.status-izin   { box-shadow: 0 0 0 2px #3b82f6 inset; }
+tr.status-sakit  { box-shadow: 0 0 0 2px #eab308 inset; }
+tr.status-alfa   { box-shadow: 0 0 0 2px #ef4444 inset; }
+
 
     input[type="radio"] {
       accent-color: var(--primary);
@@ -159,18 +163,16 @@
 
     /* Tombol */
     button.primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 16px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-top: 16px;
-      cursor: pointer;
-      width: 100%;
-      transition: 0.3s;
-    }
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  border-radius: 999px;
+  padding: 12px 18px;
+  box-shadow: 0 10px 20px rgba(37,99,235,0.25);
+}
+
+button.primary:hover {
+  transform: translateY(-2px);
+}
+
 
     button.primary:hover {
       background: var(--primary-dark);
@@ -274,11 +276,10 @@
   const currentUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
   const programHarian = [
-    "Shalat Tahajjud","Shalat Subuh","Joging Pagi","Sarapan","Apel Pagi",
-    "Makan Siang","Shalat Zuhur","Qailulah","Shalat Ashar",
-    "Piket Kebersihan","Makan Sore","Shalat Maghrib","Shalat Isya","Pengecekan Jurnal"
+    "Shalat Tahajjud","Shalat Subuh","Joging Pagi",
+   ,"Shalat Zuhur","Shalat Ashar","Shalat Maghrib","Shalat Isya"
   ];
-  const programPekanan = ["Puasa Kamis","Jemur Kasur"];
+  const programPekanan = ["Puasa Kamis"];
 
   // === Inisialisasi halaman ===
   document.addEventListener('DOMContentLoaded', () => {
@@ -289,11 +290,11 @@
     }
 
     // Ambil nama naqib dari localStorage
-    const namaNaqib = localStorage.getItem("namaNaqib") || currentUser.naqibName || "Tidak diketahui";
+    const namaNaqib = currentUser.username || "Tidak diketahui";
     const kelompok = JSON.parse(localStorage.getItem("kelompokNaqib") || "[]");
 
     // Tampilkan nama
-    document.getElementById('naqibTitle').textContent = `Mu'allim ${namaNaqib}`;
+    document.getElementById('naqibTitle').textContent = `Naqib ${namaNaqib}`;
     document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
 
     isiProgram();
