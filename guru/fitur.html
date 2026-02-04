@@ -196,7 +196,7 @@
 
     <div id="subProgramWrapper" class="hidden">
       <label>Sub Program (Khusus Tahsin/Tahfiz):</label>
-      <select id="nilaiSubProgram" onchange="loadSantriUjian()">
+      <select id="nilaiSubProgram" onchange="updateKelompokNilai(); loadSantriUjian();">
         <option value="">-- pilih program --</option>
         <option value="Tahsin">Tahsin</option>
         <option value="Tahfiz">Tahfiz</option>
@@ -279,114 +279,166 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 getAuth(app);
 
-/* === Navigasi === */
+/* ================= NAVIGASI ================= */
+
 window.showSection = function(id){
   document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
+
 window.goBack = function(){
   document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
   document.getElementById('dashboard').classList.remove('hidden');
 }
+
 window.logout = function(){
   localStorage.removeItem('cahayaCurrentUser');
   window.location.href = '../index.html';
 }
 
-/* === Update kelompok & mapel === */
+/* ================= UPDATE KELOMPOK ================= */
+
 window.updateKelompokNilai = function(){
+
   const kelas = document.getElementById('nilaiKelas').value;
+  const subProgram = document.getElementById('nilaiSubProgram').value;
   const kelompokSelect = document.getElementById('nilaiKelompok');
   const subProgramWrapper = document.getElementById('subProgramWrapper');
   const mapelSelect = document.getElementById('nilaiMapel');
 
   kelompokSelect.innerHTML = '<option value="">-- pilih kelompok --</option>';
-  subProgramWrapper.classList.add('hidden');
   mapelSelect.innerHTML = '<option value="">-- pilih mapel --</option>';
+  subProgramWrapper.classList.add('hidden');
 
-  let jenisKey='', kelompokList=[], mapelList=[];
-  if(kelas==='Keilmuan Islam & Umum'){
-    jenisKey='Keilmuan Islam & Umum';
-    kelompokList=Object.keys(dataSantri[jenisKey]);
-    mapelList=['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran'];
-  } else if(kelas==='Bahasa Internasional'){
-    jenisKey='Bahasa Internasional';
-    kelompokList=Object.keys(dataSantri[jenisKey]);
-    mapelList=['Bahasa Arab','Bahasa Inggris'];
-  } else if(kelas==="Tahsin & Tahfiz Al-Qur'an"){
-    jenisKey="Tahsin & Tahfiz Al-Qur'an";
-    subProgramWrapper.classList.remove('hidden');
-    const allKeys=Object.keys(dataSantri[jenisKey]);
-    const kelompokSet=new Set();
-    allKeys.forEach(k=>{
-      const parts=k.split(' ');
-      if(parts.length>=3){
-        const kelompok=parts.slice(-2).join(' ');
-        kelompokSet.add(kelompok);
-      }
+  if(!kelas) return;
+
+  /* ================= KEILMUAN ================= */
+  if(kelas === "Keilmuan Islam & Umum"){
+
+    const kategori = dataSantri[kelas];
+
+    Object.keys(kategori).forEach(k=>{
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = k;
+      kelompokSelect.appendChild(opt);
     });
-    kelompokList=Array.from(kelompokSet);
-    mapelList=['Tahsin','Tahfiz'];
+
+    ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran']
+    .forEach(m=>{
+      const opt=document.createElement('option');
+      opt.value=m;
+      opt.textContent=m;
+      mapelSelect.appendChild(opt);
+    });
   }
-  kelompokList.forEach(k=>{
-    const opt=document.createElement('option');
-    opt.textContent=k;
-    kelompokSelect.appendChild(opt);
-  });
-  mapelList.forEach(m=>{
-    const opt=document.createElement('option');
-    opt.textContent=m;
-    mapelSelect.appendChild(opt);
-  });
+
+  /* ================= BAHASA ================= */
+  else if(kelas === "Bahasa Internasional"){
+
+    const kategori = dataSantri[kelas];
+
+    Object.keys(kategori).forEach(k=>{
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = k;
+      kelompokSelect.appendChild(opt);
+    });
+
+    ['Bahasa Arab','Bahasa Inggris'].forEach(m=>{
+      const opt=document.createElement('option');
+      opt.value=m;
+      opt.textContent=m;
+      mapelSelect.appendChild(opt);
+    });
+  }
+
+  /* ================= TAHSIN & TAHFIZ ================= */
+  else if(kelas === "Tahsin & Tahfiz Al-Qur'an"){
+
+    subProgramWrapper.classList.remove('hidden');
+
+    if(!subProgram) return;
+
+    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+
+    Object.keys(kategori).forEach(key => {
+
+      if(key.startsWith(subProgram)){
+
+        const opt = document.createElement('option');
+        opt.value = key;      // FULL KEY
+        opt.textContent = key;
+        kelompokSelect.appendChild(opt);
+      }
+
+    });
+
+    ['Tahsin','Tahfiz'].forEach(m=>{
+      const opt=document.createElement('option');
+      opt.value=m;
+      opt.textContent=m;
+      mapelSelect.appendChild(opt);
+    });
+  }
 }
 
-/* === Load santri === */
-window.loadSantriUjian = function(){
-  const kelas=document.getElementById('nilaiKelas').value;
-  const subProgram=document.getElementById('nilaiSubProgram').value;
-  const kelompok=document.getElementById('nilaiKelompok').value;
-  const tbody=document.getElementById('nilaiSantriBody');
-  tbody.innerHTML='';
 
-  if(!kelas||!kelompok){
+
+/* ================= LOAD SANTRI ================= */
+
+window.loadSantriUjian = function(){
+
+  const kelas = document.getElementById('nilaiKelas').value;
+  const kelompok = document.getElementById('nilaiKelompok').value;
+  const tbody = document.getElementById('nilaiSantriBody');
+  tbody.innerHTML = '';
+
+  if(!kelas || !kelompok){
     tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#777">Lengkapi pilihan kelas dan kelompok.</td></tr>';
     return;
   }
 
-  let list=[];
-  if(kelas==="Tahsin & Tahfiz Al-Qur'an"){
-    const key=`${subProgram} ${kelompok}`;
-    const kategori=dataSantri["Tahsin & Tahfiz Al-Qur'an"];
-    list=kategori[key]||[];
+  let list = [];
+
+  if(kelas === "Tahsin & Tahfiz Al-Qur'an"){
+    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    list = kategori[kelompok] || [];
   } else {
-    const kategori=dataSantri[kelas];
-    list=kategori && kategori[kelompok]?kategori[kelompok]:[];
+    const kategori = dataSantri[kelas];
+    list = kategori[kelompok] || [];
   }
 
-  if(list.length===0){
+  if(list.length === 0){
     tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#777">Tidak ada santri di kelompok ini.</td></tr>';
     return;
   }
 
   list.forEach((nama,i)=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td>${nama}</td><td><input type="number" min="0" max="100" value="0" data-nama="${nama}"></td>`;
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td>${nama}</td>
+      <td><input type="number" min="0" max="100" value="0" data-nama="${nama}"></td>
+    `;
     tbody.appendChild(tr);
   });
 }
 
-/* === Simpan Nilai ke Firebase === */
+
+/* ================= SIMPAN NILAI ================= */
+
 window.simpanNilaiUjian = async function(){
+
   const kelas=document.getElementById('nilaiKelas').value;
-  const subProgram=document.getElementById('nilaiSubProgram').value;
+  const subProgram=document.getElementById('nilaiSubProgram').value || '-';
   const kelompok=document.getElementById('nilaiKelompok').value;
   const mapel=document.getElementById('nilaiMapel').value.trim();
   const bulan=parseInt(document.getElementById('nilaiBulan').value,10);
   const materi=document.getElementById('nilaiMateri').value.trim();
   const tanggal=document.getElementById('nilaiTanggal').value;
 
-  if(!kelas||!kelompok||!mapel||isNaN(bulan)||!materi||!tanggal||
-    (kelas==="Tahsin & Tahfiz Al-Qur'an"&&!subProgram)){
+  if(!kelas || !kelompok || !mapel || isNaN(bulan) || !materi || !tanggal){
     alert("⚠️ Lengkapi semua kolom terlebih dahulu!");
     return;
   }
@@ -395,13 +447,16 @@ window.simpanNilaiUjian = async function(){
   const nilaiRef=ref(db,'cahaya_app/nilai_ujian');
 
   let count=0;
+
   for(const inp of inputs){
+
     const nama=inp.dataset.nama;
     const nilai=parseInt(inp.value||"0");
-    const data={
+
+    await push(nilaiRef,{
       santri:nama,
       kelas,
-      subProgram:subProgram||'-',
+      subProgram,
       kelompok,
       mapel,
       bulan,
@@ -409,15 +464,16 @@ window.simpanNilaiUjian = async function(){
       tanggal,
       nilai,
       timestamp:Date.now()
-    };
-    await push(nilaiRef,data);
+    });
+
     count++;
   }
 
-  alert(`✅ ${count} nilai ujian berhasil disimpan ke Firebase!`);
+  alert(`✅ ${count} nilai ujian berhasil disimpan!`);
   goBack();
 }
+
 </script>
+
 </body>
 </html>
-
