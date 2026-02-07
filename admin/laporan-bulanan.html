@@ -3,162 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin CAHAYA APP - Laporan Bulanan Santri</title>
+  <title>Admin CAHAYA APP - Laporan Bulanan</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
-    body { font-family: 'Noto Sans', sans-serif; background: #f4f6fa; margin: 0; color: #1f2937; font-size: 18px; line-height: 1.8; }
-    header { background: #0f766e; color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; }
+    /* === GLOBAL STYLE === */
+    body { font-family: 'Noto Sans', sans-serif; background: #f4f6fa; margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6; }
+    
+    header { background: #0f766e; color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+    
     main { padding: 30px; max-width: 1200px; margin: auto; }
+    
     .card { background: white; padding: 28px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 30px; }
+    
     .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-    select, button { padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 18px; }
+    select, button { padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 16px; }
     button { background: #0f766e; color: white; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; }
     button:hover { background: #115e59; transform: translateY(-1px); }
     .btn-secondary { background: #e5e7eb; color: #111827; }
     .btn-secondary:hover { background: #d1d5db; }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 17px; }
-    th, td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
-    th { background: #f3f4f6; font-weight: 700; }
-    .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px; margin-bottom: 30px; background: white; }
-    .laporan-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px; }
-    .laporan-header h1 { font-size: 28px; color: #1e3a8a; margin: 0; font-weight: 800; }
-    .laporan-header h2 { font-size: 22px; color: #1e3a8a; margin: 6px 0 12px 0; font-weight: 700; }
-    .laporan-header h3 { font-size: 20px; color: #111827; margin: 6px 0 16px 0; font-weight: 700; }
-    .identitas-grid { display: flex; justify-content: space-between; max-width: 650px; margin: 0 auto; font-size: 18px; }
-    .section-title { margin-top: 28px; margin-bottom: 8px; font-weight: bold; color: #0f766e; display: flex; align-items: center; gap: 8px; font-size: 20px; }
-    .dim-card { border-radius: 12px; padding: 14px 16px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 18px; margin-bottom: 12px; }
-    .dim-card h4 { margin: 0 0 6px; font-size: 18px; color: #0f172a; }
-    .dim-card p { margin: 0; white-space: pre-line; font-size: 18px; }
-    .muted { color: #6b7280; font-size: 17px; }
-    .export-buttons { text-align: right; margin-top: 16px; }
-    .export-buttons button { background: #2563eb; margin-left: 8px; padding: 12px 18px; font-size: 17px; }
-    .export-buttons button:hover { background: #1e40af; }
+    
+    /* === LAPORAN EXECUTIVE STYLE === */
+    .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 35px; margin-bottom: 40px; background: white; position: relative; }
+    
+    .laporan-header-executive {
+      background: linear-gradient(135deg,#fefcde,#fcfbef,#faffdb);
+      border-radius: 20px; padding: 35px; 
+      box-shadow: 0 15px 40px rgba(15,23,42,0.05);
+      position: relative; overflow: hidden; margin-bottom: 30px; border: 1px solid #e5e7eb;
+    }
+    .laporan-header-executive::before {
+      content: ""; position: absolute; top: -50px; right: -70px; width: 250px; height: 180px;
+      background: linear-gradient(135deg,#1e3a8a,#0f766e); opacity: 0.05; border-radius: 50px; transform: rotate(-8deg); pointer-events: none;
+    }
+    
+    .header-exec-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .logo-exec { display: flex; align-items: center; gap: 15px; }
+    .logo-exec img { width: 90px; height: auto; }
+    .logo-text { line-height: 1.2; }
+    .logo-text .line1 { font-weight: 700; font-size: 18px; letter-spacing: 1px; color: #1e293b; }
+    .logo-text .line2 { font-weight: 800; font-size: 24px; color: #1e293b; }
+    .judul-exec h1 { margin: 0; font-size: 32px; font-weight: 800; line-height: 1.1; letter-spacing: 1px; color: #c17c1c; text-align: right; }
+    .exec-divider { height: 3px; width: 100%; margin: 20px 0 25px 0; background: linear-gradient(to right,#c17c1c,#1e3a8a); border-radius: 4px; }
+    .identitas-exec { background: #ffffff; border-radius: 16px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); display: flex; justify-content: space-between; font-size: 16px; border: 1px solid #e5e7eb; }
+    .identitas-exec span { color: #64748b; font-weight: 500; font-size: 15px; }
+    .identitas-exec b { font-weight: 700; color: #1e293b; }
 
-  /* ================= EXECUTIVE HEADER ================= */
+    /* CONTENT STYLE */
+    .section-title { margin-top: 30px; margin-bottom: 12px; font-weight: 800; color: #0f766e; display: flex; align-items: center; gap: 10px; font-size: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+    
+    .dim-card { border-radius: 12px; padding: 18px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 16px; margin-bottom: 12px; }
+    .dim-card h4 { margin: 0 0 6px; font-size: 17px; color: #0f766e; }
+    .dim-card p { margin: 0; white-space: pre-line; text-align: justify; line-height: 1.7; color: #334155; }
 
-.laporan-header-executive{
-  background:linear-gradient(135deg,#fefcde,#fcfbef,#faffdb);
-  border-radius:28px;
-  padding:45px 45px 35px 45px;
-  box-shadow:0 25px 70px rgba(15,23,42,0.08);
-  position:relative;
-  overflow:hidden;
-  margin-bottom:35px;
-  border:1px solid #e5e7eb;
-}
+    /* TABLE STYLE */
+    .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; border-radius: 12px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    th, td { border: 1px solid #e2e8f0; padding: 14px 18px; text-align: left; font-size: 15px; }
+    th { background: #f1f5f9; font-weight: 700; color: #1e293b; white-space: nowrap; }
+    td { color: #334155; }
+    tr:nth-child(even) { background-color: #f8fafc; }
 
-/* Decorative corner shape */
-.laporan-header-executive::before{
-  content:"";
-  position:absolute;
-  top:-60px;
-  right:-80px;
-  width:320px;
-  height:220px;
-  background:linear-gradient(135deg,#1e3a8a,#0f766e);
-  opacity:0.05;
-  border-radius:60px;
-  transform:rotate(-8deg);
-}
+    .muted { color: #94a3b8; font-size: 16px; }
+    
+    /* NIHIL PELANGGARAN */
+    .nihil-pelanggaran {
+        background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;
+        padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; margin-top: 10px;
+    }
 
-/* Top layout */
-.header-exec-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:35px;
-}
-
-.logo-exec{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-
-.logo-exec img{
-  width:95px;
-  height:auto;
-}
-
-.logo-text{
-  line-height:1.2;
-}
-
-.logo-text .line1{
-  font-weight:700;
-  font-size:18px;
-  letter-spacing:1px;
-}
-
-.logo-text .line2{
-  font-weight:800;
-  font-size:24px;
-}
-
-.logo-text .line3{
-  font-size:13px;
-  color:#c17c1c;
-  letter-spacing:1px;
-}
-
-/* Big title right */
-.judul-exec{
-  text-align:right;
-}
-
-.judul-exec h1{
-  margin:0;
-  font-size:34px;
-  font-weight:800;
-  line-height:1.1;
-  letter-spacing:2px;
-  color:#c17c1c;
-}
-
-/* Gold divider */
-.exec-divider{
-  height:3px;
-  width:100%;
-  margin:20px 0 25px 0;
-  background:linear-gradient(to right,#c17c1c,#1e3a8a);
-  border-radius:4px;
-}
-
-/* Identity box */
-.identitas-exec{
-  background:#ffffff;
-  border-radius:20px;
-  padding:25px 35px;
-  box-shadow:0 12px 35px rgba(0,0,0,0.05);
-  display:flex;
-  justify-content:space-between;
-  font-size:16px;
-  border:1px solid #e5e7eb;
-}
-
-.identitas-exec span{
-  color:#64748b;
-  font-weight:500;
-}
-
-.identitas-exec b{
-  font-weight:700;
-  letter-spacing:.5px;
-}
-
-
-.dim-card{
-  text-align:left;
-}
-
-.dim-card p{
-  text-align:justify;
-  text-justify:inter-word;
-  line-height:1.9;
-}
-
+    /* EXPORT BUTTONS */
+    .export-buttons { text-align: right; margin-top: 25px; }
+    .export-buttons button { background: #2563eb; padding: 12px 24px; font-size: 16px; }
   </style>
 </head>
 
@@ -187,15 +107,11 @@
       <button onclick="generateReports()">Tampilkan Laporan</button>
     </div>
     <div id="laporanContainer">
-      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan.</p>
+      <p class="muted">Silakan pilih bulan dan tahun untuk melihat laporan semua santri.</p>
     </div>
   </div>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- 🔥 FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -213,17 +129,12 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
   const dbRef = ref(db);
-  window.dbRef = dbRef; // supaya bisa dipakai di script luar
+  window.dbRef = dbRef;
 
   window.getFirebaseData = async function() {
     const [
-      assesGuruSnap,
-      assesNaqibSnap,
-      absNaqibSnap,
-      absKbmSnap,
-      ujianSnap,
-      tahfizSnap,
-      pelanggaranSnap
+      assesGuruSnap, assesNaqibSnap, absNaqibSnap, absKbmSnap,
+      ujianSnap, tahfizSnap, pelanggaranSnap
     ] = await Promise.all([
       get(child(dbRef, "cahaya_app/assesment_cahaya_santri")),
       get(child(dbRef, "cahaya_app/assesment_cahaya_naqib")),
@@ -247,522 +158,325 @@
 </script>
 
 <script>
+// === HELPER: LOAD GAMBAR UNTUK PDF ===
+function loadImage(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => {
+            console.warn("Gambar tidak ditemukan:", url);
+            resolve(null);
+        };
+        img.src = url;
+    });
+}
+
+// === HELPER: NORMALISASI DATA ===
+function normalize(str) {
+    return (str || "").toLowerCase().trim().replace(/\s+/g, ' ');
+}
+function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d && d.getMonth()===b && d.getFullYear()===t; }
+
+// === INIT ===
 let jsPDFLib;
 window.addEventListener("load", () => {
-  if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
-  const tahunSelect = document.getElementById("tahunSelect");
-  const tNow = new Date().getFullYear();
-  for (let t = tNow - 2; t <= tNow + 1; t++) {
-    const opt = document.createElement("option");
-    opt.value = t; opt.textContent = t; if (t === tNow) opt.selected = true;
-    tahunSelect.appendChild(opt);
-  }
+    if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
+    
+    const tahunSelect = document.getElementById("tahunSelect");
+    const tNow = new Date().getFullYear();
+    for (let t = tNow - 1; t <= tNow + 1; t++) {
+        const opt = document.createElement("option");
+        opt.value = t; opt.textContent = t; 
+        if (t === tNow) opt.selected = true;
+        tahunSelect.appendChild(opt);
+    }
 });
 
-function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
-function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d&&d.getMonth()===b&&d.getFullYear()===t; }
-
+// === LOGIKA UTAMA ===
 async function generateReports() {
   const bulan = +document.getElementById("bulanSelect").value;
   const tahun = +document.getElementById("tahunSelect").value;
   const container = document.getElementById("laporanContainer");
-  container.innerHTML = "";
+  container.innerHTML = "<p class='muted'>⏳ Sedang memuat data semua santri...</p>";
 
-  if (isNaN(bulan) || isNaN(tahun)) return container.innerHTML="<p class='muted'>Pilih bulan dan tahun.</p>";
+  if (isNaN(bulan) || isNaN(tahun)) {
+      container.innerHTML="<p class='muted'>Pilih bulan dan tahun terlebih dahulu.</p>";
+      return;
+  }
 
   const data = await window.getFirebaseData();
   const { assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = data;
 
+  // Kumpulkan semua santri yang ada datanya di bulan ini
   const namaSet = new Set([
-    ...assesmentGuru.map(a=>a.namaSantri),
-    ...assesmentNaqib.map(a=>a.namaSantri),
-    ...absensiNaqib.flatMap(a=>(a.data||[]).map(d=>d.nama)),
-    ...absensiKbm.flatMap(a=>(a.data||[]).map(d=>d.nama)),
-    ...ujian.map(u=>u.santri),
-    ...tahfiz.flatMap(t=>(t.data||[]).map(d=>d.nama)),
-    ...pelanggaranAll.map(p=>p.santri)
+      ...assesmentGuru.map(a=>normalize(a.namaSantri)),
+      ...assesmentNaqib.map(a=>normalize(a.namaSantri)),
+      ...absensiNaqib.flatMap(a=>(a.data||[]).map(d=>normalize(d.nama))),
+      ...absensiKbm.flatMap(a=>(a.data||[]).map(d=>normalize(d.nama))),
+      ...ujian.map(u=>normalize(u.santri)),
+      ...tahfiz.flatMap(t=>(t.data||[]).map(d=>normalize(d.nama))),
+      ...pelanggaranAll.map(p=>normalize(p.santri))
   ].filter(Boolean));
 
-  if (!namaSet.size) return container.innerHTML="<p class='muted'>Belum ada data.</p>";
+  if (!namaSet.size) {
+      container.innerHTML="<p class='muted'>Belum ada data untuk periode ini.</p>";
+      return;
+  }
 
-  namaSet.forEach(nama=>{
-    container.appendChild(buatLaporanSantri({
-      nama, bulan, tahun,
-      assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm,
-      ujian, tahfiz, pelanggaranAll
-    }));
+  container.innerHTML = "";
+
+  // Loop setiap nama dan buatkan laporan
+  namaSet.forEach(namaKey => {
+      // Cari nama asli (Title Case)
+      let namaAsli = namaKey; 
+      const refData = assesmentNaqib.find(a => normalize(a.namaSantri) === namaKey) || 
+                      assesmentGuru.find(a => normalize(a.namaSantri) === namaKey);
+      if (refData) namaAsli = refData.namaSantri;
+
+      const laporanHTML = buatLaporanSantri({
+          nama: namaAsli, 
+          namaKey: namaKey,
+          bulan, tahun,
+          ...data 
+      });
+      container.appendChild(laporanHTML);
   });
 }
 
-function hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiGuru) {
-  const kehadiran = {};
-  function tambah(prog, status) {
-    if (!kehadiran[prog]) kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
-    const s = (status || "").toLowerCase();
-    if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
-    kehadiran[prog].total++;
+// === HITUNG KEHADIRAN (ANTI DUPLIKAT) ===
+function hitungKehadiranGabungan(namaKey, bulan, tahun, absensiNaqib, absensiGuru) {
+  const statusPerHari = {};
+
+  function catatStatus(tanggal, program, status) {
+    const key = `${tanggal}_${program}`; 
+    statusPerHari[key] = status; 
   }
 
-  absensiNaqib.forEach(log => {
-    if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data || []).forEach(d => {
-      if (d.nama === nama) tambah(log.program || "Program Harian", d.status);
+  absensiNaqib
+    .filter(log => isSameMonthYear(log.tanggal, bulan, tahun))
+    .sort((a,b) => new Date(a.waktuSimpan || a.tanggal) - new Date(b.waktuSimpan || b.tanggal))
+    .forEach(log => {
+        (log.data || []).forEach(d => {
+            if (normalize(d.nama) === namaKey) catatStatus(log.tanggal, log.program || "Harian", d.status);
+        });
     });
+
+  absensiGuru
+    .filter(log => isSameMonthYear(log.tanggal, bulan, tahun))
+    .sort((a,b) => new Date(a.waktuSimpan || a.tanggal) - new Date(b.waktuSimpan || b.tanggal))
+    .forEach(log => {
+        (log.data || []).forEach(d => {
+            if (normalize(d.nama) === namaKey) catatStatus(log.tanggal, log.mapel || "KBM", d.status);
+        });
+    });
+
+  const rekap = {}; 
+  Object.entries(statusPerHari).forEach(([key, status]) => {
+      const program = key.split('_')[1];
+      if (!rekap[program]) rekap[program] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+      const s = (status || "").toLowerCase();
+      if (rekap[program][s] !== undefined) rekap[program][s]++;
+      rekap[program].total++;
   });
 
-  absensiGuru.forEach(log => {
-    if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data || []).forEach(d => {
-      if (d.nama === nama) tambah(log.mapel || "KBM", d.status);
-    });
+  const result = Object.entries(rekap).map(([prog, v]) => {
+      const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
+      return { program: prog, hadir: toP(v.hadir), izin: toP(v.izin), sakit: toP(v.sakit), alfa: toP(v.alfa) };
   });
 
-  const result = Object.entries(kehadiran).map(([prog,v],i)=>{
-    const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
-    return {
-      no: i+1,
-      program: prog,
-      hadir: toP(v.hadir),
-      izin: toP(v.izin),
-      sakit: toP(v.sakit),
-      alfa: toP(v.alfa)
-    };
-  });
-
-  if (result.length) {
-    const avg = x => Math.round(result.reduce((s,r)=>s + r[x],0) / result.length);
-    result.push({
-      no: "",
-      program: "<b>Rata-rata</b>",
-      hadir: avg("hadir"),
-      izin: avg("izin"),
-      sakit: avg("sakit"),
-      alfa: avg("alfa")
-    });
-  }
   return result;
 }
 
-// ========= BANGUN KARTU LAPORAN PER SANTRI =========
+// === RENDER KARTU (EXECUTIVE) ===
 function buatLaporanSantri(ctx) {
-  const {
-    nama,
-    bulan,
-    tahun,
-    assesmentGuru,
-    assesmentNaqib,
-    absensiNaqib,
-    absensiKbm,
-    ujian,
-    tahfiz,
-    pelanggaranAll,
-  } = ctx;
+  const { nama, namaKey, bulan, tahun, assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = ctx;
 
   const namaUpper = (nama || "").toUpperCase();
-  const namaBulan = [
-    "Januari","Februari","Maret","April","Mei","Juni",
-    "Juli","Agustus","September","Oktober","November","Desember"
-  ][bulan];
+  const namaBulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][bulan];
 
-  // ---- Ambil asesmen terbaru ----
-  const ases = assesmentNaqib
-  .filter(a =>
-    a.namaSantri === nama &&
-    isSameMonthYear(a.tanggal, bulan, tahun)
-  )
-  .sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan))
-  .at(-1) || {};
+  let ases = assesmentNaqib.filter(a => normalize(a.namaSantri) === namaKey && isSameMonthYear(a.tanggal, bulan, tahun)).sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan)).at(-1);
+  if (!ases || !ases.narasiSpiritual) ases = assesmentGuru.filter(a => normalize(a.namaSantri) === namaKey && isSameMonthYear(a.tanggal, bulan, tahun)).sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan)).at(-1) || {};
 
-
-  const narasiSpiritual =
-  ases.narasiSpiritual ||
-  "Belum ada catatan dimensi Cinta Allah (Spiritual) bulan ini.";
-
-const narasiRel =
-  ases.narasiRelasional ||
-  "Belum ada catatan dimensi Akhlak Mulia (Relasional) bulan ini.";
-
-const narasiEmo =
-  ases.narasiEmosional ||
-  "Belum ada catatan dimensi Hati Bersih (Emosional) bulan ini.";
-
-const narasiIntellectual =
-  ases.narasiIntelektual ||
-  "Belum ada catatan dimensi Akal Cerdas (Intelektual) bulan ini.";
-
-const narasiFis =
-  ases.narasiFisik ||
-  "Belum ada catatan dimensi Fisik Berdaya (Physical) bulan ini.";
-
-const namaNaqib = ases.naqib || "-";
-const namaNaqibUpper = namaNaqib.toUpperCase();
-const namaBulanUpper = (namaBulan || "").toUpperCase();
+  const def = "Belum ada catatan.";
+  const narasiSpiritual = ases.narasiSpiritual || def;
+  const narasiRel = ases.narasiRelasional || def;
+  const narasiEmo = ases.narasiEmosional || def;
+  const narasiIntellectual = ases.narasiIntelektual || def;
+  const narasiFis = ases.narasiFisik || def;
+  const namaNaqib = (ases.naqib || "-").toUpperCase();
+  const namaBulanUpper = (namaBulan || "").toUpperCase();
 
   const wrapper = document.createElement("div");
   wrapper.className = "laporan-card";
-  wrapper.dataset.santri = nama;
+  wrapper.dataset.santri = nama; 
   wrapper.dataset.bulan = namaBulan;
   wrapper.dataset.tahun = tahun;
 
-  // === HEADER LAPORAN ===
   wrapper.innerHTML = `
-<div class="laporan-header-executive">
-
-  <div class="header-exec-top">
-
-    <div class="logo-exec">
-      <img src="logofi.png" alt="Logo Pesantren">
-      <div class="logo-text">
-        <div class="line1">PESANTREN CAHAYA</div>
-        <div class="line2">FAJRUL ISLAM</div>
-        <div class="line3">HOLISTIC ISLAMIC SCHOOL</div>
+  <div class="laporan-header-executive">
+    <div class="header-exec-top">
+      <div class="logo-exec">
+        <img src="../logofi.png" alt="Logo" onerror="this.src='logofi.png'">
+        <div class="logo-text">
+          <div class="line1">PESANTREN CAHAYA</div>
+          <div class="line2">FAJRUL ISLAM</div>
+          <div class="line3">HOLISTIC ISLAMIC SCHOOL</div>
+        </div>
+      </div>
+      <div class="judul-exec">
+        <h1>LAPORAN<br>BULANAN SANTRI</h1>
       </div>
     </div>
-
-    <div class="judul-exec">
-      <h1>LAPORAN<br>BULANAN SANTRI</h1>
-    </div>
-
-  </div>
-
-  <div class="exec-divider"></div>
-
-  <div class="identitas-exec">
-    <div>
-      <p><span>Nama Santri</span> : <b>${namaUpper}</b></p>
-      <p><span>Nama Naqib</span> : <b>${namaNaqibUpper}</b></p>
-    </div>
-
-    <div style="text-align:right">
-      <p><span>Bulan</span> : <b>${namaBulanUpper}</b></p>
-      <p><span>Tahun</span> : <b>${tahun}</b></p>
+    <div class="exec-divider"></div>
+    <div class="identitas-exec">
+      <div>
+        <p><span>Nama Santri</span> : <b>${namaUpper}</b></p>
+        <p><span>Nama Naqib/Guru</span> : <b>${namaNaqib}</b></p>
+      </div>
+      <div style="text-align:right">
+        <p><span>Bulan</span> : <b>${namaBulanUpper}</b></p>
+        <p><span>Tahun</span> : <b>${tahun}</b></p>
+      </div>
     </div>
   </div>
 
-</div>
+  <div class="section-title">🌈 Dimensi CAHAYA</div>
+  <div class="dim-card"><h4>🕋 Cinta Allah</h4><p>${narasiSpiritual}</p></div>
+  <div class="dim-card"><h4>🤝 Akhlak Mulia</h4><p>${narasiRel}</p></div>
+  <div class="dim-card"><h4>💓 Hati Bersih</h4><p>${narasiEmo}</p></div>
+  <div class="dim-card"><h4>🧠 Akal Cerdas</h4><p>${narasiIntellectual}</p></div>
+  <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya</h4><p>${narasiFis}</p></div>
+  
+  <div class="section-title">📈 Fokus Perbaikan Bulan Ini</div>
+  <div class="dim-card">
+    <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
+    <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
+  </div>
 
+  <div class="section-title">📊 Hasil Perbaikan Bulan Ini</div>
+  <div class="dim-card">
+    <p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
+    <p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
+  </div>
 
-    <div class="section-title">🌈 Dimensi CAHAYA</div>
-    <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiSpiritual}</p></div>
-    <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiRel}</p></div>
-    <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiEmo}</p></div>
-    <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiIntellectual}</p></div>
-    <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiFis}</p></div>
+  <div class="section-title">🚀 Fokus Perbaikan Bulan Berikutnya</div>
+  <div class="dim-card">
+    <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
+    <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
+  </div>
   `;
-wrapper.innerHTML += `
-<div class="section-title">📈 Fokus Perbaikan Bulan Ini</div>
-<p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
-<p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
 
-<div class="section-title">📊 Hasil Perbaikan Bulan Ini</div>
-<p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
-<p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
+  const hadir = hitungKehadiranGabungan(namaKey, bulan, tahun, absensiNaqib, absensiKbm);
+  wrapper.innerHTML += `<div class="section-title">🗓️ Laporan Kehadiran</div>` + (hadir.length ? 
+    `<div class="table-wrapper"><table><thead><tr><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead><tbody>${hadir.map(r=>`<tr><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}</tbody></table></div>` : `<p class='muted'>-</p>`);
 
-<div class="section-title">🚀 Fokus Perbaikan Bulan Berikutnya</div>
-<p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
-<p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
-`;
-  // === Kehadiran ===
-  const hadir = hitungKehadiranGabungan(nama, bulan, tahun, absensiNaqib, absensiKbm);
-  wrapper.innerHTML += `
-  <div class="section-title">🗓️ Laporan Kehadiran</div>
-  ${
-    hadir.length ? `
-    <table>
-      <thead>
-        <tr>
-          <th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${hadir.map(r=>`
-          <tr>
-            <td>${r.no}</td>
-            <td>${r.program}</td>
-            <td>${r.hadir}%</td>
-            <td>${r.izin}%</td>
-            <td>${r.sakit}%</td>
-            <td>${r.alfa}%</td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-    ` : `<p class='muted'>Belum ada data kehadiran.</p>`
-  }`;
+  const nilaiUjian = ujian.filter(u => normalize(u.santri) === namaKey && isSameMonthYear(u.tanggal, bulan, tahun));
+  const rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s, u) => s + (+u.nilai || 0), 0) / nilaiUjian.length) : 0;
+  wrapper.innerHTML += `<div class="section-title">🧾 Nilai Ujian</div>` + (nilaiUjian.length ? 
+    `<div class="table-wrapper"><table><thead><tr><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Ket</th></tr></thead><tbody>${nilaiUjian.map(u=>`<tr><td>${u.mapel}</td><td>${u.materi}</td><td>${u.nilai}</td><td>${u.nilai>=75?"✅":"❌"}</td></tr>`).join("")}<tr><td colspan="2"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr></tbody></table></div>` : `<p class='muted'>-</p>`);
 
-  // === Nilai Ujian ===
-  const nilaiUjian = ujian
-  .filter(
-    (u) =>
-      (u.santri || "").toLowerCase() === nama.toLowerCase() &&
-      isSameMonthYear(u.tanggal, bulan, tahun)
-  )
-  .filter(
-    (u, i, self) =>
-      i ===
-      self.findIndex(
-        (x) =>
-          x.santri === u.santri &&
-          x.mapel === u.mapel &&
-          x.materi === u.materi &&
-          x.tanggal === u.tanggal
-      )
-  );
+  // FIX TAHFIZ (Anti Duplikat & Keterangan)
+  const logsTahfizBulanIni = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).sort((a,b) => new Date(a.waktuSimpan) - new Date(b.waktuSimpan));
+  const mapTahfiz = {};
+  logsTahfizBulanIni.forEach(log => {
+      const santriData = (log.data || []).find(d => normalize(d.nama) === namaKey);
+      if (santriData) mapTahfiz[log.tanggal] = santriData;
+  });
+  const dataTahfiz = Object.keys(mapTahfiz).sort().map(k => mapTahfiz[k]);
 
-let rataUjian = 0;
-if (nilaiUjian.length) {
-  rataUjian = Math.round(
-    nilaiUjian.reduce((s, u) => s + (+u.nilai || 0), 0) / nilaiUjian.length
-  );
-}
-    wrapper.innerHTML += `
-  <div class="section-title">🧾 Laporan Nilai Ujian</div>
-  ${
-    nilaiUjian.length ? `
-    <table>
-      <thead>
-        <tr>
-          <th>No</th><th>Mata Pelajaran</th><th>Materi</th><th>Nilai</th><th>Keterangan</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${
-          nilaiUjian.map((u,i)=>`
-            <tr>
-              <td>${i+1}</td>
-              <td>${u.mapel || "-"}</td>
-              <td>${u.materi || "-"}</td>
-              <td>${u.nilai || "-"}</td>
-              <td>${u.nilai >= 75 ? "✅ Tuntas" : "❌ Belum Tuntas"}</td>
-            </tr>
-          `).join("")
-        }
-        <tr>
-          <td colspan="3"><b>Rata-rata</b></td>
-          <td colspan="2">${rataUjian}</td>
-        </tr>
-      </tbody>
-    </table>
-    ` : `<p class='muted'>Belum ada data ujian.</p>`
-  }`;
+  wrapper.innerHTML += `<div class="section-title">📖 Tahfiz</div>` + (dataTahfiz.length ? 
+    `<div class="table-wrapper"><table><thead><tr><th>Setoran</th><th>Nilai</th><th>Ket</th></tr></thead><tbody>${dataTahfiz.map(d=>`<tr><td>${d.surat||d.setoran}</td><td>${d.nilai}</td><td>${d.keterangan || d.ket || "-"}</td></tr>`).join("")}</tbody></table></div>` : `<p class='muted'>-</p>`);
 
-  // === Tahfiz ===
-  const dataTahfiz = tahfiz
-    .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-    .flatMap(t => t.data || [])
-    .filter(d => d.nama === nama);
+  // FIX PELANGGARAN
+  const pelanggaran = pelanggaranAll.filter(p => normalize(p.santri) === namaKey && isSameMonthYear(p.tanggal, bulan, tahun));
+  wrapper.innerHTML += `<div class="section-title">⚠️ Catatan Pelanggaran</div>`;
+  if(pelanggaran.length > 0) {
+      wrapper.innerHTML += `<div class="table-wrapper"><table><thead><tr><th>Tgl</th><th>Kasus</th><th>Tindak Lanjut</th></tr></thead><tbody>${pelanggaran.map(p=>`<tr><td>${p.tanggal}</td><td>${p.namaPelanggaran}</td><td>${p.tindakLanjut}</td></tr>`).join("")}</tbody></table></div>`;
+  } else {
+      wrapper.innerHTML += `<div class="nihil-pelanggaran">✅ Alhamdulillah, tidak ada catatan pelanggaran bulan ini.</div>`;
+  }
 
-  wrapper.innerHTML += `
-  <div class="section-title">📖 Laporan Setoran Tahfiz</div>
-  ${
-    dataTahfiz.length ? `
-    <table>
-      <thead>
-        <tr>
-          <th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${
-          dataTahfiz.map((d,i)=>`
-            <tr>
-              <td>${i+1}</td>
-              <td>${d.surat || d.setoran || "-"}</td>
-              <td>${d.kesalahan || "-"}</td>
-              <td>${d.nilai || "-"}</td>
-              <td>${d.keterangan || "-"}</td>
-            </tr>
-          `).join("")
-        }
-      </tbody>
-    </table>
-    ` : `<p class='muted'>Belum ada setoran tahfiz.</p>`
-  }`;
-
-  // === Pelanggaran (sinkron dengan format baru) ===
-const pelanggaran = pelanggaranAll
-  .filter(p => p.santri === nama && isSameMonthYear(p.tanggal, bulan, tahun));
-
-wrapper.innerHTML += `
-<div class="section-title">⚠️ Laporan Pelanggaran</div>
-${
-  pelanggaran.length ? `
-  <table>
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Tanggal</th>
-        <th>Nama Pelanggaran</th>
-        <th>Kategori</th>
-        <th>Keterangan / Kronologi</th>
-        <th>Tindak Lanjut</th>
-        <th>Konsekuensi</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${
-        pelanggaran.map((p,i)=>`
-          <tr>
-            <td>${i+1}</td>
-            <td>${p.tanggal || "-"}</td>
-            <td>${p.namaPelanggaran || "-"}</td>
-            <td>${p.kategori || "-"}</td>
-            <td>${p.keterangan || p.ket || "-"}</td>
-            <td>${p.tindakLanjut || "-"}</td>
-            <td>${p.konsekuensi || "-"}</td>
-          </tr>
-        `).join("")
-      }
-    </tbody>
-  </table>
-  ` : `<p class='muted'>Tidak ada pelanggaran bulan ini.</p>`
-}
-`;
-
-  // === tombol export ===
   wrapper.innerHTML += `
     <div class="export-buttons">
-      <button onclick="exportPDF('${nama.replace(/'/g,"\\'")}')">
-        ⬇️ Export PDF Santri Ini
-      </button>
-    </div>
-  `;
+      <button onclick="exportPDF('${nama.replace(/'/g,"\\'")}')">⬇️ Download PDF Santri Ini</button>
+    </div>`;
 
   return wrapper;
 }
 
 // ====== EXPORT PDF ======
 async function exportPDF(nama){
-
   const el = document.querySelector(`.laporan-card[data-santri="${nama}"]`);
-  if (!el) {
-    alert("Laporan tidak ditemukan.");
-    return;
+  if (!el) { alert("Laporan tidak ditemukan."); return; }
+
+  const btn = el.querySelector("button");
+  const oldText = btn.innerText;
+  btn.innerText = "⏳ Memproses..."; btn.disabled = true;
+
+  try {
+      const originalStyle = el.getAttribute('style');
+      el.style.width = "800px"; el.style.maxWidth = "none"; el.style.position = "absolute"; el.style.left = "-9999px"; 
+      document.body.appendChild(el.cloneNode(true)); 
+
+      const canvas = await html2canvas(el, { scale: 1.5, useCORS: true, scrollY: 0, windowWidth: 1024 });
+      el.style.width = ""; el.style.maxWidth = ""; el.style.position = ""; el.style.left = "";
+
+      const pdf = new jsPDFLib("p","mm","a4");
+      const imgWidth = 190; const pageHeight = 295;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight; let position = 10;
+
+      pdf.addImage(canvas.toDataURL("image/jpeg", 0.85), "JPEG", 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.85), "JPEG", 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // TANDA TANGAN
+      pdf.setPage(pdf.getNumberOfPages());
+      const footerY = 280; const centerX = 150; 
+      pdf.setFontSize(11); pdf.setTextColor(40);
+      
+      pdf.text("Mengetahui,", centerX, footerY - 30, {align:"center"});
+      pdf.text("Direktur Pesantren Cahaya Fajrul Islam", centerX, footerY - 25, {align:"center"});
+
+      const ttdImage = await loadImage('ttd.jpg'); // Path file ttd di folder admin
+      if (ttdImage) pdf.addImage(ttdImage, 'JPEG', centerX - 15, footerY - 23, 30, 15); 
+
+      pdf.setFont(undefined, 'bold');
+      pdf.text("Multazam Zakaria, MPd", centerX, footerY - 5, {align:"center"});
+
+      const bulan = el.dataset.bulan; const tahun = el.dataset.tahun;
+      const cleanName = nama.toUpperCase().replace(/[^a-zA-Z0-9]/g,"_");
+      pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
+
+  } catch (e) {
+      alert("Gagal export: " + e.message);
+  } finally {
+      btn.innerText = oldText; btn.disabled = false;
   }
-
-  const bulan = el.dataset.bulan || "";
-  const tahun = el.dataset.tahun || "";
-
-  const canvas = await html2canvas(el,{
-    scale: 1.2,
-    useCORS: true,
-    scrollY: 0
-  });
-
-  const pdf = new jsPDFLib("p","mm","a4");
-
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-
-  const margin = 10;
-  const footerSpace = 15;
-
-  const usableHeight = pageHeight - margin - footerSpace;
-  const imgWidth = pageWidth - 20;
-
-  const ratio = imgWidth / canvas.width;
-  const pageCanvasHeight = usableHeight / ratio;
-
-  let renderedHeight = 0;
-  let pageCount = 0;
-
-  while (renderedHeight < canvas.height) {
-
-    const pageCanvas = document.createElement("canvas");
-    pageCanvas.width = canvas.width;
-    pageCanvas.height = Math.min(pageCanvasHeight, canvas.height - renderedHeight);
-
-    const ctx = pageCanvas.getContext("2d");
-
-    ctx.drawImage(
-      canvas,
-      0,
-      renderedHeight,
-      canvas.width,
-      pageCanvas.height,
-      0,
-      0,
-      canvas.width,
-      pageCanvas.height
-    );
-
-const imgData = pageCanvas.toDataURL("image/jpeg", 0.75);
-
-
-    if (pageCount > 0) pdf.addPage();
-
-    pdf.addImage(
-      imgData,
-      "PNG",
-      10,
-      margin,
-      imgWidth,
-      pageCanvas.height * ratio
-    );
-
-    renderedHeight += pageCanvas.height;
-    pageCount++;
-  }
-
-// ===== Tambahkan Tanda Tangan di Halaman Terakhir =====
-const totalPages = pdf.getNumberOfPages();
-pdf.setPage(totalPages);
-
-pdf.setFontSize(12);
-pdf.setTextColor(40);
-
-pdf.text("Mengetahui,", pageWidth / 2, pageHeight - 45, { align: "center" });
-pdf.text("Direktur Pesantren Cahaya Fajrul Islam", pageWidth / 2, pageHeight - 38, { align: "center" });
-
-pdf.setFont(undefined, "bold");
-pdf.text("Multazam Zakaria, M.Pd.", pageWidth / 2, pageHeight - 20, { align: "center" });
-pdf.setFont(undefined, "normal");
-
-
-// Pindah ke halaman terakhir
-pdf.setPage(totalPages);
-
-pdf.setFontSize(12);
-pdf.setTextColor(40);
-
-// Blok tanda tangan (center)
-pdf.text("Mengetahui,", pageWidth / 2, pageHeight - 45, { align: "center" });
-pdf.text("Direktur Pesantren Cahaya Fajrul Islam", pageWidth / 2, pageHeight - 38, { align: "center" });
-
-// Ruang tanda tangan (jarak kosong)
-pdf.setFont(undefined, "bold");
-pdf.text("Multazam Zakaria, M.Pd.", pageWidth / 2, pageHeight - 20, { align: "center" });
-pdf.setFont(undefined, "normal");
-
-
-// ===== Footer Nomor Halaman =====
-for(let i = 1; i <= totalPages; i++){
-  pdf.setPage(i);
-  pdf.setFontSize(10);
-  pdf.setTextColor(120);
-  pdf.text(
-    `Halaman ${i} dari ${totalPages} halaman`,
-    pageWidth / 2,
-    pageHeight - 10,
-    { align: "center" }
-  );
 }
-
-const cleanName = nama.toUpperCase().replace(/\s+/g,"_");
-pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
-}
-
 
 async function exportAllPDF(){
   const cards = document.querySelectorAll(".laporan-card");
-  if (!cards.length) {
-    alert("Tidak ada laporan.");
-    return;
-  }
+  if (!cards.length) { alert("Tidak ada laporan."); return; }
   for (let i = 0; i < cards.length; i++){
-    const n = cards[i].dataset.santri;
-    await exportPDF(n);
-    await new Promise(r=>setTimeout(r,700));
+      const n = cards[i].dataset.santri;
+      await exportPDF(n);
+      await new Promise(r=>setTimeout(r,700));
   }
   alert("✅ Semua laporan berhasil diekspor!");
 }
@@ -777,13 +491,3 @@ function goDashboard(){
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
