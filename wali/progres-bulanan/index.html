@@ -10,28 +10,26 @@
     /* === GLOBAL STYLE === */
     body { font-family: 'Noto Sans', sans-serif; background: #f4f6fa; margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6; }
     
-    /* HEADER NAVIGATION */
+    /* HEADER */
     header { background: #1e3a8a; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     header h1 { margin: 0; font-size: 18px; font-weight: 700; }
     
-    /* MAIN CONTAINER */
+    /* MAIN */
     main { padding: 20px; max-width: 1000px; margin: auto; }
     
-    /* CARD UTAMA */
+    /* CARD */
     .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); margin-bottom: 30px; }
     
-    /* CONTROLS (Select & Button) */
+    /* CONTROLS */
     .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
     select, button { padding: 12px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 15px; width: 100%; max-width: 200px; box-sizing: border-box; }
     button { background: #1e3a8a; color: white; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; max-width: 150px; }
     button:hover { background: #1e40af; transform: translateY(-1px); }
-    
     .btn-secondary { background: #e5e7eb; color: #111827; max-width: fit-content; font-size: 14px; padding: 8px 12px; }
     
-    /* === LAPORAN CARD STYLE (EXECUTIVE) === */
+    /* === LAPORAN EXECUTIVE STYLE === */
     .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 25px; margin-bottom: 30px; background: white; position: relative; }
     
-    /* HEADER EXECUTIVE (KOP SURAT) */
     .laporan-header-executive {
       background: linear-gradient(135deg,#fefcde,#fcfbef,#faffdb);
       border-radius: 20px; padding: 30px; 
@@ -49,12 +47,8 @@
     .logo-text { line-height: 1.2; }
     .logo-text .line1 { font-weight: 700; font-size: 16px; letter-spacing: 1px; color: #1e293b; }
     .logo-text .line2 { font-weight: 800; font-size: 20px; color: #1e293b; }
-    .logo-text .line3 { font-size: 11px; color: #c17c1c; letter-spacing: 1px; }
-    
     .judul-exec h1 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: 1px; color: #c17c1c; text-align: right; }
-    
     .exec-divider { height: 3px; width: 100%; margin: 15px 0 20px 0; background: linear-gradient(to right,#c17c1c,#1e3a8a); border-radius: 4px; }
-    
     .identitas-exec { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); display: flex; justify-content: space-between; font-size: 15px; border: 1px solid #e5e7eb; }
     .identitas-exec span { color: #64748b; font-weight: 500; font-size: 14px; }
     .identitas-exec b { font-weight: 700; color: #1e293b; }
@@ -66,17 +60,9 @@
     .dim-card h4 { margin: 0 0 5px; font-size: 16px; color: #0f766e; }
     .dim-card p { margin: 0; white-space: pre-line; text-align: justify; line-height: 1.7; color: #334155; }
 
-    /* === RESPONSIVE TABLE (KUNCI AGAR ENAK DI HP) === */
-    .table-wrapper {
-      width: 100%;
-      overflow-x: auto; /* Scroll samping jika tabel lebar */
-      -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-    }
-    
-    table { width: 100%; border-collapse: collapse; min-width: 600px; /* Paksa lebar minimal agar tidak gepeng */ }
+    /* RESPONSIVE TABLE */
+    .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
     th, td { border: 1px solid #e2e8f0; padding: 12px 15px; text-align: left; font-size: 14px; }
     th { background: #f1f5f9; font-weight: 700; color: #1e293b; white-space: nowrap; }
     td { color: #334155; }
@@ -88,26 +74,18 @@
     .export-buttons { text-align: center; margin-top: 30px; }
     .export-buttons button { background: #2563eb; padding: 12px 20px; font-size: 15px; width: 100%; max-width: 300px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); }
 
-    /* === MEDIA QUERY KHUSUS HP (Mobile) === */
+    /* MOBILE QUERY */
     @media (max-width: 600px) {
       body { font-size: 14px; }
       header { padding: 12px 15px; }
       main { padding: 15px; }
       .card { padding: 15px; border-radius: 12px; }
-      .laporan-card { padding: 15px; border-radius: 12px; border: none; box-shadow: none; }
-      
-      /* Header Executive di HP jadi vertikal */
       .laporan-header-executive { padding: 20px; border-radius: 16px; }
       .header-exec-top { flex-direction: column; gap: 15px; text-align: center; }
       .logo-exec { flex-direction: column; gap: 10px; }
-      .logo-text { text-align: center; }
       .judul-exec h1 { text-align: center; font-size: 24px; margin-top: 10px; }
-      
       .identitas-exec { flex-direction: column; gap: 12px; text-align: center; }
-      .identitas-exec div { text-align: center !important; } /* Paksa tengah */
-      
-      /* Button full width */
-      .controls select, .controls button { max-width: 100%; }
+      .identitas-exec div { text-align: center !important; }
       .btn-secondary { font-size: 12px; padding: 6px 10px; }
     }
   </style>
@@ -198,19 +176,154 @@
 </script>
 
 <script>
+// === DAFTAR WALI SANTRI (DIPERBAIKI AGAR SINKRON) ===
+const waliList = [
+    {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
+    {nama:"Juanda Nur Ilham",username:"juanda491",password:"Cahaya@1049"},
+    {nama:"Najmihadi Syauqii Tamaam",username:"najmi827",password:"Cahaya@7721"},
+    {nama:"Nizam Kabisat",username:"nizam643",password:"Cahaya@6605"},
+    {nama:"Mohammad Ikhsan Hairuli",username:"ikhsan984",password:"Cahaya@2042"},
+    {nama:"Reyfas Ramadhan",username:"reyfas135",password:"Cahaya@8812"},
+    {nama:"Eza Febri Al Fadzri",username:"eza209",password:"Cahaya@9901"},
+    {nama:"Hafidz Al Rozi",username:"hafidz413",password:"Cahaya@2227"},
+    {nama:"Andes Afendra",username:"andes551",password:"Cahaya@1128"},
+    {nama:"Febri Ghalih Al Farobi",username:"febri728",password:"Cahaya@3159"},
+    {nama:"Danang Prasditya Santoso",username:"danang605",password:"Cahaya@8443"},
+    {nama:"M. Raid Mahrus",username:"raid998",password:"Cahaya@7351"},
+    {nama:"M. Dirgatama",username:"dirga822",password:"Cahaya@4033"},
+    {nama:"Canza Ryanda Hutasuhut",username:"canza574",password:"Cahaya@9800"},
+    {nama:"Falizh Daffa Qatrunnada",username:"falizh309",password:"Cahaya@6514"},
+    {nama:"Daffa Al Musyari",username:"daffa237",password:"Cahaya@1257"},
+    {nama:"Rafi Ramadhan",username:"rafi765",password:"Cahaya@9026"},
+    {nama:"Wahyu Reydinata",username:"wahyu621",password:"Cahaya@1778"},
+    {nama:"Akbar Prayoga",username:"akbar308",password:"Cahaya@5194"},
+    {nama:"Very Syach",username:"very429",password:"Cahaya@4130"},
+    {nama:"M. Al Falah",username:"alfalah711",password:"Cahaya@6559"},
+    {nama:"Aditya Putra Ibrahim",username:"aditya311",password:"Cahaya@1182"},
+    {nama:"Airlangga Azka Abqori",username:"airlangga915",password:"Cahaya@3048"},
+    {nama:"Aqiela Marsyah",username:"aqiela842",password:"Cahaya@2299"},
+    {nama:"Brilly Handrian",username:"brilly244",password:"Cahaya@9100"},
+    {nama:"Darren Athaya",username:"darren712",password:"Cahaya@5013"},
+    {nama:"Dzikri Mudhoffar",username:"dzikri133",password:"Cahaya@6627"},
+    {nama:"Elleno Quthbie Hermawan",username:"elleno984",password:"Cahaya@7172"},
+    {nama:"Fadil Nurhalim",username:"fadil408",password:"Cahaya@2145"},
+    {nama:"Gabriel Al Fatih",username:"gabriel690",password:"Cahaya@8544"},
+    {nama:"Hadinata Saputra",username:"hadinata217",password:"Cahaya@1451"},
+    {nama:"Miko Vajar",username:"miko825",password:"Cahaya@7157"},
+    {nama:"M. Almisky Pratama",username:"almisky991",password:"Cahaya@1002"},
+    {nama:"M. Aqil Ridho",username:"aqil220",password:"Cahaya@9175"},
+    {nama:"M. Izam Saputra",username:"izam385",password:"Cahaya@5432"},
+    {nama:"M. Syakir Hutabarat",username:"syakir642",password:"Cahaya@9981"},
+    {nama:"M. Ziyad Zhazha",username:"ziyad503",password:"Cahaya@8440"},
+    {nama:"M. Yasir Al Fazar Jhira",username:"yasir260",password:"Cahaya@7114"},
+    {nama:"Rafa",username:"rafa909",password:"Cahaya@3642"},
+    {nama:"Angga Pratama Putra",username:"angga511",password:"Cahaya@8834"},
+    {nama:"Prawiro Pujo Tunggal Jati",username:"prawiro832",password:"Cahaya@3007"},
+    {nama:"Muhammad Marpin",username:"marpin760",password:"Cahaya@2295"},
+    {nama:"Marfel Saputra",username:"marfel273",password:"Cahaya@4311"},
+    {nama:"Meldi Novriansyah",username:"meldi622",password:"Cahaya@4405"},
+    {nama:"Fauzan Ibni Jabar",username:"fauzan917",password:"Cahaya@2350"},
+    {nama:"M. Fadhil Buana",username:"fadhil609",password:"Cahaya@6433"},
+    {nama:"Qheizan Alqiza Arisda",username:"qheizan739",password:"Cahaya@1872"},
+    {nama:"Rezfy Fakhryazka",username:"rezfy801",password:"Cahaya@5142"},
+    {nama:"Mika Rahiel Yusuf",username:"mika325",password:"Cahaya@6544"},
+    {nama:"Ki Agus Muhammad Abdullah Shiddiq Agtsali",username:"kiagus661",password:"Cahaya@9863"},
+    {nama:"Arya Difa Alsya",username:"arya990",password:"Cahaya@1278"},
+    {nama:"Reynaldi Malik Ibrahim Alfaridzi",username:"reynaldi443",password:"Cahaya@8276"},
+    {nama:"M. Xavi NF",username:"xavi561",password:"Cahaya@9181"},
+    {nama:"M. Faisal Fikriansyah",username:"faisal232",password:"Cahaya@3291"},
+    {nama:"Hafidz Alrizky",username:"hafidz401",password:"Cahaya@6621"},
+    {nama:"Naufal Akbar Alkhatiri",username:"naufal502",password:"Cahaya@8888"},
+    {nama:"Farazh Sayyid Putra Kenega",username:"farazh910",password:"Cahaya@4253"},
+    {nama:"Syahrul Ramadhan",username:"syahrul881",password:"Cahaya@7320"},
+    {nama:"Luthfan Adzaki",username:"luthfan332",password:"Cahaya@9812"},
+    {nama:"M. Abil Irwansyah",username:"abil773",password:"Cahaya@5533"},
+    {nama:"Alif Samudra",username:"alif204",password:"Cahaya@7124"},
+    {nama:"Fahrie Oktavirano Fitris",username:"fahrie519",password:"Cahaya@9340"},
+    {nama:"Dikki Kurniawan",username:"dikki411",password:"Cahaya@3417"},
+    {nama:"Ghozy Faturrahman",username:"ghozy229",password:"Cahaya@6422"},
+    {nama:"Muhammad Thooriq",username:"thooriq517",password:"Cahaya@7441"},
+    {nama:"Ahmad Riyadi",username:"ahmad709",password:"Cahaya@9825"},
+    {nama:"Alif Muhammad Yusuf",username:"alif401",password:"Cahaya@2458"},
+    {nama:"Basri Al Haziq Zulfahmi",username:"basri318",password:"Cahaya@8762"},
+    {nama:"M. Faqih Hafidzallah",username:"faqih921",password:"Cahaya@3119"},
+    {nama:"Abdullah Mukti Hafidzallah",username:"abdullah551",password:"Cahaya@4498"},
+    {nama:"Dedi Setiadi",username:"dedi204",password:"Cahaya@5561"},
+    {nama:"Fakhri Al Muzakki",username:"fakhri623",password:"Cahaya@8854"},
+    {nama:"Ilham Mukmin Al Farabi",username:"ilham432",password:"Cahaya@7119"},
+    {nama:"Muhammad Allam Nur Hushain",username:"allam365",password:"Cahaya@5640"},
+    {nama:"M. Firaas Al Insyiroh",username:"firaas999",password:"Cahaya@7238"},
+    {nama:"Nabil Najmi",username:"nabil815",password:"Cahaya@1822"},
+    {nama:"Satrio Abimayu",username:"satrio304",password:"Cahaya@9992"},
+    {nama:"Tegar Hidayat",username:"tegar532",password:"Cahaya@1107"},
+    {nama:"Wafii Fadhlurrohman",username:"wafii620",password:"Cahaya@6555"},
+    {nama:"M. Rijalul Kamil",username:"rijal544",password:"Cahaya@4029"},
+    {nama:"Alvin Herfiantino",username:"alvin880",password:"Cahaya@2051"},
+    {nama:"Zahir Zibran",username:"zahir703",password:"Cahaya@9185"},
+    {nama:"Raden Azaa Panca Putra",username:"raden555",password:"Cahaya@3148"},
+    {nama:"Zulfakih Haerunnasihin",username:"zulfakih766",password:"Cahaya@8571"},
+    {nama:"Ahmad Farhaan",username:"ahmad233",password:"Cahaya@7150"},
+    {nama:"Anugrah Pratama",username:"anugrah820",password:"Cahaya@4516"},
+    {nama:"Cahyis Iszam",username:"cahyis921",password:"Cahaya@8843"},
+    {nama:"Fahry Akbar Ramdhani",username:"fahry654",password:"Cahaya@3295"},
+    {nama:"Habib Ramadhan",username:"habib438",password:"Cahaya@9312"},
+    {nama:"Ihza Trinandi",username:"ihza587",password:"Cahaya@1108"},
+    {nama:"Ilham",username:"ilham993",password:"Cahaya@7540"},
+    {nama:"M. Arya Mahdi Wafi El-Fauzani",username:"arya782",password:"Cahaya@8473"},
+    {nama:"Mahesa Aulia Giffari",username:"mahesa652",password:"Cahaya@4299"},
+    {nama:"Muhamad Yusuf Arrosiyd",username:"yusuf407",password:"Cahaya@3128"},
+    {nama:"M. Usamah",username:"usamah950",password:"Cahaya@2639"},
+    {nama:"Nafis",username:"nafis841",password:"Cahaya@7566"},
+    {nama:"Raka Septian",username:"raka229",password:"Cahaya@6570"},
+    {nama:"Renal Martin",username:"renal316",password:"Cahaya@7182"},
+    {nama:"Rohadin Firdaus Al Qausar",username:"rohadi882",password:"Cahaya@5914"},
+    {nama:"Roid Afdal",username:"roid312",password:"Cahaya@8211"},
+    {nama:"Nilam Cahya",username:"nilam663",password:"Cahaya@9182"},
+    {nama:"Qelza Ramadhani Ath Thahirah",username:"qelza455",password:"Cahaya@7023"},
+    {nama:"Ashifa Fitri Ramadhoni",username:"ashifa911",password:"Cahaya@5466"},
+    {nama:"Adiba Aila Khanza",username:"adiba203",password:"Cahaya@9011"},
+    {nama:"Aisyah Nur Khalifah",username:"aisyah528",password:"Cahaya@3142"},
+    {nama:"Nyayu Marlitsa Ardhani",username:"nyayu707",password:"Cahaya@6648"},
+    {nama:"Wilda",username:"wilda988",password:"Cahaya@5061"},
+    {nama:"Windy Windari",username:"windy212",password:"Cahaya@9775"},
+    {nama:"Aisyah Nurul Aulia",username:"aisyahnur287",password:"Cahaya@2029"},
+    {nama:"Nessya Ramadhany",username:"nessya501",password:"Cahaya@7332"},
+    {nama:"Amirah Balqis Rahadatul A'isyah",username:"amirah673",password:"Cahaya@8827"},
+    {nama:"Earlyta Arsyfa Salsabila",username:"earlyta419",password:"Cahaya@6210"},
+    {nama:"Dafia Nafla Syakira",username:"dafia833",password:"Cahaya@4920"},
+    {nama:"Anisya Septiani",username:"anisya905",password:"Cahaya@8746"},
+    {nama:"Bilqis Nur Anisah",username:"bilqis311",password:"Cahaya@4152"},
+    {nama:"Jessica Putry Ayra",username:"jessica512",password:"Cahaya@9665"},
+    {nama:"Ghenis Andientiaz",username:"ghenis744",password:"Cahaya@2594"},
+    {nama:"Dina Ruhayah",username:"dina918",password:"Cahaya@4712"},
+    {nama:"Pitri Ramadani",username:"pitri283",password:"Cahaya@8021"},
+    {nama:"Grinneta Nalani Putri",username:"grinneta440",password:"Cahaya@3385"},
+    {nama:"Inayah Nourah Anindya",username:"inayah220",password:"Cahaya@6197"},
+    {nama:"Shelena",username:"shelena937",password:"Cahaya@5284"},
+    {nama:"Fitrah Kirana",username:"fitrah607",password:"Cahaya@7839"}
+];
+
 let jsPDFLib;
 let currentSantriName = ""; 
 
 window.addEventListener("load", () => {
-    // Cek Login
+    // 1. Cek Login
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
     if (user.role !== 'wali' || !user.namaAnak) {
-        alert("Sesi habis. Silakan login kembali.");
+        alert("Sesi habis atau tidak valid. Silakan login kembali.");
         window.location.href = "../../index.html"; 
         return;
     }
 
-    currentSantriName = user.namaAnak;
+    // 2. Perbaiki nama santri jika login menggunakan nama lama
+    // Kita cari nama yang benar dari waliList berdasarkan username yang sedang login
+    const updatedUser = waliList.find(w => w.username === user.username);
+    if (updatedUser) {
+        currentSantriName = updatedUser.nama;
+    } else {
+        currentSantriName = user.namaAnak; // Fallback
+    }
+
     document.getElementById("namaSantriTitle").innerText = currentSantriName;
 
     if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
@@ -335,9 +448,17 @@ function buatLaporanSantri(ctx) {
   <div class="dim-card"><h4>🧠 Akal Cerdas</h4><p>${narasiIntellectual}</p></div>
   <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya</h4><p>${narasiFis}</p></div>
   
-  <div class="section-title">📈 Fokus Perbaikan</div>
-  <p><b>Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
-  <p><b>Evaluasi:</b> ${ases.evaluasiBulanIni || "-"}</p>
+  <div class="section-title">📈 Fokus Perbaikan Bulan Ini</div>
+  <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
+  <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
+
+  <div class="section-title">📊 Hasil Perbaikan Bulan Ini</div>
+  <p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
+  <p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
+
+  <div class="section-title">🚀 Fokus Perbaikan Bulan Berikutnya</div>
+  <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
+  <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
   `;
 
   // Kehadiran (Table Wrapped)
