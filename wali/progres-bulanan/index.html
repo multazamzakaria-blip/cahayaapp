@@ -366,8 +366,6 @@ async function generateReports() {
   const data = await window.getFirebaseData();
   const namaKey = normalize(currentSantriName);
 
-  console.log("Mencari data untuk:", currentSantriName, "Key:", namaKey); // DEBUG
-
   const laporanHTML = buatLaporanSantri({
       nama: currentSantriName, 
       namaKey: namaKey,
@@ -379,21 +377,64 @@ async function generateReports() {
   container.appendChild(laporanHTML);
 }
 
+// === FIX: MENGHITUNG KEHADIRAN AGAR TIDAK GANDA ===
 function hitungKehadiranGabungan(namaKey, bulan, tahun, absensiNaqib, absensiGuru) {
-  const kehadiran = {};
-  function tambah(prog, status) {
-    if (!kehadiran[prog]) kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
-    const s = (status || "").toLowerCase();
-    if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
-    kehadiran[prog].total++;
-  }
-  absensiNaqib.forEach(log => { if (isSameMonthYear(log.tanggal, bulan, tahun)) (log.data || []).forEach(d => { if (normalize(d.nama) === namaKey) tambah(log.program || "Harian", d.status); }); });
-  absensiGuru.forEach(log => { if (isSameMonthYear(log.tanggal, bulan, tahun)) (log.data || []).forEach(d => { if (normalize(d.nama) === namaKey) tambah(log.mapel || "KBM", d.status); }); });
+  const statusPerHari = {}; // Map untuk menyimpan status unik per tanggal & program
 
-  const result = Object.entries(kehadiran).map(([prog,v])=>{
-    const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
-    return { program: prog, hadir: toP(v.hadir), izin: toP(v.izin), sakit: toP(v.sakit), alfa: toP(v.alfa) };
+  // Fungsi helper untuk menyimpan status (Last write wins)
+  function catatStatus(tanggal, program, status) {
+    const key = `${tanggal}_${program}`; 
+    statusPerHari[key] = status; // Kalau ada duplikat, akan tertimpa yang terakhir
+  }
+
+  // 1. Loop Data Naqib (Diurutkan dari lama ke baru agar yang baru menimpa)
+  absensiNaqib
+    .filter(log => isSameMonthYear(log.tanggal, bulan, tahun))
+    .sort((a,b) => new Date(a.waktuSimpan || a.tanggal) - new Date(b.waktuSimpan || b.tanggal))
+    .forEach(log => {
+        (log.data || []).forEach(d => {
+            if (normalize(d.nama) === namaKey) {
+                catatStatus(log.tanggal, log.program || "Harian", d.status);
+            }
+        });
+    });
+
+  // 2. Loop Data Guru
+  absensiGuru
+    .filter(log => isSameMonthYear(log.tanggal, bulan, tahun))
+    .sort((a,b) => new Date(a.waktuSimpan || a.tanggal) - new Date(b.waktuSimpan || b.tanggal))
+    .forEach(log => {
+        (log.data || []).forEach(d => {
+            if (normalize(d.nama) === namaKey) {
+                catatStatus(log.tanggal, log.mapel || "KBM", d.status);
+            }
+        });
+    });
+
+  // 3. Hitung Total dari Map yang sudah unik
+  const rekap = {}; // { "Program Harian": {hadir: 20, izin: 1...}, "Matematika": {...} }
+
+  Object.entries(statusPerHari).forEach(([key, status]) => {
+      const program = key.split('_')[1];
+      if (!rekap[program]) rekap[program] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
+      
+      const s = (status || "").toLowerCase();
+      if (rekap[program][s] !== undefined) rekap[program][s]++;
+      rekap[program].total++;
   });
+
+  // 4. Format ke Array untuk ditampilkan
+  const result = Object.entries(rekap).map(([prog, v]) => {
+      const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
+      return { 
+          program: prog, 
+          hadir: toP(v.hadir), 
+          izin: toP(v.izin), 
+          sakit: toP(v.sakit), 
+          alfa: toP(v.alfa) 
+      };
+  });
+
   return result;
 }
 
@@ -501,8 +542,24 @@ function buatLaporanSantri(ctx) {
       </table>
     </div>` : `<p class='muted'>-</p>`);
 
-  // Tahfiz (Table Wrapped) - FIX KETERANGAN DI SINI (Data Lama & Baru Muncul)
-  const dataTahfiz = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).flatMap(t => t.data || []).filter(d => normalize(d.nama) === namaKey);
+  // === FIX TAHFIZ: Hanya ambil data terakhir per tanggal ===
+  const logsTahfizBulanIni = tahfiz
+    .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
+    .sort((a,b) => new Date(a.waktuSimpan) - new Date(b.waktuSimpan)); // Urutkan biar yang baru di akhir
+
+  // Map untuk menyimpan data unik per tanggal
+  const mapTahfiz = {};
+  logsTahfizBulanIni.forEach(log => {
+      const santriData = (log.data || []).find(d => normalize(d.nama) === namaKey);
+      if (santriData) {
+          // Data tanggal sama akan tertimpa (Updated)
+          mapTahfiz[log.tanggal] = santriData;
+      }
+  });
+
+  // Konversi Map ke Array
+  const dataTahfiz = Object.keys(mapTahfiz).sort().map(k => mapTahfiz[k]);
+
   wrapper.innerHTML += `<div class="section-title">📖 Tahfiz</div>` + (dataTahfiz.length ? 
     `<div class="table-wrapper">
       <table>
