@@ -2,86 +2,122 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Portal Wali Santri - Laporan Bulanan</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* === STYLE (SAMA PERSIS DENGAN ADMIN) === */
-    body { font-family: 'Noto Sans', sans-serif; background: #f4f6fa; margin: 0; color: #1f2937; font-size: 18px; line-height: 1.8; }
-    header { background: #1e3a8a; color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; }
-    header h1 { margin: 0; font-size: 22px; font-weight: 700; }
-    main { padding: 30px; max-width: 1000px; margin: auto; }
-    .card { background: white; padding: 28px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 30px; }
-    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; justify-content: center; }
-    select, button { padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 18px; }
-    button { background: #1e3a8a; color: white; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; }
+    /* === GLOBAL STYLE === */
+    body { font-family: 'Noto Sans', sans-serif; background: #f4f6fa; margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6; }
+    
+    /* HEADER NAVIGATION */
+    header { background: #1e3a8a; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    header h1 { margin: 0; font-size: 18px; font-weight: 700; }
+    
+    /* MAIN CONTAINER */
+    main { padding: 20px; max-width: 1000px; margin: auto; }
+    
+    /* CARD UTAMA */
+    .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); margin-bottom: 30px; }
+    
+    /* CONTROLS (Select & Button) */
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
+    select, button { padding: 12px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 15px; width: 100%; max-width: 200px; box-sizing: border-box; }
+    button { background: #1e3a8a; color: white; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; max-width: 150px; }
     button:hover { background: #1e40af; transform: translateY(-1px); }
-    .btn-secondary { background: #e5e7eb; color: #111827; }
-    .btn-secondary:hover { background: #d1d5db; }
     
-    /* Table Styling */
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 17px; }
-    th, td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
-    th { background: #f3f4f6; font-weight: 700; }
+    .btn-secondary { background: #e5e7eb; color: #111827; max-width: fit-content; font-size: 14px; padding: 8px 12px; }
     
-    /* Laporan Card Styling */
-    .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px; margin-bottom: 30px; background: white; }
+    /* === LAPORAN CARD STYLE (EXECUTIVE) === */
+    .laporan-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 25px; margin-bottom: 30px; background: white; position: relative; }
     
-    /* Executive Header Styling */
-    .laporan-header-executive{
-      background:linear-gradient(135deg,#fefcde,#fcfbef,#faffdb);
-      border-radius:28px;
-      padding:45px 45px 35px 45px;
-      box-shadow:0 25px 70px rgba(15,23,42,0.08);
-      position:relative;
-      overflow:hidden;
-      margin-bottom:35px;
-      border:1px solid #e5e7eb;
+    /* HEADER EXECUTIVE (KOP SURAT) */
+    .laporan-header-executive {
+      background: linear-gradient(135deg,#fefcde,#fcfbef,#faffdb);
+      border-radius: 20px; padding: 30px; 
+      box-shadow: 0 15px 40px rgba(15,23,42,0.05);
+      position: relative; overflow: hidden; margin-bottom: 25px; border: 1px solid #e5e7eb;
     }
-    .laporan-header-executive::before{
-      content:""; position:absolute; top:-60px; right:-80px; width:320px; height:220px;
-      background:linear-gradient(135deg,#1e3a8a,#0f766e); opacity:0.05; border-radius:60px; transform:rotate(-8deg);
+    .laporan-header-executive::before {
+      content: ""; position: absolute; top: -50px; right: -70px; width: 250px; height: 180px;
+      background: linear-gradient(135deg,#1e3a8a,#0f766e); opacity: 0.05; border-radius: 50px; transform: rotate(-8deg); pointer-events: none;
     }
-    .header-exec-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; }
-    .logo-exec{ display:flex; align-items:center; gap:18px; }
-    .logo-exec img{ width:95px; height:auto; }
-    .logo-text{ line-height:1.2; }
-    .logo-text .line1{ font-weight:700; font-size:18px; letter-spacing:1px; }
-    .logo-text .line2{ font-weight:800; font-size:24px; }
-    .logo-text .line3{ font-size:13px; color:#c17c1c; letter-spacing:1px; }
-    .judul-exec{ text-align:right; }
-    .judul-exec h1{ margin:0; font-size:34px; font-weight:800; line-height:1.1; letter-spacing:2px; color:#c17c1c; }
-    .exec-divider{ height:3px; width:100%; margin:20px 0 25px 0; background:linear-gradient(to right,#c17c1c,#1e3a8a); border-radius:4px; }
-    .identitas-exec{ background:#ffffff; border-radius:20px; padding:25px 35px; box-shadow:0 12px 35px rgba(0,0,0,0.05); display:flex; justify-content:space-between; font-size:16px; border:1px solid #e5e7eb; }
-    .identitas-exec span{ color:#64748b; font-weight:500; }
-    .identitas-exec b{ font-weight:700; letter-spacing:.5px; }
+    
+    .header-exec-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .logo-exec { display: flex; align-items: center; gap: 15px; }
+    .logo-exec img { width: 80px; height: auto; }
+    .logo-text { line-height: 1.2; }
+    .logo-text .line1 { font-weight: 700; font-size: 16px; letter-spacing: 1px; color: #1e293b; }
+    .logo-text .line2 { font-weight: 800; font-size: 20px; color: #1e293b; }
+    .logo-text .line3 { font-size: 11px; color: #c17c1c; letter-spacing: 1px; }
+    
+    .judul-exec h1 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: 1px; color: #c17c1c; text-align: right; }
+    
+    .exec-divider { height: 3px; width: 100%; margin: 15px 0 20px 0; background: linear-gradient(to right,#c17c1c,#1e3a8a); border-radius: 4px; }
+    
+    .identitas-exec { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); display: flex; justify-content: space-between; font-size: 15px; border: 1px solid #e5e7eb; }
+    .identitas-exec span { color: #64748b; font-weight: 500; font-size: 14px; }
+    .identitas-exec b { font-weight: 700; color: #1e293b; }
 
-    /* Content Styling */
-    .section-title { margin-top: 28px; margin-bottom: 8px; font-weight: bold; color: #1e3a8a; display: flex; align-items: center; gap: 8px; font-size: 20px; }
-    .dim-card { border-radius: 12px; padding: 14px 16px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 18px; margin-bottom: 12px; }
-    .dim-card h4 { margin: 0 0 6px; font-size: 18px; color: #0f172a; }
-    .dim-card p { margin: 0; white-space: pre-line; font-size: 18px; text-align:justify; line-height:1.9; }
-    .muted { color: #6b7280; font-size: 17px; text-align: center; display: block; margin-top: 20px;}
-    .export-buttons { text-align: center; margin-top: 25px; }
-    .export-buttons button { background: #2563eb; padding: 12px 24px; font-size: 17px; }
-    .export-buttons button:hover { background: #1e40af; }
+    /* CONTENT STYLE */
+    .section-title { margin-top: 25px; margin-bottom: 10px; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 8px; font-size: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
     
+    .dim-card { border-radius: 12px; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 15px; margin-bottom: 10px; }
+    .dim-card h4 { margin: 0 0 5px; font-size: 16px; color: #0f766e; }
+    .dim-card p { margin: 0; white-space: pre-line; text-align: justify; line-height: 1.7; color: #334155; }
+
+    /* === RESPONSIVE TABLE (KUNCI AGAR ENAK DI HP) === */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto; /* Scroll samping jika tabel lebar */
+      -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    table { width: 100%; border-collapse: collapse; min-width: 600px; /* Paksa lebar minimal agar tidak gepeng */ }
+    th, td { border: 1px solid #e2e8f0; padding: 12px 15px; text-align: left; font-size: 14px; }
+    th { background: #f1f5f9; font-weight: 700; color: #1e293b; white-space: nowrap; }
+    td { color: #334155; }
+    tr:nth-child(even) { background-color: #f8fafc; }
+
+    .muted { color: #94a3b8; font-size: 15px; text-align: center; margin-top: 20px; }
+    
+    /* EXPORT BUTTON */
+    .export-buttons { text-align: center; margin-top: 30px; }
+    .export-buttons button { background: #2563eb; padding: 12px 20px; font-size: 15px; width: 100%; max-width: 300px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); }
+
+    /* === MEDIA QUERY KHUSUS HP (Mobile) === */
     @media (max-width: 600px) {
-      .header-exec-top { flex-direction: column; gap: 20px; text-align: center; }
-      .identitas-exec { flex-direction: column; gap: 15px; }
-      .identitas-exec div { text-align: left !important; }
+      body { font-size: 14px; }
+      header { padding: 12px 15px; }
       main { padding: 15px; }
-      .laporan-header-executive { padding: 25px; }
+      .card { padding: 15px; border-radius: 12px; }
+      .laporan-card { padding: 15px; border-radius: 12px; border: none; box-shadow: none; }
+      
+      /* Header Executive di HP jadi vertikal */
+      .laporan-header-executive { padding: 20px; border-radius: 16px; }
+      .header-exec-top { flex-direction: column; gap: 15px; text-align: center; }
+      .logo-exec { flex-direction: column; gap: 10px; }
+      .logo-text { text-align: center; }
+      .judul-exec h1 { text-align: center; font-size: 24px; margin-top: 10px; }
+      
+      .identitas-exec { flex-direction: column; gap: 12px; text-align: center; }
+      .identitas-exec div { text-align: center !important; } /* Paksa tengah */
+      
+      /* Button full width */
+      .controls select, .controls button { max-width: 100%; }
+      .btn-secondary { font-size: 12px; padding: 6px 10px; }
     }
   </style>
 </head>
 
 <body>
 <header>
-  <h1>Portal Wali Santri</h1>
-  <div>
-    <button class="btn-secondary" onclick="window.location.href='../dashboard/index.html'">⬅️ Dashboard</button>
+  <h1>Portal Wali</h1>
+  <div style="display:flex; gap:8px;">
+    <button class="btn-secondary" onclick="window.location.href='../dashboard/index.html'">🏠 Home</button>
     <button class="btn-secondary" onclick="logout()">Keluar</button>
   </div>
 </header>
@@ -89,8 +125,8 @@
 <main>
   <div class="card">
     <div style="text-align: center; margin-bottom: 20px;">
-        <h2 style="margin:0;">Laporan Bulanan Ananda</h2>
-        <h3 id="namaSantriTitle" style="margin:5px 0 0; color: #1e3a8a;">...</h3>
+        <h2 style="margin:0; font-size:1.3rem; color:#1e3a8a;">Laporan Bulanan</h2>
+        <h3 id="namaSantriTitle" style="margin:5px 0 0; color:#64748b; font-weight:600;">...</h3>
     </div>
     
     <div class="controls">
@@ -102,11 +138,13 @@
         <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
       </select>
       <select id="tahunSelect"></select>
-      <button onclick="generateReports()">Lihat Laporan</button>
+      <button onclick="generateReports()">Tampilkan</button>
     </div>
 
     <div id="laporanContainer">
-      <p class="muted">Silakan pilih bulan dan tahun untuk melihat perkembangan Ananda.</p>
+      <div style="padding: 40px 20px; text-align: center; color: #94a3b8; border: 2px dashed #e2e8f0; border-radius: 12px;">
+        <p style="margin:0">Silakan pilih <b>Bulan</b> dan <b>Tahun</b> di atas untuk melihat rapor Ananda.</p>
+      </div>
     </div>
   </div>
 </main>
@@ -133,7 +171,6 @@
   const dbRef = ref(db);
   window.dbRef = dbRef;
 
-  // Fungsi Fetch Data (Sama seperti Admin)
   window.getFirebaseData = async function() {
     const [
       assesGuruSnap, assesNaqibSnap, absNaqibSnap, absKbmSnap,
@@ -161,17 +198,14 @@
 </script>
 
 <script>
-// === CEK LOGIN & INITIALISASI ===
 let jsPDFLib;
 let currentSantriName = ""; 
 
 window.addEventListener("load", () => {
-    // 1. Cek Login
+    // Cek Login
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
-    
-    // Pastikan user adalah wali dan punya data anak
     if (user.role !== 'wali' || !user.namaAnak) {
-        alert("Sesi habis atau tidak valid. Silakan login kembali.");
+        alert("Sesi habis. Silakan login kembali.");
         window.location.href = "../../index.html"; 
         return;
     }
@@ -179,10 +213,8 @@ window.addEventListener("load", () => {
     currentSantriName = user.namaAnak;
     document.getElementById("namaSantriTitle").innerText = currentSantriName;
 
-    // 2. Load JSPDF
     if (window.jspdf && window.jspdf.jsPDF) jsPDFLib = window.jspdf.jsPDF;
 
-    // 3. Isi Dropdown Tahun
     const tahunSelect = document.getElementById("tahunSelect");
     const tNow = new Date().getFullYear();
     for (let t = tNow - 1; t <= tNow + 1; t++) {
@@ -193,24 +225,13 @@ window.addEventListener("load", () => {
     }
 });
 
-// === HELPER PENTING (PENYAMA NAMA) ===
-// Agar "Ahmad" == "ahmad "
+// === HELPER ===
 function normalize(str) {
     return (str || "").toLowerCase().trim().replace(/\s+/g, ' ');
 }
+function parseDate(s){ if(!s) return null; const p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+function isSameMonthYear(tgl,b,t){ const d=parseDate(tgl); return d && d.getMonth()===b && d.getFullYear()===t; }
 
-function parseDate(s){ 
-    if(!s) return null; 
-    const p=s.split("-"); 
-    return new Date(+p[0],+p[1]-1,+p[2]); 
-}
-
-function isSameMonthYear(tgl,b,t){ 
-    const d=parseDate(tgl); 
-    return d && d.getMonth()===b && d.getFullYear()===t; 
-}
-
-// === LOGIKA UTAMA: TAMPILKAN LAPORAN ===
 async function generateReports() {
   const bulan = +document.getElementById("bulanSelect").value;
   const tahun = +document.getElementById("tahunSelect").value;
@@ -223,13 +244,12 @@ async function generateReports() {
   }
 
   const data = await window.getFirebaseData();
-  
-  // === KUNCI UTAMA: HANYA TAMPILKAN DATA ANAK YANG LOGIN ===
+  const namaKey = normalize(currentSantriName);
+
   const laporanHTML = buatLaporanSantri({
-      nama: currentSantriName, // Nama Tampilan
-      namaKey: normalize(currentSantriName), // Nama untuk Pencarian (lowercase)
-      bulan, 
-      tahun,
+      nama: currentSantriName, 
+      namaKey: namaKey,
+      bulan, tahun,
       ...data 
   });
 
@@ -237,86 +257,39 @@ async function generateReports() {
   container.appendChild(laporanHTML);
 }
 
-// === FUNGSI HITUNG KEHADIRAN (FILTER SESUAI ANAK) ===
 function hitungKehadiranGabungan(namaKey, bulan, tahun, absensiNaqib, absensiGuru) {
   const kehadiran = {};
-  
   function tambah(prog, status) {
     if (!kehadiran[prog]) kehadiran[prog] = {hadir:0, izin:0, sakit:0, alfa:0, total:0};
     const s = (status || "").toLowerCase();
     if (kehadiran[prog][s] !== undefined) kehadiran[prog][s]++;
     kehadiran[prog].total++;
   }
+  absensiNaqib.forEach(log => { if (isSameMonthYear(log.tanggal, bulan, tahun)) (log.data || []).forEach(d => { if (normalize(d.nama) === namaKey) tambah(log.program || "Harian", d.status); }); });
+  absensiGuru.forEach(log => { if (isSameMonthYear(log.tanggal, bulan, tahun)) (log.data || []).forEach(d => { if (normalize(d.nama) === namaKey) tambah(log.mapel || "KBM", d.status); }); });
 
-  // Cek Data Naqib
-  absensiNaqib.forEach(log => {
-    if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data || []).forEach(d => {
-      // Filter hanya jika nama cocok
-      if (normalize(d.nama) === namaKey) {
-          tambah(log.program || "Program Harian", d.status);
-      }
-    });
-  });
-
-  // Cek Data Guru
-  absensiGuru.forEach(log => {
-    if (!isSameMonthYear(log.tanggal, bulan, tahun)) return;
-    (log.data || []).forEach(d => {
-      // Filter hanya jika nama cocok
-      if (normalize(d.nama) === namaKey) {
-          tambah(log.mapel || "KBM", d.status);
-      }
-    });
-  });
-
-  const result = Object.entries(kehadiran).map(([prog,v],i)=>{
+  const result = Object.entries(kehadiran).map(([prog,v])=>{
     const toP = x => (v.total ? Math.round((x / v.total) * 100) : 0);
-    return {
-      no: i+1, program: prog,
-      hadir: toP(v.hadir), izin: toP(v.izin), sakit: toP(v.sakit), alfa: toP(v.alfa)
-    };
+    return { program: prog, hadir: toP(v.hadir), izin: toP(v.izin), sakit: toP(v.sakit), alfa: toP(v.alfa) };
   });
-
-  if (result.length) {
-    const avg = x => Math.round(result.reduce((s,r)=>s + r[x],0) / result.length);
-    result.push({ no: "", program: "<b>Rata-rata</b>", hadir: avg("hadir"), izin: avg("izin"), sakit: avg("sakit"), alfa: avg("alfa") });
-  }
   return result;
 }
 
-// === FUNGSI RENDER KARTU (HANYA SATU KARTU) ===
 function buatLaporanSantri(ctx) {
-  const { 
-      nama, namaKey, // namaKey = nama yang sudah di-normalize
-      bulan, tahun, 
-      assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, 
-      ujian, tahfiz, pelanggaranAll 
-  } = ctx;
+  const { nama, namaKey, bulan, tahun, assesmentGuru, assesmentNaqib, absensiNaqib, absensiKbm, ujian, tahfiz, pelanggaranAll } = ctx;
 
   const namaUpper = (nama || "").toUpperCase();
   const namaBulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][bulan];
 
-  // ---- ASESMEN (Cari Naqib dulu, kalau tidak ada cari Guru) ----
-  let ases = assesmentNaqib
-    .filter(a => normalize(a.namaSantri) === namaKey && isSameMonthYear(a.tanggal, bulan, tahun))
-    .sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan))
-    .at(-1);
+  let ases = assesmentNaqib.filter(a => normalize(a.namaSantri) === namaKey && isSameMonthYear(a.tanggal, bulan, tahun)).sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan)).at(-1);
+  if (!ases || !ases.narasiSpiritual) ases = assesmentGuru.filter(a => normalize(a.namaSantri) === namaKey && isSameMonthYear(a.tanggal, bulan, tahun)).sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan)).at(-1) || {};
 
-  if (!ases || !ases.narasiSpiritual) {
-      ases = assesmentGuru
-        .filter(a => normalize(a.namaSantri) === namaKey && isSameMonthYear(a.tanggal, bulan, tahun))
-        .sort((a,b)=> new Date(a.waktuSimpan) - new Date(b.waktuSimpan))
-        .at(-1) || {};
-  }
-
-  const def = "Belum ada catatan bulan ini.";
+  const def = "Belum ada catatan.";
   const narasiSpiritual = ases.narasiSpiritual || def;
   const narasiRel = ases.narasiRelasional || def;
   const narasiEmo = ases.narasiEmosional || def;
   const narasiIntellectual = ases.narasiIntelektual || def;
   const narasiFis = ases.narasiFisik || def;
-  
   const namaNaqib = (ases.naqib || "-").toUpperCase();
   const namaBulanUpper = (namaBulan || "").toUpperCase();
 
@@ -326,12 +299,12 @@ function buatLaporanSantri(ctx) {
   wrapper.dataset.bulan = namaBulan;
   wrapper.dataset.tahun = tahun;
 
-  // Header Gambar (Path Mundur 2 level: ../../logofi.png)
+  // Header Executive
   wrapper.innerHTML = `
   <div class="laporan-header-executive">
     <div class="header-exec-top">
       <div class="logo-exec">
-        <img src="../../logofi.png" alt="Logo Pesantren" onerror="this.src='logofi.png'"> 
+        <img src="../../logofi.png" alt="Logo" onerror="this.src='logofi.png'">
         <div class="logo-text">
           <div class="line1">PESANTREN CAHAYA</div>
           <div class="line2">FAJRUL ISLAM</div>
@@ -356,132 +329,132 @@ function buatLaporanSantri(ctx) {
   </div>
 
   <div class="section-title">🌈 Dimensi CAHAYA</div>
-  <div class="dim-card"><h4>🕋 Cinta Allah (Spiritual)</h4><p>${narasiSpiritual}</p></div>
-  <div class="dim-card"><h4>🤝 Akhlak Mulia (Relational)</h4><p>${narasiRel}</p></div>
-  <div class="dim-card"><h4>💓 Hati Bersih (Emotional)</h4><p>${narasiEmo}</p></div>
-  <div class="dim-card"><h4>🧠 Akal Cerdas (Intellectual)</h4><p>${narasiIntellectual}</p></div>
-  <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya (Physical)</h4><p>${narasiFis}</p></div>
+  <div class="dim-card"><h4>🕋 Cinta Allah</h4><p>${narasiSpiritual}</p></div>
+  <div class="dim-card"><h4>🤝 Akhlak Mulia</h4><p>${narasiRel}</p></div>
+  <div class="dim-card"><h4>💓 Hati Bersih</h4><p>${narasiEmo}</p></div>
+  <div class="dim-card"><h4>🧠 Akal Cerdas</h4><p>${narasiIntellectual}</p></div>
+  <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya</h4><p>${narasiFis}</p></div>
   
-  <div class="section-title">📈 Fokus Perbaikan Bulan Ini</div>
-  <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
-  <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
-
-  <div class="section-title">📊 Hasil Perbaikan Bulan Ini</div>
-  <p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
-  <p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
-
-  <div class="section-title">🚀 Fokus Perbaikan Bulan Berikutnya</div>
-  <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
-  <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
+  <div class="section-title">📈 Fokus Perbaikan</div>
+  <p><b>Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
+  <p><b>Evaluasi:</b> ${ases.evaluasiBulanIni || "-"}</p>
   `;
 
-  // === Kehadiran ===
+  // Kehadiran (Table Wrapped)
   const hadir = hitungKehadiranGabungan(namaKey, bulan, tahun, absensiNaqib, absensiKbm);
-  wrapper.innerHTML += `<div class="section-title">🗓️ Laporan Kehadiran</div>` + (hadir.length ? 
-    `<table><thead><tr><th>No</th><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead><tbody>
-    ${hadir.map(r=>`<tr><td>${r.no}</td><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}
-    </tbody></table>` : `<p class='muted'>Belum ada data kehadiran.</p>`);
+  wrapper.innerHTML += `<div class="section-title">🗓️ Kehadiran</div>` + (hadir.length ? 
+    `<div class="table-wrapper">
+      <table>
+        <thead><tr><th>Program</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th></tr></thead>
+        <tbody>${hadir.map(r=>`<tr><td>${r.program}</td><td>${r.hadir}%</td><td>${r.izin}%</td><td>${r.sakit}%</td><td>${r.alfa}%</td></tr>`).join("")}</tbody>
+      </table>
+    </div>` : `<p class='muted'>-</p>`);
 
-  // === Nilai Ujian ===
+  // Ujian (Table Wrapped)
   const nilaiUjian = ujian.filter(u => normalize(u.santri) === namaKey && isSameMonthYear(u.tanggal, bulan, tahun));
   const rataUjian = nilaiUjian.length ? Math.round(nilaiUjian.reduce((s, u) => s + (+u.nilai || 0), 0) / nilaiUjian.length) : 0;
   
-  wrapper.innerHTML += `<div class="section-title">🧾 Laporan Nilai Ujian</div>` + (nilaiUjian.length ? 
-    `<table><thead><tr><th>No</th><th>Mata Pelajaran</th><th>Materi</th><th>Nilai</th><th>Ket</th></tr></thead><tbody>
-    ${nilaiUjian.map((u,i)=>`<tr><td>${i+1}</td><td>${u.mapel}</td><td>${u.materi}</td><td>${u.nilai}</td><td>${u.nilai>=75?"✅":"❌"}</td></tr>`).join("")}
-    <tr><td colspan="3"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr></tbody></table>` : `<p class='muted'>Belum ada data ujian.</p>`);
+  wrapper.innerHTML += `<div class="section-title">🧾 Nilai Ujian</div>` + (nilaiUjian.length ? 
+    `<div class="table-wrapper">
+      <table>
+        <thead><tr><th>Mapel</th><th>Materi</th><th>Nilai</th><th>Ket</th></tr></thead>
+        <tbody>
+          ${nilaiUjian.map(u=>`<tr><td>${u.mapel}</td><td>${u.materi}</td><td>${u.nilai}</td><td>${u.nilai>=75?"✅":"❌"}</td></tr>`).join("")}
+          <tr><td colspan="2"><b>Rata-rata</b></td><td colspan="2">${rataUjian}</td></tr>
+        </tbody>
+      </table>
+    </div>` : `<p class='muted'>-</p>`);
 
-  // === Tahfiz ===
-  const dataTahfiz = tahfiz
-    .filter(t => isSameMonthYear(t.tanggal, bulan, tahun))
-    .flatMap(t => t.data || [])
-    .filter(d => normalize(d.nama) === namaKey);
+  // Tahfiz (Table Wrapped)
+  const dataTahfiz = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).flatMap(t => t.data || []).filter(d => normalize(d.nama) === namaKey);
+  wrapper.innerHTML += `<div class="section-title">📖 Tahfiz</div>` + (dataTahfiz.length ? 
+    `<div class="table-wrapper">
+      <table>
+        <thead><tr><th>Setoran</th><th>Nilai</th><th>Ket</th></tr></thead>
+        <tbody>${dataTahfiz.map(d=>`<tr><td>${d.surat||d.setoran}</td><td>${d.nilai}</td><td>${d.keterangan}</td></tr>`).join("")}</tbody>
+      </table>
+    </div>` : `<p class='muted'>-</p>`);
 
-  wrapper.innerHTML += `<div class="section-title">📖 Laporan Setoran Tahfiz</div>` + (dataTahfiz.length ? 
-    `<table><thead><tr><th>No</th><th>Setoran</th><th>Kesalahan</th><th>Nilai</th><th>Keterangan</th></tr></thead><tbody>
-    ${dataTahfiz.map((d,i)=>`<tr><td>${i+1}</td><td>${d.surat||d.setoran}</td><td>${d.kesalahan||"-"}</td><td>${d.nilai}</td><td>${d.keterangan}</td></tr>`).join("")}
-    </tbody></table>` : `<p class='muted'>Belum ada setoran tahfiz.</p>`);
-
-  // === Pelanggaran ===
+  // Pelanggaran (Table Wrapped)
   const pelanggaran = pelanggaranAll.filter(p => normalize(p.santri) === namaKey && isSameMonthYear(p.tanggal, bulan, tahun));
-  wrapper.innerHTML += `<div class="section-title">⚠️ Laporan Pelanggaran</div>` + (pelanggaran.length ? 
-    `<table><thead><tr><th>No</th><th>Tanggal</th><th>Nama Pelanggaran</th><th>Tindak Lanjut</th></tr></thead><tbody>
-    ${pelanggaran.map((p,i)=>`<tr><td>${i+1}</td><td>${p.tanggal}</td><td>${p.namaPelanggaran}</td><td>${p.tindakLanjut}</td></tr>`).join("")}
-    </tbody></table>` : `<p class='muted'>Alhamdulillah, tidak ada pelanggaran.</p>`);
+  if(pelanggaran.length > 0) {
+      wrapper.innerHTML += `<div class="section-title">⚠️ Pelanggaran</div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Tgl</th><th>Kasus</th><th>Tindak Lanjut</th></tr></thead>
+          <tbody>${pelanggaran.map(p=>`<tr><td>${p.tanggal}</td><td>${p.namaPelanggaran}</td><td>${p.tindakLanjut}</td></tr>`).join("")}</tbody>
+        </table>
+      </div>`;
+  }
 
-  // Tombol Export
   wrapper.innerHTML += `
     <div class="export-buttons">
-      <button onclick="exportPDF()">⬇️ Download Laporan PDF</button>
+      <button onclick="exportPDF('${nama.replace(/'/g,"\\'")}')">⬇️ Download PDF</button>
     </div>`;
 
   return wrapper;
 }
 
 // ====== EXPORT PDF ======
-async function exportPDF(){
+async function exportPDF(nama){
   const el = document.querySelector(".laporan-card");
   if (!el) return;
 
-  const bulan = el.dataset.bulan || "";
-  const tahun = el.dataset.tahun || "";
-  const nama = el.dataset.santri || "Santri";
-
   const btn = document.querySelector(".export-buttons button");
   const oldText = btn.innerText;
-  btn.innerText = "⏳ Memproses PDF...";
-  btn.disabled = true;
+  btn.innerText = "⏳ Memproses..."; btn.disabled = true;
 
   try {
-      const canvas = await html2canvas(el, { scale: 1.2, useCORS: true, scrollY: 0 });
+      // Force Width untuk PDF agar tidak mengikuti lebar HP
+      const originalStyle = el.getAttribute('style');
+      el.style.width = "800px"; 
+      el.style.maxWidth = "none";
+      el.style.position = "absolute"; 
+      el.style.left = "-9999px"; 
+      document.body.appendChild(el.cloneNode(true)); // Hacky but needed for cleaner capture if hidden
+
+      // Capture elemen asli tapi dengan settings scale tinggi
+      const canvas = await html2canvas(el, { scale: 1.5, useCORS: true, scrollY: 0, windowWidth: 1024 });
+      
+      // Kembalikan style
+      el.style.width = ""; el.style.maxWidth = ""; el.style.position = ""; el.style.left = "";
+
       const pdf = new jsPDFLib("p","mm","a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 10;
-      const footerSpace = 15;
-      const usableHeight = pageHeight - margin - footerSpace;
-      const imgWidth = pageWidth - 20;
-      const ratio = imgWidth / canvas.width;
-      const pageCanvasHeight = usableHeight / ratio;
+      const imgWidth = 190; 
+      const pageHeight = 295;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 10;
 
-      let renderedHeight = 0;
-      let pageCount = 0;
+      pdf.addImage(canvas.toDataURL("image/jpeg", 0.85), "JPEG", 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-      while (renderedHeight < canvas.height) {
-        const pageCanvas = document.createElement("canvas");
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = Math.min(pageCanvasHeight, canvas.height - renderedHeight);
-        const ctx = pageCanvas.getContext("2d");
-        ctx.drawImage(canvas, 0, renderedHeight, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
-        
-        if (pageCount > 0) pdf.addPage();
-        pdf.addImage(pageCanvas.toDataURL("image/jpeg", 0.75), "PNG", 10, margin, imgWidth, pageCanvas.height * ratio);
-        
-        renderedHeight += pageCanvas.height;
-        pageCount++;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.85), "JPEG", 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
 
       pdf.setPage(pdf.getNumberOfPages());
-      pdf.setFontSize(12); pdf.setTextColor(40);
-      pdf.text("Mengetahui,", pageWidth/2, pageHeight-45, {align:"center"});
-      pdf.text("Direktur Pesantren Cahaya Fajrul Islam", pageWidth/2, pageHeight-38, {align:"center"});
-      pdf.setFont(undefined, "bold");
-      pdf.text("Multazam Zakaria, M.Pd.", pageWidth/2, pageHeight-20, {align:"center"});
+      pdf.setFontSize(10); pdf.setTextColor(50);
+      const footerY = 280;
+      pdf.text("Mengetahui, Direktur Pesantren", 140, footerY-15);
+      pdf.setFont(undefined, 'bold');
+      pdf.text("Multazam Zakaria, M.Pd.", 140, footerY-5);
 
       const cleanName = nama.toUpperCase().replace(/[^a-zA-Z0-9]/g,"_");
-      pdf.save(`Laporan_${cleanName}_${bulan}_${tahun}.pdf`);
+      pdf.save(`Laporan_${cleanName}.pdf`);
   } catch (e) {
-      alert("Gagal export PDF: " + e.message);
-      console.error(e);
+      alert("Gagal export: " + e.message);
   } finally {
-      btn.innerText = oldText;
-      btn.disabled = false;
+      btn.innerText = oldText; btn.disabled = false;
   }
 }
 
 function logout(){
   localStorage.removeItem("cahayaCurrentUser");
-  window.location.href = "../../index.html"; // Kembali ke login utama
+  window.location.href = "../../index.html";
 }
 </script>
 </body>
