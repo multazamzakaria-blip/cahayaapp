@@ -321,8 +321,10 @@ window.addEventListener("load", () => {
         return;
     }
 
-    // 2. Perbaiki nama santri jika login menggunakan nama lama
+    // 2. Cari nama santri di database baru (waliList) berdasarkan username yang login
     const updatedUser = waliList.find(w => w.username === user.username);
+    
+    // Jika ketemu, pakai nama yang baru. Jika tidak, pakai data lama di localStorage.
     if (updatedUser) {
         currentSantriName = updatedUser.nama;
     } else {
@@ -363,6 +365,8 @@ async function generateReports() {
 
   const data = await window.getFirebaseData();
   const namaKey = normalize(currentSantriName);
+
+  console.log("Mencari data untuk:", currentSantriName, "Key:", namaKey); // DEBUG
 
   const laporanHTML = buatLaporanSantri({
       nama: currentSantriName, 
@@ -454,16 +458,22 @@ function buatLaporanSantri(ctx) {
   <div class="dim-card"><h4>🏃‍♂️ Fisik Berdaya</h4><p>${narasiFis}</p></div>
   
   <div class="section-title">📈 Fokus Perbaikan Bulan Ini</div>
-  <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
-  <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
+  <div class="dim-card">
+    <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanIni || []).join(", ") || "-"}</p>
+    <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanIni || "-"}</p>
+  </div>
 
   <div class="section-title">📊 Hasil Perbaikan Bulan Ini</div>
-  <p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
-  <p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
+  <div class="dim-card">
+    <p><b>Status:</b> ${ases.hasilPerbaikan || "-"}</p>
+    <p><b>Evaluasi:</b><br>${ases.evaluasiBulanIni || "-"}</p>
+  </div>
 
   <div class="section-title">🚀 Fokus Perbaikan Bulan Berikutnya</div>
-  <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
-  <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
+  <div class="dim-card">
+    <p><b>Dimensi Fokus:</b> ${(ases.fokusBulanDepan || []).join(", ") || "-"}</p>
+    <p><b>Spesifik Perbaikan:</b><br>${ases.spesifikBulanDepan || "-"}</p>
+  </div>
   `;
 
   // Kehadiran (Table Wrapped)
@@ -491,13 +501,13 @@ function buatLaporanSantri(ctx) {
       </table>
     </div>` : `<p class='muted'>-</p>`);
 
-  // Tahfiz (Table Wrapped)
+  // Tahfiz (Table Wrapped) - FIX KETERANGAN DI SINI (Data Lama & Baru Muncul)
   const dataTahfiz = tahfiz.filter(t => isSameMonthYear(t.tanggal, bulan, tahun)).flatMap(t => t.data || []).filter(d => normalize(d.nama) === namaKey);
   wrapper.innerHTML += `<div class="section-title">📖 Tahfiz</div>` + (dataTahfiz.length ? 
     `<div class="table-wrapper">
       <table>
         <thead><tr><th>Setoran</th><th>Nilai</th><th>Ket</th></tr></thead>
-        <tbody>${dataTahfiz.map(d=>`<tr><td>${d.surat||d.setoran}</td><td>${d.nilai}</td><td>${d.keterangan}</td></tr>`).join("")}</tbody>
+        <tbody>${dataTahfiz.map(d=>`<tr><td>${d.surat||d.setoran}</td><td>${d.nilai}</td><td>${d.keterangan || d.ket || "-"}</td></tr>`).join("")}</tbody>
       </table>
     </div>` : `<p class='muted'>-</p>`);
 
