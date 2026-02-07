@@ -70,6 +70,12 @@
 
     .muted { color: #94a3b8; font-size: 15px; text-align: center; margin-top: 20px; }
     
+    /* NIHIL PELANGGARAN STYLE */
+    .nihil-pelanggaran {
+        background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;
+        padding: 15px; border-radius: 12px; text-align: center; font-weight: 600;
+    }
+
     /* EXPORT BUTTON */
     .export-buttons { text-align: center; margin-top: 30px; }
     .export-buttons button { background: #2563eb; padding: 12px 20px; font-size: 15px; width: 100%; max-width: 300px; box-shadow: 0 4px 15px rgba(37,99,235,0.3); }
@@ -176,7 +182,7 @@
 </script>
 
 <script>
-// === DAFTAR WALI SANTRI (DIPERBAIKI AGAR SINKRON) ===
+// === DAFTAR WALI SANTRI (SINKRON DATABASE) ===
 const waliList = [
     {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
     {nama:"Juanda Nur Ilham",username:"juanda491",password:"Cahaya@1049"},
@@ -316,12 +322,11 @@ window.addEventListener("load", () => {
     }
 
     // 2. Perbaiki nama santri jika login menggunakan nama lama
-    // Kita cari nama yang benar dari waliList berdasarkan username yang sedang login
     const updatedUser = waliList.find(w => w.username === user.username);
     if (updatedUser) {
         currentSantriName = updatedUser.nama;
     } else {
-        currentSantriName = user.namaAnak; // Fallback
+        currentSantriName = user.namaAnak; 
     }
 
     document.getElementById("namaSantriTitle").innerText = currentSantriName;
@@ -496,16 +501,21 @@ function buatLaporanSantri(ctx) {
       </table>
     </div>` : `<p class='muted'>-</p>`);
 
-  // Pelanggaran (Table Wrapped)
+  // Pelanggaran (Table Wrapped & Nihil Message)
   const pelanggaran = pelanggaranAll.filter(p => normalize(p.santri) === namaKey && isSameMonthYear(p.tanggal, bulan, tahun));
+  
+  wrapper.innerHTML += `<div class="section-title">⚠️ Catatan Pelanggaran</div>`;
+  
   if(pelanggaran.length > 0) {
-      wrapper.innerHTML += `<div class="section-title">⚠️ Pelanggaran</div>
+      wrapper.innerHTML += `
       <div class="table-wrapper">
         <table>
           <thead><tr><th>Tgl</th><th>Kasus</th><th>Tindak Lanjut</th></tr></thead>
           <tbody>${pelanggaran.map(p=>`<tr><td>${p.tanggal}</td><td>${p.namaPelanggaran}</td><td>${p.tindakLanjut}</td></tr>`).join("")}</tbody>
         </table>
       </div>`;
+  } else {
+      wrapper.innerHTML += `<div class="nihil-pelanggaran">✅ Alhamdulillah, tidak ada catatan pelanggaran bulan ini.</div>`;
   }
 
   wrapper.innerHTML += `
@@ -526,18 +536,15 @@ async function exportPDF(nama){
   btn.innerText = "⏳ Memproses..."; btn.disabled = true;
 
   try {
-      // Force Width untuk PDF agar tidak mengikuti lebar HP
       const originalStyle = el.getAttribute('style');
       el.style.width = "800px"; 
       el.style.maxWidth = "none";
       el.style.position = "absolute"; 
       el.style.left = "-9999px"; 
-      document.body.appendChild(el.cloneNode(true)); // Hacky but needed for cleaner capture if hidden
+      document.body.appendChild(el.cloneNode(true)); 
 
-      // Capture elemen asli tapi dengan settings scale tinggi
       const canvas = await html2canvas(el, { scale: 1.5, useCORS: true, scrollY: 0, windowWidth: 1024 });
       
-      // Kembalikan style
       el.style.width = ""; el.style.maxWidth = ""; el.style.position = ""; el.style.left = "";
 
       const pdf = new jsPDFLib("p","mm","a4");
