@@ -2,95 +2,51 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP - Absensi Kehadiran Pembelajaran</title>
+  <title>CAHAYA APP - Absensi KBM Guru</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef2ff;
-      margin: 0;
-      padding: 20px;
-      color: #1f2937;
-    }
-    header {
-      background: #2563eb;
-      color: white;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 10px;
-    }
-    header h1 { margin: 0; font-size: 1.2rem; }
-    main {
-      background: white;
-      margin-top: 20px;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 5px 15px rgba(15,23,42,0.15);
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    h2 { margin-top: 0; color: #1e3a8a; }
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    select, input, textarea {
-      padding: 8px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 4px;
-    }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
-    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; }
-    th { background: #f1f5f9; }
-    button {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
-    button:hover { background: #1d4ed8; }
-    .btn-secondary { background: #6b7280; }
-    .status-btn {
-      padding: 4px 10px;
-      border-radius: 5px;
-      border: 1px solid #cbd5e1;
-      cursor: pointer;
-      background: #f8fafc;
-    }
-    .status-btn.active {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
-    }
+    :root { --primary: #2563eb; --primary-dark: #1e40af; --orange: #f97316; --red: #ef4444; --green: #22c55e; --bg-gradient: radial-gradient(circle at top left, #dbeafe, #eef2ff 40%, #f8fafc); }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); color: #0f172a; margin: 0; }
+    header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2); }
+    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+    header button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+    header button:hover { background: rgba(255,255,255,0.3); }
+    main { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); margin: 20px auto; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); max-width: 1000px; width: 95%; }
+    h2 { margin-top: 0; color: var(--primary-dark); font-size: 1.2rem; }
+    .filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding: 15px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; }
+    .filter-item { flex: 1; min-width: 180px; }
+    label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 0.9rem; color: #475569; }
+    select, input, textarea { padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; width: 100%; box-sizing: border-box; font-size: 0.9rem; }
+    select:focus, input:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 15px; font-size: 0.9rem; }
+    tbody tr { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
+    td { padding: 12px 8px; text-align: center; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
+    td:first-child { border-radius: 10px 0 0 10px; border-left: 1px solid #f1f5f9; }
+    td:last-child { border-radius: 0 10px 10px 0; border-right: 1px solid #f1f5f9; }
+    tr.status-hadir { box-shadow: inset 0 0 0 2px var(--green); }
+    tr.status-terlambat { box-shadow: inset 0 0 0 2px var(--orange); background: #fff7ed; }
+    tr.status-izin { box-shadow: inset 0 0 0 2px #3b82f6; }
+    tr.status-sakit { box-shadow: inset 0 0 0 2px #eab308; }
+    tr.status-alfa { box-shadow: inset 0 0 0 2px var(--red); }
+    input[type="radio"] { transform: scale(1.2); cursor: pointer; accent-color: var(--primary); }
+    button.btn-primary { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border: none; padding: 12px 20px; border-radius: 99px; cursor: pointer; margin-top: 20px; font-weight: 600; width: 100%; box-shadow: 0 8px 20px rgba(37,99,235,0.2); }
+    button.btn-primary:hover { transform: translateY(-2px); }
+    button.btn-secondary { background: #64748b; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+    @media (max-width: 600px) { table { table-layout: fixed; } th, td { font-size: 0.75rem; padding: 6px 2px; } th:nth-child(2), td:nth-child(2) { width: 30%; text-align: left; padding-left: 8px; } th:nth-child(1), td:nth-child(1) { width: 8%; } }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>CAHAYA APP – Absensi Kehadiran Pembelajaran</h1>
-  <div>
-    <button class="btn-secondary" onclick="goBack()">⬅️ Kembali</button>
-    <button onclick="logout()">Keluar</button>
-  </div>
+  <h1>CAHAYA APP – Absensi Guru</h1>
+  <div><button onclick="goBack()">⬅️ Dashboard</button><button onclick="logout()">Keluar</button></div>
 </header>
 
 <main>
   <h2>Absensi Kehadiran Pembelajaran</h2>
-
-  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px">
-    <div style="flex:1;min-width:180px">
-      <label>Tanggal</label>
-      <input type="date" id="kbmTanggal">
-    </div>
-    <div style="flex:1;min-width:200px">
+  <div class="filters">
+    <div class="filter-item"><label>Tanggal</label><input type="date" id="kbmTanggal"></div>
+    <div class="filter-item">
       <label>Jenis Kelas</label>
       <select id="kbmJenisKelas" onchange="updatePilihan()">
         <option value="">-- Pilih Jenis Kelas --</option>
@@ -99,40 +55,33 @@
         <option value="tahfiz">Tahsin & Tahfiz Al-Qur'an</option>
       </select>
     </div>
-    <div style="flex:1;min-width:200px" id="opsiKhusus"></div>
-    <div style="flex:1;min-width:200px">
-      <label>Mata Pelajaran</label>
-      <select id="kbmMapel">
-        <option value="">-- Pilih Mapel --</option>
-      </select>
-    </div>
+    <div class="filter-item" id="opsiKhusus"></div>
+    <div class="filter-item"><label>Mata Pelajaran</label><select id="kbmMapel"><option value="">-- Pilih Mapel --</option></select></div>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h3 style="margin:0">Daftar Santri</h3>
+    <button type="button" class="btn-secondary" onclick="markAll()">✅ Semua Hadir</button>
   </div>
 
   <table>
     <thead>
       <tr>
-        <th>No</th>
-        <th>Nama Santri</th>
-        <th>Hadir</th>
-        <th>Izin</th>
-        <th>Sakit</th>
-        <th>Alfa</th>
+        <th>No</th> <th>Nama Santri</th>
+        <th title="Hadir">H</th> <th title="Terlambat (-50%)">T</th>
+        <th title="Izin">I</th> <th title="Sakit">S</th> <th title="Alfa (-100%)">A</th>
       </tr>
     </thead>
-    <tbody id="kbmBody">
-      <tr><td colspan="6" style="text-align:center;color:#6b7280">Pilih jenis kelas terlebih dahulu.</td></tr>
-    </tbody>
+    <tbody id="kbmBody"><tr><td colspan="7" style="text-align:center;color:#6b7280;padding:20px;">Silakan pilih Jenis Kelas terlebih dahulu.</td></tr></tbody>
   </table>
 
-  <label style="margin-top:20px">Ringkasan Materi / Catatan KBM:</label>
-  <textarea id="kbmCatatan" rows="3" placeholder="Tuliskan materi yang diajarkan, aktivitas pembelajaran, refleksi, dll..."></textarea>
-
-  <button onclick="simpanKehadiran()">💾 Simpan Kehadiran</button>
+  <label style="margin-top:20px; display:block;">Ringkasan Materi / Catatan KBM:</label>
+  <textarea id="kbmCatatan" rows="3" placeholder="Tuliskan materi yang diajarkan..."></textarea>
+  <button class="btn-primary" onclick="simpanKehadiran()">💾 Simpan Kehadiran & Poin</button>
 </main>
 
 <script src="dataSantri.js"></script>
 
-<!-- === FIREBASE MODULE === -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -151,17 +100,11 @@
   const db = getDatabase(app);
   const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
-  // --- Inisialisasi halaman ---
   window.init = function() {
-    if (!user || user.role !== 'guru') {
-      alert('Silakan login sebagai Guru terlebih dahulu.');
-      window.location.href = '../index.html';
-      return;
-    }
+    if (!user || user.role !== 'guru') { alert('Silakan login sebagai Guru.'); window.location.href = '../index.html'; return; }
     document.getElementById('kbmTanggal').value = new Date().toISOString().split('T')[0];
   };
 
-  // --- Update Pilihan Kelas dan Mapel ---
   window.updatePilihan = function() {
     const jenis = document.getElementById('kbmJenisKelas').value;
     const container = document.getElementById('opsiKhusus');
@@ -169,7 +112,7 @@
     const mapelSelect = document.getElementById('kbmMapel');
 
     container.innerHTML = '';
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7280">Menunggu pilihan detail kelas...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#6b7280;padding:20px">Menunggu pilihan detail...</td></tr>';
     mapelSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
 
     if (!jenis) return;
@@ -178,55 +121,42 @@
     let mapelList = [];
     if (jenis === 'keilmuan') {
       jenisKey = 'Keilmuan Islam & Umum';
-      mapelList = ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran'];
+      mapelList = ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran','Matematika','IPA'];
     } else if (jenis === 'bahasa') {
       jenisKey = 'Bahasa Internasional';
-      mapelList = ['Bahasa Arab','Bahasa Inggris'];
+      mapelList = ['Bahasa Arab','Bahasa Inggris','Muhadatsah'];
     } else if (jenis === 'tahfiz') {
       jenisKey = 'Tahsin & Tahfiz Al-Qur\'an';
-      mapelList = ['Tahsin','Tahfiz'];
+      mapelList = ['Tahsin','Tahfiz','Murojaah'];
     }
 
     mapelList.forEach(m => {
       const opt = document.createElement('option');
-      opt.value = m;
-      opt.textContent = m;
-      mapelSelect.appendChild(opt);
+      opt.value = m; opt.textContent = m; mapelSelect.appendChild(opt);
     });
 
+    if (typeof dataSantri === 'undefined') { alert("Error: File dataSantri.js tidak ditemukan!"); return; }
     const kategori = dataSantri[jenisKey];
     if (!kategori) return;
 
     if (jenis === 'keilmuan' || jenis === 'bahasa') {
-      container.innerHTML = `
-        <label>${jenis === 'keilmuan' ? 'Kelas' : 'Kelompok'}</label>
-        <select id="subPilihan" onchange="tampilkanSantri('${jenis}')">
-          <option value="">-- Pilih ${jenis === 'keilmuan' ? 'Kelas' : 'Kelompok'} --</option>
-          ${Object.keys(kategori).map(k => `<option value="${k}">${k}</option>`).join('')}
-        </select>`;
+      container.innerHTML = `<label>${jenis === 'keilmuan' ? 'Kelas' : 'Kelompok'}</label>
+        <select id="subPilihan" onchange="tampilkanSantri('${jenis}')"><option value="">-- Pilih --</option>
+          ${Object.keys(kategori).map(k => `<option value="${k}">${k}</option>`).join('')}</select>`;
     } else if (jenis === 'tahfiz') {
-      container.innerHTML = `
-        <label>Program & Kelompok</label>
-        <div style="display:flex;gap:8px">
-          <select id="programTahfiz">
-            <option value="Tahsin">Tahsin</option>
-            <option value="Tahfiz">Tahfiz</option>
-          </select>
-          <select id="subPilihan" onchange="tampilkanSantri('${jenis}')">
-            <option value="">-- Pilih Kelompok --</option>
-            ${Object.keys(kategori).map(k => `<option value="${k}">${k}</option>`).join('')}
-          </select>
-        </div>`;
+      container.innerHTML = `<label>Program & Kelompok</label><div style="display:flex;gap:8px">
+          <select id="programTahfiz" style="width:40%"><option value="Tahsin">Tahsin</option><option value="Tahfiz">Tahfiz</option></select>
+          <select id="subPilihan" onchange="tampilkanSantri('${jenis}')" style="width:60%"><option value="">-- Pilih --</option>
+            ${Object.keys(kategori).map(k => `<option value="${k}">${k}</option>`).join('')}</select></div>`;
     }
   };
 
-  // --- Tampilkan Santri ---
   window.tampilkanSantri = function(jenis) {
     const tbody = document.getElementById('kbmBody');
     tbody.innerHTML = '';
+    
     const jenisKey = jenis === 'keilmuan' ? 'Keilmuan Islam & Umum' :
-                     jenis === 'bahasa' ? 'Bahasa Internasional' :
-                     'Tahsin & Tahfiz Al-Qur\'an';
+                     jenis === 'bahasa' ? 'Bahasa Internasional' : 'Tahsin & Tahfiz Al-Qur\'an';
     const kategori = dataSantri[jenisKey];
     if (!kategori) return;
 
@@ -241,35 +171,54 @@
       list = kategori[sub] || [];
     }
 
-    if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#6b7280">Belum ada data santri untuk pilihan ini.</td></tr>`;
-      return;
-    }
+    if (list.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#6b7280">Data tidak ditemukan.</td></tr>`; return; }
 
     list.forEach((nama, i) => {
       const tr = document.createElement('tr');
-      tr.dataset.nama = nama;
-      tr.dataset.status = 'Hadir';
-      tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td style="text-align:left">${nama}</td>
-        <td><button class="status-btn active" onclick="setStatus(this,'Hadir')">✔️</button></td>
-        <td><button class="status-btn" onclick="setStatus(this,'Izin')">I</button></td>
-        <td><button class="status-btn" onclick="setStatus(this,'Sakit')">S</button></td>
-        <td><button class="status-btn" onclick="setStatus(this,'Alfa')">A</button></td>`;
+      tr.className = 'status-hadir';
+      tr.innerHTML = `<td>${i + 1}</td><td style="text-align:left; font-weight:500;">${nama}</td>
+        <td><input type="radio" name="s_${i}" value="Hadir" checked></td>
+        <td><input type="radio" name="s_${i}" value="Terlambat"></td>
+        <td><input type="radio" name="s_${i}" value="Izin"></td>
+        <td><input type="radio" name="s_${i}" value="Sakit"></td>
+        <td><input type="radio" name="s_${i}" value="Alfa"></td>`;
       tbody.appendChild(tr);
+
+      tr.querySelectorAll('input[type="radio"]').forEach(r => {
+        r.addEventListener('change', () => {
+          tr.classList.remove('status-hadir','status-terlambat','status-izin','status-sakit','status-alfa');
+          if (r.value === "Hadir")     tr.classList.add('status-hadir');
+          if (r.value === "Terlambat") tr.classList.add('status-terlambat');
+          if (r.value === "Izin")      tr.classList.add('status-izin');
+          if (r.value === "Sakit")     tr.classList.add('status-sakit');
+          if (r.value === "Alfa")      tr.classList.add('status-alfa');
+        });
+      });
     });
   };
 
-  // --- Ubah status hadir/izin/sakit/alfa ---
-  window.setStatus = function(btn, status) {
-    const row = btn.closest('tr');
-    row.dataset.status = status;
-    row.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  window.markAll = function() {
+    document.querySelectorAll('#kbmBody tr').forEach(tr => {
+      const radio = tr.querySelector('input[value="Hadir"]');
+      if (radio) { radio.checked = true; tr.className = 'status-hadir'; }
+    });
   };
 
-  // --- Simpan ke Firebase ---
+  // === RUMUS POIN AKADEMIK (UPDATE: 50% / 100%) ===
+  function hitungPoin(status) {
+    const jenis = document.getElementById('kbmJenisKelas').value;
+    
+    // Tentukan Poin Dasar
+    let poinDasar = 30; // Default KBM biasa
+    if (jenis === 'tahfiz') poinDasar = 40; // Tahfiz lebih tinggi
+
+    if (status === 'Hadir') return poinDasar;
+    if (status === 'Terlambat') return -(poinDasar * 0.5); // Minus 50%
+    if (status === 'Alfa') return -poinDasar; // Minus 100%
+    
+    return 0; // Izin/Sakit
+  }
+
   window.simpanKehadiran = function() {
     const tanggal = document.getElementById('kbmTanggal').value;
     const jenis   = document.getElementById('kbmJenisKelas').value;
@@ -278,40 +227,28 @@
     const program = document.getElementById('programTahfiz')?.value || '';
     const catatan = document.getElementById('kbmCatatan').value.trim();
 
-    if (!tanggal || !jenis || !sub || !mapel) {
-      alert('Lengkapi semua data kehadiran.');
-      return;
-    }
-
+    if (!tanggal || !jenis || !sub || !mapel) { alert('Lengkapi data!'); return; }
+    
+    const hasil = [];
     const rows = document.querySelectorAll('#kbmBody tr');
-    const data = [];
-    rows.forEach(r => data.push({ nama: r.dataset.nama, status: r.dataset.status }));
+    if (rows.length === 0 || rows[0].cells.length === 1) { alert('Data santri kosong.'); return; }
 
-    const log = {
-      tanggal,
-      jenis,
-      sub,
-      mapel,
-      program,
-      catatan,
-      guru: user.username,
-      data,
-      waktuSimpan: new Date().toISOString()
-    };
+    rows.forEach((tr, i) => {
+      const nama = tr.children[1].textContent;
+      const status = document.querySelector(`input[name="s_${i}"]:checked`)?.value || 'Hadir';
+      const poin = hitungPoin(status);
+      hasil.push({ nama, status, poin });
+    });
 
-    const absensiRef = ref(db, 'cahaya_app/absensi_pembelajaran');
-    push(absensiRef, log)
-      .then(() => alert('✅ Kehadiran pembelajaran tersimpan ke Firebase!'))
-      .catch(err => {
-        console.error(err);
-        alert('❌ Gagal menyimpan ke Firebase: ' + err.message);
-      });
+    const log = { tanggal, jenis, sub, mapel, program, catatan, guru: user.username, data: hasil, waktuSimpan: new Date().toISOString() };
+    push(ref(db, 'cahaya_app/absensi_pembelajaran'), log)
+      .then(() => alert('✅ Tersimpan!\nAturan: Telat -50%, Alfa -100%'))
+      .catch(err => alert('❌ Gagal: ' + err.message));
   };
 
   window.goBack = function() { window.location.href = 'fitur.html'; };
   window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
   document.addEventListener('DOMContentLoaded', init);
 </script>
-
 </body>
 </html>
