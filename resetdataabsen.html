@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>HAPUS DATA PER TANGGAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body { font-family: 'Poppins', sans-serif; text-align: center; padding: 20px; background: #fff1f2; color: #881337; }
+        .card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px; margin: 40px auto; border: 1px solid #fecdd3; }
+        h2 { margin-top: 0; }
+        input { padding: 10px; border-radius: 8px; border: 1px solid #fda4af; width: 100%; box-sizing: border-box; margin: 10px 0; font-size: 1rem; }
+        button {
+            background: #e11d48; color: white; border: none; padding: 12px 20px; width: 100%;
+            font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px;
+            transition: 0.2s;
+        }
+        button:hover { background: #be123c; }
+        .note { font-size: 0.8rem; color: #9f1239; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🗑️ Hapus Data Harian</h2>
+        <p>Pilih tanggal yang ingin dihapus. Data pada tanggal lain <strong>TIDAK</strong> akan terhapus.</p>
+        
+        <label style="display:block; text-align:left; font-weight:600;">Pilih Tanggal</label>
+        <input type="date" id="targetDate">
+
+        <button onclick="hapusDataTanggal()">Hapus Data Tanggal Ini</button>
+        <p class="note">Aksi ini menghapus Absensi Naqib & Guru pada tanggal tersebut.</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+            authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+            databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+            projectId: "absensi-santri-fajrul-islam",
+            storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+            messagingSenderId: "739928369926",
+            appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.hapusDataTanggal = async function() {
+            const tanggal = document.getElementById('targetDate').value;
+            if (!tanggal) {
+                alert("Mohon pilih tanggal terlebih dahulu!");
+                return;
+            }
+
+            if (!confirm(`⚠️ Yakin ingin menghapus semua data absensi pada tanggal ${tanggal}?`)) return;
+
+            try {
+                // 1. Ambil semua data dulu
+                const snapNaqib = await get(ref(db, 'cahaya_app/absensi_program_harian'));
+                const snapGuru = await get(ref(db, 'cahaya_app/absensi_pembelajaran'));
+
+                const updates = [];
+                let count = 0;
+
+                // 2. Filter data Naqib
+                if (snapNaqib.exists()) {
+                    snapNaqib.forEach(child => {
+                        if (child.val().tanggal === tanggal) {
+                            updates.push(remove(ref(db, `cahaya_app/absensi_program_harian/${child.key}`)));
+                            count++;
+                        }
+                    });
+                }
+
+                // 3. Filter data Guru
+                if (snapGuru.exists()) {
+                    snapGuru.forEach(child => {
+                        if (child.val().tanggal === tanggal) {
+                            updates.push(remove(ref(db, `cahaya_app/absensi_pembelajaran/${child.key}`)));
+                            count++;
+                        }
+                    });
+                }
+
+                if (count === 0) {
+                    alert("Tidak ditemukan data pada tanggal tersebut.");
+                    return;
+                }
+
+                // 4. Eksekusi Hapus
+                await Promise.all(updates);
+                alert(`✅ Berhasil menghapus ${count} laporan absensi pada tanggal ${tanggal}.`);
+
+            } catch (error) {
+                alert("❌ Gagal: " + error.message);
+                console.error(error);
+            }
+        };
+    </script>
+</body>
+</html>
