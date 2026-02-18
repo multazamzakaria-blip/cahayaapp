@@ -4,252 +4,46 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CAHAYA APP – Naqib</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-:root{
-  --primary:#2563eb;
-  --primary-dark:#1e3a8a;
-  --bg:#f1f5f9;
-}
-
+:root{ --primary:#2563eb; --primary-dark:#1e3a8a; --bg:#f1f5f9; }
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:"Poppins",sans-serif;
-  background:linear-gradient(135deg,#e0f2fe,#f8fafc);
-  color:#0f172a;
-}
-
-/* ================= HEADER PREMIUM ================= */
-
-.app-header{
-  position:sticky;
-  top:0;
-  z-index:999;
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  color:white;
-  box-shadow:0 10px 40px rgba(0,0,0,0.15);
-}
-
-/* Brand */
-.brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.brand-logo{
-  width:42px;
-  height:42px;
-  background:rgba(255,255,255,0.2);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:12px;
-  font-size:20px;
-  font-weight:700;
-}
-
-.brand-title{
-  font-weight:700;
-  font-size:1.1rem;
-}
-
-.brand-sub{
-  font-size:.8rem;
-  opacity:.8;
-}
-
-/* Right Side */
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.user-info{
-  text-align:right;
-  margin-right:10px;
-}
-
-.user-name{
-  font-weight:600;
-  font-size:.95rem;
-}
-
-.user-role{
-  font-size:.75rem;
-  opacity:.8;
-}
-
-/* Buttons */
-.btn-soft{
-  background:rgba(255,255,255,0.2);
-  border:none;
-  padding:8px 16px;
-  border-radius:14px;
-  font-weight:600;
-  color:white;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.btn-soft:hover{
-  background:rgba(255,255,255,0.3);
-}
-
-.btn-danger{
-  background:#ef4444;
-  border:none;
-  padding:8px 16px;
-  border-radius:14px;
-  font-weight:600;
-  color:white;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.btn-danger:hover{
-  background:#dc2626;
-}
-
-
-/* ================= MAIN ================= */
-
-.main{
-  max-width:1200px;
-  margin:60px auto;
-  padding:0 20px;
-}
-
-.dashboard-card{
-  background:white;
-  border-radius:34px;
-  padding:60px;
-  box-shadow:0 40px 90px rgba(37,99,235,0.08);
-  position:relative;
-  overflow:hidden;
-}
-
-.dashboard-card::before{
-  content:"";
-  position:absolute;
-  top:-120px;
-  right:-120px;
-  width:300px;
-  height:300px;
-  background:radial-gradient(circle,var(--primary) 0%,transparent 70%);
-  opacity:0.07;
-}
-
-/* ================= TITLE ================= */
-
-.dashboard-title{
-  font-size:2rem;
-  font-weight:700;
-  margin:0;
-}
-
-.sub{
-  margin-top:6px;
-  margin-bottom:40px;
-  color:#64748b;
-  font-size:1rem;
-}
-
-/* ================= STATS ================= */
-
-.stats{
-  display:flex;
-  gap:20px;
-  margin-bottom:50px;
-  flex-wrap:wrap;
-}
-
-.stat-card{
-  flex:1;
-  min-width:200px;
-  background:#f8fafc;
-  padding:22px;
-  border-radius:20px;
-  border:1px solid #e2e8f0;
-}
-
-.stat-number{
-  font-size:1.6rem;
-  font-weight:700;
-  color:var(--primary-dark);
-}
-
-.stat-label{
-  font-size:.9rem;
-  color:#64748b;
-}
-
-/* ================= MENU ================= */
-
-.menu-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:28px;
-}
-
-.menu-item{
-  background:white;
-  border-radius:28px;
-  padding:45px 30px;
-  text-align:center;
-  cursor:pointer;
-  transition:.3s ease;
-  border:1px solid #e2e8f0;
-  position:relative;
-}
-
-.menu-item:hover{
-  transform:translateY(-10px);
-  box-shadow:0 30px 60px rgba(37,99,235,0.15);
-  border-color:var(--primary);
-}
-
-.menu-icon{
-  font-size:48px;
-  margin-bottom:18px;
-}
-
-.menu-title{
-  font-size:1.2rem;
-  font-weight:700;
-  margin-bottom:8px;
-}
-
-.menu-desc{
-  font-size:.9rem;
-  color:#475569;
-}
-
-/* ================= FOOTER ================= */
-
-.footer{
-  text-align:center;
-  padding:40px;
-  font-size:13px;
-  color:#94a3b8;
-}
+body{ margin:0; font-family:"Poppins",sans-serif; background:linear-gradient(135deg,#e0f2fe,#f8fafc); color:#0f172a; }
+.app-header{ position:sticky; top:0; z-index:999; background:linear-gradient(135deg,#1e3a8a,#2563eb); padding:20px 40px; display:flex; justify-content:space-between; align-items:center; color:white; box-shadow:0 10px 40px rgba(0,0,0,0.15); }
+.brand{ display:flex; align-items:center; gap:14px; }
+.brand-logo{ width:42px; height:42px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; border-radius:12px; font-size:20px; font-weight:700; }
+.brand-title{ font-weight:700; font-size:1.1rem; }
+.brand-sub{ font-size:.8rem; opacity:.8; }
+.header-right{ display:flex; align-items:center; gap:14px; }
+.user-info{ text-align:right; margin-right:10px; }
+.user-name{ font-weight:600; font-size:.95rem; }
+.user-role{ font-size:.75rem; opacity:.8; }
+.btn-soft{ background:rgba(255,255,255,0.2); border:none; padding:8px 16px; border-radius:14px; font-weight:600; color:white; cursor:pointer; transition:.2s; }
+.btn-soft:hover{ background:rgba(255,255,255,0.3); }
+.btn-danger{ background:#ef4444; border:none; padding:8px 16px; border-radius:14px; font-weight:600; color:white; cursor:pointer; transition:.2s; }
+.btn-danger:hover{ background:#dc2626; }
+.main{ max-width:1200px; margin:60px auto; padding:0 20px; }
+.dashboard-card{ background:white; border-radius:34px; padding:60px; box-shadow:0 40px 90px rgba(37,99,235,0.08); position:relative; overflow:hidden; }
+.dashboard-card::before{ content:""; position:absolute; top:-120px; right:-120px; width:300px; height:300px; background:radial-gradient(circle,var(--primary) 0%,transparent 70%); opacity:0.07; }
+.dashboard-title{ font-size:2rem; font-weight:700; margin:0; }
+.sub{ margin-top:6px; margin-bottom:40px; color:#64748b; font-size:1rem; }
+.stats{ display:flex; gap:20px; margin-bottom:50px; flex-wrap:wrap; }
+.stat-card{ flex:1; min-width:200px; background:#f8fafc; padding:22px; border-radius:20px; border:1px solid #e2e8f0; }
+.stat-number{ font-size:1.6rem; font-weight:700; color:var(--primary-dark); }
+.stat-label{ font-size:.9rem; color:#64748b; }
+.menu-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:28px; }
+.menu-item{ background:white; border-radius:28px; padding:45px 30px; text-align:center; cursor:pointer; transition:.3s ease; border:1px solid #e2e8f0; position:relative; }
+.menu-item:hover{ transform:translateY(-10px); box-shadow:0 30px 60px rgba(37,99,235,0.15); border-color:var(--primary); }
+.menu-icon{ font-size:48px; margin-bottom:18px; }
+.menu-title{ font-size:1.2rem; font-weight:700; margin-bottom:8px; }
+.menu-desc{ font-size:.9rem; color:#475569; }
+.footer{ text-align:center; padding:40px; font-size:13px; color:#94a3b8; }
 </style>
 </head>
 
 <body>
 
-<!-- ================= HEADER PREMIUM ================= -->
 <div class="app-header">
-
   <div class="brand">
     <div class="brand-logo">☀</div>
     <div class="brand-text">
@@ -257,35 +51,28 @@ body{
       <div class="brand-sub">Dashboard Naqib</div>
     </div>
   </div>
-
   <div class="header-right">
     <div class="user-info">
       <div class="user-name" id="headerUser">Naqib</div>
       <div class="user-role">Penanggungjawab Usrah</div>
     </div>
-
     <button class="btn-soft" onclick="backToPortal()">Portal</button>
     <button class="btn-danger" onclick="logout()">Keluar</button>
   </div>
-
 </div>
 
-
-<!-- ================= MAIN ================= -->
 <div class="main">
   <div class="dashboard-card">
-
     <h2 class="dashboard-title" id="naqibTitle">Memuat...</h2>
     <div class="sub" id="naqibInfo">Memuat data kelompok...</div>
 
-    <!-- Stats -->
     <div class="stats">
       <div class="stat-card">
         <div class="stat-number" id="statSantri">0</div>
         <div class="stat-label">Total Santri</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">3</div>
+        <div class="stat-number">4</div>
         <div class="stat-label">Menu Aktif</div>
       </div>
       <div class="stat-card">
@@ -294,12 +81,17 @@ body{
       </div>
     </div>
 
-    <!-- Menu -->
     <div class="menu-grid">
       <div class="menu-item" onclick="go('absensi.html')">
         <div class="menu-icon">🧍</div>
         <div class="menu-title">Absensi</div>
         <div class="menu-desc">Absensi program & kehadiran santri</div>
+      </div>
+
+      <div class="menu-item" onclick="go('../poin_santri.html')">
+        <div class="menu-icon">🏆</div>
+        <div class="menu-title">Klasemen Poin</div>
+        <div class="menu-desc">Lihat ranking & poin santri</div>
       </div>
 
       <div class="menu-item" onclick="go('pelanggaran.html')">
@@ -323,210 +115,48 @@ body{
 </div>
 
 <script>
-  // === DATABASE KELOMPOK SANTRI ===
+// === DATABASE KELOMPOK SANTRI (SUMBER UTAMA) ===
 const dataSantri = {
-  "Kamal": [
-    "ADITYA PUTRA IBRAHIM",
-    "AIRLANGGA AZKA ABQORI",
-    "AQIELA MARSYAH",
-    "BRILLY HANDRIAN",
-    "DARREN ATHAYA",
-    "DZIKRI MUDHOFFAR",
-    "ELLENO QUTHBIE HERMAWAN",
-    "FADIL NURHALIM",
-    "GABRIEL AL FATIH",
-    "HADINATA SAPUTRA",
-    "MIKO VAJAR",
-    "M. ALMISKY PRATAMA",
-    "M. AQIL RIDHO",
-    "M. IZAM SAPUTRA",
-    "M. SYAKIR HUTABARAT",
-    "M. YASIR AL FAZAR JHIRA",
-    "M. ZIYAD ZHAZHA",
-    "RAFA",
-    "WAHYU REYDINATA",
-    "NIZAM KABISAT",
-    "JUANDA NUR ILHAM",
-    "M. DIRGATAMA",
-    "DAFFA AL MUSYARI",
-    "MOHAMMAD IKHSAN HAIRULI",
-    "REYFAS RAMADHAN",
-    "FALIZH DAFFA QATRUNNADA",
-    "HAFIDZ AL ROZI",
-    "CANZA RYANDA HUTASUHUT",
-    "NAJMIHADI SYAUQII TAMAAM",
-    "EZA FEBRI AL FADZRI"
-  ],
-
-  "Favian": [
-    "ABDULLAH MUKTI HAFIDZALLAH",
-    "AHMAD RIYADI",
-    "AKBAR PRAYOGA",
-    "ALIF MUHAMMAD YUSUF",
-    "ALVIN HERFIANTINO",
-    "ANDES AFENDRA",
-    "BASRI AL HAZIQ ZULFAHMI",
-    "AHMAD MAULANA",
-    "DANANG PRASDITYA SANTOSO",
-    "DEDI SETIADI",
-    "DIKKI KURNIAWAN",
-    "FAKHRI AL MUZAKKI",
-    "FEBRI GHALIH AL FAROBI",
-    "GHOZY FATURRAHMAN",
-    "ILHAM MUKMIN AL FARABI",
-    "M. AL FALAH",
-    "M. FAQIH HAFIDZALLAH",
-    "M. FIRAAS AL INSYIROH",
-    "MUHAMMAD ALLAM NUR HUSHAIN",
-    "M. RAID MAHRUS",
-    "M. RIJALUL KAMIL",
-    "NABIL NAJMI",
-    "RADEN AZAA PANCA PUTRA",
-    "RAFI RAMADHAN",
-    "SATRIO ABIMAYU",
-    "TEGAR HIDAYAT",
-    "VERY SYACH",
-    "WAFII FADHLURROHMAN",
-    "ZAHIR ZIBRAN",
-    "ZULFAKIH HAERUNNASIHIN"
-  ],
-
-  "Shafwan": [
-    "ANGGA PRATAMA PUTRA",
-    "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI",
-    "MIKA RAHIEL YUSUF",
-    "PRAWIRO PUJO TUNGGAL JATI",
-    "M. XAVI NF",
-    "REYNALDI MALIK IBRAHIM ALFARIDZI",
-    "FAHRIE OKTAVIRANO FITRIS",
-    "FARAZH SAYYID PUTRA KENEGA",
-    "LUTHFAN ADZAKI",
-    "MARFEL SAPUTRA",
-    "MELDI NOVRIANSYAH",
-    "ALIF SAMUDRA",
-    "ARYA DIFA ALSYA",
-    "FAUZAN IBNI JABAR",
-    "HAFIDZ ALRIZKY",
-    "M. ABIL IRWANSYAH",
-    "M. FADHIL BUANA",
-    "M. FAISAL FIKRIANSYAH",
-    "NAUFAL AKBAR ALKHATIRI",
-    "QHEIZAN ALQIZA ARISDA",
-    "REZFY FAKHRYAZKA",
-    "SYAHRUL RAMADHAN",
-    "ROID AFDAL",
-    "ROHADIN FIRDAUS AL QAUSAR",
-    "RENAL MARTIN",
-    "RAKA SEPTIAN",
-    "NAFIS",
-    "M. USAMAH",
-    "MUHAMAD YUSUF ARROSIYD",
-    "MAHESA AULIA GIFFARI",
-    "M. ARYA MAHDI WAFI EL-FAUZANI",
-    "ILHAM",
-    "IHZA TRINANDI",
-    "HABIB RAMADHAN",
-    "FAHRY AKBAR RAMDHANI",
-    "CAHYIS ISZAM",
-    "ANUGRAH PRATAMA",
-    "AHMAD FARHAAN"
-  ],
-
-  "Fatimah": [
-    "QELZA RAMADHANI ATH THAHIRAH",
-    "ASHIFA FITRI RAMADHONI",
-    "ADIBA AILA KHANZA",
-    "AISYAH NUR KHALIFAH",
-    "NYAYU MARLITSA ARDHANI",
-    "WILDA",
-    "WINDY WINDARI",
-    "AISYAH NURUL AULIA",
-    "NESSYA RAMADHANY",
-    "AMIRAH BALQIS RAHADATUL A'ISYAH",
-    "EARLYTA ARSYFA SALSABILA",
-    "DAFIA NAFLA SYAKIRA",
-    "ANISYA SEPTIANI"
-  ],
-
-  "Evita": [
-    "BILQIS NUR ANISAH",
-    "JESSICA PUTRY AYRA",
-    "GHENIS ANDIENTIAZ",
-    "DINA RUHAYAH",
-    "PITRI RAMADANI",
-    "GRINNETA NALANI PUTRI",
-    "INAYAH NOURAH ANINDYA",
-    "SHELENA",
-    "FITRAH KIRANA"
-  ]
+  "Kamal": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA","WAHYU REYDINATA","NIZAM KABISAT","JUANDA NUR ILHAM","M. DIRGATAMA","DAFFA AL MUSYARI","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","FALIZH DAFFA QATRUNNADA","HAFIDZ AL ROZI","CANZA RYANDA HUTASUHUT","NAJMIHADI SYAUQII TAMAAM","EZA FEBRI AL FADZRI"],
+  "Favian": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ALVIN HERFIANTINO","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","AHMAD MAULANA","DANANG PRASDITYA SANTOSO","DEDI SETIADI","DIKKI KURNIAWAN","FAKHRI AL MUZAKKI","FEBRI GHALIH AL FAROBI","GHOZY FATURRAHMAN","ILHAM MUKMIN AL FARABI","M. AL FALAH","M. FAQIH HAFIDZALLAH","M. FIRAAS AL INSYIROH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","M. RIJALUL KAMIL","NABIL NAJMI","RADEN AZAA PANCA PUTRA","RAFI RAMADHAN","SATRIO ABIMAYU","TEGAR HIDAYAT","VERY SYACH","WAFII FADHLURROHMAN","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN"],
+  "Shafwan": ["ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","MIKA RAHIEL YUSUF","PRAWIRO PUJO TUNGGAL JATI","M. XAVI NF","REYNALDI MALIK IBRAHIM ALFARIDZI","FAHRIE OKTAVIRANO FITRIS","FARAZH SAYYID PUTRA KENEGA","LUTHFAN ADZAKI","MARFEL SAPUTRA","MELDI NOVRIANSYAH","ALIF SAMUDRA","ARYA DIFA ALSYA","FAUZAN IBNI JABAR","HAFIDZ ALRIZKY","M. ABIL IRWANSYAH","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","NAUFAL AKBAR ALKHATIRI","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ROID AFDAL","ROHADIN FIRDAUS AL QAUSAR","RENAL MARTIN","RAKA SEPTIAN","NAFIS","M. USAMAH","MUHAMAD YUSUF ARROSIYD","MAHESA AULIA GIFFARI","M. ARYA MAHDI WAFI EL-FAUZANI","ILHAM","IHZA TRINANDI","HABIB RAMADHAN","FAHRY AKBAR RAMDHANI","CAHYIS ISZAM","ANUGRAH PRATAMA","AHMAD FARHAAN"],
+  "Fatimah": ["QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
+  "Evita": ["BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
 };
 
-// === AMBIL DATA USER ===
 const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
 const title = document.getElementById("naqibTitle");
 const info = document.getElementById("naqibInfo");
 const stat = document.getElementById("statSantri");
 const headerUser = document.getElementById("headerUser");
 
-// Cegah jika belum login
 if (!user || (!user.role && !user.roles)) {
-
   title.textContent = "Dashboard Naqib (Belum Login)";
   info.textContent = "Silakan login melalui portal utama.";
   stat.textContent = "0";
   headerUser.textContent = "Naqib";
-
 } else {
-
-  // === Ambil nama naqib ===
   let namaNaqib = "";
+  if (user.username) { namaNaqib = user.username; } 
+  else if (user.email) { namaNaqib = user.email.split("@")[0]; } 
+  else if (user.label) { namaNaqib = user.label.replace(/^Mu'?allim(ah)?\s+|^Naqib(ah)?\s+|^Mrs\s+/i, "").trim(); }
 
-  if (user.username) {
-    namaNaqib = user.username;
-  } else if (user.email) {
-    namaNaqib = user.email.split("@")[0];
-  } else if (user.label) {
-    namaNaqib = user.label
-      .replace(/^Mu'?allim(ah)?\s+|^Naqib(ah)?\s+|^Mrs\s+/i, "")
-      .trim();
-  }
-
-  // Kapitalisasi huruf pertama
   namaNaqib = namaNaqib.charAt(0).toUpperCase() + namaNaqib.slice(1);
-
-  // === Ambil kelompok dari database utama ===
   const kelompok = dataSantri[namaNaqib] || [];
 
-  // === Update Dashboard ===
   title.textContent = `Assalamu’alaikum, ${namaNaqib}`;
   info.textContent = `Kelompok: ${kelompok.length} santri`;
   stat.textContent = kelompok.length;
   headerUser.textContent = namaNaqib;
 
-  // Simpan untuk halaman lain (absensi, dll)
   localStorage.setItem("kelompokNaqib", JSON.stringify(kelompok));
   localStorage.setItem("namaNaqib", namaNaqib);
 }
 
-
-/* ===============================
-   NAVIGATION
-================================ */
-function go(page){
-  window.location.href = page;
-}
-
-function logout(){
-  localStorage.clear();
-  window.location.href="../index.html";
-}
-
-function backToPortal(){
-  window.location.href="../index.html";
-}
-
+function go(page){ window.location.href = page; }
+function logout(){ localStorage.clear(); window.location.href="../index.html"; }
+function backToPortal(){ window.location.href="../index.html"; }
 </script>
-
 
 </body>
 </html>
