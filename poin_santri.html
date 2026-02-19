@@ -2,89 +2,201 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP – Rapor Persentase</title>
+  <title>CAHAYA APP – Klasemen & Rapor Dinamis</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #2563eb; --bg-gradient: radial-gradient(circle at top left, #dbeafe, #eef2ff 40%, #f8fafc); }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); color: #0f172a; margin: 0; padding: 0; }
-
-    header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2); position: sticky; top: 0; z-index: 50; }
-    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
-    header button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
-
-    main { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
-
-    /* INFO BAR TARGET */
-    .target-box { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fcd34d; color: #92400e; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .target-label { font-size: 0.85rem; color: #b45309; }
-    .target-number { font-weight: 800; font-size: 1.3rem; color: #b45309; }
-
-    .usrah-section { background: white; border-radius: 16px; padding: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-    .usrah-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 15px; }
-    .usrah-title { font-size: 1.2rem; color: #1e40af; font-weight: 700; margin: 0; }
-
-    .santri-card { padding: 15px; border-radius: 12px; margin-bottom: 12px; background: #f8fafc; border: 1px solid transparent; cursor: pointer; position: relative; transition: 0.2s; }
-    .santri-card:hover { background: #eff6ff; border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37,99,235,0.1); }
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --accent-gold: #d4af37;
+      --accent-gold-light: #fef08a;
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
     
-    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .santri-name { font-weight: 600; color: #334155; font-size: 1rem; }
-    .rank-badge { width: 24px; height: 24px; background: #cbd5e1; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; margin-right: 8px; }
-    .rank-1 { background: #f59e0b; } .rank-2 { background: #64748b; } .rank-3 { background: #b45309; }
-    
-    .progress-container { background: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 8px; }
-    .progress-bar { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
-    .progress-info { display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; margin-top: 5px; }
-    
-    /* STYLE PREDIKAT BARU */
-    .predikat { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.5px; }
-    .p-mumtaz { background: #dcfce7; color: #166534; }
-    .p-standar { background: #e0f2fe; color: #075985; } /* Biru Standar */
-    .p-kurang { background: #fee2e2; color: #991b1b; } /* Merah Kurang */
-    .p-netral { background: #f3f4f6; color: #6b7280; border: 1px solid #d1d5db; } /* Abu-abu (0/0) */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .highlight-child { border: 2px solid #2563eb; background: #dbeafe; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: 
+        radial-gradient(circle at top right, rgba(212, 175, 55, 0.1), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.05), transparent 40%),
+        linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
 
-    /* MODAL STYLE */
-    .modal { display: none; position: fixed; z-index: 100; inset: 0; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-    .modal-content { background: white; width: 95%; max-width: 500px; height: 80vh; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; }
-    .modal-header { padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-    .modal-body { flex: 1; overflow-y: auto; padding: 0; background: #fff; }
-    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #f1f5f9; }
-    .h-poin.plus { color: #16a34a; } .h-poin.minus { color: #dc2626; }
-    .modal-footer { padding: 15px 20px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; gap: 10px; }
-    .btn-action { flex: 1; padding: 12px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
-    .btn-edit { background: var(--primary); color: white; }
-    .btn-close { background: #e2e8f0; color: #475569; }
-    #editForm { display: none; padding: 20px; background: #eff6ff; border-top: 1px solid #dbeafe; }
-    #editForm input, #editForm select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
+    /* Background Texture */
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: -1;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent-gold); letter-spacing: 1px; }
+    .btn-back {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main); padding: 8px 16px; border-radius: 50px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+    main { max-width: 900px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
+    @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* TARGET BOX LUXURY */
+    .target-box {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 20px 25px; border-radius: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 35px; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+      position: relative; overflow: hidden;
+    }
+    .target-box::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 60%); pointer-events: none;
+    }
+    .target-label { font-size: 0.9rem; color: var(--accent-gold-light); text-transform: uppercase; letter-spacing: 1px; }
+    .target-number { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 2rem; color: var(--accent-gold); text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3); }
+
+    /* USRAH SECTION */
+    .usrah-section { margin-bottom: 40px; }
+    .usrah-header {
+      margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .usrah-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-main); font-weight: 700; letter-spacing: 1px; }
+
+    /* SANTRI CARD */
+    .santri-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 20px 25px; border-radius: 16px; margin-bottom: 15px;
+      cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative; overflow: hidden;
+    }
+    .santri-card:hover {
+      background: rgba(255,255,255,0.08); transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.15);
+    }
+
+    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .santri-name { font-weight: 600; color: var(--text-main); font-size: 1.05rem; }
+    .poin-badge { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; }
+
+    /* BADGE RANKING */
+    .rank-badge {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; margin-right: 12px;
+      background: rgba(255,255,255,0.1); color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    /* Emas, Perak, Perunggu */
+    .rank-1 { background: linear-gradient(135deg, #fef08a, #d4af37); color: #000; border: none; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
+    .rank-2 { background: linear-gradient(135deg, #f8fafc, #94a3b8); color: #000; border: none; box-shadow: 0 0 15px rgba(148, 163, 184, 0.5); }
+    .rank-3 { background: linear-gradient(135deg, #fdba74, #b45309); color: #000; border: none; box-shadow: 0 0 15px rgba(180, 83, 9, 0.5); }
+
+    /* PROGRESS BAR */
+    .progress-container { background: rgba(0,0,0,0.5); height: 8px; border-radius: 10px; overflow: hidden; margin-top: 10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
+    .progress-bar { height: 100%; border-radius: 10px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+    .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+    /* PREDIKAT STYLES */
+    .predikat { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .p-mumtaz { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .p-standar { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); }
+    .p-kurang { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .p-netral { background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+    .highlight-child { border: 1px solid var(--accent-gold); background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), transparent); }
+
+    /* MODAL DETAIL (KACA GELAP) */
+    .modal { display: none; position: fixed; z-index: 200; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+    .modal-content { background: linear-gradient(145deg, #0f172a, #1e293b); width: 90%; max-width: 500px; max-height: 85vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 30px 60px rgba(0,0,0,0.7); animation: scaleIn 0.3s ease; }
+    @keyframes scaleIn { from {transform: scale(0.9); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+    
+    .modal-header { padding: 25px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+    .modal-header h3 { color: var(--text-main); font-size: 1.1rem; margin-bottom: 5px; }
+    .modal-body { flex: 1; overflow-y: auto; padding: 0; }
+    .modal-footer { padding: 20px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; background: rgba(255,255,255,0.02); }
+    
+    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+    .history-item:hover { background: rgba(255,255,255,0.05); }
+    .h-poin.plus { color: #34d399; font-weight: 700; font-size: 1.1rem; }
+    .h-poin.minus { color: #f87171; font-weight: 700; font-size: 1.1rem; }
+    
+    .btn-action { flex: 1; padding: 12px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-edit { background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold)); color: #000; }
+    .btn-edit:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-close { background: rgba(255,255,255,0.1); color: var(--text-main); }
+    .btn-close:hover { background: rgba(255,255,255,0.2); }
+
+    #editForm { display: none; padding: 25px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--glass-border); }
+    #editForm input, #editForm select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; outline: none; }
+    #editForm input:focus, #editForm select:focus { border-color: var(--accent-gold); }
+    
+    @media(max-width: 600px) {
+      .santri-card { padding: 15px; }
+      .rank-badge { width: 25px; height: 25px; font-size: 0.75rem; }
+      .target-number { font-size: 1.6rem; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🏆 Rapor Dinamis</h1>
-  <div><button onclick="goBack()">⬅️ Kembali</button></div>
+  <h1>Indeks Kedisiplinan Santri</h1>
+  <div><button class="btn-back" onclick="goBack()">Kembali</button></div>
 </header>
 
 <main id="mainContent">
-  <div style="text-align:center; padding: 40px; color: #64748b;">Menganalisis data absensi...</div>
+  <div style="text-align:center; padding: 50px; color: var(--text-muted); font-style: italic;">
+    <span style="font-size:2rem; display:block; margin-bottom:10px;">✨</span>
+    Menyelaraskan data klasemen...
+  </div>
 </main>
 
 <div id="detailModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <div><h3 id="dNama" style="margin:0">Nama</h3><span id="dPredikat" class="predikat p-mumtaz">PREDIKAT</span></div>
-      <div id="dTotal" style="font-size:1.5rem;font-weight:800;color:var(--primary)">0%</div>
+      <div>
+        <h3 id="dNama">Nama Santri</h3>
+        <span id="dPredikat" class="predikat p-mumtaz">PREDIKAT</span>
+      </div>
+      <div id="dTotal" style="font-size:1.8rem;font-weight:700;color:var(--accent-gold);font-family:'Playfair Display'">0%</div>
     </div>
     <div class="modal-body" id="historyList"></div>
+    
     <div id="editForm">
-      <h4 style="margin-top:0; color:#1e40af">🔧 Koreksi Poin</h4>
-      <select id="manualType"><option value="bonus">➕ Tambah (Bonus)</option><option value="denda">➖ Kurang (Denda)</option></select>
+      <h4 style="margin-top:0; color:var(--accent-gold); font-family:'Playfair Display'; margin-bottom:15px;">🔧 Koreksi Poin</h4>
+      <select id="manualType">
+        <option value="bonus">➕ Tambah (Bonus)</option>
+        <option value="denda">➖ Kurang (Denda)</option>
+      </select>
       <input type="number" id="manualAmount" placeholder="Jumlah Poin">
-      <input type="text" id="manualReason" placeholder="Keterangan">
-      <div style="display:flex; gap:10px;"><button class="btn-action btn-edit" onclick="saveManualPoint()">Simpan</button><button class="btn-action btn-close" onclick="toggleEditForm()">Batal</button></div>
+      <input type="text" id="manualReason" placeholder="Keterangan Spesifik">
+      <div style="display:flex; gap:10px;">
+        <button class="btn-action btn-edit" onclick="saveManualPoint()">Simpan</button>
+        <button class="btn-action btn-close" onclick="toggleEditForm()">Batal</button>
+      </div>
     </div>
+    
     <div class="modal-footer">
       <button class="btn-action btn-close" onclick="closeModal()">Tutup</button>
       <button id="btnShowEdit" class="btn-action btn-edit" onclick="toggleEditForm()">⚙️ Edit Poin</button>
@@ -125,27 +237,17 @@
   let mapSantriUsrah = {};
   let selectedSantriName = null;
 
-  // === RUMUS PREDIKAT (DISEDERHANAKAN) ===
   function getPredikat(persen, totalPoin) {
-    // 1. Kondisi Netral (Belum ada data / Poin 0)
     if (TARGET_DINAMIS === 0 || (persen === 0 && totalPoin === 0)) {
        return { label: "MENUNGGU DATA", class: "p-netral", color: "#64748b", info: "Belum ada poin tercatat" };
     }
+    if (persen >= 90) return { label: "MUMTAZ", class: "p-mumtaz", color: "#34d399", info: "✅ Layak Dapat Bonus / Kunjungan" };
+    
+    let label = "JAYYID"; let style = "p-standar"; let color = "#38bdf8";
+    if (persen < 50) { label = "RASIB"; style = "p-kurang"; color = "#f87171"; }
+    else if (persen < 75) { label = "MAQBUL"; style = "p-standar"; color = "#fbbf24"; }
 
-    // 2. Kondisi Mumtaz
-    if (persen >= 90) {
-       return { label: "MUMTAZ", class: "p-mumtaz", color: "#16a34a", info: "✅ Layak Dapat Bonus" };
-    }
-
-    // 3. Kondisi Lainnya (Jayyid, Maqbul, Rasib dijadikan satu pesan)
-    let label = "JAYYID";
-    let style = "p-standar";
-    let color = "#2563eb";
-
-    if (persen < 50) { label = "RASIB"; style = "p-kurang"; color = "#dc2626"; }
-    else if (persen < 75) { label = "MAQBUL"; style = "p-standar"; color = "#ca8a04"; }
-
-    return { label: label, class: style, color: color, info: "💪 Harus Lebih Disiplin Lagi untuk Dapat Bonus" };
+    return { label: label, class: style, color: color, info: "💪 Harus Lebih Disiplin Lagi" };
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
@@ -155,7 +257,6 @@
     for (const [namaKelompok, listSantri] of Object.entries(MASTER_SANTRI)) {
       listSantri.forEach(nama => { mapSantriUsrah[nama] = namaKelompok; });
     }
-
     await loadAllData();
   });
 
@@ -169,7 +270,7 @@
       const snapshots = await Promise.all(refs);
       processData(snapshots[0].val() || {}, snapshots[1].val() || {}, snapshots[2].val() || {});
     } catch (error) {
-      document.getElementById('mainContent').innerHTML = `<p style="color:red;text-align:center">${error.message}</p>`;
+      document.getElementById('mainContent').innerHTML = `<p style="color:#f87171;text-align:center">${error.message}</p>`;
     }
   }
 
@@ -178,9 +279,7 @@
     const getStudent = (nama) => {
       let usrahResmi = mapSantriUsrah[nama];
       if (!usrahResmi) return null;
-      if (!students[nama]) {
-        students[nama] = { name: nama, totalMurni: 0, totalAkhir: 0, naqib: usrahResmi, history: [] };
-      }
+      if (!students[nama]) students[nama] = { name: nama, totalMurni: 0, totalAkhir: 0, naqib: usrahResmi, history: [] };
       return students[nama];
     };
 
@@ -192,14 +291,8 @@
             const entry = getStudent(s.nama);
             if (entry) {
               let p = parseInt(s.poin) || 0;
-              entry.totalMurni += p; 
-              entry.totalAkhir += p;
-              entry.history.push({ 
-                date: session.tanggal, 
-                title: session.program || session.mapel, 
-                status: s.status, 
-                poin: p 
-              });
+              entry.totalMurni += p; entry.totalAkhir += p;
+              entry.history.push({ date: session.tanggal, title: session.program || session.mapel, status: s.status, poin: p });
             }
           });
         }
@@ -207,9 +300,7 @@
     });
 
     let maxScore = 0;
-    Object.values(students).forEach(s => {
-      if (s.totalMurni > maxScore) maxScore = s.totalMurni;
-    });
+    Object.values(students).forEach(s => { if (s.totalMurni > maxScore) maxScore = s.totalMurni; });
     TARGET_DINAMIS = maxScore;
 
     Object.values(manualLog).forEach(log => {
@@ -217,7 +308,7 @@
       if (entry) {
         let p = parseInt(log.poin) || 0;
         entry.totalAkhir += p;
-        entry.history.push({ date: log.waktu.split('T')[0], title: 'Manual/Admin', status: log.keterangan, poin: p });
+        entry.history.push({ date: log.waktu.split('T')[0], title: 'Catatan Manual', status: log.keterangan, poin: p });
       }
     });
 
@@ -236,13 +327,9 @@
   function renderUI(studentsObj) {
     const main = document.getElementById('mainContent');
     
-    // Tampilan Target Dinamis
     let targetText = `${TARGET_DINAMIS} Poin`;
-    let targetSub = "Target Tertinggi (Benchmark)";
-    if (TARGET_DINAMIS === 0) {
-        targetText = "Menunggu Data";
-        targetSub = "Belum ada absensi masuk";
-    }
+    let targetSub = "BENCHMARK TERTINGGI (100%)";
+    if (TARGET_DINAMIS === 0) { targetText = "-"; targetSub = "Menunggu Data Pertama Masuk"; }
 
     main.innerHTML = `
       <div class="target-box">
@@ -258,9 +345,7 @@
     });
 
     let usrahsToShow = Object.keys(usrahGroup);
-    if (currentUser.role === 'naqib') {
-      usrahsToShow = usrahsToShow.filter(n => n.toLowerCase().includes(currentUser.username.toLowerCase()));
-    }
+    if (currentUser.role === 'naqib') usrahsToShow = usrahsToShow.filter(n => n.toLowerCase().includes(currentUser.username.toLowerCase()));
 
     usrahsToShow.sort().forEach(groupName => {
       let santriList = usrahGroup[groupName];
@@ -268,11 +353,10 @@
 
       const section = document.createElement('div');
       section.className = 'usrah-section';
-      let html = `<div class="usrah-header"><div><h2 class="usrah-title">${groupName}</h2></div></div>`;
+      let html = `<div class="usrah-header"><h2 class="usrah-title">Asrama ${groupName}</h2></div>`;
 
       santriList.forEach((s, index) => {
         const predikat = getPredikat(s.persen, s.totalAkhir);
-        
         const rank = index + 1;
         let rankClass = rank<=3 ? `rank-${rank}` : '';
         let isMyChild = (currentUser.role === 'wali' && s.name.toLowerCase().includes(currentUser.childName?.toLowerCase()));
@@ -284,15 +368,15 @@
                 <div class="rank-badge ${rankClass}">${rank}</div>
                 <span class="santri-name">${s.name} ${isMyChild ? '(Ananda)' : ''}</span>
               </div>
-              <div class="poin-badge">${s.persen}%</div>
+              <div class="poin-badge" style="color:${predikat.color}">${s.persen}%</div>
             </div>
             
             <div class="progress-container">
-              <div class="progress-bar" style="width:${s.persenTampil}%; background:${predikat.color}"></div>
+              <div class="progress-bar" style="width:${s.persenTampil}%; background:${predikat.color}; box-shadow: 0 0 10px ${predikat.color}"></div>
             </div>
             
             <div class="progress-info">
-              <span>${s.totalAkhir} Poin</span>
+              <span><strong>${s.totalAkhir}</strong> Poin</span>
               <span class="predikat ${predikat.class}">${predikat.label}</span>
             </div>
           </div>`;
@@ -302,6 +386,7 @@
     });
   }
 
+  // --- DETAIL & MODAL ---
   window.showDetail = (name) => {
     selectedSantriName = name;
     const data = allStudentsData[name];
@@ -319,23 +404,26 @@
     const list = document.getElementById('historyList');
     list.innerHTML = '';
     
-    // Header Reward
-    list.innerHTML += `<div style="padding:15px;background:#f0fdf4;border-bottom:1px solid #e2e8f0;font-size:0.9rem;color:#166534;text-align:center">
-      <strong>🎁 Status Bonus:</strong><br>${predikat.info}
+    list.innerHTML += `<div style="padding:15px;background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.1);font-size:0.85rem;color:var(--text-muted);text-align:center">
+      ${predikat.info}
     </div>`;
 
     if (data.history.length === 0) {
-       list.innerHTML += `<div style="padding:20px;text-align:center;color:#94a3b8">Belum ada riwayat absensi.</div>`;
+       list.innerHTML += `<div style="padding:30px;text-align:center;color:#64748b;font-style:italic;">Riwayat masih kosong.</div>`;
     }
 
     data.history.forEach(h => {
       const cls = h.poin > 0 ? 'plus' : (h.poin < 0 ? 'minus' : '');
       const sgn = h.poin > 0 ? '+' : '';
-      list.innerHTML += `<div class="history-item">
-        <div style="font-size:0.75rem;color:#94a3b8;width:80px">${h.date}</div>
-        <div style="flex:1;padding:0 10px"><div style="font-weight:600;font-size:0.9rem">${h.title}</div><div style="font-size:0.75rem;color:#64748b">${h.status}</div></div>
-        <div class="h-poin ${cls}">${sgn}${h.poin}</div>
-      </div>`;
+      list.innerHTML += `
+        <div class="history-item">
+          <div style="font-size:0.75rem;color:var(--text-muted);width:80px">${h.date}</div>
+          <div style="flex:1;padding:0 10px">
+            <div style="font-weight:600;font-size:0.95rem;color:white">${h.title}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">${h.status}</div>
+          </div>
+          <div class="h-poin ${cls}">${sgn}${h.poin}</div>
+        </div>`;
     });
     
     document.getElementById('editForm').style.display = 'none';
@@ -361,7 +449,7 @@
     if (!currentUser) window.location.href = 'index.html';
     else if (currentUser.role === 'admin') window.location.href = 'admin/index.html';
     else if (currentUser.role === 'naqib') window.location.href = 'naqib/dashboard.html';
-    else if (currentUser.role === 'wali') window.location.href = 'wali/dashboard.html';
+    else if (currentUser.role === 'wali') window.location.href = 'wali/dashboard/index.html';
     else window.location.href = 'guru/fitur.html';
   };
 </script>
