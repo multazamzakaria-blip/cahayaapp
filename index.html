@@ -5,177 +5,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CAHAYA APP - Portal Utama</title>
   <link rel="icon" type="image/png" href="logofi.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-:root{
-  --primary:#0f172a;
-  --accent:#2563eb;
-  --accent-soft:#3b82f6;
-  --glass:rgba(255,255,255,.08);
-  --border:rgba(255,255,255,.15);
-}
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --accent-gold: #d4af37;
+      --accent-gold-light: #fef08a;
+      --glass-bg: rgba(15, 23, 42, 0.65);
+      --glass-border: rgba(212, 175, 55, 0.25);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
 
-/* ===== BODY ENTERPRISE ===== */
-body{
-  font-family:"Poppins",sans-serif;
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background:
-    radial-gradient(circle at 20% 20%, #1e3a8a, transparent 40%),
-    radial-gradient(circle at 80% 80%, #0f766e, transparent 40%),
-    linear-gradient(135deg,#0f172a,#1e293b);
-  color:white;
-  overflow:hidden;
-  text-align:center;
-}
+    /* ===== BODY ENTERPRISE LUXURY ===== */
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: 
+        radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.15), transparent 45%),
+        radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.08), transparent 45%),
+        linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+      overflow: hidden;
+      text-align: center;
+    }
 
-/* ===== SPLASH ===== */
-#splash{
-  position:fixed;
-  inset:0;
-  background:#0f172a;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:100;
-  animation:fadeOut 1.4s ease forwards;
-  animation-delay:1.5s;
-}
-#splash img{
-  width:140px;
-  animation:zoomIn 1.2s ease;
-  filter:drop-shadow(0 0 20px rgba(59,130,246,.5));
-}
-@keyframes zoomIn{
-  from{transform:scale(.5);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-@keyframes fadeOut{
-  to{opacity:0;visibility:hidden}
-}
+    /* Tekstur Halus Overlay */
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: -1;
+    }
 
-/* ===== LOGO AREA ===== */
-.logo-area{
-  margin-bottom:30px;
-  animation:fadeInUp 1s ease 1.5s both;
-}
-.logo-area img{
-  width:120px;
-  margin-bottom:14px;
-  filter:drop-shadow(0 0 18px rgba(59,130,246,.4));
-}
-.logo-area h1{
-  margin:0;
-  font-size:2.2rem;
-  font-weight:700;
-  letter-spacing:2px;
-}
-.logo-area p{
-  margin-top:6px;
-  opacity:.8;
-  font-size:.95rem;
-}
+    /* ===== SPLASH SCREEN ===== */
+    #splash {
+      position: fixed; inset: 0;
+      background: var(--primary-dark);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 100;
+      animation: fadeOut 1.5s cubic-bezier(0.7,0,0.3,1) forwards;
+      animation-delay: 1.8s; /* Sedikit lebih lama untuk efek eksklusif */
+    }
+    #splash img {
+      width: 140px;
+      animation: zoomInPosh 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.6));
+    }
+    @keyframes zoomInPosh { 
+      0% { transform: scale(0.6); opacity: 0; filter: blur(12px) drop-shadow(0 0 0 rgba(212, 175, 55, 0)); } 
+      100% { transform: scale(1); opacity: 1; filter: blur(0) drop-shadow(0 0 35px rgba(212, 175, 55, 0.6)); } 
+    }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; transform: scale(1.05); } }
 
-/* ===== LOGIN CARD ===== */
-.login-box{
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(28px);
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:28px;
-  padding:48px 40px;        /* lebih lega */
-  width:90%;
-  max-width:420px;
-  box-shadow:
-    0 40px 90px rgba(0,0,0,.65),
-    inset 0 0 0 1px rgba(255,255,255,.05);
-  display:flex;
-  flex-direction:column;
-  gap:20px;                 /* jarak konsisten antar elemen */
-}
+    /* ===== LOGO AREA ===== */
+    .logo-area {
+      margin-bottom: 40px;
+      animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 1.8s both;
+    }
+    @keyframes fadeInUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    
+    .logo-area img {
+      width: 100px; margin-bottom: 18px;
+      filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+    }
+    .logo-area h1 {
+      margin: 0; font-family: 'Playfair Display', serif;
+      font-size: 2.5rem; font-weight: 700; letter-spacing: 4px;
+      background: linear-gradient(to right, var(--text-main), var(--accent-gold), var(--accent-gold-light));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+    }
+    .logo-area p {
+      margin-top: 10px; font-size: 0.95rem; color: var(--text-muted);
+      letter-spacing: 3px; text-transform: uppercase; font-weight: 400;
+    }
 
-/* ===== INPUT FIELD ===== */
-input{
-  width:100%;
-  height:54px;              /* tinggi konsisten */
-  padding:0 18px;           /* horizontal padding saja */
-  border-radius:18px;       /* proporsional dengan card */
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.95);
-  font-size:.95rem;
-  box-sizing:border-box;
-  transition:.25s;
-}
+    /* ===== LOGIN CARD LUXURY ===== */
+    .login-box {
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px) saturate(160%);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 55px 45px;
+      width: 90%; max-width: 440px;
+      box-shadow: 
+        0 40px 80px -20px rgba(0,0,0,0.9),
+        inset 0 1px 1px rgba(255,255,255,0.08);
+      display: flex; flex-direction: column; gap: 24px;
+      position: relative; overflow: hidden;
+      animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 2s both;
+    }
+    /* Efek kilau di sudut card */
+    .login-box::before {
+      content: ''; position: absolute; top: -100px; right: -100px; width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
 
-input:focus{
-  outline:none;
-  border-color:#3b82f6;
-  box-shadow:0 0 0 4px rgba(59,130,246,.25);
-}
+    /* ===== INPUT FIELD ===== */
+    .input-group { position: relative; width: 100%; }
+    
+    input {
+      width: 100%; height: 60px;
+      padding: 0 22px; border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0, 0, 0, 0.45);
+      color: var(--text-main); font-size: 1.05rem; font-family: inherit;
+      box-sizing: border-box; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.5px;
+    }
+    input::placeholder { color: rgba(255,255,255,0.35); font-weight: 300; }
+    
+    input:focus {
+      outline: none; background: rgba(0, 0, 0, 0.65);
+      border-color: rgba(212, 175, 55, 0.6);
+      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12), inset 0 2px 4px rgba(0,0,0,0.3);
+      transform: translateY(-1px);
+    }
 
-/* ===== BUTTON ===== */
-button{
-  height:54px;              /* sama tinggi dengan input */
-  border-radius:18px;       /* konsisten dengan input */
-  border:none;
-  font-weight:600;
-  font-size:1rem;
-  cursor:pointer;
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
-  color:white;
-  transition:.25s;
-  box-shadow:0 14px 35px rgba(37,99,235,.45);
-}
+    /* ===== BUTTON PREMIUM ===== */
+    button.btn-login {
+      height: 60px; border-radius: 18px; border: none;
+      font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.15rem; letter-spacing: 2px;
+      cursor: pointer; color: var(--primary-dark);
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+      position: relative; overflow: hidden; margin-top: 15px;
+    }
+    button.btn-login::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: all 0.6s ease;
+    }
+    button.btn-login:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(212, 175, 55, 0.4);
+      filter: brightness(1.1);
+    }
+    button.btn-login:hover::after { left: 100%; }
+    button.btn-login:active { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
 
-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 20px 45px rgba(37,99,235,.6);
-}
+    /* ===== FOOTER ===== */
+    .footer-text {
+      margin-top: 45px; font-size: 0.9rem; color: rgba(148, 163, 184, 0.7);
+      letter-spacing: 1.5px; font-family: 'Playfair Display', serif; font-style: italic;
+      animation: fadeInUp 1s ease 2.2s both;
+    }
 
+    /* ===== RESPONSIVE ===== */
+    @media(max-width: 480px) {
+      .logo-area img { width: 85px; margin-bottom: 12px;}
+      .logo-area h1 { font-size: 2rem; letter-spacing: 2px;}
+      .login-box { padding: 45px 30px; border-radius: 24px;}
+      input, button.btn-login { height: 55px; }
+      .footer-text { margin-top: 30px; font-size: 0.8rem;}
+    }
 
-/* ===== FOOTER ===== */
-.footer-text{
-  margin-top:24px;
-  font-size:.85rem;
-  opacity:.6;
-  letter-spacing:.5px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media(max-width:480px){
-  .logo-area img{width:95px;}
-  .logo-area h1{font-size:1.7rem;}
-  .login-box{padding:32px 24px;}
-}
-</style>
-
+    /* === Modal Pilihan Peran === */
+    .modal {
+      display: none; position: fixed; z-index: 999; inset: 0;
+      background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px);
+      justify-content: center; align-items: center; animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    
+    .modal-content {
+      background: linear-gradient(145deg, #0f172a, #1e293b);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px; padding: 45px 35px;
+      max-width: 420px; width: 90%; text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+      animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes scaleIn { from {transform: scale(0.85); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+    
+    .modal-logo { width: 65px; margin-bottom: 20px; filter: drop-shadow(0 5px 15px rgba(212, 175, 55, 0.4)); }
+    .modal-content h2 { color: var(--accent-gold); font-size: 1.6rem; font-family: 'Playfair Display', serif; margin: 0; letter-spacing: 1px;}
+    .modal-content p { color: var(--text-muted); font-size: 0.95rem; margin: 15px 0 30px; line-height: 1.6; }
+    
+    .role-buttons { display: flex; flex-direction: column; gap: 16px; }
+    .role-btn {
+      border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 16px;
+      font-size: 1.05rem; font-weight: 500; cursor: pointer; color: var(--text-main);
+      background: rgba(255,255,255,0.03); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.5px; position: relative; overflow: hidden;
+    }
+    .role-btn::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+        background: var(--accent-gold); transform: scaleY(0); transition: transform 0.3s ease; transform-origin: bottom;
+    }
+    .role-btn:hover { 
+        background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), rgba(255,255,255,0.05)); 
+        border-color: rgba(212, 175, 55, 0.3); transform: translateX(5px); color: var(--accent-gold-light);
+    }
+    .role-btn:hover::before { transform: scaleY(1); }
+  </style>
 </head>
 
 <body>
-  <!-- SPLASH SCREEN -->
   <div id="splash">
     <img src="logofi.png" alt="Logo Cahaya App" />
   </div>
 
-  <!-- HEADER -->
   <div class="logo-area">
     <img src="logofi.png" alt="Logo" />
     <h1>CAHAYA APP</h1>
-    <p>Pesantren Cahaya Fajrul Islam</p>
+    <p>Pesantren Fajrul Islam</p>
   </div>
 
-  <!-- LOGIN BOX -->
   <div class="login-box">
-    <input type="text" id="username" placeholder="Username" autocomplete="off" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Masuk</button>
+    <div class="input-group">
+      <input type="text" id="username" placeholder="Username / ID Santri" autocomplete="off" />
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password" />
+    </div>
+    <button class="btn-login" onclick="login()">MASUK</button>
   </div>
 
-  <div class="footer-text">Baca “Bismillah” terlebih dahulu</div>
-  <!-- === Firebase SDK Setup (versi kompatibel) === -->
+  <div class="footer-text">"Bismillaahirrohmaanirrohiim"</div>
+
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -192,7 +248,6 @@ button:hover{
       appId: "1:739982369926:web:7e5375c3ddbaf0584cdd07"
     };
     firebase.initializeApp(firebaseConfig);
-    console.log("✅ Firebase terhubung (versi kompatibel)");
   </script>
 
   <script>
@@ -208,23 +263,17 @@ button:hover{
     { username: "meilisa", password: "guru123", role: "guru", label: "Mu'allimah Meilisa" },
     { username: "rosyidin", password: "guru123", role: "guru", label: "Mu'allim Rosyidin" },
     { username: "naqieb", password: "guru123", role: "guru", label: "Mu'allim Naqieb" },
-
-    // Guru + Naqib
     { username: "kamal", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Kamal" },
     { username: "favian", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Favian" },
     { username: "fatimah", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allimah Fatimah" },
     { username: "evita", password: "guru123", roles: ["guru", "naqib"], label: "Mrs Evita" },
     { username: "shafwan", password: "guru123", roles: ["guru", "naqib"], label: "Mu'allim Shafwan" },
-
-    // Naqib saja
     { username: "dimas", password: "dimas123", role: "naqib", label: "Naqib Dimas" },
     { username: "regen", password: "regen123", role: "naqib", label: "Naqib Regen" },
-
-    // Admin
     { username: "admin", password: "cahaya2026", role: "admin", label: "Admin Pesantren" }
   ];
 
-  /* === DAFTAR WALI SANTRI (PERBAIKAN SESUAI DATA SANTRI) === */
+  /* === DAFTAR WALI SANTRI === */
   const waliList = [
     {nama:"Ahmad Maulana",username:"ahmad312",password:"Cahaya@8723"},
     {nama:"Juanda Nur Ilham",username:"juanda491",password:"Cahaya@1049"},
@@ -237,8 +286,8 @@ button:hover{
     {nama:"Andes Afendra",username:"andes551",password:"Cahaya@1128"},
     {nama:"Febri Ghalih Al Farobi",username:"febri728",password:"Cahaya@3159"},
     {nama:"Danang Prasditya Santoso",username:"danang605",password:"Cahaya@8443"},
-    {nama:"M. Raid Mahrus",username:"raid998",password:"Cahaya@7351"}, // Fix: M.
-    {nama:"M. Dirgatama",username:"dirga822",password:"Cahaya@4033"}, // Fix: M.
+    {nama:"M. Raid Mahrus",username:"raid998",password:"Cahaya@7351"},
+    {nama:"M. Dirgatama",username:"dirga822",password:"Cahaya@4033"},
     {nama:"Canza Ryanda Hutasuhut",username:"canza574",password:"Cahaya@9800"},
     {nama:"Falizh Daffa Qatrunnada",username:"falizh309",password:"Cahaya@6514"},
     {nama:"Daffa Al Musyari",username:"daffa237",password:"Cahaya@1257"},
@@ -246,7 +295,7 @@ button:hover{
     {nama:"Wahyu Reydinata",username:"wahyu621",password:"Cahaya@1778"},
     {nama:"Akbar Prayoga",username:"akbar308",password:"Cahaya@5194"},
     {nama:"Very Syach",username:"very429",password:"Cahaya@4130"},
-    {nama:"M. Al Falah",username:"alfalah711",password:"Cahaya@6559"}, // Fix: M.
+    {nama:"M. Al Falah",username:"alfalah711",password:"Cahaya@6559"},
     {nama:"Aditya Putra Ibrahim",username:"aditya311",password:"Cahaya@1182"},
     {nama:"Airlangga Azka Abqori",username:"airlangga915",password:"Cahaya@3048"},
     {nama:"Aqiela Marsyah",username:"aqiela842",password:"Cahaya@2299"},
@@ -258,12 +307,12 @@ button:hover{
     {nama:"Gabriel Al Fatih",username:"gabriel690",password:"Cahaya@8544"},
     {nama:"Hadinata Saputra",username:"hadinata217",password:"Cahaya@1451"},
     {nama:"Miko Vajar",username:"miko825",password:"Cahaya@7157"},
-    {nama:"M. Almisky Pratama",username:"almisky991",password:"Cahaya@1002"}, // Fix: M.
-    {nama:"M. Aqil Ridho",username:"aqil220",password:"Cahaya@9175"}, // Fix: M.
-    {nama:"M. Izam Saputra",username:"izam385",password:"Cahaya@5432"}, // Fix: M.
-    {nama:"M. Syakir Hutabarat",username:"syakir642",password:"Cahaya@9981"}, // Fix: M.
-    {nama:"M. Ziyad Zhazha",username:"ziyad503",password:"Cahaya@8440"}, // Fix: M.
-    {nama:"M. Yasir Al Fazar Jhira",username:"yasir260",password:"Cahaya@7114"}, // Fix: M.
+    {nama:"M. Almisky Pratama",username:"almisky991",password:"Cahaya@1002"},
+    {nama:"M. Aqil Ridho",username:"aqil220",password:"Cahaya@9175"},
+    {nama:"M. Izam Saputra",username:"izam385",password:"Cahaya@5432"},
+    {nama:"M. Syakir Hutabarat",username:"syakir642",password:"Cahaya@9981"},
+    {nama:"M. Ziyad Zhazha",username:"ziyad503",password:"Cahaya@8440"},
+    {nama:"M. Yasir Al Fazar Jhira",username:"yasir260",password:"Cahaya@7114"},
     {nama:"Rafa",username:"rafa909",password:"Cahaya@3642"},
     {nama:"Angga Pratama Putra",username:"angga511",password:"Cahaya@8834"},
     {nama:"Prawiro Pujo Tunggal Jati",username:"prawiro832",password:"Cahaya@3007"},
@@ -271,21 +320,21 @@ button:hover{
     {nama:"Marfel Saputra",username:"marfel273",password:"Cahaya@4311"},
     {nama:"Meldi Novriansyah",username:"meldi622",password:"Cahaya@4405"},
     {nama:"Fauzan Ibni Jabar",username:"fauzan917",password:"Cahaya@2350"},
-    {nama:"M. Fadhil Buana",username:"fadhil609",password:"Cahaya@6433"}, // Fix: M.
+    {nama:"M. Fadhil Buana",username:"fadhil609",password:"Cahaya@6433"},
     {nama:"Qheizan Alqiza Arisda",username:"qheizan739",password:"Cahaya@1872"},
     {nama:"Rezfy Fakhryazka",username:"rezfy801",password:"Cahaya@5142"},
-    {nama:"Mika Rahiel Yusuf",username:"mika325",password:"Cahaya@6544"}, // Fix: Rahiel
+    {nama:"Mika Rahiel Yusuf",username:"mika325",password:"Cahaya@6544"},
     {nama:"Ki Agus Muhammad Abdullah Shiddiq Agtsali",username:"kiagus661",password:"Cahaya@9863"},
     {nama:"Arya Difa Alsya",username:"arya990",password:"Cahaya@1278"},
     {nama:"Reynaldi Malik Ibrahim Alfaridzi",username:"reynaldi443",password:"Cahaya@8276"},
-    {nama:"M. Xavi NF",username:"xavi561",password:"Cahaya@9181"}, // Fix: M.
-    {nama:"M. Faisal Fikriansyah",username:"faisal232",password:"Cahaya@3291"}, // Fix: M.
+    {nama:"M. Xavi NF",username:"xavi561",password:"Cahaya@9181"},
+    {nama:"M. Faisal Fikriansyah",username:"faisal232",password:"Cahaya@3291"},
     {nama:"Hafidz Alrizky",username:"hafidz401",password:"Cahaya@6621"},
-    {nama:"Naufal Akbar Alkhatiri",username:"naufal502",password:"Cahaya@8888"}, // Fix: Alkhatiri
+    {nama:"Naufal Akbar Alkhatiri",username:"naufal502",password:"Cahaya@8888"},
     {nama:"Farazh Sayyid Putra Kenega",username:"farazh910",password:"Cahaya@4253"},
     {nama:"Syahrul Ramadhan",username:"syahrul881",password:"Cahaya@7320"},
     {nama:"Luthfan Adzaki",username:"luthfan332",password:"Cahaya@9812"},
-    {nama:"M. Abil Irwansyah",username:"abil773",password:"Cahaya@5533"}, // Fix: M.
+    {nama:"M. Abil Irwansyah",username:"abil773",password:"Cahaya@5533"},
     {nama:"Alif Samudra",username:"alif204",password:"Cahaya@7124"},
     {nama:"Fahrie Oktavirano Fitris",username:"fahrie519",password:"Cahaya@9340"},
     {nama:"Dikki Kurniawan",username:"dikki411",password:"Cahaya@3417"},
@@ -294,18 +343,18 @@ button:hover{
     {nama:"Ahmad Riyadi",username:"ahmad709",password:"Cahaya@9825"},
     {nama:"Alif Muhammad Yusuf",username:"alif401",password:"Cahaya@2458"},
     {nama:"Basri Al Haziq Zulfahmi",username:"basri318",password:"Cahaya@8762"},
-    {nama:"M. Faqih Hafidzallah",username:"faqih921",password:"Cahaya@3119"}, // Fix: M.
+    {nama:"M. Faqih Hafidzallah",username:"faqih921",password:"Cahaya@3119"},
     {nama:"Abdullah Mukti Hafidzallah",username:"abdullah551",password:"Cahaya@4498"},
     {nama:"Dedi Setiadi",username:"dedi204",password:"Cahaya@5561"},
     {nama:"Fakhri Al Muzakki",username:"fakhri623",password:"Cahaya@8854"},
     {nama:"Ilham Mukmin Al Farabi",username:"ilham432",password:"Cahaya@7119"},
-    {nama:"Muhammad Allam Nur Hushain",username:"allam365",password:"Cahaya@5640"}, // Fix: Hushain
-    {nama:"M. Firaas Al Insyiroh",username:"firaas999",password:"Cahaya@7238"}, // Fix: M.
+    {nama:"Muhammad Allam Nur Hushain",username:"allam365",password:"Cahaya@5640"},
+    {nama:"M. Firaas Al Insyiroh",username:"firaas999",password:"Cahaya@7238"},
     {nama:"Nabil Najmi",username:"nabil815",password:"Cahaya@1822"},
     {nama:"Satrio Abimayu",username:"satrio304",password:"Cahaya@9992"},
     {nama:"Tegar Hidayat",username:"tegar532",password:"Cahaya@1107"},
     {nama:"Wafii Fadhlurrohman",username:"wafii620",password:"Cahaya@6555"},
-    {nama:"M. Rijalul Kamil",username:"rijal544",password:"Cahaya@4029"}, // Fix: M.
+    {nama:"M. Rijalul Kamil",username:"rijal544",password:"Cahaya@4029"},
     {nama:"Alvin Herfiantino",username:"alvin880",password:"Cahaya@2051"},
     {nama:"Zahir Zibran",username:"zahir703",password:"Cahaya@9185"},
     {nama:"Raden Azaa Panca Putra",username:"raden555",password:"Cahaya@3148"},
@@ -317,10 +366,10 @@ button:hover{
     {nama:"Habib Ramadhan",username:"habib438",password:"Cahaya@9312"},
     {nama:"Ihza Trinandi",username:"ihza587",password:"Cahaya@1108"},
     {nama:"Ilham",username:"ilham993",password:"Cahaya@7540"},
-    {nama:"M. Arya Mahdi Wafi El-Fauzani",username:"arya782",password:"Cahaya@8473"}, // Fix: M.
+    {nama:"M. Arya Mahdi Wafi El-Fauzani",username:"arya782",password:"Cahaya@8473"},
     {nama:"Mahesa Aulia Giffari",username:"mahesa652",password:"Cahaya@4299"},
-    {nama:"Muhamad Yusuf Arrosiyd",username:"yusuf407",password:"Cahaya@3128"}, // Fix: Muhamad (satu m)
-    {nama:"M. Usamah",username:"usamah950",password:"Cahaya@2639"}, // Fix: M.
+    {nama:"Muhamad Yusuf Arrosiyd",username:"yusuf407",password:"Cahaya@3128"},
+    {nama:"M. Usamah",username:"usamah950",password:"Cahaya@2639"},
     {nama:"Nafis",username:"nafis841",password:"Cahaya@7566"},
     {nama:"Raka Septian",username:"raka229",password:"Cahaya@6570"},
     {nama:"Renal Martin",username:"renal316",password:"Cahaya@7182"},
@@ -336,7 +385,7 @@ button:hover{
     {nama:"Windy Windari",username:"windy212",password:"Cahaya@9775"},
     {nama:"Aisyah Nurul Aulia",username:"aisyahnur287",password:"Cahaya@2029"},
     {nama:"Nessya Ramadhany",username:"nessya501",password:"Cahaya@7332"},
-    {nama:"Amirah Balqis Rahadatul A'isyah",username:"amirah673",password:"Cahaya@8827"}, // Fix: A'isyah
+    {nama:"Amirah Balqis Rahadatul A'isyah",username:"amirah673",password:"Cahaya@8827"},
     {nama:"Earlyta Arsyfa Salsabila",username:"earlyta419",password:"Cahaya@6210"},
     {nama:"Dafia Nafla Syakira",username:"dafia833",password:"Cahaya@4920"},
     {nama:"Anisya Septiani",username:"anisya905",password:"Cahaya@8746"},
@@ -350,30 +399,24 @@ button:hover{
     {nama:"Shelena",username:"shelena937",password:"Cahaya@5284"},
     {nama:"Fitrah Kirana",username:"fitrah607",password:"Cahaya@7839"}
   ];
-  /* === LOGIN UTAMA (Firebase untuk petugas + lokal untuk wali) === */
-  async function login() {
-    let u = username.value.trim().toLowerCase();
-    const p = password.value.trim();
 
-    // Tambahkan domain jika belum ada
+  /* === LOGIN UTAMA === */
+  async function login() {
+    let u = document.getElementById("username").value.trim().toLowerCase();
+    const p = document.getElementById("password").value.trim();
+
     if (!u.includes("@") && !waliList.some(w => w.username.toLowerCase() === u)) {
       u = u + "@cahayaapp.id";
     }
 
-    // === LOGIN WALI SANTRI (versi lokal) ===
+    // === LOGIN WALI SANTRI ===
     if (!u.endsWith("@cahayaapp.id")) {
       const wali = waliList.find(w => w.username.toLowerCase() === u && w.password === p);
       if (!wali) {
         alert("❌ Username atau password salah.");
         return;
       }
-
-      const found = {
-        role: "wali",
-        namaAnak: wali.nama,
-        username: wali.username,
-        label: `Wali ${wali.nama}`
-      };
+      const found = { role: "wali", namaAnak: wali.nama, username: wali.username, label: `Wali ${wali.nama}` };
       localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
       location.href = "wali/dashboard/index.html";
       return;
@@ -384,64 +427,46 @@ button:hover{
       const email = u;
       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, p);
       const user = userCredential.user;
-
       const uname = email.split("@")[0];
       const localUser = users.find(a => a.username === uname);
 
       if (!localUser) {
-        alert("❌ Akun ini belum terdaftar di daftar petugas lokal.");
+        alert("❌ Akun tidak terdaftar di sistem lokal.");
         await firebase.auth().signOut();
         return;
       }
 
-      // Jika punya dua peran (Guru & Naqib)
       if (localUser.roles && localUser.roles.length > 1) {
         tampilModalPeran(localUser);
         return;
       }
 
       const role = localUser.role;
-
-      // Simpan ke localStorage
-      const found = {
-        role,
-        email: user.email,
-        username: uname,
-        label: localUser.label,
-        uid: user.uid
-      };
+      const found = { role, email: user.email, username: uname, label: localUser.label, uid: user.uid };
       localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
 
-      // Catat login ke Realtime Database
       const db = firebase.database();
       await db.ref("users/" + user.uid).set({
-        nama: localUser.label,
-        username: uname,
-        email: user.email,
-        role: role,
-        waktu_login: new Date().toISOString()
+        nama: localUser.label, username: uname, email: user.email, role: role, waktu_login: new Date().toISOString()
       });
 
-      alert(`✅ Login berhasil sebagai ${localUser.label} (${role.toUpperCase()})`);
-
-      // Redirect
-      switch (role) {
-        case "guru": location.href = "guru/fitur.html"; break;
-        case "naqib": location.href = "naqib/dashboard.html"; break;
-        case "admin": location.href = "admin/index.html"; break;
-      }
+      // Redirect Visual Premium
+      tampilkanLoadingPosh(`Memasuki Portal ${role.toUpperCase()}...`);
+      setTimeout(() => {
+        if(role === "guru") location.href = "guru/fitur.html";
+        else if(role === "naqib") location.href = "naqib/dashboard.html";
+        else if(role === "admin") location.href = "admin/index.html";
+      }, 1500);
 
     } catch (error) {
-      console.error(error);
-      alert("❌ Gagal login via Firebase: " + error.message);
+      alert("❌ Gagal login: " + error.message);
     }
   }
 
-  /* === AUTO LOGIN (VERSI AMAN) === */
+  /* === AUTO LOGIN === */
   (function autoLogin() {
     const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
     if (!user) return;
-
     switch (user.role) {
       case "guru": window.location.href = "guru/fitur.html"; break;
       case "naqib": window.location.href = "naqib/dashboard.html"; break;
@@ -450,170 +475,47 @@ button:hover{
       default: localStorage.removeItem("cahayaCurrentUser"); break;
     }
   })();
-  </script>
 
-  <!-- === Modal Pilihan Peran === -->
-  <div id="roleModal" class="modal">
-    <div class="modal-content">
-      <img src="logofi.png" alt="Logo Cahaya" class="modal-logo">
-      <h2>Pilih Peran Login</h2>
-      <p>Anda terdaftar sebagai <b>Guru</b> dan <b>Naqib</b>.<br>Silakan pilih salah satu:</p>
-
-      <div class="role-buttons">
-        <button class="role-btn guru" onclick="pilihPeran('guru')">👨‍🏫 Guru</button>
-        <button class="role-btn naqib" onclick="pilihPeran('naqib')">🕌 Naqib</button>
-      </div>
-    </div>
-  </div>
-  <style>
-  /* === Modal Container === */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(4px);
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.3s ease;
-  }
-  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-
-  /* === Modal Box === */
-  .modal-content {
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 36px 28px 32px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    animation: scaleIn 0.3s ease;
-  }
-  @keyframes scaleIn {
-    from {transform: scale(0.85); opacity: 0;}
-    to {transform: scale(1); opacity: 1;}
-  }
-
-  .modal-logo {
-    width: 70px;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 0 6px rgba(37,99,235,0.25));
-  }
-
-  .modal-content h2 {
-    color: #2563eb;
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .modal-content p {
-    color: #475569;
-    font-size: 0.95rem;
-    margin: 12px 0 22px;
-    line-height: 1.5;
-  }
-
-  /* === Tombol Pilihan === */
-  .role-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .role-btn {
-    border: none;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: white;
-    transition: all 0.25s;
-  }
-
-  .role-btn.guru {
-    background: linear-gradient(90deg,#3b82f6,#2563eb);
-    box-shadow: 0 4px 15px rgba(37,99,235,0.35);
-  }
-
-  .role-btn.naqib {
-    background: linear-gradient(90deg,#10b981,#059669);
-    box-shadow: 0 4px 15px rgba(5,150,105,0.35);
-  }
-
-  .role-btn:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.08);
-  }
-
-  @media (max-width: 480px) {
-    .modal-content { padding: 30px 22px; }
-    .modal-logo { width: 60px; }
-  }
-  </style>
-
-  <script>
+  /* === Modal Peran & Efek Loading === */
   let pendingUser = null;
-
-  // Tampilkan modal pilihan peran
   function tampilModalPeran(user) {
     pendingUser = user;
     document.getElementById('roleModal').style.display = 'flex';
   }
 
-  // Saat peran dipilih
   async function pilihPeran(role) {
     document.getElementById('roleModal').style.display = 'none';
-
     const uname = pendingUser.username;
     const label = pendingUser.label;
     const email = uname + "@cahayaapp.id";
-
-    // Simpan ke localStorage
     const found = { role, email, username: uname, label };
     localStorage.setItem("cahayaCurrentUser", JSON.stringify(found));
 
-    // Sinkronkan ke Firebase
-    try {
-      const db = firebase.database();
-      const currentUser = firebase.auth().currentUser;
-
-      if (currentUser) {
-        await db.ref("users/" + currentUser.uid).update({
-          nama: label,
-          role,
-          email,
-          username: uname,
-          waktu_login: new Date().toISOString()
-        });
-        console.log("✅ Data user tersinkron ke Firebase");
-      } else {
-        console.warn("⚠️ Tidak ada user aktif di Firebase Auth.");
-      }
-    } catch (err) {
-      console.error("❌ Gagal sinkronisasi user:", err);
-    }
-
-    // Efek loading
-    const loading = document.createElement('div');
-    loading.innerHTML = `
-      <div style="
-        position:fixed;inset:0;
-        display:flex;justify-content:center;align-items:center;
-        background:rgba(255,255,255,0.85);z-index:9999;
-        font-family:Poppins,Arial,sans-serif;font-size:1.2rem;color:#2563eb;
-      ">⏳ Sedang memuat dashboard ${role}...</div>`;
-    document.body.appendChild(loading);
-
-    // Redirect
+    tampilkanLoadingPosh(`Mempersiapkan area ${role.toUpperCase()}...`);
     setTimeout(() => {
       if (role === 'guru') window.location.href = 'guru/fitur.html';
       else if (role === 'naqib') window.location.href = 'naqib/dashboard.html';
-    }, 1000);
+    }, 1500);
+  }
+
+  function tampilkanLoadingPosh(text) {
+    const loading = document.createElement('div');
+    loading.style.cssText = `position:fixed; inset:0; background:rgba(2,6,23,0.9); backdrop-filter:blur(15px); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#d4af37; font-family:'Playfair Display',serif; font-size:1.5rem; letter-spacing:2px; animation: fadeIn 0.5s ease;`;
+    loading.innerHTML = `<img src="logofi.png" style="width:90px; margin-bottom:25px; filter:drop-shadow(0 0 20px rgba(212,175,55,0.6)); animation:pulse 1.2s infinite alternate;" /><div>${text}</div>`;
+    document.body.appendChild(loading);
   }
   </script>
+
+  <div id="roleModal" class="modal">
+    <div class="modal-content">
+      <img src="logofi.png" alt="Logo" class="modal-logo">
+      <h2>Pilih Akses Portal</h2>
+      <p>Kredensial Anda memiliki otorisasi ganda. Silakan pilih ruang kerja Anda.</p>
+      <div class="role-buttons">
+        <button class="role-btn" onclick="pilihPeran('guru')">Ruang Akademik (Guru)</button>
+        <button class="role-btn" onclick="pilihPeran('naqib')">Ruang Asrama (Naqib)</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
