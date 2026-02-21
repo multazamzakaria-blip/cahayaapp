@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index Kedisiplinan Ananda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --accent: #f59e0b; /* Gold */
+      --danger: #ef4444;
+      --success: #10b981;
+      --bg-gradient: radial-gradient(circle at top left, #134e4a, #0f172a);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
+      color: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    header h1 { margin: 0; font-size: 1.1rem; }
+    .btn-back {
+      background: rgba(255,255,255,0.1);
+      border: none; color: white;
+      padding: 8px 12px; border-radius: 8px;
+      cursor: pointer; font-size: 0.9rem;
+    }
+
+    main { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
+
+    /* SUMMARY CARD (SCORE) */
+    .score-card {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Efek Kilau */
+    .score-card::before {
+      content: ''; position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      transform: rotate(45deg); pointer-events: none;
+    }
+
+    .santri-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; color: #ccfbf1; }
+    .percentage { font-size: 3.5rem; font-weight: 800; margin: 10px 0; letter-spacing: -1px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    
+    .predikat-badge {
+      display: inline-block; padding: 6px 16px;
+      border-radius: 50px; font-weight: 700; font-size: 0.9rem;
+      text-transform: uppercase; letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .p-mumtaz { background: #dcfce7; color: #166534; }
+    .p-jayyid { background: #e0f2fe; color: #075985; }
+    .p-maqbul { background: #fef9c3; color: #854d0e; }
+    .p-rasib { background: #fee2e2; color: #991b1b; }
+
+    /* PROGRESS BAR */
+    .progress-track {
+      background: rgba(0,0,0,0.3);
+      height: 8px; border-radius: 10px;
+      margin: 15px 0; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 10px;
+      transition: width 1s ease;
+      background: linear-gradient(90deg, #34d399, #10b981);
+    }
+
+    .poin-detail { display: flex; justify-content: space-between; font-size: 0.85rem; opacity: 0.8; }
+
+    /* HISTORY LIST */
+    .section-title { font-size: 1rem; font-weight: 600; margin-bottom: 15px; border-left: 4px solid var(--accent); padding-left: 10px; }
+    
+    .history-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 15px; margin-bottom: 8px;
+      border-radius: 12px; transition: 0.2s;
+    }
+    .history-item:hover { background: rgba(255,255,255,0.1); }
+
+    .h-left { display: flex; flex-direction: column; gap: 4px; }
+    .h-title { font-weight: 600; font-size: 0.95rem; }
+    .h-sub { font-size: 0.75rem; opacity: 0.7; display: flex; gap: 8px; align-items: center; }
+    
+    .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .st-hadir { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+    .st-telat { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+    .st-alfa { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+    .h-poin { font-weight: 700; font-size: 1rem; }
+    .plus { color: #4ade80; }
+    .minus { color: #f87171; }
+
+    .loading { text-align: center; padding: 40px; opacity: 0.7; }
+    .no-data { text-align: center; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 12px; font-style: italic; opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏅 Indeks Kedisiplinan</h1>
+  <button class="btn-back" onclick="window.location.href='dashboard/index.html'">Kembali</button>
+</header>
+
+<main id="mainContent">
+  <div class="loading">⏳ Mengalkulasi poin kedisiplinan...</div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  
+  const TANGGAL_MULAI = "2024-05-01"; 
+
+  // === AMBIL DATA WALI & VALIDASI ===
+  const currentUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+  
+  if (!currentUser || currentUser.role !== 'wali') {
+    alert("Silakan login sebagai Wali Santri.");
+    window.location.href = '../index.html';
+  }
+
+  // PERBAIKAN DI SINI: Menggunakan 'namaAnak' sesuai data Login
+  const childName = (currentUser.namaAnak || "").trim();
+  
+  if (!childName) {
+    document.getElementById('mainContent').innerHTML = `<div class="no-data">❌ ERROR: Data nama anak tidak ditemukan pada akun ini. Silakan login ulang.</div>`;
+  } else {
+    loadDataAnak();
+  }
+
+  // === FUNGSI UTAMA ===
+  async function loadDataAnak() {
+    try {
+      const refs = [
+        get(ref(db, 'cahaya_app/absensi_program_harian')), 
+        get(ref(db, 'cahaya_app/absensi_pembelajaran')),   
+        get(ref(db, 'cahaya_app/poin_manual'))             
+      ];
+
+      const snapshots = await Promise.all(refs);
+      processData(snapshots[0].val() || {}, snapshots[1].val() || {}, snapshots[2].val() || {});
+
+    } catch (error) {
+      console.error(error);
+      document.getElementById('mainContent').innerHTML = `<div class="no-data">Gagal memuat data: ${error.message}</div>`;
+    }
+  }
+
+  function processData(ibadahData, sekolahData, manualData) {
+    let skorTertinggi = 0;
+    const mapPoinSemuaSantri = {};
+
+    // 1. Hitung Benchmark Global (Untuk Persentase)
+    const hitungGlobal = (log, isManual = false) => {
+      Object.values(log).forEach(item => {
+        if (item.tanggal < TANGGAL_MULAI && !isManual) return; 
+        
+        if (item.data) {
+          item.data.forEach(s => {
+            const nama = (s.nama || "").trim();
+            const poin = parseInt(s.poin) || 0;
+            if (!mapPoinSemuaSantri[nama]) mapPoinSemuaSantri[nama] = 0;
+            mapPoinSemuaSantri[nama] += poin; 
+          });
+        }
+        
+        if (isManual) {
+          const nama = (item.namaSantri || "").trim();
+          const poin = parseInt(item.poin) || 0;
+          if (!mapPoinSemuaSantri[nama]) mapPoinSemuaSantri[nama] = 0;
+          mapPoinSemuaSantri[nama] += poin;
+        }
+      });
+    };
+
+    hitungGlobal(ibadahData);
+    hitungGlobal(sekolahData);
+    hitungGlobal(manualData, true);
+
+    Object.values(mapPoinSemuaSantri).forEach(total => {
+      if (total > skorTertinggi) skorTertinggi = total;
+    });
+    if (skorTertinggi === 0) skorTertinggi = 1;
+
+    // 2. Filter Data Khusus Anak Ini
+    let totalPoinAnak = 0;
+    let historyList = [];
+
+    // Helper: Cek Kesamaan Nama (Case Insensitive)
+    const isMyChild = (n) => (n || "").trim().toLowerCase() === childName.toLowerCase();
+
+    // A. Ibadah
+    Object.values(ibadahData).forEach(session => {
+      if (session.tanggal < TANGGAL_MULAI) return;
+      if (session.data) {
+        session.data.forEach(s => {
+          if (isMyChild(s.nama)) {
+            const poin = parseInt(s.poin) || 0;
+            totalPoinAnak += poin;
+            historyList.push({
+              date: session.tanggal,
+              title: session.program,
+              status: s.status,
+              poin: poin
+            });
+          }
+        });
+      }
+    });
+
+    // B. Sekolah
+    Object.values(sekolahData).forEach(session => {
+      if (session.tanggal < TANGGAL_MULAI) return;
+      if (session.data) {
+        session.data.forEach(s => {
+          if (isMyChild(s.nama)) {
+            const poin = parseInt(s.poin) || 0;
+            totalPoinAnak += poin;
+            historyList.push({
+              date: session.tanggal,
+              title: session.mapel,
+              status: s.status,
+              poin: poin
+            });
+          }
+        });
+      }
+    });
+
+    // C. Manual/Pelanggaran
+    Object.values(manualData).forEach(log => {
+      if (isMyChild(log.namaSantri)) {
+        const poin = parseInt(log.poin) || 0;
+        const tgl = log.waktu ? log.waktu.split('T')[0] : "-";
+        totalPoinAnak += poin;
+        historyList.push({
+          date: tgl,
+          title: log.keterangan || "Catatan Kedisiplinan",
+          status: poin < 0 ? 'Sanksi' : 'Reward',
+          poin: poin
+        });
+      }
+    });
+
+    // 3. Urutkan & Hitung
+    historyList.sort((a, b) => new Date(b.date) - new Date(a.date));
+    let persen = Math.round((totalPoinAnak / skorTertinggi) * 100);
+    let persenVisual = persen > 100 ? 100 : (persen < 0 ? 0 : persen);
+
+    renderUI(totalPoinAnak, persen, persenVisual, historyList);
+  }
+
+  function renderUI(total, persen, persenVisual, history) {
+    const main = document.getElementById('mainContent');
+    
+    let predikat = "JAYYID";
+    let cssClass = "p-jayyid";
+    let colorBar = "#0ea5e9";
+    
+    if (persen >= 90) { 
+      predikat = "MUMTAZ"; cssClass = "p-mumtaz"; colorBar = "#10b981"; 
+    } else if (persen < 50) { 
+      predikat = "RASIB"; cssClass = "p-rasib"; colorBar = "#ef4444"; 
+    } else if (persen < 75) { 
+      predikat = "MAQBUL"; cssClass = "p-maqbul"; colorBar = "#f59e0b"; 
+    }
+
+    let html = `
+      <div class="score-card">
+        <div class="santri-name">${childName}</div>
+        <div class="percentage" style="color:${colorBar}">${persen}%</div>
+        <span class="predikat-badge ${cssClass}">${predikat}</span>
+        
+        <div class="progress-track">
+          <div class="progress-fill" style="width: ${persenVisual}%; background: ${colorBar}"></div>
+        </div>
+        
+        <div class="poin-detail">
+          <span>Total Poin: <strong>${total}</strong></span>
+          <span>Target: 100%</span>
+        </div>
+      </div>
+
+      <div class="section-title">Riwayat Aktivitas & Kedisiplinan</div>
+    `;
+
+    if (history.length === 0) {
+      html += `<div class="no-data">Belum ada data aktivitas yang terekam.</div>`;
+    } else {
+      history.forEach(h => {
+        let badgeClass = "";
+        let s = h.status.toLowerCase();
+        if (s.includes('hadir') || s.includes('bonus')) badgeClass = "st-hadir";
+        else if (s.includes('telat') || s.includes('terlambat')) badgeClass = "st-telat";
+        else badgeClass = "st-alfa"; 
+
+        let sign = h.poin > 0 ? "+" : "";
+        let poinClass = h.poin > 0 ? "plus" : (h.poin < 0 ? "minus" : "");
+
+        html += `
+          <div class="history-item">
+            <div class="h-left">
+              <div class="h-title">${h.title}</div>
+              <div class="h-sub">
+                <span>${formatDate(h.date)}</span> • 
+                <span class="status-badge ${badgeClass}">${h.status}</span>
+              </div>
+            </div>
+            <div class="h-poin ${poinClass}">${sign}${h.poin}</div>
+          </div>
+        `;
+      });
+    }
+
+    main.innerHTML = html;
+  }
+
+  function formatDate(isoStr) {
+    if (!isoStr) return "-";
+    const d = new Date(isoStr);
+    const months = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
+    return `${d.getDate()} ${months[d.getMonth()]}`;
+  }
+
+</script>
+
+</body>
+</html>
