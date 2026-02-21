@@ -2,82 +2,189 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP - Form Pelanggaran Santri</title>
+  <title>CAHAYA APP - Tindak Kasus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #dc2626; --bg-gradient: radial-gradient(circle at top left, #fef2f2, #fff1f2 40%, #fff); }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); color: #7f1d1d; margin: 0; padding: 0; }
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --danger-main: #dc2626;
+      --danger-dark: #7f1d1d;
+      --danger-glow: rgba(220, 38, 38, 0.4);
+      --accent-gold: #d4af37;
+      
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(220, 38, 38, 0.3); /* Border kemerahan */
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
 
-    header { background: linear-gradient(135deg, #b91c1c, #ef4444); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3); }
-    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
-    header button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    main { padding: 20px; max-width: 800px; margin: 0 auto; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: 
+        radial-gradient(circle at top right, rgba(220, 38, 38, 0.1), transparent 50%),
+        radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.05), transparent 40%),
+        linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
 
-    .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #fecaca; }
+    /* Texture */
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: -1;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fca5a5; letter-spacing: 1px; }
     
-    label { display: block; font-weight: 600; margin-top: 15px; color: #991b1b; }
-    select, textarea, input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #fca5a5; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 0.95rem; }
-    select:focus, textarea:focus { outline: none; border-color: #dc2626; }
+    .btn-back {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main); padding: 8px 16px; border-radius: 50px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+    main { max-width: 800px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
+    @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* INFO BOX */
+    .info-box {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(127, 29, 29, 0.2));
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      padding: 15px 20px; border-radius: 16px; font-size: 0.9rem; color: #fca5a5;
+      margin-bottom: 30px; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+    }
+
+    /* FORM CARD */
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px; padding: 40px;
+      box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--danger-glow) 0%, transparent 70%); pointer-events: none;
+    }
+
+    label { display: block; font-weight: 600; margin-top: 20px; margin-bottom: 8px; color: #fca5a5; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase; }
     
-    /* Field Kategori Otomatis (Read-Only) */
-    .auto-field { background: #f3f4f6; color: #6b7280; border-color: #d1d5db; cursor: not-allowed; font-weight: bold; }
+    select, textarea, input { 
+      width: 100%; padding: 14px 20px;
+      border-radius: 12px; border: 1px solid rgba(220, 38, 38, 0.3);
+      background: rgba(0,0,0,0.4); color: white;
+      font-family: inherit; font-size: 1rem;
+      transition: all 0.3s; outline: none; resize: vertical;
+    }
+    select:focus, textarea:focus, input:focus {
+      border-color: var(--danger-main); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15); background: rgba(0,0,0,0.6);
+    }
+    
+    /* Auto Field */
+    .auto-field { background: rgba(255,255,255,0.02); color: var(--text-muted); border-color: rgba(255,255,255,0.05); cursor: not-allowed; font-weight: bold; }
 
-    .poin-preview { margin-top: 10px; font-weight: bold; text-align: right; color: #dc2626; font-size: 0.9rem; }
+    .poin-preview { 
+      margin-top: 15px; font-weight: bold; text-align: right; 
+      color: #fca5a5; font-size: 1rem; font-family: 'Playfair Display', serif;
+      letter-spacing: 1px;
+    }
+    .poin-number { font-size: 1.8rem; color: #ef4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
 
-    button.btn-save { background: #dc2626; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; margin-top: 25px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
-    button.btn-save:hover { background: #b91c1c; transform: translateY(-2px); }
+    /* SAVE BUTTON */
+    .btn-save {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: white; border: none; padding: 16px; width: 100%;
+      border-radius: 16px; margin-top: 35px; font-weight: 700; font-size: 1.1rem;
+      font-family: inherit; letter-spacing: 1px; cursor: pointer; transition: 0.3s;
+      box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+    }
+    .btn-save:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(220, 38, 38, 0.6); filter: brightness(1.1); }
+    .btn-save:disabled { background: #475569; cursor: not-allowed; box-shadow: none; transform: none; color: #94a3b8; }
 
-    /* Tabel Riwayat */
-    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 30px; font-size: 0.85rem; }
-    thead th { text-align: left; padding: 10px; color: #7f1d1d; }
-    tbody tr { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    tbody td { padding: 12px; border-top: 1px solid #fee2e2; }
-    tbody td:first-child { border-left: 1px solid #fee2e2; border-radius: 10px 0 0 10px; }
-    tbody td:last-child { border-right: 1px solid #fee2e2; border-radius: 0 10px 10px 0; }
+    /* TABLE */
+    .table-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fca5a5; margin-top: 50px; margin-bottom: 20px; border-bottom: 1px solid rgba(220,38,38,0.2); padding-bottom: 10px; }
+    
+    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: 0.9rem; }
+    thead th { text-align: left; padding: 10px 15px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+    
+    tbody tr { background: rgba(255,255,255,0.03); border-radius: 12px; transition: 0.2s; }
+    tbody tr:hover { background: rgba(255,255,255,0.05); }
+    
+    tbody td { padding: 15px; border-top: 1px solid transparent; border-bottom: 1px solid transparent; color: var(--text-main); }
+    tbody td:first-child { border-left: 1px solid transparent; border-radius: 12px 0 0 12px; color: var(--text-muted); }
+    tbody td:last-child { border-right: 1px solid transparent; border-radius: 0 12px 12px 0; color: #fca5a5; }
+
+    @media(max-width: 600px) {
+      .card { padding: 25px; }
+      table { font-size: 0.8rem; }
+      tbody td { padding: 10px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🚨 Input Pelanggaran</h1>
-  <button onclick="window.location.href='dashboard.html'">Kembali</button>
+  <h1>Tindak Kasus</h1>
+  <button class="btn-back" onclick="window.location.href='dashboard.html'">Kembali</button>
 </header>
 
 <main>
-  <div style="background:#fef2f2; padding:12px; border-radius:8px; border:1px solid #fecaca; font-size:0.9rem; color:#b91c1c; margin-bottom:20px;">
-    <strong>Info Naqib:</strong> Data santri otomatis diambil dari anggota Usrah Anda.
+  <div class="info-box">
+    <span style="font-size: 1.2rem;">⚠️</span>
+    <span>Otorisasi Naqib: Data santri otomatis difilter berdasarkan anggota Usrah Anda.</span>
   </div>
 
   <div class="card">
-    <label>Nama Santri (Usrah Anda)</label>
+    <label>Nama Santri Terhukum</label>
     <select id="namaSantri">
       <option value="">-- Memuat Data --</option>
     </select>
 
     <label>Jenis Pelanggaran</label>
     <select id="namaPelanggaran" onchange="autoSetKategori()">
-      <option value="">-- Pilih Pelanggaran --</option>
-      </select>
+      <option value="">-- Pilih Jenis Pelanggaran --</option>
+    </select>
 
-    <label>Kategori (Otomatis)</label>
-    <input type="text" id="kategoriDisplay" class="auto-field" readonly placeholder="Otomatis terisi...">
+    <label>Kategori Sistem</label>
+    <input type="text" id="kategoriDisplay" class="auto-field" readonly placeholder="Terisi otomatis berdasarkan jenis pelanggaran...">
     
     <div id="previewPoin" class="poin-preview"></div>
 
-    <label>Keterangan Tambahan / Kronologi</label>
-    <textarea id="keterangan" rows="2" placeholder="Detail kejadian..."></textarea>
+    <label>Kronologi / Keterangan Kejadian</label>
+    <textarea id="keterangan" rows="2" placeholder="Tuliskan detail spesifik kejadian..."></textarea>
 
-    <label>Tindak Lanjut dan Konskuensi</label>
-    <textarea id="tindakLanjut" rows="2" placeholder="Contoh: Push up, membersihkan WC, nasihat..."></textarea>
+    <label>Tindak Lanjut & Sanksi Diberikan</label>
+    <textarea id="tindakLanjut" rows="2" placeholder="Contoh: Push up 50x, Hafalan surat, Pemanggilan Orang Tua..."></textarea>
 
-    <button class="btn-save" onclick="simpanPelanggaran()">⚖️ HUKUM & POTONG POIN</button>
+    <button id="btnEksekusi" class="btn-save" onclick="simpanPelanggaran()">EKSEKUSI POTONG POIN</button>
   </div>
 
-  <h3 style="margin-top:40px; color:#991b1b;">Riwayat Input Hari Ini</h3>
+  <h3 class="table-title">Riwayat Input Hari Ini</h3>
   <table id="tabelPelanggaran">
     <thead>
-      <tr><th>No</th><th>Santri</th><th>Pelanggaran</th><th>Hukuman</th></tr>
+      <tr>
+        <th width="5%">No</th>
+        <th width="30%">Santri</th>
+        <th width="35%">Pelanggaran</th>
+        <th width="30%">Sanksi</th>
+      </tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -102,7 +209,6 @@
   
   // === DATABASE 65 PELANGGARAN ===
   const DAFTAR_PELANGGARAN = [
-    // RINGAN (-10)
     { no:1, nama:"Seragam tidak sesuai", kat:"Ringan" },
     { no:2, nama:"Membuat keributan di masjid", kat:"Ringan" },
     { no:3, nama:"Bermain ketika dzikir", kat:"Ringan" },
@@ -128,8 +234,6 @@
     { no:23, nama:"Tidak cuci piring", kat:"Ringan" },
     { no:24, nama:"Tempat tidur berantakan", kat:"Ringan" },
     { no:25, nama:"Masuk kamar orang lain", kat:"Ringan" },
-
-    // SEDANG (-30)
     { no:26, nama:"Keluar pondok tanpa izin (sebentar)", kat:"Sedang" },
     { no:27, nama:"Merokok / Vaping", kat:"Sedang" },
     { no:28, nama:"Simpan HP/Elektronik (Ringan)", kat:"Sedang" },
@@ -150,8 +254,6 @@
     { no:43, nama:"Sebar gosip/isu", kat:"Sedang" },
     { no:44, nama:"Main Medsos tanpa izin", kat:"Sedang" },
     { no:45, nama:"Pelanggaran ringan berulang (3x)", kat:"Sedang" },
-
-    // BERAT (-100)
     { no:46, nama:"Mencuri (Sariqah)", kat:"Berat" },
     { no:47, nama:"Narkoba / Miras", kat:"Berat" },
     { no:48, nama:"Zina / Asusila Berat", kat:"Berat" },
@@ -180,59 +282,48 @@
   const kelompok = JSON.parse(localStorage.getItem('kelompokNaqib') || '[]');
 
   document.addEventListener('DOMContentLoaded', () => {
-    // 1. Validasi Login
     if (!currentUser || currentUser.role !== 'naqib') {
       alert("Sesi habis. Login kembali."); window.location.href='../index.html'; return;
     }
 
-    // 2. Isi Dropdown Santri (Dari Usrah)
     const selectSantri = document.getElementById('namaSantri');
     selectSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
     if(kelompok.length === 0) {
-        const opt = document.createElement('option');
-        opt.text = "Tidak ada data anggota usrah";
-        selectSantri.appendChild(opt);
+        selectSantri.innerHTML = '<option value="">(Kosong) Data Usrah tidak ditemukan</option>';
     } else {
         kelompok.forEach(nama => {
             const opt = document.createElement('option');
-            opt.value = nama;
-            opt.text = nama;
+            opt.value = nama; opt.text = nama;
             selectSantri.appendChild(opt);
         });
     }
 
-    // 3. Isi Dropdown Pelanggaran
     const selectPel = document.getElementById('namaPelanggaran');
     DAFTAR_PELANGGARAN.forEach(p => {
         const opt = document.createElement('option');
-        opt.value = p.no; // Simpan ID/Nomor sebagai value
+        opt.value = p.no;
         opt.text = `${p.no}. ${p.nama} (${p.kat})`;
         selectPel.appendChild(opt);
     });
   });
 
-  // === FUNGSI OTOMATISASI KATEGORI ===
   window.autoSetKategori = function() {
     const no = document.getElementById('namaPelanggaran').value;
     const inputKat = document.getElementById('kategoriDisplay');
     const divPoin = document.getElementById('previewPoin');
 
     if (!no) {
-        inputKat.value = "";
-        divPoin.textContent = "";
-        return;
+        inputKat.value = ""; divPoin.innerHTML = ""; return;
     }
 
-    // Cari data berdasarkan nomor
     const data = DAFTAR_PELANGGARAN.find(p => p.no == no);
     if (data) {
-        inputKat.value = data.kat; // Isi otomatis
+        inputKat.value = data.kat; 
         const denda = POIN_DENDA[data.kat];
-        divPoin.innerHTML = `Potongan Poin: <span style="font-size:1.2rem">${denda}</span>`;
+        divPoin.innerHTML = `Sanksi Poin Kedisiplinan: <br><span class="poin-number">${denda}</span>`;
     }
   };
 
-  // === SIMPAN DATA ===
   window.simpanPelanggaran = function() {
     const santri = document.getElementById('namaSantri').value;
     const noPelanggaran = document.getElementById('namaPelanggaran').value;
@@ -240,15 +331,16 @@
     const tindakLanjut = document.getElementById('tindakLanjut').value;
     const naqib = currentUser.username || "Naqib";
 
-    if (!santri || !noPelanggaran) { alert("Pilih Santri dan Jenis Pelanggaran!"); return; }
+    if (!santri || !noPelanggaran) { alert("⚠️ Lengkapi Nama Santri dan Jenis Pelanggaran!"); return; }
 
     const dataPel = DAFTAR_PELANGGARAN.find(p => p.no == noPelanggaran);
     const denda = POIN_DENDA[dataPel.kat];
 
-    // Konfirmasi
-    if(!confirm(`⚠️ KONFIRMASI HUKUMAN\n\nSantri: ${santri}\nKasus: ${dataPel.nama}\nKategori: ${dataPel.kat}\n\nPoin akan berkurang ${denda}. Lanjutkan?`)) return;
+    if(!confirm(`⚠️ KONFIRMASI TINDAK KASUS\n\nSantri: ${santri}\nKasus: ${dataPel.nama}\n\nPoin santri akan dikurangi ${denda}. Lanjutkan?`)) return;
 
-    // 1. Simpan Log Kasus
+    const btn = document.getElementById('btnEksekusi');
+    btn.innerHTML = "⏳ MENGIRIM DATA..."; btn.disabled = true;
+
     const logKasus = {
       tanggal: new Date().toISOString().split('T')[0],
       santri: santri,
@@ -260,11 +352,10 @@
       waktuSimpan: new Date().toISOString()
     };
 
-    // 2. Simpan Log Poin (Untuk Rapor)
     const logPoin = {
       namaSantri: santri,
       poin: denda,
-      keterangan: `[PELANGGARAN ${dataPel.kat}] ${dataPel.nama}`,
+      keterangan: `[PELANGGARAN ${dataPel.kat.toUpperCase()}] ${dataPel.nama}`,
       admin: naqib,
       waktu: new Date().toISOString()
     };
@@ -273,18 +364,20 @@
         push(ref(db, 'cahaya_app/pelanggaran_santri'), logKasus),
         push(ref(db, 'cahaya_app/poin_manual'), logPoin)
     ]).then(() => {
-        alert("✅ Data tersimpan & Poin dikurangi.");
+        alert("✅ Kasus tercatat & Poin berhasil dipotong.");
         
-        // Update Tabel Preview
         const tbody = document.querySelector('#tabelPelanggaran tbody');
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${tbody.children.length+1}</td><td>${santri}</td><td>${dataPel.nama}</td><td>${tindakLanjut || '-'}</td>`;
         tbody.prepend(tr);
 
-        // Reset
         document.getElementById('keterangan').value = '';
         document.getElementById('tindakLanjut').value = '';
-    }).catch(e => alert("Error: " + e.message));
+        btn.innerHTML = "EKSEKUSI POTONG POIN"; btn.disabled = false;
+    }).catch(e => {
+        alert("Error Database: " + e.message);
+        btn.innerHTML = "EKSEKUSI POTONG POIN"; btn.disabled = false;
+    });
   };
 </script>
 
