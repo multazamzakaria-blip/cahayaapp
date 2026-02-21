@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAHAYA APP - Asesmen Premium</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ================= RESET & VARIABLES ================= */
+:root {
+  --primary-dark: #020617;
+  --primary-blue: #0f172a;
+  --accent-gold: #d4af37;
+  --accent-gold-light: #fef08a;
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(212, 175, 55, 0.25);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height: 100vh;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.1), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.05), transparent 40%),
+    linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+  color: var(--text-main);
+  padding-bottom: 80px;
+}
+
+/* Texture Pattern */
+body::before {
+  content: ""; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: -1;
+}
+
+/* ================= HEADER (STICKY) ================= */
+.sticky-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(2, 6, 23, 0.85);
+  backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 15px 30px;
+  display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.brand-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; color: var(--accent-gold); font-weight: 700;
+  margin: 0; display: flex; align-items: center; gap: 10px; letter-spacing: 1px;
+}
+.brand-sub { font-size: 0.8rem; color: var(--text-muted); font-family: 'Poppins', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: 2px;}
+
+.btn-header {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-main); padding: 8px 16px; border-radius: 50px;
+  font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s;
+}
+.btn-header:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+/* ================= CONTAINER & CARDS ================= */
+.app-container { max-width: 900px; margin: 40px auto; padding: 0 20px; animation: fadeInUp 0.8s ease backwards; }
+@keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  padding: 40px; border-radius: 24px;
+  box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
+  margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.08);
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%); pointer-events: none;
+}
+
+/* ================= DIMENSI TITLE ================= */
+.dimension-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--accent-gold-light); margin-bottom: 30px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 15px; letter-spacing: 1px;
+}
+
+/* ================= FORM ELEMENTS ================= */
+label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+input[type="date"], select, textarea {
+  width: 100%; padding: 14px 20px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4);
+  font-family: inherit; font-size: 1rem; color: var(--text-main);
+  transition: all 0.3s; outline: none; resize: vertical;
+}
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+input[type="date"]:focus, select:focus, textarea:focus {
+  border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); background: rgba(0,0,0,0.6);
+}
+
+/* ================= QUESTION & OPTIONS ================= */
+.question { margin-bottom: 35px; }
+.question strong { display: block; margin-bottom: 15px; font-weight: 500; font-size: 1.05rem; color: var(--accent-gold-light); line-height: 1.5; }
+
+.option-group { display: flex; flex-direction: column; gap: 10px; }
+
+/* Custom Radio Button Dark Mode */
+.option-group label {
+  display: flex; align-items: center; padding: 14px 20px;
+  border-radius: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer; transition: all 0.2s ease; font-size: 0.95rem; color: var(--text-muted);
+}
+.option-group label:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); transform: translateX(4px); color: var(--text-main); }
+
+.option-group input[type="radio"], .option-group input[type="checkbox"] { 
+  margin-right: 15px; transform: scale(1.3); accent-color: var(--accent-gold); cursor: pointer;
+}
+
+/* State Checked */
+.option-group label:has(input:checked) {
+  background: rgba(212, 175, 55, 0.15); border-color: var(--accent-gold); color: #fff; font-weight: 600;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+}
+
+/* ================= BUTTON & NARASI ================= */
+.btn-generate {
+  margin-top: 10px; padding: 12px 24px; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px;
+  font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  background: rgba(212, 175, 55, 0.1); color: var(--accent-gold-light); transition: 0.3s;
+  display: flex; align-items: center; gap: 8px; width: fit-content;
+}
+.btn-generate:hover { background: rgba(212, 175, 55, 0.2); border-color: var(--accent-gold); }
+
+.btn-primary {
+  width: 100%; margin-top: 20px; padding: 18px; border: none; border-radius: 16px;
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold)); color: #000;
+  transition: 0.3s; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5); filter: brightness(1.1); }
+.btn-primary:disabled { filter: grayscale(1); cursor: not-allowed; transform: none; }
+
+.narasi-box {
+  margin-top: 25px; padding: 25px; border-radius: 16px;
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
+  border-left: 4px solid var(--accent-gold);
+}
+
+@media(max-width:768px){
+  .sticky-header { padding: 15px 20px; flex-direction: column; gap: 15px; align-items: flex-start; }
+  .btn-header { width: 100%; text-align: center; }
+  .card { padding: 25px 20px; }
+  .dimension-title { font-size: 1.2rem; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sticky-header">
+  <div class="brand-title">
+    ✨ Asesmen CAHAYA
+    <span class="brand-sub">Evaluasi 5 Dimensi</span>
+  </div>
+  <button class="btn-header" onclick="window.location.href='dashboard.html'">⬅ Kembali</button>
+</div>
+
+<div class="app-container">
+
+<div class="card">
+  <div class="dimension-title">📋 Identitas Evaluasi</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;">
+    <div>
+      <label>Tanggal Evaluasi</label>
+      <input type="date" id="tanggalAsesmen">
+    </div>
+    <div>
+      <label>Nama Santri (Usrah Anda)</label>
+      <select id="namaSantri">
+        <option value="">-- Memuat Data --</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+function getSelectedValue(name){
+  const radios=document.querySelectorAll(`input[name="${name}"]`);
+  for(let r of radios){ if(r.checked) return r.parentElement.innerText.trim(); }
+  return "";
+}
+
+function generateNarasiSpiritual(){
+  const p1=getSelectedValue("sp1"); const p2=getSelectedValue("sp2"); const p3=getSelectedValue("sp3");
+  let narasi="Pada Dimensi Spiritual, kami melihat ananda sedang bertumbuh dalam membangun kualitas ibadahnya. ";
+
+  if(p1==="Sering lalai") narasi+="Saat waktu ibadah tiba, ananda masih sering belum sigap merespons panggilan. ";
+  else if(p1==="Kadang menunda") narasi+="Saat waktu ibadah tiba, ananda sudah memiliki kesadaran namun sesekali masih menunda. ";
+  else if(p1==="Umumnya siap") narasi+="Saat waktu ibadah tiba, ananda cukup responsif. ";
+  else if(p1==="Siap dan tertib") narasi+="Saat waktu ibadah tiba, ananda sigap dan menjaga ketertiban dengan baik. ";
+  else if(p1==="Sangat sadar dan terjaga") narasi+="Saat waktu ibadah tiba, ananda menunjukkan kesadaran yang sangat baik. ";
+
+  if(p2==="Sering tertinggal") narasi+="Dalam pelaksanaan shalat berjamaah, ananda masih sering tertinggal. ";
+  else if(p2==="Beberapa kali lalai") narasi+="Dalam shalat berjamaah, ananda beberapa kali lalai namun mulai membaik. ";
+  else if(p2==="Cukup tertib") narasi+="Dalam pelaksanaan shalat berjamaah, ananda cukup konsisten. ";
+  else if(p2==="Tertib") narasi+="Dalam pelaksanaan shalat berjamaah, ananda disiplin. ";
+  else if(p2==="Sangat tertib") narasi+="Dalam pelaksanaan shalat berjamaah, ananda sangat konsisten dan disiplin. ";
+
+  if(p3==="Sering enggan") narasi+="Dalam mengikuti pembinaan ruhani, ananda masih perlu dimotivasi. ";
+  else if(p3==="Kurang serius") narasi+="Dalam pembinaan ruhani, ananda sudah hadir namun perlu peningkatan kesungguhan. ";
+  else if(p3==="Cukup mengikuti") narasi+="Dalam pembinaan ruhani, ananda berpartisipasi dengan cukup baik. ";
+  else if(p3==="Mengikuti dengan adab") narasi+="Dalam pembinaan ruhani, ananda menjaga adab dengan baik. ";
+  else if(p3==="Sangat bersungguh-sungguh") narasi+="Dalam pembinaan ruhani, ananda menunjukkan kesungguhan yang sangat baik. ";
+
+  narasi+="InsyaAllah kualitas spiritualnya akan semakin matang.";
+  document.getElementById("narasiSpiritual").value=narasi;
+}
+</script>
+
+<div class="card">
+  <div class="dimension-title">🌙 1. Cinta Allah (Spiritual)</div>
+
+  <div class="question">
+    <strong>1. Saat waktu ibadah tiba, bagaimana respons santri pekan ini?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="sp1">Sering lalai</label>
+      <label><input type="radio" name="sp1">Kadang menunda</label>
+      <label><input type="radio" name="sp1">Umumnya siap</label>
+      <label><input type="radio" name="sp1">Siap dan tertib</label>
+      <label><input type="radio" name="sp1">Sangat sadar dan terjaga</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>2. Bagaimana kedisiplinan santri dalam ibadah wajib (shalat berjamaah)?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="sp2">Sering tertinggal</label>
+      <label><input type="radio" name="sp2">Beberapa kali lalai</label>
+      <label><input type="radio" name="sp2">Cukup tertib</label>
+      <label><input type="radio" name="sp2">Tertib</label>
+      <label><input type="radio" name="sp2">Sangat tertib</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>3. Bagaimana sikap santri dalam mengikuti pembinaan ruhani?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="sp3">Sering enggan</label>
+      <label><input type="radio" name="sp3">Kurang serius</label>
+      <label><input type="radio" name="sp3">Cukup mengikuti</label>
+      <label><input type="radio" name="sp3">Mengikuti dengan adab</label>
+      <label><input type="radio" name="sp3">Sangat bersungguh-sungguh</label>
+    </div>
+  </div>
+
+  <button class="btn-generate" onclick="generateNarasiSpiritual()">✨ Susun Narasi Otomatis</button>
+
+  <div class="narasi-box">
+    <label style="color:var(--accent-gold-light)">Narasi Evaluasi Spiritual</label>
+    <textarea id="narasiSpiritual" style="min-height:100px; margin-top:10px;"></textarea>
+  </div>
+</div>
+
+<script>
+function generateNarasiRelasional(){
+  const r1=getSelectedValue("re1"); const r2=getSelectedValue("re2"); const r3=getSelectedValue("re3"); const r4=getSelectedValue("re4");
+  let narasi="Pada Dimensi Relasional, kami melihat ananda sedang bertumbuh dalam kualitas interaksi sosialnya. ";
+
+  if(r1==="Kurang terjaga") narasi+="Dalam beradab kepada guru, ananda masih memerlukan pembinaan. ";
+  else if(r1==="Kadang lalai") narasi+="Dalam beradab kepada guru, ananda cukup baik namun belum konsisten. ";
+  else if(r1==="Cukup sopan") narasi+="Dalam beradab kepada guru, ananda menunjukkan sikap sopan yang cukup baik. ";
+  else if(r1==="Sopan dan hormat") narasi+="Dalam beradab kepada guru, ananda menjaga sikap hormat dengan baik. ";
+  else if(r1==="Sangat terjaga") narasi+="Ananda sangat hormat dan beradab dalam setiap interaksi dengan guru. ";
+
+  if(r2==="Sering konflik") narasi+="Hubungannya dengan teman masih perlu pendampingan agar lebih harmonis. ";
+  else if(r2==="Beberapa gesekan") narasi+="Terdapat beberapa gesekan kecil dengan teman yang perlu diarahkan. ";
+  else if(r2==="Biasa saja") narasi+="Hubungan dengan teman cukup stabil. ";
+  else if(r2==="Baik") narasi+="Ananda menjalin hubungan yang baik dengan teman-temannya. ";
+  else if(r2==="Sangat harmonis") narasi+="Ananda mampu menjaga hubungan yang sangat harmonis. ";
+
+  if(r3==="Sering lalai") narasi+="Dalam menjalankan amanah, ananda masih perlu peningkatan konsistensi. ";
+  else if(r3==="Kadang lalai") narasi+="Dalam menjalankan amanah, ananda sudah berusaha namun belum stabil. ";
+  else if(r3==="Cukup bertanggung jawab") narasi+="Ananda menjalankan tugas dengan cukup baik. ";
+  else if(r3==="Bertanggung jawab") narasi+="Ananda bertanggung jawab dalam menjalankan amanah. ";
+  else if(r3==="Sangat dapat dipercaya") narasi+="Ananda menunjukkan integritas dan dapat dipercaya dalam setiap amanah. ";
+
+  if(r4==="Kurang peduli") narasi+="Kepedulian sosialnya masih perlu ditumbuhkan. ";
+  else if(r4==="Kadang acuh") narasi+="Ananda sudah peduli namun belum konsisten. ";
+  else if(r4==="Cukup peduli") narasi+="Ananda menunjukkan kepedulian yang cukup baik terhadap sekitar. ";
+  else if(r4==="Peduli dan peka") narasi+="Ananda peka dan responsif terhadap kebutuhan orang lain. ";
+  else if(r4==="Sangat empatik") narasi+="Ananda memiliki empati yang sangat baik dan menjadi teladan. ";
+
+  narasi+="Karakter sosialnya akan semakin matang seiring waktu.";
+  document.getElementById("narasiRelasional").value=narasi;
+}
+</script>
+
+<div class="card">
+  <div class="dimension-title">🤝 2. Akhlak Mulia (Relasional)</div>
+
+  <div class="question">
+    <strong>4. Bagaimana adab santri kepada guru dan pengurus pekan ini?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="re1">Kurang terjaga</label>
+      <label><input type="radio" name="re1">Kadang lalai</label>
+      <label><input type="radio" name="re1">Cukup sopan</label>
+      <label><input type="radio" name="re1">Sopan dan hormat</label>
+      <label><input type="radio" name="re1">Sangat terjaga</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>5. Bagaimana sikap santri terhadap teman-teman asrama?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="re2">Sering konflik</label>
+      <label><input type="radio" name="re2">Beberapa gesekan</label>
+      <label><input type="radio" name="re2">Biasa saja</label>
+      <label><input type="radio" name="re2">Baik</label>
+      <label><input type="radio" name="re2">Sangat harmonis</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>6. Bagaimana tanggung jawab santri terhadap amanah (contoh: piket)?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="re3">Sering lalai</label>
+      <label><input type="radio" name="re3">Kadang lalai</label>
+      <label><input type="radio" name="re3">Cukup bertanggung jawab</label>
+      <label><input type="radio" name="re3">Bertanggung jawab</label>
+      <label><input type="radio" name="re3">Sangat dapat dipercaya</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>7. Bagaimana kepedulian santri terhadap orang lain?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="re4">Kurang peduli</label>
+      <label><input type="radio" name="re4">Kadang acuh</label>
+      <label><input type="radio" name="re4">Cukup peduli</label>
+      <label><input type="radio" name="re4">Peduli dan peka</label>
+      <label><input type="radio" name="re4">Sangat empatik</label>
+    </div>
+  </div>
+
+  <button class="btn-generate" onclick="generateNarasiRelasional()">✨ Susun Narasi Otomatis</button>
+
+  <div class="narasi-box">
+    <label style="color:var(--accent-gold-light)">Narasi Evaluasi Relasional</label>
+    <textarea id="narasiRelasional" style="min-height:100px; margin-top:10px;"></textarea>
+  </div>
+</div>
+
+<script>
+function generateNarasiEmosional(){
+  const e1=getSelectedValue("em1"); const e2=getSelectedValue("em2"); const e3=getSelectedValue("em3");
+  let narasi="Pada Dimensi Emosional, ananda sedang berproses dalam mematangkan pengelolaan dirinya. ";
+
+  if(e1==="Meledak atau tidak terkendali") narasi+="Saat emosi muncul, ananda masih memerlukan pembinaan untuk mengendalikan diri. ";
+  else if(e1==="Sulit mengendalikan") narasi+="Ananda sudah berusaha mengontrol emosi namun belum stabil. ";
+  else if(e1==="Cukup terkendali") narasi+="Ananda cukup mampu mengontrol emosinya. ";
+  else if(e1==="Umumnya tenang") narasi+="Ananda umumnya tenang dalam menghadapi situasi menantang. ";
+  else if(e1==="Sangat terkelola") narasi+="Ananda menunjukkan kematangan emosi yang sangat baik. ";
+
+  if(e2==="Sangat gelisah") narasi+="Kondisi emosinya masih memerlukan pendampingan agar lebih stabil. ";
+  else if(e2==="Kurang stabil") narasi+="Emosinya masih mengalami fluktuasi yang perlu diarahkan. ";
+  else if(e2==="Biasa saja") narasi+="Kondisi emosinya cukup stabil dalam keseharian. ";
+  else if(e2==="Cukup tenang") narasi+="Ketenangan emosinya cukup baik. ";
+  else if(e2==="Tenang dan stabil") narasi+="Ananda menunjukkan kestabilan emosi yang sangat baik. ";
+
+  if(e3==="Menolak") narasi+="Dalam menerima nasihat, ananda masih perlu dibimbing agar lebih terbuka. ";
+  else if(e3==="Sulit menerima") narasi+="Ananda memerlukan waktu dalam menerima arahan. ";
+  else if(e3==="Menerima tapi berat") narasi+="Ananda menerima nasihat meski belum sepenuhnya ringan. ";
+  else if(e3==="Terbuka") narasi+="Ananda cukup terbuka terhadap masukan. ";
+  else if(e3==="Sangat terbuka") narasi+="Ananda sangat lapang dan siap memperbaiki diri ketika dinasihati. ";
+
+  document.getElementById("narasiEmosional").value=narasi;
+}
+</script>
+
+<div class="card">
+  <div class="dimension-title">💛 3. Hati Bersih (Emosional)</div>
+
+  <div class="question">
+    <strong>8. Saat emosi negatif muncul (marah, kecewa), bagaimana sikap santri?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="em1">Meledak / tidak terkendali</label>
+      <label><input type="radio" name="em1">Sulit mengendalikan</label>
+      <label><input type="radio" name="em1">Cukup terkendali</label>
+      <label><input type="radio" name="em1">Umumnya tenang</label>
+      <label><input type="radio" name="em1">Sangat terkelola</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>9. Bagaimana ketenangan emosi santri secara umum pekan ini?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="em2">Sangat gelisah</label>
+      <label><input type="radio" name="em2">Kurang stabil</label>
+      <label><input type="radio" name="em2">Biasa saja</label>
+      <label><input type="radio" name="em2">Cukup tenang</label>
+      <label><input type="radio" name="em2">Tenang dan stabil</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>10. Bagaimana keterbukaan santri dalam menerima nasihat?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="em3">Menolak</label>
+      <label><input type="radio" name="em3">Sulit menerima</label>
+      <label><input type="radio" name="em3">Menerima tapi berat</label>
+      <label><input type="radio" name="em3">Terbuka</label>
+      <label><input type="radio" name="em3">Sangat terbuka</label>
+    </div>
+  </div>
+
+  <button class="btn-generate" onclick="generateNarasiEmosional()">✨ Susun Narasi Otomatis</button>
+
+  <div class="narasi-box">
+    <label style="color:var(--accent-gold-light)">Narasi Evaluasi Emosional</label>
+    <textarea id="narasiEmosional" style="min-height:100px; margin-top:10px;"></textarea>
+  </div>
+</div>
+
+<script>
+function generateNarasiIntelektual(){
+  const i1=getSelectedValue("in1"); const i2=getSelectedValue("in2"); const i3=getSelectedValue("in3");
+  let narasi="Pada Dimensi Intelektual, ananda sedang bertumbuh dalam kualitas belajarnya. ";
+  if(i1==="Sangat rendah") narasi+="Motivasi belajar masih perlu dorongan yang kuat. ";
+  else if(i1==="Kurang semangat") narasi+="Semangat belajar belum stabil. ";
+  else if(i1==="Cukup") narasi+="Motivasi belajarnya berada pada tingkat yang cukup baik. ";
+  else if(i1==="Termotivasi") narasi+="Ananda menunjukkan semangat belajar yang terarah. ";
+  else if(i1==="Sangat antusias") narasi+="Ananda sangat antusias dalam belajar. ";
+
+  if(i2==="Sangat kesulitan") narasi+="Pemahaman pelajaran masih memerlukan pendampingan intensif. ";
+  else if(i2==="Sering bingung") narasi+="Masih ada kebingungan dalam memahami materi. ";
+  else if(i2==="Cukup memahami") narasi+="Ananda cukup memahami materi yang disampaikan. ";
+  else if(i2==="Memahami") narasi+="Ananda memahami pelajaran dengan baik. ";
+  else if(i2==="Sangat memahami") narasi+="Ananda menunjukkan penguasaan materi yang sangat baik. ";
+
+  if(i3==="Pasif") narasi+="Keaktifan dalam diskusi perlu ditingkatkan. ";
+  else if(i3==="Jarang") narasi+="Ananda sesekali berpartisipasi. ";
+  else if(i3==="Cukup") narasi+="Ananda cukup aktif bertanya. ";
+  else if(i3==="Aktif") narasi+="Ananda aktif berkontribusi. ";
+  else if(i3==="Sangat aktif & proporsional") narasi+="Ananda sangat kritis dan aktif dalam kajian. ";
+
+  document.getElementById("narasiIntelektual").value=narasi;
+}
+
+function generateNarasiFisik(){
+  const f1=getSelectedValue("fi1"); const f2=getSelectedValue("fi2"); const f3=getSelectedValue("fi3");
+  let narasi="Pada Dimensi Fisik, ananda sedang membangun kebiasaan hidup yang lebih sehat. ";
+  if(f1==="Kurang terjaga") narasi+="Kebersihan diri masih perlu pembiasaan ekstra. ";
+  else if(f1==="Kadang lalai") narasi+="Ananda belum sepenuhnya stabil menjaga kerapian. ";
+  else if(f1==="Cukup") narasi+="Ananda cukup menjaga kebersihan. ";
+  else if(f1==="Terjaga") narasi+="Ananda konsisten menjaga kebersihan dan kerapian. ";
+  else if(f1==="Sangat terjaga") narasi+="Ananda sangat rapi dan teladan dalam kebersihan. ";
+
+  if(f2==="Sangat kurang") narasi+="Kepedulian terhadap kesehatan butuh perhatian serius. ";
+  else if(f2==="Kurang peduli") narasi+="Ananda belum konsisten menjaga kesehatan istirahat. ";
+  else if(f2==="Cukup") narasi+="Ananda cukup menjaga kesehatannya. ";
+  else if(f2==="Peduli") narasi+="Ananda peduli terhadap kesehatan dan istirahat. ";
+  else if(f2==="Sangat peduli") narasi+="Ananda sangat disiplin menjaga kesehatannya. ";
+
+  if(f3==="Tidak teratur") narasi+="Pola makan masih perlu dibiasakan teratur. ";
+  else if(f3==="Kurang terjaga") narasi+="Pola makan belum sepenuhnya konsisten. ";
+  else if(f3==="Terjaga") narasi+="Ananda cukup menjaga pola makan. ";
+  else if(f3==="Sangat terjaga") narasi+="Ananda sangat disiplin dalam asupan gizi. ";
+
+  document.getElementById("narasiFisik").value=narasi;
+}
+</script>
+
+<div class="card">
+  <div class="dimension-title">🧠 4. Akal Cerdas (Intelektual)</div>
+  <div class="question">
+    <strong>11. Bagaimana motivasi belajar santri pekan ini?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="in1">Sangat rendah</label>
+      <label><input type="radio" name="in1">Kurang semangat</label>
+      <label><input type="radio" name="in1">Cukup</label>
+      <label><input type="radio" name="in1">Termotivasi</label>
+      <label><input type="radio" name="in1">Sangat antusias</label>
+    </div>
+  </div>
+  <div class="question">
+    <strong>12. Bagaimana pemahaman santri terhadap pelajaran pekan ini?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="in2">Sangat kesulitan</label>
+      <label><input type="radio" name="in2">Sering bingung</label>
+      <label><input type="radio" name="in2">Cukup memahami</label>
+      <label><input type="radio" name="in2">Memahami</label>
+      <label><input type="radio" name="in2">Sangat memahami</label>
+    </div>
+  </div>
+  <div class="question">
+    <strong>13. Bagaimana keaktifan santri dalam bertanya / halaqah?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="in3">Pasif</label>
+      <label><input type="radio" name="in3">Jarang</label>
+      <label><input type="radio" name="in3">Cukup</label>
+      <label><input type="radio" name="in3">Aktif</label>
+      <label><input type="radio" name="in3">Sangat aktif & proporsional</label>
+    </div>
+  </div>
+  <button class="btn-generate" onclick="generateNarasiIntelektual()">✨ Susun Narasi Intelektual</button>
+  <div class="narasi-box"><textarea id="narasiIntelektual" style="min-height:80px; margin-top:10px;"></textarea></div>
+
+  <div class="dimension-title" style="margin-top:50px;">💪 5. Fisik Berdaya (Physical)</div>
+  <div class="question">
+    <strong>14. Bagaimana kebersihan dan kerapian santri pekan ini?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="fi1">Kurang terjaga</label>
+      <label><input type="radio" name="fi1">Kadang lalai</label>
+      <label><input type="radio" name="fi1">Cukup</label>
+      <label><input type="radio" name="fi1">Terjaga</label>
+      <label><input type="radio" name="fi1">Sangat terjaga</label>
+    </div>
+  </div>
+  <div class="question">
+    <strong>15. Bagaimana kepedulian santri terhadap waktu istirahat?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="fi2">Sangat kurang</label>
+      <label><input type="radio" name="fi2">Kurang peduli</label>
+      <label><input type="radio" name="fi2">Cukup</label>
+      <label><input type="radio" name="fi2">Peduli</label>
+      <label><input type="radio" name="fi2">Sangat peduli</label>
+    </div>
+  </div>
+  <div class="question">
+    <strong>16. Bagaimana kedisiplinan pola makan santri?</strong>
+    <div class="option-group">
+      <label><input type="radio" name="fi3">Tidak teratur</label>
+      <label><input type="radio" name="fi3">Kurang terjaga</label>
+      <label><input type="radio" name="fi3">Terjaga</label>
+      <label><input type="radio" name="fi3">Sangat terjaga</label>
+    </div>
+  </div>
+  <button class="btn-generate" onclick="generateNarasiFisik()">✨ Susun Narasi Fisik</button>
+  <div class="narasi-box"><textarea id="narasiFisik" style="min-height:80px; margin-top:10px;"></textarea></div>
+</div>
+
+<script>
+function generateEvaluasiBulanIni(){
+  const hasil = getSelectedValue("hasilBulan");
+  let narasi = "";
+  if(hasil === "Belum Ada Hasil") narasi = "Perkembangan ananda masih belum menunjukkan hasil signifikan pada fokus yang ditetapkan. Hal ini menjadi bahan refleksi untuk memperkuat pendampingan.";
+  else if(hasil === "Cukup Meningkat") narasi = "Ananda menunjukkan perkembangan yang cukup baik. Tanda-tanda kemajuan sudah terlihat dan perlu diperkuat melalui pembiasaan.";
+  else if(hasil === "Sangat Meningkat") narasi = "Ananda menunjukkan peningkatan sangat baik dan signifikan. Perubahan positif terlihat stabil sebagai fondasi pengembangan berikutnya.";
+  document.getElementById("evaluasiBulanIni").value = narasi;
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  document.querySelectorAll('input[name="hasilBulan"]').forEach(radio=>{
+    radio.addEventListener("change", generateEvaluasiBulanIni);
+  });
+});
+</script>
+
+<div class="card">
+  <div class="dimension-title">📈 Rencana Tindak Lanjut</div>
+  
+  <div class="question" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px; margin-bottom: 30px;">
+    <strong>📊 Hasil Perbaikan Bulan Ini</strong>
+    <div class="option-group">
+      <label><input type="radio" name="hasilBulan">Belum Ada Hasil</label>
+      <label><input type="radio" name="hasilBulan">Cukup Meningkat</label>
+      <label><input type="radio" name="hasilBulan">Sangat Meningkat</label>
+    </div>
+    <label style="margin-top:20px; color:var(--accent-gold-light)">Catatan Evaluasi Bulan Ini</label>
+    <textarea id="evaluasiBulanIni" style="min-height:80px"></textarea>
+  </div>
+
+  <div class="question">
+    <strong>🎯 Fokus Perbaikan Ananda untuk Bulan Depan?</strong>
+    <div class="option-group">
+      <label><input type="checkbox" name="fb2">🌙 Spiritual (Ibadah)</label>
+      <label><input type="checkbox" name="fb2">🤝 Relasional (Adab & Sosial)</label>
+      <label><input type="checkbox" name="fb2">💛 Emosional (Kontrol Diri)</label>
+      <label><input type="checkbox" name="fb2">🧠 Intelektual (Akademik)</label>
+      <label><input type="checkbox" name="fb2">💪 Fisik (Kebersihan & Kesehatan)</label>
+    </div>
+  </div>
+
+  <label style="color:var(--accent-gold-light)">Catatan Khusus dari Naqib untuk Wali Santri</label>
+  <textarea id="spesifikBulanDepan" placeholder="Tuliskan spesifik perbaikan atau pesan untuk orang tua..."></textarea>
+
+  <button class="btn-primary" id="btnSubmit" onclick="simpanAsesmen()">💾 SIMPAN HASIL EVALUASI</button>
+</div>
+
+</div> <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+  authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+  databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+  projectId: "absensi-santri-fajrul-islam",
+  storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+  messagingSenderId: "739928369926",
+  appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+function initIdentitas(){
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "null");
+  if(!user || user.role !== "naqib"){
+    alert("Akses ditolak. Silakan login sebagai Naqib."); window.location.href = "../index.html"; return;
+  }
+
+  document.getElementById("tanggalAsesmen").value = new Date().toISOString().split("T")[0];
+
+  const kelompok = JSON.parse(localStorage.getItem("kelompokNaqib") || "[]");
+  const select = document.getElementById("namaSantri");
+  
+  select.innerHTML = '<option value="">-- Pilih Santri --</option>';
+  if(kelompok.length){
+    kelompok.forEach(nama=>{
+      const opt = document.createElement("option");
+      opt.value = nama; opt.textContent = nama; select.appendChild(opt);
+    });
+  }
+}
+
+window.simpanAsesmen = function(){
+  const tanggal = document.getElementById("tanggalAsesmen").value;
+  const namaSantri = document.getElementById("namaSantri").value;
+
+  if(!namaSantri){ alert("⚠️ Mohon pilih Nama Santri terlebih dahulu di bagian Identitas."); return; }
+
+  const btn = document.getElementById("btnSubmit");
+  btn.innerHTML = "⏳ MENYIMPAN DATA..."; btn.disabled = true;
+
+  const user = JSON.parse(localStorage.getItem("cahayaCurrentUser") || "{}");
+  const naqib = user.username || user.label || "Naqib";
+
+  const fokusBulanDepan = Array.from(document.querySelectorAll('input[name="fb2"]:checked')).map(cb => cb.parentElement.innerText.trim());
+  const hasilBulan = document.querySelector('input[name="hasilBulan"]:checked');
+  const hasilPerbaikan = hasilBulan ? hasilBulan.parentElement.innerText.trim() : "";
+
+  const data = {
+    tanggal, namaSantri, naqib,
+    narasiSpiritual: document.getElementById("narasiSpiritual").value || "",
+    narasiRelasional: document.getElementById("narasiRelasional").value || "",
+    narasiEmosional: document.getElementById("narasiEmosional").value || "",
+    narasiIntelektual: document.getElementById("narasiIntelektual").value || "",
+    narasiFisik: document.getElementById("narasiFisik").value || "",
+    fokusBulanIni: [], 
+    spesifikBulanIni: "",
+    hasilPerbaikan,
+    evaluasiBulanIni: document.getElementById("evaluasiBulanIni").value || "",
+    fokusBulanDepan,
+    spesifikBulanDepan: document.getElementById("spesifikBulanDepan").value || "",
+    waktuSimpan: new Date().toISOString()
+  };
+
+  push(ref(db, "cahaya_app/assesment_cahaya_naqib"), data)
+  .then(()=> {
+      alert(`✅ BERHASIL!\nAsesmen untuk ${namaSantri} telah tersimpan di database.`);
+      window.scrollTo(0,0);
+      setTimeout(()=> location.reload(), 1000);
+  })
+  .catch((err)=> {
+      alert("❌ Gagal menyimpan: " + err.message);
+      btn.innerHTML = "💾 SIMPAN HASIL EVALUASI"; btn.disabled = false;
+  });
+};
+
+document.addEventListener("DOMContentLoaded", initIdentitas);
+</script>
+</body>
+</html>
