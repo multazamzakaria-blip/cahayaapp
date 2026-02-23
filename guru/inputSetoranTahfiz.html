@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>CAHAYA APP - Input Setoran Tahfiz</title>
+  <title>CAHAYA APP - Input Setoran Santri</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -57,7 +57,7 @@
     }
     .btn-header:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); color: var(--accent-gold-light);}
 
-    main { max-width: 1100px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
+    main { max-width: 700px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
     @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* CARD STYLES */
@@ -67,55 +67,43 @@
       padding: 40px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
       margin-bottom: 40px; position: relative;
     }
-    .card-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--text-main); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;}
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--accent-gold-light); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center;}
 
-    /* FILTERS GRID */
-    .filters {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px; margin-bottom: 30px;
-    }
+    /* FORM GROUPS */
+    .form-group { margin-bottom: 20px; }
     label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
     
-    select, input[type="date"] {
+    select, input[type="date"], input[type="text"], input[type="number"], textarea {
       width: 100%; padding: 14px 20px; border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4);
       color: white; font-family: inherit; font-size: 1rem;
       transition: all 0.3s; outline: none;
     }
-    select:focus, input[type="date"]:focus {
+    select:focus, input[type="date"]:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
       border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); background: rgba(0,0,0,0.6);
     }
     select option { background: var(--primary-blue); color: white; }
     input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
 
-    /* TABLE LAYOUT */
-    .table-wrapper { width: 100%; overflow-x: auto; margin-top: 20px; }
-    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 800px; }
-    thead th { color: var(--text-muted); font-weight: 500; font-size: 0.85rem; text-align: center; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-    thead th:nth-child(2) { text-align: left; }
-
-    tbody tr { background: rgba(255,255,255,0.03); border-radius: 12px; transition: all 0.3s ease; }
-    tbody td { padding: 10px; text-align: center; border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
-    tbody td:first-child { border-radius: 12px 0 0 12px; border-left: 1px solid transparent; }
-    tbody td:nth-child(2) { text-align: left; font-weight: 500; letter-spacing: 0.5px; color: var(--text-main); }
-    tbody td:last-child { border-radius: 0 12px 12px 0; border-right: 1px solid transparent; }
-    tr:hover td { background: rgba(255,255,255,0.06); }
-
-    /* INPUT DALAM TABEL */
-    td input[type="text"], td input[type="number"] {
-      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(0,0,0,0.3); color: white; font-family: inherit; outline: none; transition: 0.3s;
-    }
-    td input[type="text"]:focus, td input[type="number"]:focus { border-color: var(--accent-gold); background: rgba(0,0,0,0.6); }
-    
-    td input[type="number"] { text-align: center; font-weight: bold; color: var(--accent-gold-light); }
-    
-    /* Input Readonly (Otomatis Predikat) */
-    .input-predikat { font-weight: 700 !important; text-align: center; letter-spacing: 1px; transition: 0.3s; }
+    /* INPUT KHUSUS PREDIKAT */
+    .input-predikat { font-weight: 700 !important; text-align: center; letter-spacing: 1px; transition: 0.3s; font-size: 1.2rem; }
     .pred-mumtaz { color: #34d399 !important; border-color: rgba(16,185,129,0.4) !important; background: rgba(16,185,129,0.1) !important; }
     .pred-jayyid { color: #38bdf8 !important; border-color: rgba(14,165,233,0.4) !important; background: rgba(14,165,233,0.1) !important; }
     .pred-maqbul { color: #fbbf24 !important; border-color: rgba(245,158,11,0.4) !important; background: rgba(245,158,11,0.1) !important; }
     .pred-bimbingan { color: #f87171 !important; border-color: rgba(239,68,68,0.4) !important; background: rgba(239,68,68,0.1) !important; }
+
+    /* GRID UNTUK BARIS INPUT */
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    /* SECTION INPUT INDIVIDU */
+    #sectionInputData { 
+      display: none; 
+      margin-top: 30px; 
+      padding-top: 30px; 
+      border-top: 1px dashed rgba(255,255,255,0.2); 
+      animation: fadeInUp 0.5s ease;
+    }
 
     /* SAVE BUTTON */
     .btn-save {
@@ -129,8 +117,7 @@
 
     @media (max-width: 768px) {
       .card { padding: 25px 20px; }
-      .filters { grid-template-columns: 1fr; gap: 15px; }
-      .table-wrapper { border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+      .input-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -147,14 +134,15 @@
 
 <main>
   <div class="card">
-    <h2 class="card-title">📖 Log Setoran Tahfiz & Tahsin</h2>
+    <h2 class="card-title">📖 Input Setoran Individu</h2>
 
-    <div class="filters">
-      <div class="filter-item">
-        <label>📅 Tanggal Setoran</label>
-        <input type="date" id="tfzTanggal">
-      </div>
-      <div class="filter-item">
+    <div class="form-group">
+      <label>📅 Tanggal Setoran</label>
+      <input type="date" id="tfzTanggal">
+    </div>
+
+    <div class="input-row">
+      <div class="form-group">
         <label>📚 Program</label>
         <select id="tfzProgram" onchange="updateKelompok()">
           <option value="">-- Pilih Program --</option>
@@ -162,39 +150,51 @@
           <option value="Tahfiz">Tahfiz</option>
         </select>
       </div>
-      <div class="filter-item">
-        <label>👥 Kelompok (Halaqah)</label>
-        <select id="tfzKelompok" onchange="tampilkanSantri()">
+      <div class="form-group">
+        <label>👥 Halaqah</label>
+        <select id="tfzKelompok" onchange="updateSantri()">
           <option value="">-- Menunggu Program --</option>
         </select>
       </div>
     </div>
 
-    <h3 style="margin-top: 40px; font-family:'Playfair Display'; color:var(--accent-gold-light);">Daftar Santri Halaqah</h3>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th width="5%">No</th>
-            <th width="20%">Nama Lengkap</th>
-            <th width="20%">Surat & Ayat (Setoran)</th>
-            <th width="10%">Jml Ayat</th>
-            <th width="10%">Kesalahan</th>
-            <th width="15%">Predikat (Auto)</th>
-            <th width="20%">Catatan / Tajwid</th>
-          </tr>
-        </thead>
-        <tbody id="tfzBody">
-          <tr>
-            <td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;font-style:italic;">
-              Pilih program & kelompok halaqah untuk menampilkan daftar santri.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="form-group">
+      <label>👤 Nama Santri</label>
+      <select id="tfzNamaSantri" onchange="siapkanForm()">
+        <option value="">-- Pilih Halaqah Dulu --</option>
+      </select>
     </div>
 
-    <button class="btn-save" onclick="simpanSetoran()">💾 SIMPAN DATA SETORAN</button>
+    <div id="sectionInputData">
+      <div class="form-group">
+        <label>📖 Surat & Ayat yang Disetorkan</label>
+        <input type="text" id="inputSurat" placeholder="Cth: Al-Baqarah ayat 1-10">
+      </div>
+      
+      <div class="input-row">
+        <div class="form-group">
+          <label>🔢 Jumlah Ayat</label>
+          <input type="number" id="inputJumlahAyat" min="1" placeholder="Cth: 10">
+        </div>
+        <div class="form-group">
+          <label>❌ Jumlah Kesalahan Lahn Jali</label>
+          <input type="number" id="inputKesalahan" min="0" placeholder="0" oninput="hitungPredikat()">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>🏆 Predikat Penilaian</label>
+        <input type="text" id="inputPredikat" class="input-predikat" readonly placeholder="Otomatis terisi...">
+      </div>
+
+      <div class="form-group">
+        <label>📝 Catatan / Tajwid (Opsional)</label>
+        <textarea id="inputCatatan" placeholder="Tuliskan catatan perbaikan makhraj atau tajwid di sini..."></textarea>
+      </div>
+
+      <button class="btn-save" id="btnSimpanSetoran" onclick="simpanSetoranPerAnak()">💾 SIMPAN DATA SANTRI INI</button>
+    </div>
+
   </div>
 </main>
 
@@ -227,16 +227,22 @@
     document.getElementById('tfzTanggal').value = new Date().toISOString().split('T')[0];
   };
 
+  // 1. Mengisi Dropdown Halaqah berdasarkan Program
   window.updateKelompok = function() {
     const program = document.getElementById('tfzProgram').value;
     const kelompokSelect = document.getElementById('tfzKelompok');
-    const tbody = document.getElementById('tfzBody');
+    const namaSelect = document.getElementById('tfzNamaSantri');
+    const sectionForm = document.getElementById('sectionInputData');
+
     kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);font-style:italic;">Silakan pilih kelompok halaqah.</td></tr>';
+    namaSelect.innerHTML = '<option value="">-- Pilih Halaqah Dulu --</option>';
+    sectionForm.style.display = 'none'; // Sembunyikan form
 
     if (!program) return;
     if (typeof dataSantri === 'undefined') { alert("Data Santri tidak ditemukan!"); return; }
-    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    
+    // Sesuai dengan dataSantri.js yang baru, namanya "Halqah Quraniyah"
+    const kategori = dataSantri["Halqah Quraniyah"];
     if (!kategori) return;
 
     const kelompokList = Object.keys(kategori)
@@ -244,9 +250,7 @@
       .map(k => k.replace(program + ' ', ''));
 
     if (kelompokList.length === 0) {
-      const opt = document.createElement('option');
-      opt.textContent = '(Kosong) Tidak ada data';
-      kelompokSelect.appendChild(opt);
+      kelompokSelect.innerHTML = '<option value="">(Kosong) Tidak ada data</option>';
       return;
     }
 
@@ -257,56 +261,68 @@
     });
   };
 
-  window.tampilkanSantri = function() {
+  // 2. Mengisi Dropdown Nama Santri berdasarkan Halaqah yang dipilih
+  window.updateSantri = function() {
     const program = document.getElementById('tfzProgram').value;
     const kelompok = document.getElementById('tfzKelompok').value;
-    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
+    const namaSelect = document.getElementById('tfzNamaSantri');
+    const sectionForm = document.getElementById('sectionInputData');
+    
+    namaSelect.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    sectionForm.style.display = 'none';
+
+    if (!program || !kelompok) return;
+
+    const kategori = dataSantri["Halqah Quraniyah"];
     const key = `${program} ${kelompok}`;
     const list = kategori[key] || [];
-    const tbody = document.getElementById('tfzBody');
-    tbody.innerHTML = '';
-
-    if (!program || !kelompok) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);font-style:italic;">Lengkapi program & kelompok.</td></tr>';
-      return;
-    }
 
     if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#f87171;padding:20px;">Tidak ada data santri di kelompok ini.</td></tr>`;
+      namaSelect.innerHTML = '<option value="">(Kosong) Tidak ada santri</option>';
       return;
     }
 
-    list.forEach((nama, i) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td style="text-align:left; font-weight:500;">${nama}</td>
-        <td><input type="text" placeholder="Cth: Al-Baqarah 1-10" /></td>
-        <td><input type="number" min="1" max="300" placeholder="0" /></td>
-        <td><input type="number" min="0" placeholder="0" oninput="hitungNilai(this)" /></td>
-        <td><input type="text" class="input-predikat" readonly placeholder="-" /></td>
-        <td><input type="text" placeholder="Lancar / Perbaiki Mad..." /></td>
-      `;
-      tbody.appendChild(tr);
+    list.forEach(nama => {
+      const opt = document.createElement('option');
+      opt.value = nama;
+      opt.textContent = nama;
+      namaSelect.appendChild(opt);
     });
   };
 
-  // === LOGIKA NILAI OTOMATIS + WARNA DINAMIS ===
-  window.hitungNilai = function(inputKesalahan) {
-    const row = inputKesalahan.closest('tr');
-    const nilaiInput = row.cells[5].querySelector('input');
+  // 3. Menampilkan Form Input ketika nama santri dipilih
+  window.siapkanForm = function() {
+    const nama = document.getElementById('tfzNamaSantri').value;
+    const sectionForm = document.getElementById('sectionInputData');
+    
+    if (nama) {
+        sectionForm.style.display = 'block';
+        // Reset isi form
+        document.getElementById('inputSurat').value = '';
+        document.getElementById('inputJumlahAyat').value = '';
+        document.getElementById('inputKesalahan').value = '';
+        document.getElementById('inputPredikat').value = '';
+        document.getElementById('inputPredikat').className = 'input-predikat';
+        document.getElementById('inputCatatan').value = '';
+    } else {
+        sectionForm.style.display = 'none';
+    }
+  };
+
+  // 4. Logika Hitung Predikat Otomatis
+  window.hitungPredikat = function() {
+    const inputKesalahan = document.getElementById('inputKesalahan');
+    const nilaiInput = document.getElementById('inputPredikat');
     let salah = parseInt(inputKesalahan.value, 10);
     
-    // Validasi input negatif
     if (isNaN(salah) || salah < 0) {
         salah = 0;
         inputKesalahan.value = ""; 
         nilaiInput.value = "";
-        nilaiInput.className = "input-predikat"; // Reset class
+        nilaiInput.className = "input-predikat"; 
         return;
     }
 
-    // Reset Class
     nilaiInput.className = "input-predikat";
 
     let predikat = '';
@@ -330,59 +346,53 @@
     nilaiInput.value = predikat;
   };
 
-  window.simpanSetoran = function() {
+  // 5. Menyimpan Data ke Firebase
+  window.simpanSetoranPerAnak = function() {
     const tanggal = document.getElementById('tfzTanggal').value;
     const program = document.getElementById('tfzProgram').value;
     const kelompok = document.getElementById('tfzKelompok').value;
+    const nama = document.getElementById('tfzNamaSantri').value;
+    
+    const surat = document.getElementById('inputSurat').value.trim();
+    const ayat = document.getElementById('inputJumlahAyat').value;
+    const kesalahan = document.getElementById('inputKesalahan').value;
+    const predikat = document.getElementById('inputPredikat').value;
+    const catatan = document.getElementById('inputCatatan').value.trim();
 
-    if (!tanggal || !program || !kelompok) {
-      alert('⚠️ Lengkapi Tanggal, Program, dan Kelompok terlebih dahulu.');
+    if (!tanggal || !program || !kelompok || !nama) {
+      alert('⚠️ Identitas santri belum lengkap.');
       return;
     }
 
-    const rows = document.querySelectorAll('#tfzBody tr');
-    const data = [];
-
-    rows.forEach(row => {
-      if(row.cells.length < 7) return; // Skip baris info kosong
-      
-      const nama = row.cells[1].innerText;
-      const setoran = row.cells[2].querySelector('input').value.trim();
-      const ayat = row.cells[3].querySelector('input').value;
-      const kesalahan = row.cells[4].querySelector('input').value;
-      const nilai = row.cells[5].querySelector('input').value.trim();
-      const keterangan = row.cells[6].querySelector('input').value.trim(); 
-
-      if (setoran !== '') {
-        data.push({ nama, setoran, ayat, kesalahan, nilai, keterangan });
-      }
-    });
-
-    if (data.length === 0) {
-      alert('⚠️ Belum ada data Surat/Ayat yang diisi untuk disimpan.');
+    if (!surat || !ayat || predikat === "") {
+      alert('⚠️ Mohon isi Surat, Jumlah Ayat, dan Kesalahan terlebih dahulu.');
       return;
     }
 
-    const btn = document.querySelector('.btn-save');
+    const btn = document.getElementById('btnSimpanSetoran');
     btn.innerHTML = "⏳ MENYIMPAN..."; btn.disabled = true;
 
+    // Membungkus data individu ke dalam array agar format database tetap seragam
     const log = {
-      tanggal, program, kelompok, guru: user.username, data,
+      tanggal, program, kelompok, guru: user.username,
+      data: [{ nama, setoran: surat, ayat, kesalahan, nilai: predikat, keterangan: catatan }],
       waktuSimpan: new Date().toISOString()
     };
 
     const setoranRef = ref(db, 'cahaya_app/setoran_tahfiz');
     push(setoranRef, log)
       .then(() => {
-        alert('✅ BERHASIL!\nData setoran Al-Qur\'an telah tersimpan di sistem.');
-        btn.innerHTML = "💾 SIMPAN DATA SETORAN"; btn.disabled = false;
-        // Opsional: Kosongkan form setelah simpan
-        // tampilkanSantri(); 
+        alert(`✅ BERHASIL!\nData setoran atas nama ${nama} telah tersimpan.`);
+        btn.innerHTML = "💾 SIMPAN DATA SANTRI INI"; btn.disabled = false;
+        
+        // Kosongkan nama santri agar form tertutup dan siap untuk santri berikutnya
+        document.getElementById('tfzNamaSantri').value = "";
+        siapkanForm();
       })
       .catch(err => {
         console.error(err);
         alert('❌ Terjadi kesalahan: ' + err.message);
-        btn.innerHTML = "💾 SIMPAN DATA SETORAN"; btn.disabled = false;
+        btn.innerHTML = "💾 SIMPAN DATA SANTRI INI"; btn.disabled = false;
       });
   };
 
