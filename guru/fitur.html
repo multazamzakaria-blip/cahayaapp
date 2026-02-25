@@ -37,7 +37,7 @@
       pointer-events: none; z-index: -1;
     }
 
-    /* HEADER (Persis Naqib) */
+    /* HEADER */
     header {
       position: sticky; top: 0; z-index: 100;
       background: rgba(2, 6, 23, 0.8);
@@ -74,7 +74,7 @@
     main { max-width: 1100px; margin: 50px auto; padding: 0 20px; animation: fadeInUp 0.8s ease backwards; }
     @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    /* DASHBOARD CARD & STATS (Persis Naqib) */
+    /* DASHBOARD CARD & STATS */
     .dashboard-card {
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
@@ -103,7 +103,7 @@
     .stat-num { font-size: 2.5rem; font-weight: 700; color: var(--accent-gold-light); line-height: 1; margin-bottom: 5px; font-family: 'Playfair Display'; }
     .stat-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* MENU GRID (Gaya Naqib, 3 Kolom) */
+    /* MENU GRID (3 Kolom) */
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
     
     .menu-item {
@@ -132,7 +132,7 @@
     .menu-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
 
-    /* FORM INPUT NILAI UJIAN (Premium) */
+    /* FORM INPUT NILAI UJIAN */
     .card-form {
       background: var(--glass-bg); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 24px;
@@ -226,8 +226,7 @@
         <div class="stat-label">Rumpun Kelas</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num">3</div>
-        <div class="stat-label">Akses Menu Aktif</div>
+        <div class="stat-num" id="jmlMenuAktif">4</div> <div class="stat-label">Akses Menu Aktif</div>
       </div>
     </div>
 
@@ -242,6 +241,12 @@
         <div class="menu-icon">📖</div>
         <div class="menu-title">Setoran Tahfiz</div>
         <div class="menu-desc">Input hafalan dan nilai tahsin santri.</div>
+      </div>
+
+      <div class="menu-item" onclick="window.location.href='rekap-tahfiz.html'">
+        <div class="menu-icon">📊</div>
+        <div class="menu-title">Rekap Tahfiz</div>
+        <div class="menu-desc">Pantau capaian setoran harian & grafik tren.</div>
       </div>
 
       <div class="menu-item" onclick="showSection('inputNilaiPage')">
