@@ -30,14 +30,12 @@
       overflow-x: hidden;
     }
 
-    /* Background Texture */
     body::before {
       content: ""; position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
       pointer-events: none; z-index: -1;
     }
 
-    /* HEADER */
     header {
       position: sticky; top: 0; z-index: 100;
       background: rgba(2, 6, 23, 0.8);
@@ -70,11 +68,9 @@
     .btn-danger { color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
     .btn-danger:hover { background: #ef4444; color: white; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
 
-    /* MAIN CONTENT */
     main { max-width: 1100px; margin: 50px auto; padding: 0 20px; animation: fadeInUp 0.8s ease backwards; }
     @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    /* DASHBOARD CARD & STATS */
     .dashboard-card {
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
@@ -136,8 +132,6 @@
     .menu-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
     .menu-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
-
-    /* FORM INPUT NILAI UJIAN */
     .card-form {
       background: var(--glass-bg); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 24px;
@@ -190,20 +184,13 @@
 
     .hidden { display: none !important; }
 
-    /* PENYESUAIAN UNTUK LAYAR HP (MOBILE) */
     @media (max-width: 768px) {
       header { padding: 15px 20px; }
       .brand-title { font-size: 1.1rem; }
       .dashboard-card { padding: 30px 20px; }
       .greeting { font-size: 2rem; }
       
-      /* Ubah Menu Grid menjadi 2 Baris 2 Kolom di HP */
-      .menu-grid { 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 15px; 
-      }
-      
-      /* Kecilkan sedikit ukuran kotak menu di HP agar muat 2 kolom */
+      .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
       .menu-item { padding: 25px 15px; border-radius: 18px; }
       .menu-icon { font-size: 2.5rem; margin-bottom: 12px; }
       .menu-title { font-size: 1.05rem; margin-bottom: 6px; }
