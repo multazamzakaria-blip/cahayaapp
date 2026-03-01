@@ -399,7 +399,16 @@
     document.getElementById('dTotal').textContent = `${data.persen}%`;
     document.getElementById('dTotal').style.color = predikat.color;
 
-    document.getElementById('btnShowEdit').style.display = (currentUser.role === 'admin') ? 'block' : 'none';
+    // KODE YANG DIUBAH: Memberikan akses Edit Poin untuk 'admin' DAN 'naqib'
+    document.getElementById('btnShowEdit').style.display = (currentUser.role === 'admin' || currentUser.role === 'naqib') ? 'block' : 'none';
+
+    // Opsi tambahan: Jika Naqib hanya boleh menambah poin bonus (tidak boleh potong denda), kita bisa atur opsi dropdownnya
+    if (currentUser.role === 'naqib') {
+        // Baris di bawah ini akan menyembunyikan opsi "Denda" jika penggunanya adalah Naqib
+        // document.querySelector('#manualType option[value="denda"]').style.display = 'none';
+        
+        // (Saya biarkan menjadi komentar agar Naqib tetap bisa denda jika diperlukan. Jika ingin dikunci hanya bonus, hapus tanda // di awal baris atas)
+    }
 
     const list = document.getElementById('historyList');
     list.innerHTML = '';
@@ -439,7 +448,8 @@
 
     push(ref(db, 'cahaya_app/poin_manual'), {
       namaSantri: selectedSantriName, poin: amount, keterangan: reason,
-      admin: currentUser.username, waktu: new Date().toISOString()
+      admin: currentUser.username, // Tetap menggunakan properti 'admin' agar tidak merusak struktur data lama di Firebase
+      waktu: new Date().toISOString()
     }).then(() => { location.reload(); });
   };
 
