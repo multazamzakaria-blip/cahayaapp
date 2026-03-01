@@ -15,7 +15,7 @@
       --accent-gold: #d4af37;
       
       --glass-bg: rgba(15, 23, 42, 0.7);
-      --glass-border: rgba(220, 38, 38, 0.3); /* Border kemerahan */
+      --glass-border: rgba(220, 38, 38, 0.3);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -207,7 +207,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
   
-  // === DATABASE 65 PELANGGARAN ===
+  // === DATABASE 67 PELANGGARAN ===
   const DAFTAR_PELANGGARAN = [
     { no:1, nama:"Seragam tidak sesuai", kat:"Ringan" },
     { no:2, nama:"Membuat keributan di masjid", kat:"Ringan" },
@@ -234,46 +234,48 @@
     { no:23, nama:"Tidak cuci piring", kat:"Ringan" },
     { no:24, nama:"Tempat tidur berantakan", kat:"Ringan" },
     { no:25, nama:"Masuk kamar orang lain", kat:"Ringan" },
-    { no:26, nama:"Keluar pondok tanpa izin (sebentar)", kat:"Sedang" },
-    { no:27, nama:"Merokok / Vaping", kat:"Sedang" },
-    { no:28, nama:"Simpan HP/Elektronik (Ringan)", kat:"Sedang" },
-    { no:29, nama:"Vandalisme ringan fasilitas", kat:"Sedang" },
-    { no:30, nama:"Berkelahi ringan/cekcok", kat:"Sedang" },
-    { no:31, nama:"Berbohong kepada pengurus", kat:"Sedang" },
-    { no:32, nama:"Simpan konten tidak pantas", kat:"Sedang" },
-    { no:33, nama:"Mengganggu santri lain (fisik)", kat:"Sedang" },
-    { no:34, nama:"Bawa uang saku berlebih", kat:"Sedang" },
-    { no:35, nama:"Alpa Ujian/KBM", kat:"Sedang" },
-    { no:36, nama:"Rambut gondrong", kat:"Sedang" },
-    { no:37, nama:"Kosmetik berlebihan", kat:"Sedang" },
-    { no:38, nama:"Bawa alat masak/bahaya api", kat:"Sedang" },
-    { no:39, nama:"Perundungan verbal (Ejekan)", kat:"Sedang" },
-    { no:40, nama:"Palsukan tanda tangan ringan", kat:"Sedang" },
-    { no:41, nama:"Melanggar jam malam", kat:"Sedang" },
-    { no:42, nama:"Aktivitas membahayakan", kat:"Sedang" },
-    { no:43, nama:"Sebar gosip/isu", kat:"Sedang" },
-    { no:44, nama:"Main Medsos tanpa izin", kat:"Sedang" },
-    { no:45, nama:"Pelanggaran ringan berulang (3x)", kat:"Sedang" },
-    { no:46, nama:"Mencuri (Sariqah)", kat:"Berat" },
-    { no:47, nama:"Narkoba / Miras", kat:"Berat" },
-    { no:48, nama:"Zina / Asusila Berat", kat:"Berat" },
-    { no:49, nama:"Judi / Taruhan", kat:"Berat" },
-    { no:50, nama:"Berkelahi (Cedera Serius)", kat:"Berat" },
-    { no:51, nama:"Bawa Senjata Tajam", kat:"Berat" },
-    { no:52, nama:"Kabur (Minggat) lama", kat:"Berat" },
-    { no:53, nama:"Bullying Sistematis (Trauma)", kat:"Berat" },
-    { no:54, nama:"Melawan/Ancam Guru (Fisik)", kat:"Berat" },
-    { no:55, nama:"Merusak Fasilitas (Berat)", kat:"Berat" },
-    { no:56, nama:"Demo/Merusak nama baik", kat:"Berat" },
-    { no:57, nama:"Paham Radikal", kat:"Berat" },
-    { no:58, nama:"Hasut tindakan kriminal", kat:"Berat" },
-    { no:59, nama:"Pemerasan (Malak)", kat:"Berat" },
-    { no:60, nama:"Menipu Orang Tua/Pondok", kat:"Berat" },
-    { no:61, nama:"Palsukan surat penting", kat:"Berat" },
-    { no:62, nama:"Hubungan sejenis (Homoseksual)", kat:"Berat" },
-    { no:63, nama:"Pemberontakan massal", kat:"Berat" },
-    { no:64, nama:"Pelanggaran Sedang Berulang", kat:"Berat" },
-    { no:65, nama:"Pelanggaran Berat Lainnya", kat:"Berat" }
+    { no:26, nama:"Pelanggaran Ringan Lainnya", kat:"Ringan" },
+    { no:27, nama:"Keluar pondok tanpa izin (sebentar)", kat:"Sedang" },
+    { no:28, nama:"Merokok / Vaping", kat:"Sedang" },
+    { no:29, nama:"Simpan HP/Elektronik (Ringan)", kat:"Sedang" },
+    { no:30, nama:"Vandalisme ringan fasilitas", kat:"Sedang" },
+    { no:31, nama:"Berkelahi ringan/cekcok", kat:"Sedang" },
+    { no:32, nama:"Berbohong kepada pengurus", kat:"Sedang" },
+    { no:33, nama:"Simpan konten tidak pantas", kat:"Sedang" },
+    { no:34, nama:"Mengganggu santri lain (fisik)", kat:"Sedang" },
+    { no:35, nama:"Bawa uang saku berlebih", kat:"Sedang" },
+    { no:36, nama:"Alpa Ujian/KBM", kat:"Sedang" },
+    { no:37, nama:"Rambut gondrong", kat:"Sedang" },
+    { no:38, nama:"Kosmetik berlebihan", kat:"Sedang" },
+    { no:39, nama:"Bawa alat masak/bahaya api", kat:"Sedang" },
+    { no:40, nama:"Perundungan verbal (Ejekan)", kat:"Sedang" },
+    { no:41, nama:"Palsukan tanda tangan ringan", kat:"Sedang" },
+    { no:42, nama:"Melanggar jam malam", kat:"Sedang" },
+    { no:43, nama:"Aktivitas membahayakan", kat:"Sedang" },
+    { no:44, nama:"Sebar gosip/isu", kat:"Sedang" },
+    { no:45, nama:"Main Medsos tanpa izin", kat:"Sedang" },
+    { no:46, nama:"Pelanggaran ringan berulang (3x)", kat:"Sedang" },
+    { no:47, nama:"Pelanggaran Sedang Lainnya", kat:"Sedang" },
+    { no:48, nama:"Mencuri (Sariqah)", kat:"Berat" },
+    { no:49, nama:"Narkoba / Miras", kat:"Berat" },
+    { no:50, nama:"Zina / Asusila Berat", kat:"Berat" },
+    { no:51, nama:"Judi / Taruhan", kat:"Berat" },
+    { no:52, nama:"Berkelahi (Cedera Serius)", kat:"Berat" },
+    { no:53, nama:"Bawa Senjata Tajam", kat:"Berat" },
+    { no:54, nama:"Kabur (Minggat) lama", kat:"Berat" },
+    { no:55, nama:"Bullying Sistematis (Trauma)", kat:"Berat" },
+    { no:56, nama:"Melawan/Ancam Guru (Fisik)", kat:"Berat" },
+    { no:57, nama:"Merusak Fasilitas (Berat)", kat:"Berat" },
+    { no:58, nama:"Demo/Merusak nama baik", kat:"Berat" },
+    { no:59, nama:"Paham Radikal", kat:"Berat" },
+    { no:60, nama:"Hasut tindakan kriminal", kat:"Berat" },
+    { no:61, nama:"Pemerasan (Malak)", kat:"Berat" },
+    { no:62, nama:"Menipu Orang Tua/Pondok", kat:"Berat" },
+    { no:63, nama:"Palsukan surat penting", kat:"Berat" },
+    { no:64, nama:"Hubungan sejenis (Homoseksual)", kat:"Berat" },
+    { no:65, nama:"Pemberontakan massal", kat:"Berat" },
+    { no:66, nama:"Pelanggaran Sedang Berulang", kat:"Berat" },
+    { no:67, nama:"Pelanggaran Berat Lainnya", kat:"Berat" }
   ];
 
   const POIN_DENDA = { "Ringan": -10, "Sedang": -30, "Berat": -100 };
