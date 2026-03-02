@@ -104,11 +104,10 @@
     .stat-num { font-size: 2.5rem; font-weight: 700; color: var(--accent-gold-light); line-height: 1; margin-bottom: 5px; font-family: 'Playfair Display'; }
     .stat-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* MENU GRID - PERUBAHAN DI SINI */
+    /* MENU GRID - DIPERBARUI MENJADI 3 KOLOM */
     .menu-grid { 
       display: grid; 
-      /* Default Desktop: 4 kolom sama besar */
-      grid-template-columns: repeat(4, 1fr); 
+      grid-template-columns: repeat(3, 1fr); 
       gap: 20px; 
     }
     
@@ -159,7 +158,7 @@
       .menu-item { padding: 25px 15px; }
       .menu-icon { font-size: 2.2rem; }
       .menu-title { font-size: 0.95rem; }
-      .menu-desc { font-size: 0.75rem; display: none; /* Sembunyikan deskripsi di mobile agar lebih rapi */ }
+      .menu-desc { font-size: 0.75rem; display: none; }
     }
   </style>
 </head>
@@ -195,7 +194,7 @@
         <div class="stat-label">Total Santri Usrah</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num">4</div>
+        <div class="stat-num">6</div>
         <div class="stat-label">Akses Menu Utama</div>
       </div>
     </div>
@@ -207,16 +206,28 @@
         <div class="menu-desc">Kehadiran program asrama</div>
       </div>
 
-      <div class="menu-item" onclick="go('../poin_santri.html')">
-        <div class="menu-icon">🏆</div>
-        <div class="menu-title">Klasemen Poin</div>
-        <div class="menu-desc">Peringkat & akumulasi poin</div>
+      <div class="menu-item" onclick="go('tindak_hari_ini.html')">
+        <div class="menu-icon">🔎</div>
+        <div class="menu-title">Pantauan Disiplin</div>
+        <div class="menu-desc">Rekap absen & setoran hari ini</div>
+      </div>
+
+      <div class="menu-item" onclick="go('lapor_inisiatif.html')">
+        <div class="menu-icon">📢</div>
+        <div class="menu-title">Lapor & Inisiatif</div>
+        <div class="menu-desc">Beri apresiasi poin santri</div>
       </div>
 
       <div class="menu-item" onclick="go('pelanggaran.html')">
         <div class="menu-icon">⚖️</div>
         <div class="menu-title">Tindak Kasus</div>
         <div class="menu-desc">Pelanggaran & potong poin</div>
+      </div>
+
+      <div class="menu-item" onclick="go('../poin_santri.html')">
+        <div class="menu-icon">🏆</div>
+        <div class="menu-title">Klasemen Poin</div>
+        <div class="menu-desc">Peringkat & akumulasi poin</div>
       </div>
 
       <div class="menu-item" onclick="go('assasment.html')">
