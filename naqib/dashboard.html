@@ -104,10 +104,11 @@
     .stat-num { font-size: 2.5rem; font-weight: 700; color: var(--accent-gold-light); line-height: 1; margin-bottom: 5px; font-family: 'Playfair Display'; }
     .stat-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* MENU GRID - DIPERBARUI MENJADI 3 KOLOM */
+    /* MENU GRID */
     .menu-grid { 
       display: grid; 
-      grid-template-columns: repeat(3, 1fr); 
+      /* Karena ada 7 menu, kita pakai 4 kolom agar tidak ada 1 menu yang menggantung sendirian di baris bawah kalau pakai 3 kolom */
+      grid-template-columns: repeat(4, 1fr); 
       gap: 20px; 
     }
     
@@ -194,7 +195,7 @@
         <div class="stat-label">Total Santri Usrah</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num">6</div>
+        <div class="stat-num">7</div>
         <div class="stat-label">Akses Menu Utama</div>
       </div>
     </div>
@@ -210,6 +211,12 @@
         <div class="menu-icon">🔎</div>
         <div class="menu-title">Pantauan Disiplin</div>
         <div class="menu-desc">Rekap absen & setoran hari ini</div>
+      </div>
+
+      <div class="menu-item" onclick="go('pantauan_inisiatif.html')">
+        <div class="menu-icon">🌟</div>
+        <div class="menu-title">Pantauan Inisiatif</div>
+        <div class="menu-desc">Daftar amal saleh santri</div>
       </div>
 
       <div class="menu-item" onclick="go('lapor_inisiatif.html')">
