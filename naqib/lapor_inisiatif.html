@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Lapor & Inisiatif</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --accent-gold: #d4af37;
+      --accent-green: #10b981;
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(212, 175, 55, 0.3);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+    }
+    header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent-gold); }
+    
+    .btn-back {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main); padding: 8px 16px; border-radius: 50px; cursor: pointer;
+    }
+
+    main { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+
+    .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
+    .tab-btn {
+      flex: 1; padding: 15px; border: none; border-radius: 12px; font-weight: 600;
+      background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; transition: 0.3s;
+      border: 1px solid transparent;
+    }
+    .tab-btn.active {
+      background: rgba(212, 175, 55, 0.1); color: var(--accent-gold); border-color: var(--accent-gold);
+    }
+
+    .card {
+      background: var(--glass-bg); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 30px; display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .card.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    label { display: block; font-weight: 500; margin-top: 15px; margin-bottom: 8px; color: var(--accent-gold); font-size: 0.9rem; }
+    select, input, textarea { 
+      width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.3); color: white; font-family: inherit; margin-bottom: 10px;
+    }
+    select:focus, input:focus, textarea:focus { border-color: var(--accent-gold); outline: none; }
+
+    .info-poin { font-size: 0.85rem; color: var(--accent-green); margin-bottom: 15px; font-style: italic; }
+
+    .btn-submit {
+      width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #b48e26);
+      color: #000; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; margin-top: 20px; transition: 0.3s;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Lapor & Inisiatif Kebaikan</h1>
+  <button class="btn-back" onclick="window.location.href='dashboard.html'">Kembali</button>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('lapor')">Melaporkan Pelanggaran</button>
+    <button class="tab-btn" onclick="switchTab('inisiatif')">Inisiatif Kebaikan</button>
+  </div>
+
+  <div id="formLapor" class="card active">
+    <h2 style="margin-bottom: 10px;">Form Laporan Santri</h2>
+    <div class="info-poin">✨ Santri pelapor akan otomatis mendapatkan +5 Poin Kedisiplinan.</div>
+
+    <label>Nama Pelapor (Dapat Poin)</label>
+    <select id="namaPelapor" class="all-santri"><option value="">-- Pilih Santri Pelapor --</option></select>
+
+    <label>Nama yang Dilaporkan</label>
+    <select id="namaDilapor" class="all-santri"><option value="">-- Pilih Santri yang Melanggar --</option></select>
+
+    <label>Kejadian / Pelanggaran</label>
+    <textarea id="kejadianLapor" rows="3" placeholder="Ceritakan detail pelanggaran..."></textarea>
+
+    <label>Saksi (Opsional)</label>
+    <input type="text" id="saksiLapor" placeholder="Nama saksi jika ada">
+
+    <button class="btn-submit" onclick="simpanLaporan()">KIRIM LAPORAN (+5 Poin)</button>
+  </div>
+
+  <div id="formInisiatif" class="card">
+    <h2 style="margin-bottom: 10px;">Form Inisiatif Kebaikan</h2>
+    <div class="info-poin">✨ Berikan apresiasi poin sesuai dengan besarnya dampak inisiatif santri.</div>
+
+    <label>Nama Santri (Inisiator)</label>
+    <select id="namaInisiator" class="all-santri"><option value="">-- Pilih Santri --</option></select>
+
+    <label>Jumlah Poin Apresiasi</label>
+    <input type="number" id="poinInisiatif" placeholder="Contoh: 10, 20, 50...">
+
+    <label>Keterangan Inisiatif Kebaikan</label>
+    <textarea id="keteranganInisiatif" rows="3" placeholder="Contoh: Membersihkan selokan asrama tanpa disuruh, membantu santri sakit..."></textarea>
+
+    <button class="btn-submit" onclick="simpanInisiatif()">BERIKAN APRESIASI POIN</button>
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const currentUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{}');
+
+  const MASTER_SANTRI = {
+    "Kamal": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA","WAHYU REYDINATA","NIZAM KABISAT","JUANDA NUR ILHAM","M. DIRGATAMA","DAFFA AL MUSYARI","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","FALIZH DAFFA QATRUNNADA","HAFIDZ AL ROZI","CANZA RYANDA HUTASUHUT","NAJMIHADI SYAUQII TAMAAM","EZA FEBRI AL FADZRI"],
+    "Favian": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ALVIN HERFIANTINO","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","AHMAD MAULANA","DANANG PRASDITYA SANTOSO","DEDI SETIADI","DIKKI KURNIAWAN","FAKHRI AL MUZAKKI","FEBRI GHALIH AL FAROBI","GHOZY FATURRAHMAN","ILHAM MUKMIN AL FARABI","M. AL FALAH","M. FAQIH HAFIDZALLAH","M. FIRAAS AL INSYIROH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","M. RIJALUL KAMIL","NABIL NAJMI","RADEN AZAA PANCA PUTRA","RAFI RAMADHAN","SATRIO ABIMAYU","TEGAR HIDAYAT","VERY SYACH","WAFII FADHLURROHMAN","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN"],
+    "Shafwan": ["ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","MIKA RAHIEL YUSUF","PRAWIRO PUJO TUNGGAL JATI","M. XAVI NF","REYNALDI MALIK IBRAHIM ALFARIDZI","FAHRIE OKTAVIRANO FITRIS","FARAZH SAYYID PUTRA KENEGA","LUTHFAN ADZAKI","MARFEL SAPUTRA","MELDI NOVRIANSYAH","ALIF SAMUDRA","ARYA DIFA ALSYA","FAUZAN IBNI JABAR","HAFIDZ ALRIZKY","M. ABIL IRWANSYAH","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","NAUFAL AKBAR ALKHATIRI","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ROID AFDAL","ROHADIN FIRDAUS AL QAUSAR","RENAL MARTIN","RAKA SEPTIAN","NAFIS","M. USAMAH","MUHAMAD YUSUF ARROSIYD","MAHESA AULIA GIFFARI","M. ARYA MAHDI WAFI EL-FAUZANI","ILHAM","IHZA TRINANDI","HABIB RAMADHAN","FAHRY AKBAR RAMDHANI","CAHYIS ISZAM","ANUGRAH PRATAMA","AHMAD FARHAAN"],
+    "Fatimah": ["QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
+    "Evita": ["BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
+  };
+
+  window.switchTab = (tab) => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+    
+    if (tab === 'lapor') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('formLapor').classList.add('active');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('formInisiatif').classList.add('active');
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let allSantriList = [];
+    Object.values(MASTER_SANTRI).forEach(list => allSantriList.push(...list));
+    allSantriList.sort();
+
+    const selects = document.querySelectorAll('.all-santri');
+    selects.forEach(select => {
+      allSantriList.forEach(nama => {
+        const opt = document.createElement('option');
+        opt.value = nama; opt.text = nama;
+        select.appendChild(opt);
+      });
+    });
+  });
+
+  window.simpanLaporan = async () => {
+    const pelapor = document.getElementById('namaPelapor').value;
+    const dilapor = document.getElementById('namaDilapor').value;
+    const kejadian = document.getElementById('kejadianLapor').value;
+    const saksi = document.getElementById('saksiLapor').value;
+
+    if (!pelapor || !dilapor || !kejadian) { alert("Lengkapi data laporan!"); return; }
+    if (!confirm(`Berikan +5 poin untuk ${pelapor} atas laporannya?`)) return;
+
+    const waktu = new Date().toISOString();
+    
+    // 1. Catat laporannya
+    await push(ref(db, 'cahaya_app/log_lapor_inisiatif'), {
+      tipe: "Lapor Pelanggaran", pelapor: pelapor, dilaporkan: dilapor, 
+      keterangan: kejadian, saksi: saksi, admin: currentUser.username, waktu: waktu
+    });
+
+    // 2. Tambah poin pelapor otomatis
+    await push(ref(db, 'cahaya_app/poin_manual'), {
+      namaSantri: pelapor, poin: 5, keterangan: "Melaporkan Pelanggaran: " + kejadian, 
+      admin: currentUser.username, waktu: waktu
+    });
+
+    alert("Laporan berhasil dicatat dan poin telah ditambahkan!");
+    location.reload();
+  };
+
+  window.simpanInisiatif = async () => {
+    const inisiator = document.getElementById('namaInisiator').value;
+    const poin = parseInt(document.getElementById('poinInisiatif').value);
+    const keterangan = document.getElementById('keteranganInisiatif').value;
+
+    if (!inisiator || !poin || !keterangan) { alert("Lengkapi data inisiatif!"); return; }
+    if (!confirm(`Berikan +${poin} poin untuk ${inisiator}?`)) return;
+
+    const waktu = new Date().toISOString();
+
+    // 1. Catat Inisiatifnya
+    await push(ref(db, 'cahaya_app/log_lapor_inisiatif'), {
+      tipe: "Inisiatif Kebaikan", pelapor: inisiator, dilaporkan: "-", 
+      keterangan: keterangan, poinDiberikan: poin, admin: currentUser.username, waktu: waktu
+    });
+
+    // 2. Tambah poin manual
+    await push(ref(db, 'cahaya_app/poin_manual'), {
+      namaSantri: inisiator, poin: poin, keterangan: "Inisiatif Kebaikan: " + keterangan, 
+      admin: currentUser.username, waktu: waktu
+    });
+
+    alert("Apresiasi poin kebaikan berhasil dikirim!");
+    location.reload();
+  };
+</script>
+</body>
+</html>

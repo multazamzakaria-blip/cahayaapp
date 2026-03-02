@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Pantauan Disiplin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --danger-main: #ef4444;
+      --warning-main: #f59e0b;
+      --info-main: #38bdf8;
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+    }
+    header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #f8fafc; }
+    
+    .btn-back {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main); padding: 8px 16px; border-radius: 50px; cursor: pointer;
+    }
+
+    main { max-width: 900px; margin: 40px auto; padding: 0 20px; padding-bottom: 60px; }
+
+    .filter-box {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+      padding: 20px; border-radius: 16px; margin-bottom: 30px;
+      display: flex; align-items: center; justify-content: space-between; gap: 15px;
+      flex-wrap: wrap;
+    }
+    .filter-box label { font-weight: 600; color: #d4af37; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;}
+    .filter-box input[type="date"] {
+      padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.4);
+      background: rgba(0,0,0,0.5); color: white; font-family: inherit; font-size: 1rem;
+      outline: none; cursor: pointer;
+    }
+    .filter-box input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+
+    .section-title { font-family: 'Playfair Display', serif; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-top: 40px; margin-bottom: 20px; font-size: 1.3rem; }
+    .title-lapor { color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .title-absen { color: #fcd34d; border-color: rgba(245, 158, 11, 0.3); }
+    .title-setor { color: #bae6fd; border-color: rgba(56, 189, 248, 0.3); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: rgba(255,255,255,0.02); border-radius: 12px; overflow: hidden; }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    th { background: rgba(0,0,0,0.4); color: var(--text-muted); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; }
+    tr:hover { background: rgba(255,255,255,0.05); }
+    
+    .badge { padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+    .b-alpa { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .b-telat { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; background: rgba(0,0,0,0.2); border-radius: 12px; }
+    
+    .keterangan-sumber { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: block; }
+    .highlight-kegiatan { color: #d4af37; font-weight: 600; }
+
+    /* CSS KHUSUS PELAPOR RAHASIA */
+    .pelapor-rahasia {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+      color: #94a3b8; transition: 0.3s;
+    }
+    .pelapor-rahasia:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white; }
+    .pelapor-ikon { font-size: 0.8rem; opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pantauan Disiplin</h1>
+  <button class="btn-back" onclick="window.location.href='dashboard.html'">Kembali</button>
+</header>
+
+<main>
+  <div class="filter-box">
+    <label>📅 Pantauan Tanggal:</label>
+    <input type="date" id="filterTanggal" onchange="prosesData()">
+  </div>
+
+  <div id="loadingIndicator" style="text-align:center; padding: 40px; display:none; color: #d4af37; font-style:italic;">
+    ⏳ Menarik data dari server...
+  </div>
+
+  <div id="dataContainer">
+    <h2 class="section-title title-lapor">🚨 Laporan Pelanggaran</h2>
+    <div id="containerLaporan"><div class="empty-state">Memuat...</div></div>
+
+    <h2 class="section-title title-absen">⚠️ Indisipliner Absensi (Alfa / Telat)</h2>
+    <div id="containerAbsen"><div class="empty-state">Memuat...</div></div>
+
+    <h2 class="section-title title-setor">📖 Belum Setoran Al-Qur'an (Khusus Tahfiz)</h2>
+    <div id="containerSetoran"><div class="empty-state">Memuat...</div></div>
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const currentUser = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{}');
+  const kelompokNaqib = JSON.parse(localStorage.getItem('kelompokNaqib') || '[]');
+
+  const SANTRI_TAHFIZ = [
+    "M. AL FALAH", "MIKA RAHIEL YUSUF", "ANGGA PRATAMA PUTRA", "NIZAM KABISAT", "PRAWIRO PUJO TUNGGAL JATI", "MAHESA AULIA GIFFARI", "NAJMIHADI SYAUQII TAMAAM", "MARFEL SAPUTRA", "MELDI NOVRIANSYAH", "RENAL MARTIN", "AHMAD RIYADI", "ABDULLAH MUKTI HAFIDZALLAH", "AKBAR PRAYOGA", "ANDES AFENDRA", "BASRI AL HAZIQ ZULFAHMI", "CANZA RYANDA HUTASUHUT", "DAFFA AL MUSYARI", "DANANG PRASDITYA SANTOSO", "FAKHRI AL MUZAKKI", "FALIZH DAFFA QATRUNNADA", "FEBRI GHALIH AL FAROBI", "HAFIDZ AL ROZI", "HAFIDZ ALRIZKY", "ILHAM MUKMIN AL FARABI", "LUTHFAN ADZAKI", "DIKKI KURNIAWAN", "ROID AFDAL", "IHZA TRINANDI", "ILHAM", "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI",
+    "AHMAD MAULANA", "ALIF MUHAMMAD YUSUF", "ARYA DIFA ALSYA", "FARAZH SAYYID PUTRA KENEGA", "GHOZY FATURRAHMAN", "M. FAQIH HAFIDZALLAH", "M. RIJALUL KAMIL", "MUHAMMAD ALLAM NUR HUSHAIN", "M. RAID MAHRUS", "NAFIS", "RAFI RAMADHAN", "REYNALDI MALIK IBRAHIM ALFARIDZI", "WAFII FADHLURROHMAN", "M. FADHIL BUANA", "M. FIRAAS AL INSYIROH", "M. XAVI NF", "NABIL NAJMI", "NAUFAL AKBAR ALKHATIRI", "QHEIZAN ALQIZA ARISDA", "REYFAS RAMADHAN", "ROHADIN FIRDAUS AL QAUSAR", "SATRIO ABIMAYU", "WAHYU REYDINATA", "ZAHIR ZIBRAN", "ZULFAKIH HAERUNNASIHIN", "HABIB RAMADHAN", "MUHAMAD YUSUF ARROSIYD", "VERY SYACH", "M. FAISAL FIKRIANSYAH", "TEGAR HIDAYAT",
+    "WILDA", "NESSYA RAMADHANY", "GHENIS ANDIENTIAZ", "JESSICA PUTRY AYRA", "NYAYU MARLITSA ARDHANI", "GRINNETA NALANI PUTRI", "AMIRAH BALQIS RAHADATUL A'ISYAH", "BILQIS NUR ANISAH", "QELZA RAMADHANI ATH THAHIRAH"
+  ];
+
+  let allData = { lapor: {}, absenHarian: {}, absenKBM: {}, setoran: {} };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    document.getElementById('filterTanggal').value = new Date().toISOString().split('T')[0];
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('dataContainer').style.display = 'none';
+
+    try {
+      const snaps = await Promise.all([
+        get(ref(db, 'cahaya_app/log_lapor_inisiatif')),
+        get(ref(db, 'cahaya_app/absensi_program_harian')),
+        get(ref(db, 'cahaya_app/absensi_pembelajaran')),
+        get(ref(db, 'cahaya_app/setoran_tahfiz'))
+      ]);
+      
+      allData.lapor = snaps[0].val() || {};
+      allData.absenHarian = snaps[1].val() || {};
+      allData.absenKBM = snaps[2].val() || {};
+      allData.setoran = snaps[3].val() || {};
+
+      document.getElementById('loadingIndicator').style.display = 'none';
+      document.getElementById('dataContainer').style.display = 'block';
+      
+      prosesData();
+    } catch(err) {
+      alert("Gagal memuat data dari server: " + err.message);
+    }
+  });
+
+  window.prosesData = function() {
+    if (kelompokNaqib.length === 0) {
+      document.getElementById('dataContainer').innerHTML = `<div class="empty-state">Data anggota Usrah tidak ditemukan. Silakan login ulang.</div>`;
+      return;
+    }
+    const tglPilih = document.getElementById('filterTanggal').value;
+    
+    renderLaporan(tglPilih);
+    renderAbsensi(tglPilih);
+    renderSetoran(tglPilih);
+  };
+
+  // FUNGSI UNTUK MENGUBAH TAMPILAN NAMA PELAPOR SAAT DIKLIK
+  window.togglePelapor = function(element, namaAsli) {
+    const textSpan = element.querySelector('.pelapor-text');
+    const iconSpan = element.querySelector('.pelapor-ikon');
+    
+    if (textSpan.textContent === '••••••••') {
+      textSpan.textContent = namaAsli;
+      iconSpan.textContent = '👁️';
+    } else {
+      textSpan.textContent = '••••••••';
+      iconSpan.textContent = '🔒';
+    }
+  };
+
+  function renderLaporan(tanggal) {
+    let html = `<table><tr><th width="30%">Santri Dilaporkan</th><th width="45%">Kejadian</th><th width="25%">Pelapor</th></tr>`;
+    let count = 0;
+
+    Object.values(allData.lapor).forEach(log => {
+      if (log.waktu && log.waktu.startsWith(tanggal) && log.tipe === "Lapor Pelanggaran") {
+        if (kelompokNaqib.includes(log.dilaporkan)) {
+          // Tombol pelapor yang namanya tersamarkan (••••••••)
+          let pelaporRahasiaHTML = `
+            <div class="pelapor-rahasia" onclick="togglePelapor(this, '${log.pelapor}')" title="Klik untuk melihat/menyembunyikan">
+              <span class="pelapor-ikon">🔒</span>
+              <span class="pelapor-text">••••••••</span>
+            </div>
+          `;
+
+          html += `<tr>
+            <td style="color:#fca5a5; font-weight:bold;">${log.dilaporkan}</td>
+            <td>${log.keterangan}</td>
+            <td>${pelaporRahasiaHTML}</td>
+          </tr>`;
+          count++;
+        }
+      }
+    });
+
+    html += `</table>`;
+    document.getElementById('containerLaporan').innerHTML = count > 0 ? html : `<div class="empty-state">Alhamdulillah, tidak ada anggota usrah yang dilaporkan.</div>`;
+  }
+
+  function renderAbsensi(tanggal) {
+    let listBermasalah = [];
+
+    Object.values(allData.absenHarian).forEach(log => {
+      if (log.tanggal === tanggal && log.data) {
+        log.data.forEach(s => {
+          let st = (s.status || '').toLowerCase();
+          if (kelompokNaqib.includes(s.nama) && (st === 'alfa' || st === 'terlambat')) {
+            listBermasalah.push({ nama: s.nama, status: s.status, kegiatan: log.program, tipeKegiatan: "Program Harian" });
+          }
+        });
+      }
+    });
+
+    Object.values(allData.absenKBM).forEach(log => {
+      if (log.tanggal === tanggal && log.data) {
+        log.data.forEach(s => {
+          let st = (s.status || '').toLowerCase();
+          if (kelompokNaqib.includes(s.nama) && (st === 'alfa' || st === 'terlambat')) {
+            listBermasalah.push({ nama: s.nama, status: s.status, kegiatan: log.mapel, tipeKegiatan: `KBM Kelas (${log.guru})` });
+          }
+        });
+      }
+    });
+
+    if (listBermasalah.length === 0) {
+      document.getElementById('containerAbsen').innerHTML = `<div class="empty-state">Alhamdulillah, absensi anggota usrah aman.</div>`;
+      return;
+    }
+
+    let html = `<table><tr><th width="35%">Nama Santri</th><th width="20%">Status</th><th width="45%">Detail Keterangan</th></tr>`;
+    listBermasalah.forEach(item => {
+      let badgeCls = item.status.toLowerCase() === 'alfa' ? 'b-alpa' : 'b-telat';
+      html += `<tr>
+        <td style="font-weight:bold; color:white;">${item.nama}</td>
+        <td><span class="badge ${badgeCls}">${item.status}</span></td>
+        <td>
+          <span class="highlight-kegiatan">${item.kegiatan}</span>
+          <span class="keterangan-sumber">Sumber: ${item.tipeKegiatan}</span>
+        </td>
+      </tr>`;
+    });
+    html += `</table>`;
+    document.getElementById('containerAbsen').innerHTML = html;
+  }
+
+  function renderSetoran(tanggal) {
+    let santriSudahSetor = [];
+
+    Object.values(allData.setoran).forEach(log => {
+      if (log.tanggal === tanggal && log.data) {
+        log.data.forEach(s => { santriSudahSetor.push(s.nama); });
+      }
+    });
+
+    let targetSantriTahfizDiUsrah = kelompokNaqib.filter(nama => SANTRI_TAHFIZ.includes(nama));
+    let santriBelumSetor = targetSantriTahfizDiUsrah.filter(nama => !santriSudahSetor.includes(nama));
+
+    if (targetSantriTahfizDiUsrah.length === 0) {
+      document.getElementById('containerSetoran').innerHTML = `<div class="empty-state">Tidak ada santri dengan target Tahfiz di dalam Usrah ini.</div>`;
+      return;
+    }
+
+    if (santriBelumSetor.length === 0) {
+      document.getElementById('containerSetoran').innerHTML = `<div class="empty-state">Luar biasa! Seluruh anggota Usrah (Program Tahfiz) sudah setor hari ini.</div>`;
+      return;
+    }
+
+    let html = `<table><tr><th width="10%">No</th><th>Nama Santri Tahfiz (Belum Setor)</th></tr>`;
+    santriBelumSetor.forEach((nama, index) => {
+      html += `<tr>
+        <td>${index + 1}</td>
+        <td style="color:#fca5a5; font-weight:500;">
+          ${nama} 
+          <span class="keterangan-sumber">Wajib Setor Hafalan</span>
+        </td>
+      </tr>`;
+    });
+    html += `</table>`;
+    
+    document.getElementById('containerSetoran').innerHTML = html;
+  }
+</script>
+</body>
+</html>
