@@ -11,7 +11,7 @@
       --primary-blue: #0f172a;
       --danger-main: #ef4444;
       --warning-main: #f59e0b;
-      --info-main: #38bdf8;
+      --accent-gold: #d4af37;
       --glass-border: rgba(255, 255, 255, 0.1);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
@@ -42,51 +42,63 @@
 
     main { max-width: 900px; margin: 40px auto; padding: 0 20px; padding-bottom: 60px; }
 
+    .priority-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+    .priority-card {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 5px solid var(--danger-main);
+      padding: 20px;
+      border-radius: 12px;
+    }
+    .priority-card.warning { background: rgba(245, 158, 11, 0.1); border-left-color: var(--warning-main); }
+    .priority-card h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+    .priority-card .count { font-size: 2rem; font-weight: 700; color: white; display: block; }
+
+    .pulse-danger { animation: pulse-red 2s infinite; }
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
     .filter-box {
       background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
       padding: 20px; border-radius: 16px; margin-bottom: 30px;
       display: flex; align-items: center; justify-content: space-between; gap: 15px;
-      flex-wrap: wrap;
     }
-    .filter-box label { font-weight: 600; color: #d4af37; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;}
     .filter-box input[type="date"] {
       padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.4);
-      background: rgba(0,0,0,0.5); color: white; font-family: inherit; font-size: 1rem;
-      outline: none; cursor: pointer;
+      background: rgba(0,0,0,0.5); color: white; font-family: inherit;
     }
-    .filter-box input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
-    .section-title { font-family: 'Playfair Display', serif; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-top: 50px; margin-bottom: 20px; font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-    .title-lapor { color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
-    .title-absen { color: #fcd34d; border-color: rgba(245, 158, 11, 0.3); }
-    .title-setor { color: #bae6fd; border-color: rgba(56, 189, 248, 0.3); }
+    .section-title { font-family: 'Playfair Display', serif; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-top: 50px; margin-bottom: 20px; font-size: 1.5rem; }
+    .title-lapor { color: #fca5a5; }
+    .title-absen { color: #fcd34d; }
 
     .usrah-group { background: rgba(0,0,0,0.2); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-    .usrah-title { color: var(--accent-gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .usrah-title { color: var(--accent-gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 15px; }
     
     table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: rgba(255,255,255,0.02); border-radius: 12px; overflow: hidden; }
-    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
     th { background: rgba(0,0,0,0.4); color: var(--text-muted); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; }
-    tr:hover { background: rgba(255,255,255,0.05); }
     
-    .badge { padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-    .b-alpa { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
-    .b-telat { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .list-item { margin-bottom: 8px; padding-left: 15px; position: relative; }
+    .list-item::before { content: "•"; position: absolute; left: 0; color: var(--accent-gold); }
 
-    .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; background: rgba(0,0,0,0.2); border-radius: 12px; }
-    
-    .keterangan-sumber { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: block; }
-    .highlight-kegiatan { color: #d4af37; font-weight: 600; }
+    .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-right: 5px; }
+    .b-alpa { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .b-telat { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
 
-    /* CSS KHUSUS PELAPOR RAHASIA */
     .pelapor-rahasia {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-      color: #94a3b8; transition: 0.3s;
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer; color: #94a3b8; font-size: 0.8rem;
     }
-    .pelapor-rahasia:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white; }
-    .pelapor-ikon { font-size: 0.8rem; opacity: 0.7; }
+    .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; }
   </style>
 </head>
 <body>
@@ -98,23 +110,21 @@
 
 <main>
   <div class="filter-box">
-    <label>📅 Pantauan Tanggal:</label>
+    <label>📅 Tanggal:</label>
     <input type="date" id="filterTanggal" onchange="prosesData()">
   </div>
 
-  <div id="loadingIndicator" style="text-align:center; padding: 40px; display:none; color: #d4af37; font-style:italic;">
-    ⏳ Menarik seluruh data asrama...
-  </div>
+  <div id="prioritySummary" class="priority-container"></div>
 
   <div id="dataContainer">
-    <h2 class="section-title title-lapor">🚨 Santri Terlapor (Berdasarkan Usrah)</h2>
-    <div id="containerLaporan"><div class="empty-state">Memuat...</div></div>
+    <h2 class="section-title title-lapor">🚨 Santri Terlapor</h2>
+    <div id="containerLaporan"></div>
 
-    <h2 class="section-title title-absen">⚠️ Indisipliner Absensi (Alfa / Telat)</h2>
-    <div id="containerAbsen"><div class="empty-state">Memuat...</div></div>
+    <h2 class="section-title title-absen">⚠️ Indisipliner Absensi</h2>
+    <div id="containerAbsen"></div>
 
-    <h2 class="section-title title-setor">📖 Belum Setoran Al-Qur'an (Khusus Tahfiz)</h2>
-    <div id="containerSetoran"><div class="empty-state">Memuat...</div></div>
+    <h2 class="section-title title-setor">📖 Belum Setoran</h2>
+    <div id="containerSetoran"></div>
   </div>
 </main>
 
@@ -140,28 +150,19 @@
     "Evita": ["BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
   };
 
+  const SANTRI_TAHFIZ = ["M. AL FALAH", "MIKA RAHIEL YUSUF", "ANGGA PRATAMA PUTRA", "NIZAM KABISAT", "PRAWIRO PUJO TUNGGAL JATI", "MAHESA AULIA GIFFARI", "NAJMIHADI SYAUQII TAMAAM", "MARFEL SAPUTRA", "MELDI NOVRIANSYAH", "RENAL MARTIN", "AHMAD RIYADI", "ABDULLAH MUKTI HAFIDZALLAH", "AKBAR PRAYOGA", "ANDES AFENDRA", "BASRI AL HAZIQ ZULFAHMI", "CANZA RYANDA HUTASUHUT", "DAFFA AL MUSYARI", "DANANG PRASDITYA SANTOSO", "FAKHRI AL MUZAKKI", "FALIZH DAFFA QATRUNNADA", "FEBRI GHALIH AL FAROBI", "HAFIDZ AL ROZI", "HAFIDZ ALRIZKY", "ILHAM MUKMIN AL FARABI", "LUTHFAN ADZAKI", "DIKKI KURNIAWAN", "ROID AFDAL", "IHZA TRINANDI", "ILHAM", "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI", "AHMAD MAULANA", "ALIF MUHAMMAD YUSUF", "ARYA DIFA ALSYA", "FARAZH SAYYID PUTRA KENEGA", "GHOZY FATURRAHMAN", "M. FAQIH HAFIDZALLAH", "M. RIJALUL KAMIL", "MUHAMMAD ALLAM NUR HUSHAIN", "M. RAID MAHRUS", "NAFIS", "RAFI RAMADHAN", "REYNALDI MALIK IBRAHIM ALFARIDZI", "WAFII FADHLURROHMAN", "M. FADHIL BUANA", "M. FIRAAS AL INSYIROH", "M. XAVI NF", "NABIL NAJMI", "NAUFAL AKBAR ALKHATIRI", "QHEIZAN ALQIZA ARISDA", "REYFAS RAMADHAN", "ROHADIN FIRDAUS AL QAUSAR", "SATRIO ABIMAYU", "WAHYU REYDINATA", "ZAHIR ZIBRAN", "ZULFAKIH HAERUNNASIHIN", "HABIB RAMADHAN", "MUHAMAD YUSUF ARROSIYD", "VERY SYACH", "M. FAISAL FIKRIANSYAH", "TEGAR HIDAYAT", "WILDA", "NESSYA RAMADHANY", "GHENIS ANDIENTIAZ", "JESSICA PUTRY AYRA", "NYAYU MARLITSA ARDHANI", "GRINNETA NALANI PUTRI", "AMIRAH BALQIS RAHADATUL A'ISYAH", "BILQIS NUR ANISAH", "QELZA RAMADHANI ATH THAHIRAH"];
+
   let mapSantriUsrah = {};
   for (const [usrah, list] of Object.entries(MASTER_SANTRI)) {
     list.forEach(nama => mapSantriUsrah[nama] = usrah);
   }
 
-  function getUsrah(namaSantri) {
-    return mapSantriUsrah[namaSantri] || "Usrah Tidak Diketahui";
-  }
-
-  const SANTRI_TAHFIZ = [
-    "M. AL FALAH", "MIKA RAHIEL YUSUF", "ANGGA PRATAMA PUTRA", "NIZAM KABISAT", "PRAWIRO PUJO TUNGGAL JATI", "MAHESA AULIA GIFFARI", "NAJMIHADI SYAUQII TAMAAM", "MARFEL SAPUTRA", "MELDI NOVRIANSYAH", "RENAL MARTIN", "AHMAD RIYADI", "ABDULLAH MUKTI HAFIDZALLAH", "AKBAR PRAYOGA", "ANDES AFENDRA", "BASRI AL HAZIQ ZULFAHMI", "CANZA RYANDA HUTASUHUT", "DAFFA AL MUSYARI", "DANANG PRASDITYA SANTOSO", "FAKHRI AL MUZAKKI", "FALIZH DAFFA QATRUNNADA", "FEBRI GHALIH AL FAROBI", "HAFIDZ AL ROZI", "HAFIDZ ALRIZKY", "ILHAM MUKMIN AL FARABI", "LUTHFAN ADZAKI", "DIKKI KURNIAWAN", "ROID AFDAL", "IHZA TRINANDI", "ILHAM", "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI",
-    "AHMAD MAULANA", "ALIF MUHAMMAD YUSUF", "ARYA DIFA ALSYA", "FARAZH SAYYID PUTRA KENEGA", "GHOZY FATURRAHMAN", "M. FAQIH HAFIDZALLAH", "M. RIJALUL KAMIL", "MUHAMMAD ALLAM NUR HUSHAIN", "M. RAID MAHRUS", "NAFIS", "RAFI RAMADHAN", "REYNALDI MALIK IBRAHIM ALFARIDZI", "WAFII FADHLURROHMAN", "M. FADHIL BUANA", "M. FIRAAS AL INSYIROH", "M. XAVI NF", "NABIL NAJMI", "NAUFAL AKBAR ALKHATIRI", "QHEIZAN ALQIZA ARISDA", "REYFAS RAMADHAN", "ROHADIN FIRDAUS AL QAUSAR", "SATRIO ABIMAYU", "WAHYU REYDINATA", "ZAHIR ZIBRAN", "ZULFAKIH HAERUNNASIHIN", "HABIB RAMADHAN", "MUHAMAD YUSUF ARROSIYD", "VERY SYACH", "M. FAISAL FIKRIANSYAH", "TEGAR HIDAYAT",
-    "WILDA", "NESSYA RAMADHANY", "GHENIS ANDIENTIAZ", "JESSICA PUTRY AYRA", "NYAYU MARLITSA ARDHANI", "GRINNETA NALANI PUTRI", "AMIRAH BALQIS RAHADATUL A'ISYAH", "BILQIS NUR ANISAH", "QELZA RAMADHANI ATH THAHIRAH"
-  ];
+  function getUsrah(nama) { return mapSantriUsrah[nama] || "Luar"; }
 
   let allData = { lapor: {}, absenHarian: {}, absenKBM: {}, setoran: {} };
 
   document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('filterTanggal').value = new Date().toISOString().split('T')[0];
-    document.getElementById('loadingIndicator').style.display = 'block';
-    document.getElementById('dataContainer').style.display = 'none';
-
     try {
       const snaps = await Promise.all([
         get(ref(db, 'cahaya_app/log_lapor_inisiatif')),
@@ -169,196 +170,127 @@
         get(ref(db, 'cahaya_app/absensi_pembelajaran')),
         get(ref(db, 'cahaya_app/setoran_tahfiz'))
       ]);
-      
       allData.lapor = snaps[0].val() || {};
       allData.absenHarian = snaps[1].val() || {};
       allData.absenKBM = snaps[2].val() || {};
       allData.setoran = snaps[3].val() || {};
-
-      document.getElementById('loadingIndicator').style.display = 'none';
-      document.getElementById('dataContainer').style.display = 'block';
-      
       prosesData();
-    } catch(err) {
-      alert("Gagal memuat data dari server: " + err.message);
-    }
+    } catch(err) { alert(err.message); }
   });
 
   window.prosesData = function() {
-    const tglPilih = document.getElementById('filterTanggal').value;
-    
-    renderLaporan(tglPilih);
-    renderAbsensi(tglPilih);
-    renderSetoran(tglPilih);
+    const tgl = document.getElementById('filterTanggal').value;
+    renderLaporan(tgl);
+    renderAbsensi(tgl);
+    renderSetoran(tgl);
+    generatePriority(tgl);
   };
 
-  // FUNGSI UNTUK MENGUBAH TAMPILAN NAMA PELAPOR SAAT DIKLIK
-  window.togglePelapor = function(element, namaAsli) {
-    const textSpan = element.querySelector('.pelapor-text');
-    const iconSpan = element.querySelector('.pelapor-ikon');
-    
-    if (textSpan.textContent === '••••••••') {
-      textSpan.textContent = namaAsli;
-      iconSpan.textContent = '👁️';
-    } else {
-      textSpan.textContent = '••••••••';
-      iconSpan.textContent = '🔒';
-    }
-  };
+  function generatePriority(tgl) {
+    let lapor = 0, alfa = 0;
+    Object.values(allData.lapor).forEach(l => { if(l.waktu?.startsWith(tgl) && l.tipe === "Lapor Pelanggaran") lapor++; });
+    [allData.absenHarian, allData.absenKBM].forEach(db => {
+      Object.values(db).forEach(log => {
+        if(log.tanggal === tgl && log.data) log.data.forEach(s => { if(s.status?.toLowerCase()==='alfa') alfa++; });
+      });
+    });
+    document.getElementById('prioritySummary').innerHTML = `
+      <div class="priority-card ${lapor>0?'pulse-danger':''}"><h3>Laporan</h3><span class="count">${lapor}</span></div>
+      <div class="priority-card warning ${alfa>0?'pulse-danger':''}"><h3>Alfa</h3><span class="count">${alfa}</span></div>
+    `;
+  }
 
-  function renderLaporan(tanggal) {
-    let groupedData = {};
-    let totalKasus = 0;
-
+  // LOGIKA PENYEMPURNAAN: GROUPING BY NAME
+  function renderLaporan(tgl) {
+    let grouped = {}; // { usrah: { nama: [kejadian1, kejadian2] } }
     Object.values(allData.lapor).forEach(log => {
-      if (log.waktu && log.waktu.startsWith(tanggal) && log.tipe === "Lapor Pelanggaran") {
-        let usrah = getUsrah(log.dilaporkan);
-        if (!groupedData[usrah]) groupedData[usrah] = [];
-        groupedData[usrah].push(log);
-        totalKasus++;
+      if (log.waktu?.startsWith(tgl) && log.tipe === "Lapor Pelanggaran") {
+        let u = getUsrah(log.dilaporkan), n = log.dilaporkan;
+        if (!grouped[u]) grouped[u] = {};
+        if (!grouped[u][n]) grouped[u][n] = { list: [], pelapor: [] };
+        grouped[u][n].list.push(log.keterangan);
+        grouped[u][n].pelapor.push(log.pelapor);
       }
     });
 
     let html = '';
-    if (totalKasus === 0) {
-      html = `<div class="empty-state">Alhamdulillah, tidak ada laporan pelanggaran dari seluruh asrama hari ini.</div>`;
-    } else {
-      for (const [usrah, logs] of Object.entries(groupedData)) {
-        html += `<div class="usrah-group">
-                  <div class="usrah-title">🏠 Dari Usrah ${usrah}</div>
-                  <table>
-                    <tr><th width="30%">Santri Dilaporkan</th><th width="45%">Kejadian</th><th width="25%">Pelapor</th></tr>`;
-        
-        logs.forEach(log => {
-          let pelaporRahasiaHTML = `
-            <div class="pelapor-rahasia" onclick="togglePelapor(this, '${log.pelapor}')" title="Klik untuk melihat/menyembunyikan">
-              <span class="pelapor-ikon">🔒</span>
-              <span class="pelapor-text">••••••••</span>
-            </div>
-          `;
-          html += `<tr>
-            <td style="color:#fca5a5; font-weight:bold;">${log.dilaporkan}</td>
-            <td>${log.keterangan}</td>
-            <td>${pelaporRahasiaHTML}</td>
-          </tr>`;
-        });
+    if (Object.keys(grouped).length === 0) html = '<div class="empty-state">Nihil Laporan.</div>';
+    else {
+      for (let u in grouped) {
+        html += `<div class="usrah-group"><div class="usrah-title">🏠 Usrah ${u}</div><table><tr><th>Nama</th><th>Daftar Kejadian</th><th>Info Pelapor</th></tr>`;
+        for (let nama in grouped[u]) {
+          let kejadianHTML = grouped[u][nama].list.map(k => `<div class="list-item">${k}</div>`).join('');
+          let pelaporHTML = grouped[u][nama].pelapor.map(p => `
+            <div class="pelapor-rahasia" onclick="togglePelapor(this, '${p}')" style="margin-bottom:4px;">
+              <span>🔒 ••••••••</span>
+            </div>`).join('<br>');
+          html += `<tr><td><b>${nama}</b></td><td>${kejadianHTML}</td><td>${pelaporHTML}</td></tr>`;
+        }
         html += `</table></div>`;
       }
     }
     document.getElementById('containerLaporan').innerHTML = html;
   }
 
-  function renderAbsensi(tanggal) {
-    let listBermasalah = [];
-
-    // Kumpulkan Harian
-    Object.values(allData.absenHarian).forEach(log => {
-      if (log.tanggal === tanggal && log.data) {
-        log.data.forEach(s => {
-          let st = (s.status || '').toLowerCase();
-          if (st === 'alfa' || st === 'terlambat') {
-            listBermasalah.push({ nama: s.nama, status: s.status, kegiatan: log.program, tipeKegiatan: "Program Harian" });
-          }
-        });
-      }
-    });
-
-    // Kumpulkan KBM
-    Object.values(allData.absenKBM).forEach(log => {
-      if (log.tanggal === tanggal && log.data) {
-        log.data.forEach(s => {
-          let st = (s.status || '').toLowerCase();
-          if (st === 'alfa' || st === 'terlambat') {
-            listBermasalah.push({ nama: s.nama, status: s.status, kegiatan: log.mapel, tipeKegiatan: `KBM Kelas (${log.guru})` });
-          }
-        });
-      }
-    });
-
-    let groupedData = {};
-    let totalBermasalah = 0;
-
-    listBermasalah.forEach(item => {
-      let usrah = getUsrah(item.nama);
-      if (!groupedData[usrah]) groupedData[usrah] = [];
-      groupedData[usrah].push(item);
-      totalBermasalah++;
+  function renderAbsensi(tgl) {
+    let grouped = {}; 
+    [allData.absenHarian, allData.absenKBM].forEach(db => {
+      Object.values(db).forEach(log => {
+        if(log.tanggal === tgl && log.data) {
+          log.data.forEach(s => {
+            let st = s.status?.toLowerCase();
+            if(st === 'alfa' || st === 'terlambat') {
+              let u = getUsrah(s.nama), n = s.nama;
+              if(!grouped[u]) grouped[u] = {};
+              if(!grouped[u][n]) grouped[u][n] = [];
+              grouped[u][n].push({ status: s.status, kegiatan: log.program || log.mapel });
+            }
+          });
+        }
+      });
     });
 
     let html = '';
-    if (totalBermasalah === 0) {
-      html = `<div class="empty-state">Alhamdulillah, seluruh santri asrama disiplin waktu hari ini.</div>`;
-    } else {
-      for (const [usrah, logs] of Object.entries(groupedData)) {
-        html += `<div class="usrah-group">
-                  <div class="usrah-title">🏠 Dari Usrah ${usrah}</div>
-                  <table>
-                    <tr><th width="35%">Nama Santri</th><th width="20%">Status</th><th width="45%">Detail Keterangan</th></tr>`;
-        
-        logs.forEach(item => {
-          let badgeCls = item.status.toLowerCase() === 'alfa' ? 'b-alpa' : 'b-telat';
-          html += `<tr>
-            <td style="font-weight:bold; color:white;">${item.nama}</td>
-            <td><span class="badge ${badgeCls}">${item.status}</span></td>
-            <td>
-              <span class="highlight-kegiatan">${item.kegiatan}</span>
-              <span class="keterangan-sumber">Sumber: ${item.tipeKegiatan}</span>
-            </td>
-          </tr>`;
-        });
+    if (Object.keys(grouped).length === 0) html = '<div class="empty-state">Disiplin Terjaga.</div>';
+    else {
+      for (let u in grouped) {
+        html += `<div class="usrah-group"><div class="usrah-title">🏠 Usrah ${u}</div><table><tr><th>Nama</th><th>Keterangan Absensi</th></tr>`;
+        for (let nama in grouped[u]) {
+          let itemHTML = grouped[u][nama].map(i => `
+            <div class="list-item">
+              <span class="badge ${i.status.toLowerCase()==='alfa'?'b-alpa':'b-telat'}">${i.status}</span>
+              ${i.kegiatan}
+            </div>`).join('');
+          html += `<tr><td><b>${nama}</b></td><td>${itemHTML}</td></tr>`;
+        }
         html += `</table></div>`;
       }
     }
     document.getElementById('containerAbsen').innerHTML = html;
   }
 
-  function renderSetoran(tanggal) {
-    let santriSudahSetor = [];
-
-    // Kumpulkan semua santri yang sudah setor
-    Object.values(allData.setoran).forEach(log => {
-      if (log.tanggal === tanggal && log.data) {
-        log.data.forEach(s => { santriSudahSetor.push(s.nama); });
-      }
-    });
-
-    // Cek siapa dari total SANTRI_TAHFIZ yang BELUM setor
-    let santriBelumSetor = SANTRI_TAHFIZ.filter(nama => !santriSudahSetor.includes(nama));
-
-    let groupedData = {};
-    let totalBelumSetor = 0;
-
-    santriBelumSetor.forEach(nama => {
-      let usrah = getUsrah(nama);
-      if (!groupedData[usrah]) groupedData[usrah] = [];
-      groupedData[usrah].push(nama);
-      totalBelumSetor++;
-    });
-
+  function renderSetoran(tgl) {
+    let sudah = [];
+    Object.values(allData.setoran).forEach(log => { if(log.tanggal === tgl && log.data) log.data.forEach(s => sudah.push(s.nama)); });
+    let belum = SANTRI_TAHFIZ.filter(n => !sudah.includes(n));
     let html = '';
-    if (totalBelumSetor === 0) {
-      html = `<div class="empty-state">Luar biasa! Seluruh santri Tahfiz di Pesantren sudah menyelesaikan setoran hari ini.</div>`;
-    } else {
-      for (const [usrah, logs] of Object.entries(groupedData)) {
-        html += `<div class="usrah-group">
-                  <div class="usrah-title">🏠 Dari Usrah ${usrah}</div>
-                  <table>
-                    <tr><th width="10%">No</th><th>Nama Santri Tahfiz (Belum Setor)</th></tr>`;
-        
-        logs.forEach((nama, index) => {
-          html += `<tr>
-            <td>${index + 1}</td>
-            <td style="color:#fca5a5; font-weight:500;">
-              ${nama} 
-              <span class="keterangan-sumber">Wajib Setor Hafalan</span>
-            </td>
-          </tr>`;
-        });
+    if(!belum.length) html = '<div class="empty-state">Selesai Semua.</div>';
+    else {
+      let grp = {}; belum.forEach(n => { let u = getUsrah(n); if(!grp[u]) grp[u] = []; grp[u].push(n); });
+      for(let u in grp) {
+        html += `<div class="usrah-group"><div class="usrah-title">🏠 Usrah ${u}</div><table>`;
+        grp[u].forEach(n => { html += `<tr><td>${n}</td><td style="color:var(--danger-main)">Belum Setoran</td></tr>`; });
         html += `</table></div>`;
       }
     }
     document.getElementById('containerSetoran').innerHTML = html;
   }
+
+  window.togglePelapor = function(el, nama) {
+    const span = el.querySelector('span');
+    if(span.textContent.includes('••••')) { span.textContent = '👁️ ' + nama; el.style.color = 'white'; }
+    else { span.textContent = '🔒 ••••••••'; el.style.color = '#94a3b8'; }
+  };
 </script>
 </body>
 </html>
