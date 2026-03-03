@@ -38,9 +38,7 @@
     .btn-back {
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
       color: var(--text-main); padding: 8px 16px; border-radius: 50px; cursor: pointer;
-      transition: 0.3s;
     }
-    .btn-back:hover { background: rgba(255,255,255,0.1); }
 
     main { max-width: 900px; margin: 40px auto; padding: 0 20px; padding-bottom: 60px; }
 
@@ -48,38 +46,35 @@
       background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
       padding: 20px; border-radius: 16px; margin-bottom: 30px;
       display: flex; align-items: center; justify-content: space-between; gap: 15px;
-      flex-wrap: wrap;
     }
-    .filter-box label { font-weight: 600; color: var(--success-light); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;}
+    .filter-box label { font-weight: 600; color: var(--success-light); font-size: 0.95rem; text-transform: uppercase; }
     .filter-box input[type="date"] {
       padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(52, 211, 153, 0.4);
-      background: rgba(0,0,0,0.5); color: white; font-family: inherit; font-size: 1rem;
-      outline: none; cursor: pointer;
+      background: rgba(0,0,0,0.5); color: white; font-family: inherit;
     }
-    .filter-box input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
-    .section-title { font-family: 'Playfair Display', serif; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); color: var(--success-light); }
+    .section-title { font-family: 'Playfair Display', serif; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; font-size: 1.5rem; color: var(--success-light); }
 
     .usrah-group { background: rgba(0,0,0,0.2); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-    .usrah-title { color: var(--accent-gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .usrah-title { color: var(--accent-gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 15px; }
     
     table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: rgba(255,255,255,0.02); border-radius: 12px; overflow: hidden; }
-    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
     th { background: rgba(0,0,0,0.4); color: var(--text-muted); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; }
-    tr:hover { background: rgba(255,255,255,0.05); }
     
-    .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; background: rgba(0,0,0,0.2); border-radius: 12px; }
-    
-    /* CSS KHUSUS POIN RAHASIA */
+    /* Style untuk daftar kebaikan */
+    .kebaikan-item { margin-bottom: 8px; position: relative; padding-left: 18px; line-height: 1.4; }
+    .kebaikan-item::before { content: "✨"; position: absolute; left: 0; font-size: 0.8rem; }
+
     .poin-rahasia {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(0,0,0,0.4); padding: 6px 14px; border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-      color: #94a3b8; transition: 0.3s; font-weight: 600; min-width: 100px; justify-content: center;
+      color: #94a3b8; font-weight: 600; min-width: 100px; justify-content: center;
     }
-    .poin-rahasia:hover { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.5); color: var(--success-light); }
-    .poin-rahasia.terbuka { background: rgba(16, 185, 129, 0.15); border-color: var(--success-light); color: var(--success-light); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
-    .poin-ikon { font-size: 0.85rem; opacity: 0.8; }
+    .poin-rahasia.terbuka { background: rgba(16, 185, 129, 0.15); border-color: var(--success-light); color: var(--success-light); }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; }
   </style>
 </head>
 <body>
@@ -91,7 +86,7 @@
 
 <main>
   <div class="filter-box">
-    <label>📅 Tanggal Inisiatif:</label>
+    <label>📅 Tanggal:</label>
     <input type="date" id="filterTanggal" onchange="prosesData()">
   </div>
 
@@ -132,90 +127,84 @@
     list.forEach(nama => mapSantriUsrah[nama] = usrah);
   }
 
-  function getUsrah(namaSantri) {
-    return mapSantriUsrah[namaSantri] || "Usrah Tidak Diketahui";
-  }
+  function getUsrah(nama) { return mapSantriUsrah[nama] || "Luar"; }
 
   let allDataInisiatif = {};
 
   document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('filterTanggal').value = new Date().toISOString().split('T')[0];
     document.getElementById('loadingIndicator').style.display = 'block';
-    document.getElementById('dataContainer').style.display = 'none';
-
     try {
       const snap = await get(ref(db, 'cahaya_app/log_lapor_inisiatif'));
       allDataInisiatif = snap.val() || {};
-
       document.getElementById('loadingIndicator').style.display = 'none';
-      document.getElementById('dataContainer').style.display = 'block';
-      
       prosesData();
-    } catch(err) {
-      alert("Gagal memuat data dari server: " + err.message);
-    }
+    } catch(err) { alert(err.message); }
   });
 
   window.prosesData = function() {
-    const tglPilih = document.getElementById('filterTanggal').value;
-    renderInisiatif(tglPilih);
+    const tgl = document.getElementById('filterTanggal').value;
+    renderInisiatif(tgl);
   };
 
-  // FUNGSI TOGGLE POIN RAHASIA
-  window.togglePoin = function(element, poinAsli) {
-    const textSpan = element.querySelector('.poin-text');
-    const iconSpan = element.querySelector('.poin-ikon');
-    
-    if (textSpan.textContent === '•••') {
-      textSpan.textContent = `+${poinAsli} Poin`;
-      iconSpan.textContent = '👁️';
+  window.togglePoin = function(element, poin) {
+    const text = element.querySelector('.poin-text');
+    const icon = element.querySelector('.poin-ikon');
+    if (text.textContent === '•••') {
+      text.textContent = `+${poin} Poin`;
+      icon.textContent = '👁️';
       element.classList.add('terbuka');
     } else {
-      textSpan.textContent = '•••';
-      iconSpan.textContent = '🔒';
+      text.textContent = '•••';
+      icon.textContent = '🔒';
       element.classList.remove('terbuka');
     }
   };
 
+  // LOGIKA PENYEMPURNAAN: GROUPING BY NAME
   function renderInisiatif(tanggal) {
-    let groupedData = {};
-    let totalInisiatif = 0;
+    let grouped = {}; // { usrah: { nama: { list: [], total: 0 } } }
+    let hasData = false;
 
     Object.values(allDataInisiatif).forEach(log => {
-      // Saring hanya data Inisiatif Kebaikan pada tanggal yang dipilih
-      if (log.waktu && log.waktu.startsWith(tanggal) && log.tipe === "Inisiatif Kebaikan") {
-        let usrah = getUsrah(log.pelapor); // 'pelapor' di database ini berarti inisiatornya
-        if (!groupedData[usrah]) groupedData[usrah] = [];
-        groupedData[usrah].push(log);
-        totalInisiatif++;
+      if (log.waktu?.startsWith(tanggal) && log.tipe === "Inisiatif Kebaikan") {
+        let u = getUsrah(log.pelapor);
+        let n = log.pelapor;
+        let p = parseInt(log.poinDiberikan) || 0;
+
+        if (!grouped[u]) grouped[u] = {};
+        if (!grouped[u][n]) grouped[u][n] = { list: [], total: 0 };
+        
+        grouped[u][n].list.push(log.keterangan);
+        grouped[u][n].total += p;
+        hasData = true;
       }
     });
 
     let html = '';
-    if (totalInisiatif === 0) {
-      html = `<div class="empty-state">Belum ada catatan inisiatif kebaikan pada tanggal ini.</div>`;
+    if (!hasData) {
+      html = `<div class="empty-state">Belum ada catatan inisiatif kebaikan hari ini.</div>`;
     } else {
-      for (const [usrah, logs] of Object.entries(groupedData)) {
+      for (const [usrah, students] of Object.entries(grouped)) {
         html += `<div class="usrah-group">
-                  <div class="usrah-title">🏠 Dari Usrah ${usrah}</div>
+                  <div class="usrah-title">🏠 Usrah ${usrah}</div>
                   <table>
-                    <tr><th width="30%">Nama Santri</th><th width="50%">Aksi Kebaikan</th><th width="20%">Poin Apresiasi</th></tr>`;
+                    <tr><th width="30%">Nama Inisiator</th><th width="50%">Rangkuman Kebaikan</th><th width="20%">Total Apresiasi</th></tr>`;
         
-        logs.forEach(log => {
-          let poinDiberikan = log.poinDiberikan || 0;
-          let poinRahasiaHTML = `
-            <div class="poin-rahasia" onclick="togglePoin(this, '${poinDiberikan}')" title="Klik untuk mengungkap poin">
-              <span class="poin-ikon">🔒</span>
-              <span class="poin-text">•••</span>
-            </div>
-          `;
-
+        for (const [nama, data] of Object.entries(students)) {
+          let kebaikanHTML = data.list.map(k => `<div class="kebaikan-item">${k}</div>`).join('');
+          
           html += `<tr>
-            <td style="color:var(--text-main); font-weight:bold;">${log.pelapor}</td>
-            <td>${log.keterangan}</td>
-            <td>${poinRahasiaHTML}</td>
+            <td style="font-weight:bold;">${nama}</td>
+            <td>${kebaikanHTML}</td>
+            <td>
+              <div class="poin-rahasia" onclick="togglePoin(this, '${data.total}')">
+                <span class="poin-ikon">🔒</span>
+                <span class="poin-text">•••</span>
+              </div>
+            </td>
           </tr>`;
-        });
+        }
         html += `</table></div>`;
       }
     }
