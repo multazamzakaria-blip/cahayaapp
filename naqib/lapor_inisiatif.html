@@ -11,6 +11,7 @@
       --primary-blue: #0f172a;
       --accent-gold: #d4af37;
       --accent-green: #10b981;
+      --accent-red: #ef4444;
       --glass-bg: rgba(15, 23, 42, 0.7);
       --glass-border: rgba(212, 175, 55, 0.3);
       --text-main: #f8fafc;
@@ -67,6 +68,18 @@
     }
     select:focus, input:focus, textarea:focus { border-color: var(--accent-gold); outline: none; }
 
+    /* Gaya untuk multi-input nama */
+    .row-nama { display: flex; gap: 10px; align-items: center; margin-bottom: 5px; }
+    .btn-remove { 
+      background: rgba(239, 68, 68, 0.2); border: 1px solid var(--accent-red); 
+      color: var(--accent-red); padding: 10px; border-radius: 10px; cursor: pointer; height: 45px; margin-bottom: 10px;
+    }
+    .btn-add-nama {
+      background: transparent; border: 1px dashed var(--accent-gold); color: var(--accent-gold);
+      padding: 8px; width: 100%; border-radius: 10px; cursor: pointer; font-size: 0.85rem; transition: 0.3s;
+    }
+    .btn-add-nama:hover { background: rgba(212, 175, 55, 0.1); }
+
     .info-poin { font-size: 0.85rem; color: var(--accent-green); margin-bottom: 15px; font-style: italic; }
 
     .btn-submit {
@@ -95,10 +108,15 @@
     <div class="info-poin">✨ Santri pelapor akan otomatis mendapatkan +5 Poin Kedisiplinan.</div>
 
     <label>Nama Pelapor (Dapat Poin)</label>
-    <select id="namaPelapor" class="all-santri"><option value="">-- Pilih Santri Pelapor --</option></select>
+    <select id="namaPelapor" class="all-santri-select"><option value="">-- Pilih Santri Pelapor --</option></select>
 
-    <label>Nama yang Dilaporkan</label>
-    <select id="namaDilapor" class="all-santri"><option value="">-- Pilih Santri yang Melanggar --</option></select>
+    <label>Nama yang Dilaporkan (Bisa lebih dari 1)</label>
+    <div id="containerDilapor">
+      <div class="row-nama">
+        <select class="dilapor-item all-santri-select"><option value="">-- Pilih Santri --</option></select>
+      </div>
+    </div>
+    <button type="button" class="btn-add-nama" onclick="tambahBarisDilapor()">+ Tambah Nama Lain (Pelaku Lain)</button>
 
     <label>Kejadian / Pelanggaran</label>
     <textarea id="kejadianLapor" rows="3" placeholder="Ceritakan detail pelanggaran..."></textarea>
@@ -114,7 +132,7 @@
     <div class="info-poin">✨ Berikan apresiasi poin sesuai dengan besarnya dampak inisiatif santri.</div>
 
     <label>Nama Santri (Inisiator)</label>
-    <select id="namaInisiator" class="all-santri"><option value="">-- Pilih Santri --</option></select>
+    <select id="namaInisiator" class="all-santri-select"><option value="">-- Pilih Santri --</option></select>
 
     <label>Jumlah Poin Apresiasi</label>
     <input type="number" id="poinInisiatif" placeholder="Contoh: 10, 20, 50...">
@@ -152,6 +170,37 @@
     "Evita": ["BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
   };
 
+  let allSantriList = [];
+  Object.values(MASTER_SANTRI).forEach(list => allSantriList.push(...list));
+  allSantriList.sort();
+
+  // Fungsi untuk mengisi dropdown
+  const fillSelect = (selectElement) => {
+    allSantriList.forEach(nama => {
+      const opt = document.createElement('option');
+      opt.value = nama; opt.text = nama;
+      selectElement.appendChild(opt);
+    });
+  };
+
+  // Inisialisasi awal
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.all-santri-select').forEach(fillSelect);
+  });
+
+  // Fungsi Tambah Baris Nama Pelaku
+  window.tambahBarisDilapor = () => {
+    const container = document.getElementById('containerDilapor');
+    const div = document.createElement('div');
+    div.className = 'row-nama';
+    div.innerHTML = `
+      <select class="dilapor-item"><option value="">-- Pilih Santri --</option></select>
+      <button type="button" class="btn-remove" onclick="this.parentElement.remove()">✕</button>
+    `;
+    container.appendChild(div);
+    fillSelect(div.querySelector('select'));
+  };
+
   window.switchTab = (tab) => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
@@ -165,46 +214,55 @@
     }
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    let allSantriList = [];
-    Object.values(MASTER_SANTRI).forEach(list => allSantriList.push(...list));
-    allSantriList.sort();
-
-    const selects = document.querySelectorAll('.all-santri');
-    selects.forEach(select => {
-      allSantriList.forEach(nama => {
-        const opt = document.createElement('option');
-        opt.value = nama; opt.text = nama;
-        select.appendChild(opt);
-      });
-    });
-  });
-
   window.simpanLaporan = async () => {
     const pelapor = document.getElementById('namaPelapor').value;
-    const dilapor = document.getElementById('namaDilapor').value;
     const kejadian = document.getElementById('kejadianLapor').value;
     const saksi = document.getElementById('saksiLapor').value;
+    
+    // Ambil semua nama yang dipilih di container dilapor
+    const dilaporElements = document.querySelectorAll('.dilapor-item');
+    let daftarDilapor = [];
+    dilaporElements.forEach(el => {
+        if(el.value) daftarDilapor.push(el.value);
+    });
 
-    if (!pelapor || !dilapor || !kejadian) { alert("Lengkapi data laporan!"); return; }
-    if (!confirm(`Berikan +5 poin untuk ${pelapor} atas laporannya?`)) return;
+    if (!pelapor || daftarDilapor.length === 0 || !kejadian) { 
+        alert("Lengkapi data! Pilih pelapor, minimal 1 nama yang dilaporkan, dan detail kejadian."); 
+        return; 
+    }
+    
+    if (!confirm(`Kirim laporan untuk ${daftarDilapor.length} santri dan berikan +5 poin untuk pelapor (${pelapor})?`)) return;
 
     const waktu = new Date().toISOString();
     
-    // 1. Catat laporannya
-    await push(ref(db, 'cahaya_app/log_lapor_inisiatif'), {
-      tipe: "Lapor Pelanggaran", pelapor: pelapor, dilaporkan: dilapor, 
-      keterangan: kejadian, saksi: saksi, admin: currentUser.username, waktu: waktu
-    });
+    try {
+        // 1. Catat laporan untuk setiap pelaku
+        for (const namaPelaku of daftarDilapor) {
+            await push(ref(db, 'cahaya_app/log_lapor_inisiatif'), {
+                tipe: "Lapor Pelanggaran", 
+                pelapor: pelapor, 
+                dilaporkan: namaPelaku, 
+                keterangan: kejadian, 
+                saksi: saksi, 
+                admin: currentUser.username || "Admin", 
+                waktu: waktu
+            });
+        }
 
-    // 2. Tambah poin pelapor otomatis
-    await push(ref(db, 'cahaya_app/poin_manual'), {
-      namaSantri: pelapor, poin: 5, keterangan: "Melaporkan Pelanggaran: " + kejadian, 
-      admin: currentUser.username, waktu: waktu
-    });
+        // 2. Tambah poin pelapor otomatis (Cukup 1 kali saja meskipun pelaku banyak)
+        await push(ref(db, 'cahaya_app/poin_manual'), {
+            namaSantri: pelapor, 
+            poin: 5, 
+            keterangan: "Melaporkan Pelanggaran: " + kejadian, 
+            admin: currentUser.username || "Admin", 
+            waktu: waktu
+        });
 
-    alert("Laporan berhasil dicatat dan poin telah ditambahkan!");
-    location.reload();
+        alert("Laporan berhasil dicatat untuk " + daftarDilapor.length + " santri!");
+        location.reload();
+    } catch (e) {
+        alert("Terjadi kesalahan: " + e.message);
+    }
   };
 
   window.simpanInisiatif = async () => {
@@ -217,16 +275,14 @@
 
     const waktu = new Date().toISOString();
 
-    // 1. Catat Inisiatifnya
     await push(ref(db, 'cahaya_app/log_lapor_inisiatif'), {
       tipe: "Inisiatif Kebaikan", pelapor: inisiator, dilaporkan: "-", 
-      keterangan: keterangan, poinDiberikan: poin, admin: currentUser.username, waktu: waktu
+      keterangan: keterangan, poinDiberikan: poin, admin: currentUser.username || "Admin", waktu: waktu
     });
 
-    // 2. Tambah poin manual
     await push(ref(db, 'cahaya_app/poin_manual'), {
       namaSantri: inisiator, poin: poin, keterangan: "Inisiatif Kebaikan: " + keterangan, 
-      admin: currentUser.username, waktu: waktu
+      admin: currentUser.username || "Admin", waktu: waktu
     });
 
     alert("Apresiasi poin kebaikan berhasil dikirim!");
