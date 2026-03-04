@@ -1,246 +1,25 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <title>CAHAYA APP - Absensi KBM Guru</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary-dark: #020617;
-      --primary-blue: #0f172a;
-      --accent-gold: #d4af37;
-      --accent-gold-light: #fef08a;
-      --glass-bg: rgba(15, 23, 42, 0.7);
-      --glass-border: rgba(212, 175, 55, 0.2);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      
-      /* Warna Status */
-      --st-hadir: rgba(16, 185, 129, 0.15);
-      --st-hadir-border: rgba(16, 185, 129, 0.5);
-      --st-telat: rgba(245, 158, 11, 0.15);
-      --st-telat-border: rgba(245, 158, 11, 0.5);
-      --st-izin: rgba(14, 165, 233, 0.15);
-      --st-izin-border: rgba(14, 165, 233, 0.5);
-      --st-sakit: rgba(234, 179, 8, 0.15);
-      --st-sakit-border: rgba(234, 179, 8, 0.5);
-      --st-alfa: rgba(239, 68, 68, 0.15);
-      --st-alfa-border: rgba(239, 68, 68, 0.5);
-    }
+// ======================
+// 📘 DATA GURU
+// ======================
+const dataGuru = [
+  "MULTAZAM","ALVIN","RASYIDIN","NAQIEB","FALAH","FAHMI",
+  "KHAIZURAN","RAHIEL","FAIQ","FAVIAN","KAMAL",
+  "MEILISA","FATIMAH","EVITA"
+];
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+// ======================
+// 📚 DATA MATA PELAJARAN
+// ======================
+const dataMapel = [
+  "AQIDAH","FIQIH","ADAB","SHIRAH","METODE PENGAJARAN",
+  "KEWIRAUSAHAAN","NAHWU","SHARAF","BALAGHAH","TAHSIN","TAHFIZ"
+];
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.15), transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.1), transparent 40%),
-        linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
-      color: var(--text-main);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: ""; position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: -1;
-    }
-
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(2, 6, 23, 0.85);
-      backdrop-filter: blur(20px) saturate(150%);
-      border-bottom: 1px solid var(--glass-border);
-      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    
-    header h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--accent-gold); letter-spacing: 1px; }
-    
-    .btn-group { display: flex; gap: 10px; }
-    .btn-header {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text-main); padding: 8px 16px; border-radius: 50px;
-      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; font-family: 'Poppins';
-    }
-    .btn-header:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); color: var(--accent-gold-light);}
-
-    main { max-width: 1000px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
-    @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-    .card {
-      background: var(--glass-bg); backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 24px;
-      padding: 40px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
-      margin-bottom: 40px; position: relative;
-    }
-    .card-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--text-main); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;}
-
-    .filters {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px; margin-bottom: 30px;
-    }
-    label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-    
-    select, input[type="date"], textarea {
-      width: 100%; padding: 14px 20px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4);
-      color: white; font-family: inherit; font-size: 1rem;
-      transition: all 0.3s; outline: none; resize: vertical;
-    }
-    select:focus, input[type="date"]:focus, textarea:focus {
-      border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); background: rgba(0,0,0,0.6);
-    }
-
-    .table-header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-    .table-header-flex h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--accent-gold-light); margin: 0; }
-    
-    .btn-mark-all {
-      background: rgba(16, 185, 129, 0.2); color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.4); padding: 8px 16px;
-      border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Poppins';
-    }
-    .btn-mark-all:hover { background: rgba(16, 185, 129, 0.4); color: white; }
-
-    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-    thead th { color: var(--text-muted); font-weight: 500; font-size: 0.85rem; text-align: center; padding-bottom: 5px; }
-    thead th:nth-child(2) { text-align: left; }
-
-    tbody tr { background: rgba(255,255,255,0.03); border-radius: 12px; transition: all 0.3s ease; }
-    tbody td { padding: 15px 10px; text-align: center; border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
-    tbody td:first-child { border-radius: 12px 0 0 12px; border-left: 1px solid transparent; }
-    tbody td:nth-child(2) { text-align: left; font-weight: 500; letter-spacing: 0.5px; }
-    tbody td:last-child { border-radius: 0 12px 12px 0; border-right: 1px solid transparent; }
-
-    input[type="radio"] { 
-        appearance: none; width: 22px; height: 22px; 
-        border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
-        outline: none; cursor: pointer; position: relative; transition: 0.2s;
-        background: rgba(0,0,0,0.2);
-    }
-    input[type="radio"]:checked::before {
-        content: ''; position: absolute; top: 4px; left: 4px; width: 10px; height: 10px;
-        border-radius: 50%; background: white;
-    }
-
-    tr.status-hadir { background: var(--st-hadir); }
-    tr.status-hadir td:first-child { border-left-color: var(--st-hadir-border); }
-    tr.status-hadir input[type="radio"][value="Hadir"]:checked { background: #10b981; border-color: #34d399; }
-    
-    tr.status-terlambat { background: var(--st-telat); }
-    tr.status-terlambat td:first-child { border-left-color: var(--st-telat-border); }
-    tr.status-terlambat input[type="radio"][value="Terlambat"]:checked { background: #f59e0b; border-color: #fbbf24; }
-
-    tr.status-izin { background: var(--st-izin); }
-    tr.status-izin td:first-child { border-left-color: var(--st-izin-border); }
-    tr.status-izin input[type="radio"][value="Izin"]:checked { background: #0ea5e9; border-color: #38bdf8; }
-
-    tr.status-sakit { background: var(--st-sakit); }
-    tr.status-sakit td:first-child { border-left-color: var(--st-sakit-border); }
-    tr.status-sakit input[type="radio"][value="Sakit"]:checked { background: #eab308; border-color: #facc15; }
-
-    tr.status-alfa { background: var(--st-alfa); }
-    tr.status-alfa td:first-child { border-left-color: var(--st-alfa-border); }
-    tr.status-alfa input[type="radio"][value="Alfa"]:checked { background: #ef4444; border-color: #f87171; }
-
-    .btn-save {
-      width: 100%; padding: 18px; border-radius: 16px; border: none;
-      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
-      color: var(--primary-dark); font-family: inherit; font-size: 1.1rem;
-      font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-top: 30px;
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); transition: all 0.3s;
-    }
-    .btn-save:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5); filter: brightness(1.1); }
-  </style>
-</head>
-<body>
-
-<header>
-  <h1>Absensi Akademik</h1>
-  <div class="btn-group">
-    <button class="btn-header" onclick="goBack()">⬅️ Beranda</button>
-    <button class="btn-header" onclick="logout()">Keluar</button>
-  </div>
-</header>
-
-<main>
-  <div class="card">
-    <h2 class="card-title">📝 Log Kehadiran KBM</h2>
-    
-    <div class="filters">
-      <div class="filter-item">
-        <label>📅 Tanggal KBM</label>
-        <input type="date" id="kbmTanggal">
-      </div>
-      <div class="filter-item">
-        <label>📚 Rumpun Kelas</label>
-        <select id="kbmJenisKelas" onchange="updatePilihan()">
-          <option value="">-- Pilih Rumpun --</option>
-          <option value="ilmu">Halqah Ilmiyah</option>
-          <option value="bahasa">Halqah Lughowiyah</option>
-          <option value="alquran">Halqah Quraniyah</option>
-        </select>
-      </div>
-      <div class="filter-item" id="opsiKhusus"></div>
-      <div class="filter-item">
-        <label>📝 Mata Pelajaran</label>
-        <select id="kbmMapel"><option value="">-- Pilih Mapel --</option></select>
-      </div>
-    </div>
-
-    <div class="table-header-flex">
-      <h3>Daftar Santri</h3>
-      <button type="button" class="btn-mark-all" onclick="markAll()">✓ Set Semua Hadir</button>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th width="5%">No</th>
-          <th width="45%">Nama Lengkap</th>
-          <th title="Hadir" width="10%">H</th>
-          <th title="Terlambat (-50%)" width="10%">T</th>
-          <th title="Izin" width="10%">I</th>
-          <th title="Sakit" width="10%">S</th>
-          <th title="Alfa (-100%)" width="10%">A</th>
-        </tr>
-      </thead>
-      <tbody id="kbmBody">
-        <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;font-style:italic;">Silakan lengkapi pilihan kelas di atas.</td></tr>
-      </tbody>
-    </table>
-
-    <div style="margin-top: 30px;">
-      <label>📌 Ringkasan Materi / Catatan Jurnal Mengajar</label>
-      <textarea id="kbmCatatan" rows="3" placeholder="Tuliskan materi yang diajarkan..."></textarea>
-    </div>
-
-    <button class="btn-save" onclick="simpanKehadiran()">💾 SIMPAN LOG & POIN KEHADIRAN</button>
-  </div>
-</main>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
-    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
-    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
-    projectId: "absensi-santri-fajrul-islam",
-    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
-    messagingSenderId: "739928369926",
-    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
-
-  window.dataSantri = {
-    "Halqah Ilmiyah": {
+// ======================
+// 🕌 DATA KELAS & SANTRI
+// ======================
+window.dataSantri = {
+  "Halqah Ilmiyah": {
     "Kelas 1 Putra": ["JUANDA NUR ILHAM","M. ABIL IRWANSYAH","ALIF SAMUDRA","FAHRY AKBAR RAMDHANI","M. USAMAH","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","ANUGRAH PRATAMA","AHMAD FARHAAN","DEDI SETIADI","MOHAMMAD IKHSAN HAIRULI","ALVIN HERFIANTINO","IHZA TRINANDI","ILHAM","RAKA SEPTIAN","CAHYIS ISZAM","DIKKI KURNIAWAN","M. ARYA MAHDI WAFI EL-FAUZANI","EZA FEBRI AL FADZRI","M. DIRGATAMA","VERY SYACH","RADEN AZAA PANCA PUTRA","FAUZAN IBNI JABAR","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA"],
     "Kelas 2 Putra": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","CANZA RYANDA HUTASUHUT","DAFFA AL MUSYARI","DANANG PRASDITYA SANTOSO","FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","FALIZH DAFFA QATRUNNADA","FEBRI GHALIH AL FAROBI","HAFIDZ AL ROZI","HAFIDZ ALRIZKY","ILHAM MUKMIN AL FARABI","LUTHFAN ADZAKI","MAHESA AULIA GIFFARI","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","M. FIRAAS AL INSYIROH","M. XAVI NF","NABIL NAJMI","NAJMIHADI SYAUQII TAMAAM","NAUFAL AKBAR ALKHATIRI","NIZAM KABISAT","QHEIZAN ALQIZA ARISDA","RENAL MARTIN","REYFAS RAMADHAN","ROHADIN FIRDAUS AL QAUSAR","SATRIO ABIMAYU","TEGAR HIDAYAT","WAHYU REYDINATA","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN","HABIB RAMADHAN"],
     "Kelas 3 Putra": ["AHMAD MAULANA","ALIF MUHAMMAD YUSUF","ARYA DIFA ALSYA","FARAZH SAYYID PUTRA KENEGA","GHOZY FATURRAHMAN","M. FAQIH HAFIDZALLAH","M. RIJALUL KAMIL","M. AL FALAH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","NAFIS","RAFI RAMADHAN","REYNALDI MALIK IBRAHIM ALFARIDZI","WAFII FADHLURROHMAN"],
@@ -251,15 +30,15 @@
     "Kelas 3 Putri": ["AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"]
   },
   "Halqah Lughowiyah": {
-   "Kelas Abah": ["AHMAD MAULANA","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ANDES AFENDRA","ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","BASRI AL HAZIQ ZULFAHMI","DANANG PRASDITYA SANTOSO","M. FAQIH HAFIDZALLAH","FEBRI GHALIH AL FAROBI","FALIZH DAFFA QATRUNNADA","HABIB RAMADHAN","MUHAMMAD ALLAM NUR HUSHAIN","M. AL FALAH","MARFEL SAPUTRA","MELDI NOVRIANSYAH","MIKA RAHIEL YUSUF","NAFIS","RAFI RAMADHAN","M. RAID MAHRUS","REYFAS RAMADHAN","ROHADIN FIRDAUS AL QAUSAR","M. XAVI NF","PRAWIRO PUJO TUNGGAL JATI"],
+    "Kelas Abah": ["AHMAD MAULANA","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ANDES AFENDRA","ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","BASRI AL HAZIQ ZULFAHMI","DANANG PRASDITYA SANTOSO","M. FAQIH HAFIDZALLAH","FEBRI GHALIH AL FAROBI","FALIZH DAFFA QATRUNNADA","HABIB RAMADHAN","MUHAMMAD ALLAM NUR HUSHAIN","M. AL FALAH","MARFEL SAPUTRA","MELDI NOVRIANSYAH","MIKA RAHIEL YUSUF","NAFIS","RAFI RAMADHAN","M. RAID MAHRUS","REYFAS RAMADHAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","M. XAVI NF","PRAWIRO PUJO TUNGGAL JATI"],
     "Kelas Rahiel": ["NAUFAL AKBAR ALKHATIRI","NIZAM KABISAT","M. RIJALUL KAMIL","DAFFA AL MUSYARI","ALIF SAMUDRA","WAFII FADHLURROHMAN","EZA FEBRI AL FADZRI","M. ABIL IRWANSYAH","SYAHRUL RAMADHAN","HAFIDZ AL ROZI","HAFIDZ ALRIZKY","NAJMIHADI SYAUQII TAMAAM","IHZA TRINANDI","CAHYIS ISZAM","AHMAD FARHAAN","ARYA DIFA ALSYA","M. FADHIL BUANA","WAHYU REYDINATA","FAHRY AKBAR RAMDHANI","ALVIN HERFIANTINO","M. ARYA MAHDI WAFI EL-FAUZANI","RADEN AZAA PANCA PUTRA","FAUZAN IBNI JABAR","REZFY FAKHRYAZKA","M. FAISAL FIKRIANSYAH","QHEIZAN ALQIZA ARISDA"],
     "Kelas Alvin": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA"],
-    "Kelas Falah": ["RENAL MARTIN","FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","CANZA RYANDA HUTASUHUT","M. DIRGATAMA","LUTHFAN ADZAKI","FARAZH SAYYID PUTRA KENEGA","ZULFAKIH HAERUNNASIHIN","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","MOHAMMAD IKHSAN HAIRULI","ZAHIR ZIBRAN","NABIL NAJMI","DEDI SETIADI","ANUGRAH PRATAMA","SATRIO ABIMAYU","TEGAR HIDAYAT","ABDULLAH MUKTI HAFIDZALLAH","ILHAM","ILHAM MUKMIN AL FARABI","JUANDA NUR ILHAM","RAKA SEPTIAN","M. FIRAAS AL INSYIROH","GHOZY FATURRAHMAN","REYNALDI MALIK IBRAHIM ALFARIDZI","M. USAMAH","MAHESA AULIA GIFFARI","DIKKI KURNIAWAN","VERY SYACH"],
+    "Kelas Falah": ["FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","CANZA RYANDA HUTASUHUT","M. DIRGATAMA","LUTHFAN ADZAKI","FARAZH SAYYID PUTRA KENEGA","ZULFAKIH HAERUNNASIHIN","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","MOHAMMAD IKHSAN HAIRULI","ZAHIR ZIBRAN","NABIL NAJMI","DEDI SETIADI","ANUGRAH PRATAMA","SATRIO ABIMAYU","TEGAR HIDAYAT","ABDULLAH MUKTI HAFIDZALLAH","ILHAM","ILHAM MUKMIN AL FARABI","JUANDA NUR ILHAM","RAKA SEPTIAN","M. FIRAAS AL INSYIROH","GHOZY FATURRAHMAN","REYNALDI MALIK IBRAHIM ALFARIDZI","M. USAMAH","MAHESA AULIA GIFFARI","DIKKI KURNIAWAN","VERY SYACH"],
     "Kelas Meilisa": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI"],
     "Kelas Fatimah": ["ASHIFA FITRI RAMADHONI","EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"],
     "Kelas Evita": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI","ASHIFA FITRI RAMADHONI","EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"]
   },
-"Halqah Quraniyah": {
+  "Halqah Quraniyah": {
     "Tahfiz Abah": ["M. AL FALAH", "MIKA RAHIEL YUSUF", "ANGGA PRATAMA PUTRA", "NIZAM KABISAT", "PRAWIRO PUJO TUNGGAL JATI", "MAHESA AULIA GIFFARI", "NAJMIHADI SYAUQII TAMAAM", "MARFEL SAPUTRA", "MELDI NOVRIANSYAH", "RENAL MARTIN", "AHMAD RIYADI", "ABDULLAH MUKTI HAFIDZALLAH", "AKBAR PRAYOGA", "ANDES AFENDRA", "BASRI AL HAZIQ ZULFAHMI", "CANZA RYANDA HUTASUHUT", "DAFFA AL MUSYARI", "DANANG PRASDITYA SANTOSO", "FAKHRI AL MUZAKKI", "FALIZH DAFFA QATRUNNADA", "FEBRI GHALIH AL FAROBI", "HAFIDZ AL ROZI", "HAFIDZ ALRIZKY", "ILHAM MUKMIN AL FARABI", "LUTHFAN ADZAKI", "DIKKI KURNIAWAN", "ROID AFDAL", "IHZA TRINANDI", "ILHAM", "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI", "FAHRIE OKTAVIRANO FITRIS"],
     "Tahfiz Alvin": ["AHMAD MAULANA", "ALIF MUHAMMAD YUSUF", "ARYA DIFA ALSYA", "FARAZH SAYYID PUTRA KENEGA", "GHOZY FATURRAHMAN", "M. FAQIH HAFIDZALLAH", "M. RIJALUL KAMIL", "MUHAMMAD ALLAM NUR HUSHAIN", "M. RAID MAHRUS", "NAFIS", "RAFI RAMADHAN", "REYNALDI MALIK IBRAHIM ALFARIDZI", "WAFII FADHLURROHMAN", "M. FADHIL BUANA", "M. FIRAAS AL INSYIROH", "M. XAVI NF", "NABIL NAJMI", "NAUFAL AKBAR ALKHATIRI", "QHEIZAN ALQIZA ARISDA", "REYFAS RAMADHAN", "ROHADIN FIRDAUS AL QAUSAR", "SATRIO ABIMAYU", "WAHYU REYDINATA", "ZAHIR ZIBRAN", "ZULFAKIH HAERUNNASIHIN", "HABIB RAMADHAN", "MUHAMAD YUSUF ARROSIYD", "VERY SYACH", "M. FAISAL FIKRIANSYAH", "TEGAR HIDAYAT"],
     "Tahsin Faiq": ["DARREN ATHAYA", "M. AQIL RIDHO", "ALIF SAMUDRA", "M. ABIL IRWANSYAH", "FAUZAN IBNI JABAR", "M. IZAM SAPUTRA", "BRILLY HANDRIAN", "M. SYAKIR HUTABARAT", "DZIKRI MUDHOFFAR", "FADIL NURHALIM", "RAFA", "AIRLANGGA AZKA ABQORI", "M. YASIR AL FAZAR JHIRA", "AQIELA MARSYAH", "ADITYA PUTRA IBRAHIM"],
@@ -269,122 +48,3 @@
     "Tahsin Meilisa": ["PITRI RAMADANI", "ADIBA AILA KHANZA", "AISYAH NUR KHALIFAH", "AISYAH NURUL AULIA", "ANISYA SEPTIANI", "DAFIA NAFLA SYAKIRA", "DINA RUHAYAH", "FITRAH KIRANA", "INAYAH NOURAH ANINDYA", "SHELENA", "WINDY WINDARI", "ASHIFA FITRI RAMADHONI", "EARLYTA ARSYFA SALSABILA"]
   }
 };
-
-  window.init = function() {
-    if (!user || user.role !== 'guru') { alert('Sesi habis. Silakan login.'); window.location.href = '../index.html'; return; }
-    document.getElementById('kbmTanggal').value = new Date().toISOString().split('T')[0];
-  };
-
-  window.updatePilihan = function() {
-    const jenis = document.getElementById('kbmJenisKelas').value;
-    const container = document.getElementById('opsiKhusus');
-    const tbody = document.getElementById('kbmBody');
-    const mapelSelect = document.getElementById('kbmMapel');
-
-    container.innerHTML = '';
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;font-style:italic;">Menunggu pilihan kelas/kelompok...</td></tr>';
-    mapelSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
-
-    if (!jenis) return;
-
-    // Perubahan 2: Menyesuaikan mapping jenisKey ke nama "Halqah"
-    let jenisKey = (jenis === 'ilmu' ? 'Halqah Ilmiyah' : (jenis === 'bahasa' ? 'Halqah Lughowiyah' : "Halqah Quraniyah"));
-    let mapelList = (jenis === 'ilmu' ? ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran','Matematika','IPA'] : (jenis === 'bahasa' ? ['Bahasa Arab','Bahasa Inggris','Muhadatsah'] : ['Tahsin','Tahfiz','Murojaah']));
-
-    mapelList.forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m; opt.textContent = m; mapelSelect.appendChild(opt);
-    });
-
-    const kategori = window.dataSantri[jenisKey];
-    if (!kategori) return;
-
-    container.innerHTML = `<label>🏫 Pilih Kelas / Kelompok</label>
-      <select id="subPilihan" onchange="tampilkanSantri('${jenis}')"><option value="">-- Pilih --</option>
-        ${Object.keys(kategori).map(k => `<option value="${k}">${k}</option>`).join('')}</select>`;
-  };
-
-  window.tampilkanSantri = function(jenis) {
-    const tbody = document.getElementById('kbmBody');
-    tbody.innerHTML = '';
-    
-    // Perubahan 3: Menyesuaikan mapping jenisKey ke nama "Halqah" juga di fungsi ini
-    const jenisKey = (jenis === 'ilmu' ? 'Halqah Ilmiyah' : (jenis === 'bahasa' ? 'Halqah Lughowiyah' : "Halqah Quraniyah"));
-    const kategori = window.dataSantri[jenisKey];
-    const sub = document.getElementById('subPilihan').value;
-    const list = kategori[sub] || [];
-
-    if (list.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#f87171;padding:30px">Data tidak ditemukan.</td></tr>`; return; }
-
-    list.forEach((nama, i) => {
-      const tr = document.createElement('tr');
-      tr.className = 'status-hadir';
-      tr.innerHTML = `<td>${i + 1}</td><td style="text-align:left;">${nama}</td>
-        <td><input type="radio" name="s_${i}" value="Hadir" checked></td>
-        <td><input type="radio" name="s_${i}" value="Terlambat"></td>
-        <td><input type="radio" name="s_${i}" value="Izin"></td>
-        <td><input type="radio" name="s_${i}" value="Sakit"></td>
-        <td><input type="radio" name="s_${i}" value="Alfa"></td>`;
-      tbody.appendChild(tr);
-
-      tr.querySelectorAll('input[type="radio"]').forEach(r => {
-        r.addEventListener('change', () => {
-          tr.className = ''; 
-          if (r.value === "Hadir") tr.classList.add('status-hadir');
-          else if (r.value === "Terlambat") tr.classList.add('status-terlambat');
-          else if (r.value === "Izin") tr.classList.add('status-izin');
-          else if (r.value === "Sakit") tr.classList.add('status-sakit');
-          else if (r.value === "Alfa") tr.classList.add('status-alfa');
-        });
-      });
-    });
-  };
-
-  window.markAll = function() {
-    document.querySelectorAll('#kbmBody tr').forEach(tr => {
-      const radio = tr.querySelector('input[value="Hadir"]');
-      if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
-    });
-  };
-
-  window.simpanKehadiran = function() {
-    const tanggal = document.getElementById('kbmTanggal').value;
-    const jenis = document.getElementById('kbmJenisKelas').value;
-    const mapel = document.getElementById('kbmMapel').value;
-    const sub = document.getElementById('subPilihan')?.value || '';
-    const catatan = document.getElementById('kbmCatatan').value.trim();
-
-    if (!tanggal || !jenis || !sub || !mapel) { alert('⚠️ Lengkapi pilihan filter.'); return; }
-    
-    const hasil = [];
-    const rows = document.querySelectorAll('#kbmBody tr');
-    if (rows.length === 0 || rows[0].cells.length === 1) { alert('⚠️ Daftar santri kosong.'); return; }
-
-    const btn = document.querySelector('.btn-save');
-    btn.innerHTML = "⏳ MENYIMPAN..."; btn.disabled = true;
-
-    rows.forEach((tr, i) => {
-      const nama = tr.children[1].textContent;
-      const status = document.querySelector(`input[name="s_${i}"]:checked`)?.value || 'Hadir';
-      const poin = (status === 'Hadir' ? (jenis === 'alquran' ? 40 : 30) : (status === 'Terlambat' ? (jenis === 'alquran' ? -20 : -15) : (status === 'Alfa' ? (jenis === 'alquran' ? -40 : -30) : 0)));
-      hasil.push({ nama, status, poin });
-    });
-
-    const log = { tanggal, jenis, sub, mapel, catatan, guru: user.username, data: hasil, waktuSimpan: new Date().toISOString() };
-    push(ref(db, 'cahaya_app/absensi_pembelajaran'), log)
-      .then(() => {
-          alert('✅ BERHASIL DISIMPAN!');
-          btn.innerHTML = "💾 SIMPAN LOG & POIN KEHADIRAN"; btn.disabled = false;
-      })
-      .catch(err => {
-          alert('❌ Gagal: ' + err.message);
-          btn.innerHTML = "💾 SIMPAN LOG & POIN KEHADIRAN"; btn.disabled = false;
-      });
-  };
-
-  window.goBack = function() { window.location.href = 'fitur.html'; };
-  window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
-  document.addEventListener('DOMContentLoaded', init);
-</script>
-</body>
-</html>
