@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Input Setoran Santri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --accent-gold: #d4af37;
+      --accent-gold-light: #fef08a;
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(212, 175, 55, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.15), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.1), transparent 40%),
+        linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: -1;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(20px) saturate(150%);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent-gold); letter-spacing: 1px; }
+    
+    .btn-group { display: flex; gap: 10px; }
+    .btn-header {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main); padding: 8px 16px; border-radius: 50px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; font-family: 'Poppins';
+    }
+    .btn-header:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); color: var(--accent-gold-light);}
+
+    main { max-width: 750px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
+    @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .card {
+      background: var(--glass-bg); backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border); border-radius: 24px;
+      padding: 40px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
+      margin-bottom: 40px; position: relative;
+    }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--accent-gold-light); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center;}
+
+    .form-group { margin-bottom: 20px; width: 100%; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+    
+    select, input[type="date"], input[type="text"], input[type="number"], textarea {
+      width: 100%; padding: 12px 15px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4);
+      color: white; font-family: inherit; font-size: 1rem;
+      transition: all 0.3s; outline: none;
+    }
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); background: rgba(0,0,0,0.6);
+    }
+    select option { background: var(--primary-blue); color: white; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    input[readonly] { background: rgba(255,255,255,0.05); color: var(--accent-gold-light); cursor: not-allowed; font-weight: bold;}
+
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    #sectionInputData { 
+      display: none; 
+      margin-top: 30px; 
+      padding-top: 30px; 
+      border-top: 1px dashed rgba(255,255,255,0.2); 
+      animation: fadeInUp 0.5s ease;
+    }
+
+    /* GAYA UNTUK MULTI-SURAT */
+    .surat-row {
+      display: flex; gap: 10px; align-items: flex-start; 
+      background: rgba(255,255,255,0.03); padding: 15px; 
+      border-radius: 15px; border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 15px; position: relative; flex-wrap: wrap;
+    }
+    .col-surat { flex: 2; min-width: 150px; }
+    .col-ayat { flex: 1; min-width: 80px; }
+    .col-hapus { margin-top: 32px; }
+
+    .btn-hapus {
+      background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5; border-radius: 8px; padding: 12px; cursor: pointer; transition: 0.3s;
+      height: 44px; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-hapus:hover { background: #ef4444; color: white; }
+
+    .btn-tambah-surat {
+      background: rgba(56, 189, 248, 0.1); border: 1px dashed rgba(56, 189, 248, 0.4);
+      color: #bae6fd; width: 100%; padding: 12px; border-radius: 12px; margin-bottom: 25px;
+      cursor: pointer; font-family: inherit; font-weight: 600; transition: 0.3s;
+    }
+    .btn-tambah-surat:hover { background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: white;}
+
+    .ayat-info { font-size: 0.75rem; color: var(--accent-gold); margin-top: 5px; font-style: italic; display: block;}
+
+    /* PREDIKAT */
+    .input-predikat { font-weight: 700 !important; text-align: center; letter-spacing: 1px; transition: 0.3s; font-size: 1.2rem; }
+    .pred-mumtaz { color: #34d399 !important; border-color: rgba(16,185,129,0.4) !important; background: rgba(16,185,129,0.1) !important; }
+    .pred-jayyid { color: #38bdf8 !important; border-color: rgba(14,165,233,0.4) !important; background: rgba(14,165,233,0.1) !important; }
+    .pred-maqbul { color: #fbbf24 !important; border-color: rgba(245,158,11,0.4) !important; background: rgba(245,158,11,0.1) !important; }
+    .pred-bimbingan { color: #f87171 !important; border-color: rgba(239,68,68,0.4) !important; background: rgba(239,68,68,0.1) !important; }
+
+    .btn-save {
+      width: 100%; padding: 18px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+      color: var(--primary-dark); font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); transition: all 0.3s;
+    }
+    .btn-save:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5); filter: brightness(1.1); }
+
+    .box-total { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;}
+
+    @media (max-width: 768px) {
+      .card { padding: 25px 20px; }
+      .input-row { grid-template-columns: 1fr; }
+      .surat-row { flex-direction: column; gap: 5px; }
+      .col-surat, .col-ayat { width: 100%; }
+      .col-hapus { width: 100%; margin-top: 5px; }
+      .btn-hapus { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Al-Qur'an Center</h1>
+  <div class="btn-group">
+    <button class="btn-header" onclick="goBack()">⬅️ Beranda</button>
+    <button class="btn-header" onclick="logout()">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <h2 class="card-title">📖 Input Setoran Individu</h2>
+
+    <div class="form-group">
+      <label>📅 Tanggal Setoran</label>
+      <input type="date" id="tfzTanggal">
+    </div>
+
+    <div class="input-row">
+      <div class="form-group">
+        <label>📚 Program</label>
+        <select id="tfzProgram" onchange="updateKelompok()">
+          <option value="">-- Pilih Program --</option>
+          <option value="Tahsin">Tahsin</option>
+          <option value="Tahfiz">Tahfiz</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>👥 Halaqah</label>
+        <select id="tfzKelompok" onchange="updateSantri()">
+          <option value="">-- Menunggu Program --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>👤 Nama Santri</label>
+      <select id="tfzNamaSantri" onchange="siapkanForm()">
+        <option value="">-- Pilih Halaqah Dulu --</option>
+      </select>
+    </div>
+
+    <div id="sectionInputData">
+      
+      <div id="wadahListSurat">
+        </div>
+      
+      <button class="btn-tambah-surat" onclick="tambahBarisSurat()">➕ Tambah Surat Lain</button>
+
+      <div class="box-total">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>∑ TOTAL KESELURUHAN AYAT</label>
+          <input type="number" id="inputJumlahAyat" readonly placeholder="Otomatis dihitung dari atas..." style="font-size: 1.2rem; text-align: center;">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label>❌ Kesalahan Lahn Jali</label>
+          <input type="number" id="inputKesalahan" min="0" placeholder="Ketik angka 0 jika lancar..." oninput="hitungPredikat()">
+        </div>
+
+        <div class="form-group">
+          <label>🏆 Predikat Penilaian</label>
+          <input type="text" id="inputPredikat" class="input-predikat" readonly placeholder="-">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>📝 Catatan / Tajwid (Opsional)</label>
+        <textarea id="inputCatatan" placeholder="Tuliskan catatan perbaikan makhraj atau tajwid di sini..."></textarea>
+      </div>
+
+      <button class="btn-save" id="btnSimpanSetoran" onclick="simpanSetoranPerAnak()">💾 SIMPAN DATA SANTRI INI</button>
+    </div>
+
+  </div>
+</main>
+
+<script src="dataSantri.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
+
+  // DATA DAFTAR SURAT AL-QUR'AN
+  window.daftarSurat = [
+    { nama: "Al-Fatihah", ayat: 7 }, { nama: "Al-Baqarah", ayat: 286 }, { nama: "Ali 'Imran", ayat: 200 },
+    { nama: "An-Nisa'", ayat: 176 }, { nama: "Al-Ma'idah", ayat: 120 }, { nama: "Al-An'am", ayat: 165 },
+    { nama: "Al-A'raf", ayat: 206 }, { nama: "Al-Anfal", ayat: 75 }, { nama: "At-Taubah", ayat: 129 },
+    { nama: "Yunus", ayat: 109 }, { nama: "Hud", ayat: 123 }, { nama: "Yusuf", ayat: 111 },
+    { nama: "Ar-Ra'd", ayat: 43 }, { nama: "Ibrahim", ayat: 52 }, { nama: "Al-Hijr", ayat: 99 },
+    { nama: "An-Nahl", ayat: 128 }, { nama: "Al-Isra'", ayat: 111 }, { nama: "Al-Kahf", ayat: 110 },
+    { nama: "Maryam", ayat: 98 }, { nama: "Taha", ayat: 135 }, { nama: "Al-Anbiya'", ayat: 112 },
+    { nama: "Al-Hajj", ayat: 78 }, { nama: "Al-Mu'minun", ayat: 118 }, { nama: "An-Nur", ayat: 64 },
+    { nama: "Al-Furqan", ayat: 77 }, { nama: "Asy-Syu'ara'", ayat: 227 }, { nama: "An-Naml", ayat: 93 },
+    { nama: "Al-Qasas", ayat: 88 }, { nama: "Al-'Ankabut", ayat: 69 }, { nama: "Ar-Rum", ayat: 60 },
+    { nama: "Luqman", ayat: 34 }, { nama: "As-Sajdah", ayat: 30 }, { nama: "Al-Ahzab", ayat: 73 },
+    { nama: "Saba'", ayat: 54 }, { nama: "Fatir", ayat: 45 }, { nama: "Ya Sin", ayat: 83 },
+    { nama: "As-Saffat", ayat: 182 }, { nama: "Sad", ayat: 88 }, { nama: "Az-Zumar", ayat: 75 },
+    { nama: "Ghafir", ayat: 85 }, { nama: "Fussilat", ayat: 54 }, { nama: "Asy-Syura", ayat: 53 },
+    { nama: "Az-Zukhruf", ayat: 89 }, { nama: "Ad-Dukhan", ayat: 59 }, { nama: "Al-Jasiyah", ayat: 37 },
+    { nama: "Al-Ahqaf", ayat: 35 }, { nama: "Muhammad", ayat: 38 }, { nama: "Al-Fath", ayat: 29 },
+    { nama: "Al-Hujurat", ayat: 18 }, { nama: "Qaf", ayat: 45 }, { nama: "Az-Zariyat", ayat: 60 },
+    { nama: "At-Tur", ayat: 49 }, { nama: "An-Najm", ayat: 62 }, { nama: "Al-Qamar", ayat: 55 },
+    { nama: "Ar-Rahman", ayat: 78 }, { nama: "Al-Waqi'ah", ayat: 96 }, { nama: "Al-Hadid", ayat: 29 },
+    { nama: "Al-Mujadilah", ayat: 22 }, { nama: "Al-Hasyr", ayat: 24 }, { nama: "Al-Mumtahanah", ayat: 13 },
+    { nama: "As-Saff", ayat: 14 }, { nama: "Al-Jumu'ah", ayat: 11 }, { nama: "Al-Munafiqun", ayat: 11 },
+    { nama: "At-Tagabun", ayat: 18 }, { nama: "At-Talaq", ayat: 12 }, { nama: "At-Tahrim", ayat: 12 },
+    { nama: "Al-Mulk", ayat: 30 }, { nama: "Al-Qalam", ayat: 52 }, { nama: "Al-Haqqah", ayat: 52 },
+    { nama: "Al-Ma'arij", ayat: 44 }, { nama: "Nuh", ayat: 28 }, { nama: "Al-Jinn", ayat: 28 },
+    { nama: "Al-Muzzammil", ayat: 20 }, { nama: "Al-Muddassir", ayat: 56 }, { nama: "Al-Qiyamah", ayat: 40 },
+    { nama: "Al-Insan", ayat: 31 }, { nama: "Al-Mursalat", ayat: 50 }, { nama: "An-Naba'", ayat: 40 },
+    { nama: "An-Nazi'at", ayat: 46 }, { nama: "'Abasa", ayat: 42 }, { nama: "At-Takwir", ayat: 29 },
+    { nama: "Al-Infitar", ayat: 19 }, { nama: "Al-Mutaffifin", ayat: 36 }, { nama: "Al-Insyiqaq", ayat: 25 },
+    { nama: "Al-Buruj", ayat: 22 }, { nama: "At-Tariq", ayat: 17 }, { nama: "Al-A'la", ayat: 19 },
+    { nama: "Al-Gasyiyah", ayat: 26 }, { nama: "Al-Fajr", ayat: 30 }, { nama: "Al-Balad", ayat: 20 },
+    { nama: "Asy-Syams", ayat: 15 }, { nama: "Al-Lail", ayat: 21 }, { nama: "Ad-Duha", ayat: 11 },
+    { nama: "Asy-Syarh", ayat: 8 }, { nama: "At-Tin", ayat: 8 }, { nama: "Al-'Alaq", ayat: 19 },
+    { nama: "Al-Qadr", ayat: 5 }, { nama: "Al-Bayyinah", ayat: 8 }, { nama: "Az-Zalzalah", ayat: 8 },
+    { nama: "Al-'Adiyat", ayat: 11 }, { nama: "Al-Qari'ah", ayat: 11 }, { nama: "At-Takasur", ayat: 8 },
+    { nama: "Al-'Asr", ayat: 3 }, { nama: "Al-Humazah", ayat: 9 }, { nama: "Al-Fil", ayat: 5 },
+    { nama: "Quraisy", ayat: 4 }, { nama: "Al-Ma'un", ayat: 7 }, { nama: "Al-Kausar", ayat: 3 },
+    { nama: "Al-Kafirun", ayat: 6 }, { nama: "An-Nasr", ayat: 3 }, { nama: "Al-Lahab", ayat: 5 },
+    { nama: "Al-Ikhlas", ayat: 4 }, { nama: "Al-Falaq", ayat: 5 }, { nama: "An-Nas", ayat: 6 }
+  ];
+
+  let opsiSuratHTML = '<option value="">-- Pilih Surat --</option>';
+  window.daftarSurat.forEach((surat, index) => {
+    opsiSuratHTML += `<option value="${index}">${index + 1}. ${surat.nama}</option>`;
+  });
+
+  window.init = function() {
+    if (!user || user.role !== 'guru') {
+      alert('Sesi habis. Silakan login sebagai Guru.');
+      window.location.href = '../index.html';
+      return;
+    }
+    document.getElementById('tfzTanggal').value = new Date().toISOString().split('T')[0];
+  };
+
+  // 1. Mengisi Dropdown Halaqah
+  window.updateKelompok = function() {
+    const program = document.getElementById('tfzProgram').value;
+    const kelompokSelect = document.getElementById('tfzKelompok');
+    const namaSelect = document.getElementById('tfzNamaSantri');
+    const sectionForm = document.getElementById('sectionInputData');
+
+    kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+    namaSelect.innerHTML = '<option value="">-- Pilih Halaqah Dulu --</option>';
+    sectionForm.style.display = 'none';
+
+    if (!program) return;
+    if (typeof dataSantri === 'undefined') { alert("Data Santri tidak ditemukan!"); return; }
+    
+    const kategori = dataSantri["Halqah Quraniyah"];
+    if (!kategori) return;
+
+    const kelompokList = Object.keys(kategori)
+      .filter(k => k.startsWith(program + ' '))
+      .map(k => k.replace(program + ' ', ''));
+
+    kelompokList.forEach(k => {
+      const opt = document.createElement('option');
+      opt.textContent = k;
+      kelompokSelect.appendChild(opt);
+    });
+  };
+
+  // 2. Mengisi Dropdown Nama Santri
+  window.updateSantri = function() {
+    const program = document.getElementById('tfzProgram').value;
+    const kelompok = document.getElementById('tfzKelompok').value;
+    const namaSelect = document.getElementById('tfzNamaSantri');
+    const sectionForm = document.getElementById('sectionInputData');
+    
+    namaSelect.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    sectionForm.style.display = 'none';
+
+    if (!program || !kelompok) return;
+
+    const key = `${program} ${kelompok}`;
+    const list = dataSantri["Halqah Quraniyah"][key] || [];
+
+    list.forEach(nama => {
+      const opt = document.createElement('option');
+      opt.value = nama;
+      opt.textContent = nama;
+      namaSelect.appendChild(opt);
+    });
+  };
+
+  // 3. Persiapan Form (Reset)
+  window.siapkanForm = function() {
+    const nama = document.getElementById('tfzNamaSantri').value;
+    const sectionForm = document.getElementById('sectionInputData');
+    
+    if (nama) {
+        sectionForm.style.display = 'block';
+        document.getElementById('wadahListSurat').innerHTML = '';
+        tambahBarisSurat(); // Tambah otomatis 1 baris kosong
+        
+        document.getElementById('inputJumlahAyat').value = '';
+        document.getElementById('inputKesalahan').value = '';
+        document.getElementById('inputPredikat').value = '';
+        document.getElementById('inputPredikat').className = 'input-predikat';
+        document.getElementById('inputCatatan').value = '';
+    } else {
+        sectionForm.style.display = 'none';
+    }
+  };
+
+  // === FITUR MULTI SURAT ===
+  window.tambahBarisSurat = function() {
+    const wadah = document.getElementById('wadahListSurat');
+    const rowId = 'row_' + Date.now();
+    
+    const htmlBaris = `
+      <div class="surat-row" id="${rowId}">
+        <div class="col-surat">
+          <label>📖 Nama Surat</label>
+          <select class="pilih-surat" onchange="setInfoSurat(this)">
+            ${opsiSuratHTML}
+          </select>
+          <span class="ayat-info"></span>
+        </div>
+        <div class="col-ayat">
+          <label>Mulai</label>
+          <input type="number" class="input-mulai" min="1" placeholder="Ayat" oninput="hitungTotalAyat()">
+        </div>
+        <div class="col-ayat">
+          <label>Sampai</label>
+          <input type="number" class="input-sampai" min="1" placeholder="Ayat" oninput="hitungTotalAyat()">
+        </div>
+        <div class="col-hapus">
+          <button type="button" class="btn-hapus" title="Hapus Surat" onclick="hapusBaris('${rowId}')">🗑️</button>
+        </div>
+      </div>
+    `;
+    wadah.insertAdjacentHTML('beforeend', htmlBaris);
+  };
+
+  window.hapusBaris = function(rowId) {
+    const baris = document.getElementById(rowId);
+    const wadah = document.getElementById('wadahListSurat');
+    
+    // Jangan izinkan hapus jika ini adalah satu-satunya baris tersisa
+    if (wadah.children.length > 1) {
+        baris.remove();
+        hitungTotalAyat(); // Hitung ulang setelah dihapus
+    } else {
+        alert("Minimal harus ada 1 surat untuk disetorkan.");
+    }
+  };
+
+  window.setInfoSurat = function(elemenSelect) {
+    const row = elemenSelect.closest('.surat-row');
+    const infoSpan = row.querySelector('.ayat-info');
+    const inputMulai = row.querySelector('.input-mulai');
+    const inputSampai = row.querySelector('.input-sampai');
+    
+    const indexSurat = elemenSelect.value;
+    
+    if (indexSurat === "") {
+        infoSpan.textContent = "";
+        inputMulai.max = ""; inputSampai.max = "";
+    } else {
+        const maxAyat = window.daftarSurat[indexSurat].ayat;
+        infoSpan.textContent = `*Maks: ${maxAyat} ayat`;
+        inputMulai.max = maxAyat;
+        inputSampai.max = maxAyat;
+    }
+    hitungTotalAyat();
+  };
+
+  window.hitungTotalAyat = function() {
+    let grandTotal = 0;
+    const barisSemua = document.querySelectorAll('.surat-row');
+    
+    barisSemua.forEach(row => {
+        const indexSurat = row.querySelector('.pilih-surat').value;
+        const mulaiStr = row.querySelector('.input-mulai').value;
+        const sampaiStr = row.querySelector('.input-sampai').value;
+        
+        if (indexSurat !== "" && mulaiStr !== "" && sampaiStr !== "") {
+            let mulai = parseInt(mulaiStr, 10);
+            let sampai = parseInt(sampaiStr, 10);
+            const maxAyat = window.daftarSurat[indexSurat].ayat;
+
+            // Pastikan tidak melebihi batas ayat surat tersebut
+            if (mulai > maxAyat) mulai = maxAyat;
+            if (sampai > maxAyat) sampai = maxAyat;
+            
+            // Tambahkan ke total jika valid
+            if (sampai >= mulai) {
+                grandTotal += (sampai - mulai) + 1;
+            }
+        }
+    });
+
+    const outputTotal = document.getElementById('inputJumlahAyat');
+    outputTotal.value = grandTotal > 0 ? grandTotal : "";
+  };
+
+  // 4. Logika Hitung Predikat Otomatis
+  window.hitungPredikat = function() {
+    const inputKesalahan = document.getElementById('inputKesalahan');
+    const nilaiInput = document.getElementById('inputPredikat');
+    let salah = parseInt(inputKesalahan.value, 10);
+    
+    if (isNaN(salah) || salah < 0) {
+        salah = 0;
+        inputKesalahan.value = ""; 
+        nilaiInput.value = "";
+        nilaiInput.className = "input-predikat"; 
+        return;
+    }
+
+    nilaiInput.className = "input-predikat";
+
+    let predikat = '';
+    if (salah === 0) {
+        predikat = 'MUMTAZ';
+        nilaiInput.classList.add('pred-mumtaz');
+    } else if (salah >= 1 && salah <= 2) {
+        predikat = 'JAYYID JIDDAN';
+        nilaiInput.classList.add('pred-jayyid');
+    } else if (salah >= 3 && salah <= 4) {
+        predikat = 'JAYYID';
+        nilaiInput.classList.add('pred-jayyid');
+    } else if (salah >= 5 && salah <= 6) {
+        predikat = 'MAQBUL';
+        nilaiInput.classList.add('pred-maqbul');
+    } else {
+        predikat = 'BIMBINGAN';
+        nilaiInput.classList.add('pred-bimbingan');
+    }
+
+    nilaiInput.value = predikat;
+  };
+
+  // 5. Menyimpan Data ke Firebase
+  window.simpanSetoranPerAnak = function() {
+    const tanggal = document.getElementById('tfzTanggal').value;
+    const program = document.getElementById('tfzProgram').value;
+    const kelompok = document.getElementById('tfzKelompok').value;
+    const nama = document.getElementById('tfzNamaSantri').value;
+    
+    const grandTotalAyat = document.getElementById('inputJumlahAyat').value;
+    const kesalahan = document.getElementById('inputKesalahan').value;
+    const predikat = document.getElementById('inputPredikat').value;
+    const catatan = document.getElementById('inputCatatan').value.trim();
+
+    if (!tanggal || !program || !kelompok || !nama) {
+      alert('⚠️ Identitas santri belum lengkap.');
+      return;
+    }
+
+    // --- MENGUMPULKAN SEMUA DATA SURAT ---
+    let arraySetoranString = [];
+    const barisSemua = document.querySelectorAll('.surat-row');
+    
+    for (let i = 0; i < barisSemua.length; i++) {
+        const row = barisSemua[i];
+        const indexSurat = row.querySelector('.pilih-surat').value;
+        const mulai = row.querySelector('.input-mulai').value;
+        const sampai = row.querySelector('.input-sampai').value;
+
+        if (indexSurat === "" || !mulai || !sampai) {
+            alert(`⚠️ Mohon lengkapi isian Surat ke-${i+1} dengan benar.`);
+            return;
+        }
+
+        const namaSuratAsli = window.daftarSurat[indexSurat].nama;
+        arraySetoranString.push(`Surat ${namaSuratAsli} (${mulai}-${sampai})`);
+    }
+
+    if (!grandTotalAyat || grandTotalAyat == 0) {
+        alert('⚠️ Jumlah ayat belum terhitung dengan benar.'); return;
+    }
+    if (predikat === "") {
+        alert('⚠️ Mohon isi jumlah kesalahan.'); return;
+    }
+
+    // Gabungkan array menjadi 1 string: "Surat Al-Fatihah (1-7), Surat Al-Baqarah (1-5)"
+    const formatSetoranLengkap = arraySetoranString.join(", ");
+
+    const btn = document.getElementById('btnSimpanSetoran');
+    btn.innerHTML = "⏳ MENYIMPAN..."; btn.disabled = true;
+
+    const log = {
+      tanggal, program, kelompok, guru: user.username,
+      data: [{ 
+          nama, 
+          setoran: formatSetoranLengkap, 
+          ayat: grandTotalAyat, 
+          kesalahan, 
+          nilai: predikat, 
+          keterangan: catatan 
+      }],
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const setoranRef = ref(db, 'cahaya_app/setoran_tahfiz');
+    push(setoranRef, log)
+      .then(() => {
+        alert(`✅ BERHASIL!\nData setoran atas nama ${nama} telah tersimpan.\n[${formatSetoranLengkap}]`);
+        btn.innerHTML = "💾 SIMPAN DATA SANTRI INI"; btn.disabled = false;
+        
+        document.getElementById('tfzNamaSantri').value = "";
+        siapkanForm();
+      })
+      .catch(err => {
+        console.error(err);
+        alert('❌ Terjadi kesalahan: ' + err.message);
+        btn.innerHTML = "💾 SIMPAN DATA SANTRI INI"; btn.disabled = false;
+      });
+  };
+
+  window.goBack = function() { window.location.href = 'fitur.html'; }; 
+  window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
+  
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
