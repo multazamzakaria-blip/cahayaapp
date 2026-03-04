@@ -1,401 +1,239 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CAHAYA APP - Raport Triwulan Terpadu</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP - Input Setoran Santri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ===================== ROOT & SCREEN VARIABLES ===================== */
     :root {
-      --primary-dark: #0f172a;
-      --accent-gold: #b8860b;
-      --accent-gold-light: #e3c472;
-      --bg-screen: #f1f5f9;
-      --text-main: #1e293b;
-      --text-muted: #475569;
-      --emerald-dark: #023b26;
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --accent-gold: #d4af37;
+      --accent-gold-light: #fef08a;
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(212, 175, 55, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-screen);
+      min-height: 100vh;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.15), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.1), transparent 40%),
+        linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
       color: var(--text-main);
+      overflow-x: hidden;
     }
 
-    /* ===================== ADMIN CONTROLS (NO PRINT) ===================== */
-    .admin-panel {
-      background: white; padding: 15px 25px; border-bottom: 3px solid var(--accent-gold);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08); display: flex; flex-wrap: wrap; gap: 15px;
-      align-items: flex-end; position: sticky; top: 0; z-index: 1000;
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: -1;
     }
-    .admin-panel h2 { font-family: 'Playfair Display', serif; width: 100%; color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 5px; font-weight: 700; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(20px) saturate(150%);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
     
-    .filter-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
-    .filter-group label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;}
-    .filter-group select { 
-      padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 0.85rem; outline: none; background: #f8fafc; transition: 0.3s;
-    }
-    .filter-group select:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.1); }
-
-    .btn-action {
-      padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s;
-      display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.85rem;
-    }
-    .btn-generate { background: var(--primary-dark); color: white; }
-    .btn-generate:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(15, 23, 42, 0.3); }
-    .btn-print { background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light)); color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);}
-    .btn-print:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(184, 134, 11, 0.4); }
-
-    /* ===================== A4 PAPER DESIGN (SCREEN VIEW) ===================== */
-    .paper-wrapper { padding: 30px 10px; display: flex; flex-direction: column; align-items: center; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent-gold); letter-spacing: 1px; }
     
-    .a4-page {
-      width: 210mm; background: #fffdf8;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15); margin: 0 auto;
-      padding: 15mm; position: relative; overflow: hidden;
-      min-height: 297mm;
+    .btn-group { display: flex; gap: 10px; }
+    .btn-header {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main); padding: 8px 16px; border-radius: 50px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; font-family: 'Poppins';
     }
+    .btn-header:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); color: var(--accent-gold-light);}
 
-    /* KOP SURAT / HEADER */
-    .kop-surat { text-align: center; border-bottom: 2px solid var(--primary-dark); padding-bottom: 10px; margin-bottom: 15px; position: relative; }
-    .kop-surat::after { content: ""; display: block; width: 100%; height: 1px; background: var(--primary-dark); margin-top: 2px; }
-    .kop-title { font-family: 'Playfair Display', serif; font-size: 20pt; font-weight: 800; color: var(--emerald-dark); letter-spacing: 1px; }
-    .kop-subtitle { font-size: 8.5pt; color: var(--accent-gold); font-weight: 600; letter-spacing: 3px; text-transform: uppercase; margin-top: 3px; }
-    .kop-address { font-size: 7.5pt; color: var(--text-muted); margin-top: 4px; }
+    main { max-width: 750px; margin: 40px auto; padding: 0 20px 80px; animation: fadeInUp 0.8s ease backwards; }
+    @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    .doc-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 13pt; font-weight: 800; color: var(--primary-dark); margin: 15px 0; text-transform: uppercase; letter-spacing: 1px; }
-
-    /* BIODATA SANTRI */
-    .biodata-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; background: rgba(184, 134, 11, 0.03); padding: 10px 15px; border: 1px solid rgba(184, 134, 11, 0.2); border-radius: 6px;}
-    .bio-item { display: flex; font-size: 8.5pt; margin-bottom: 3px; }
-    .bio-label { width: 120px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 8pt; align-self: center;}
-    .bio-value { font-weight: 700; color: var(--primary-dark); font-size: 9pt;}
-    .bio-value::before { content: ": "; margin-right: 5px; font-weight: normal; color: var(--text-muted); }
-
-    /* SECTION TITLES */
-    .section-title {
-      font-family: 'Playfair Display', serif; font-size: 11pt; font-weight: 800; color: var(--emerald-dark);
-      border-bottom: 1.5px solid var(--accent-gold); padding-bottom: 4px; margin-bottom: 10px; margin-top: 15px;
-      display: flex; align-items: center; gap: 8px;
+    .card {
+      background: var(--glass-bg); backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border); border-radius: 24px;
+      padding: 40px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
+      margin-bottom: 40px; position: relative;
     }
-    .section-title::before { content: "❖"; color: var(--accent-gold); font-size: 10pt;}
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--accent-gold-light); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center;}
 
-    /* TABEL AKADEMIK */
-    table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 8.5pt; }
-    th { background: rgba(2, 59, 38, 0.05); color: var(--emerald-dark); font-weight: 700; text-transform: uppercase; border: 1px solid var(--emerald-dark); padding: 6px; text-align: center; }
-    td { border: 1px solid var(--text-muted); padding: 5px 8px; }
-    .td-center { text-align: center; font-weight: 600; }
-    .td-mapel { font-weight: 700; color: var(--primary-dark); }
-    .table-footer { background: rgba(184, 134, 11, 0.1); font-weight: 700; }
-
-    /* TAHFIZ & KEDISIPLINAN GRID */
-    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 20px; width: 100%; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
     
-    .tahfiz-box, .discipline-box { 
-      border: 1px solid var(--accent-gold); border-radius: 8px; padding: 10px 15px; 
-      background: linear-gradient(135deg, #fff, #fdfcf8); position: relative; overflow: hidden;
+    select, input[type="date"], input[type="text"], input[type="number"], textarea {
+      width: 100%; padding: 12px 15px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4);
+      color: white; font-family: inherit; font-size: 1rem;
+      transition: all 0.3s; outline: none;
     }
-    .box-header { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: var(--primary-dark); text-align: center; margin-bottom: 10px; border-bottom: 1px dashed var(--accent-gold); padding-bottom: 5px;}
-    
-    .stats-row { display: flex; justify-content: space-around; text-align: center; margin-bottom: 5px; }
-    .stat-item { display: flex; flex-direction: column; }
-    .stat-lbl { font-size: 7pt; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
-    .stat-val { font-family: 'Playfair Display', serif; font-size: 14pt; font-weight: 800; color: var(--emerald-dark); }
-    
-    .tahfiz-badge { background: rgba(184, 134, 11, 0.15); color: var(--emerald-dark); text-align: center; padding: 4px; font-size: 7.5pt; font-weight: 700; border-radius: 50px; border: 1px solid var(--accent-gold); margin-top: 8px; display: none;}
-
-    .disc-score-wrapper { display: flex; align-items: center; justify-content: center; gap: 15px; }
-    .disc-circle { 
-      width: 55px; height: 55px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold-light);
-      display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display'; font-size: 14pt; font-weight: 800;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2); border: 2px solid var(--accent-gold);
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); background: rgba(0,0,0,0.6);
     }
-    .disc-info { display: flex; flex-direction: column; }
-    .disc-pred { font-size: 11pt; font-weight: 800; letter-spacing: 0.5px; }
-    .disc-poin { font-size: 8pt; color: var(--text-muted); font-weight: 600;}
+    select option { background: var(--primary-blue); color: white; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    input[readonly] { background: rgba(255,255,255,0.05); color: var(--accent-gold-light); cursor: not-allowed; font-weight: bold;}
 
-    /* NARASI ASESMEN */
-    .narasi-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-    .narasi-box { border-left: 3px solid var(--accent-gold); padding: 8px 12px; background: rgba(184, 134, 11, 0.02); }
-    .narasi-header { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--emerald-dark); font-size: 9.5pt; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;}
-    .narasi-text { font-size: 8.5pt; text-align: justify; line-height: 1.5; color: #1e293b;}
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-    /* RENCANA TINDAK LANJUT */
-    .rtl-box { border: 1px solid var(--primary-dark); padding: 10px 15px; border-radius: 6px; margin-bottom: 25px; background: white;}
-    .rtl-item { margin-bottom: 8px; }
-    .rtl-item:last-child { margin-bottom: 0; }
-    .rtl-label { font-weight: 700; color: var(--primary-dark); font-size: 8.5pt; display: flex; align-items: center; gap: 5px;}
-    .rtl-value { font-size: 8.5pt; line-height: 1.5; margin-top: 3px; padding-left: 12px; border-left: 2px solid #e2e8f0; color: #1e293b;}
+    #sectionInputData { 
+      display: none; 
+      margin-top: 30px; 
+      padding-top: 30px; 
+      border-top: 1px dashed rgba(255,255,255,0.2); 
+      animation: fadeInUp 0.5s ease;
+    }
 
-    /* SIGNATURES */
-    .signature-container { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 20px;}
-    .sign-box { text-align: center; width: 200px; }
-    .sign-date { font-size: 8.5pt; margin-bottom: 5px; color: var(--text-main); font-family: 'Playfair Display', serif; font-style: italic;}
-    .sign-role { font-weight: 700; font-size: 8.5pt; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.5px;}
-    .sign-space { height: 60px; }
-    .sign-name { font-weight: 800; font-size: 10pt; text-decoration: underline; color: var(--primary-dark); font-family: 'Playfair Display', serif;}
+    /* GAYA UNTUK MULTI-SURAT */
+    .surat-row {
+      display: flex; gap: 10px; align-items: flex-start; 
+      background: rgba(255,255,255,0.03); padding: 15px; 
+      border-radius: 15px; border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 15px; position: relative; flex-wrap: wrap;
+    }
+    .col-surat { flex: 2; min-width: 150px; }
+    .col-ayat { flex: 1; min-width: 80px; }
+    .col-hapus { margin-top: 32px; }
 
-    /* PRINT FOOTER (Halaman X dari Y) */
-    .print-footer-container { display: none; }
+    .btn-hapus {
+      background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5; border-radius: 8px; padding: 12px; cursor: pointer; transition: 0.3s;
+      height: 44px; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-hapus:hover { background: #ef4444; color: white; }
 
-    /* ===================== PRINT RULES (SUPER IMPORTANT) ===================== */
-    @media print {
-      body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .admin-panel, .no-print { display: none !important; }
-      .paper-wrapper { padding: 0; display: block; }
-      
-      /* Hapus box-shadow & width tetap agar elemen mengalir wajar ke lembar berikutnya */
-      .a4-page { 
-        box-shadow: none; margin: 0; padding: 0; width: 100%; height: auto; min-height: auto; 
-      }
+    .btn-tambah-surat {
+      background: rgba(56, 189, 248, 0.1); border: 1px dashed rgba(56, 189, 248, 0.4);
+      color: #bae6fd; width: 100%; padding: 12px; border-radius: 12px; margin-bottom: 25px;
+      cursor: pointer; font-family: inherit; font-weight: 600; transition: 0.3s;
+    }
+    .btn-tambah-surat:hover { background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: white;}
 
-      @page { 
-        size: A4 portrait; 
-        margin: 15mm; 
-        /* Trik CSS native untuk Halaman X dari Y di Firefox/Safari dan beberapa PDF generator */
-        @bottom-right {
-          content: "Halaman " counter(page) " dari " counter(pages);
-          font-family: 'Poppins', sans-serif;
-          font-size: 8pt;
-          color: #64748b;
-        }
-      }
+    .ayat-info { font-size: 0.75rem; color: var(--accent-gold); margin-top: 5px; font-style: italic; display: block;}
 
-      /* Trik Footer Print untuk Chrome */
-      .print-footer-container { 
-        display: block; position: fixed; bottom: 0; right: 0;
-        font-size: 8pt; color: #64748b; font-family: 'Poppins', sans-serif;
-      }
-      
-      /* Mencegah terpotong separuh di tengah halaman */
-      .section-title, .narasi-box, .split-grid, .rtl-box, .signature-container, tr, .biodata-grid {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-      
-      /* Berikan margin pada section untuk ruang potong */
-      .section-title { margin-top: 20px; }
+    /* PREDIKAT */
+    .input-predikat { font-weight: 700 !important; text-align: center; letter-spacing: 1px; transition: 0.3s; font-size: 1.2rem; }
+    .pred-mumtaz { color: #34d399 !important; border-color: rgba(16,185,129,0.4) !important; background: rgba(16,185,129,0.1) !important; }
+    .pred-jayyid { color: #38bdf8 !important; border-color: rgba(14,165,233,0.4) !important; background: rgba(14,165,233,0.1) !important; }
+    .pred-maqbul { color: #fbbf24 !important; border-color: rgba(245,158,11,0.4) !important; background: rgba(245,158,11,0.1) !important; }
+    .pred-bimbingan { color: #f87171 !important; border-color: rgba(239,68,68,0.4) !important; background: rgba(239,68,68,0.1) !important; }
+
+    .btn-save {
+      width: 100%; padding: 18px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+      color: var(--primary-dark); font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); transition: all 0.3s;
+    }
+    .btn-save:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5); filter: brightness(1.1); }
+
+    .box-total { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;}
+
+    @media (max-width: 768px) {
+      .card { padding: 25px 20px; }
+      .input-row { grid-template-columns: 1fr; }
+      .surat-row { flex-direction: column; gap: 5px; }
+      .col-surat, .col-ayat { width: 100%; }
+      .col-hapus { width: 100%; margin-top: 5px; }
+      .btn-hapus { width: 100%; }
     }
   </style>
 </head>
+
 <body>
 
-<div class="admin-panel no-print">
-  <h2>🖨️ Panel Cetak Raport Terpadu</h2>
-  
-  <div class="filter-group">
-    <label>Tahun Akademik</label>
-    <select id="fTahun">
-      <option value="2025/2026">2025/2026</option>
-      <option value="2026/2027">2026/2027</option>
-    </select>
+<header>
+  <h1>Al-Qur'an Center</h1>
+  <div class="btn-group">
+    <button class="btn-header" onclick="goBack()">⬅️ Beranda</button>
+    <button class="btn-header" onclick="logout()">Keluar</button>
   </div>
-  <div class="filter-group">
-    <label>Semester</label>
-    <select id="fSemester">
-      <option value="Ganjil">Ganjil</option>
-      <option value="Genap">Genap</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <label>Triwulan</label>
-    <select id="fTriwulan">
-      <option value="1">Triwulan 1</option>
-      <option value="2">Triwulan 2</option>
-      <option value="3">Triwulan 3</option>
-      <option value="4">Triwulan 4</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <label>Kategori Kelas</label>
-    <select id="fKategori" onchange="loadSantriList()">
-      <option value="">-- Pilih Kelas --</option>
-      <optgroup label="Halqah Ilmiyah">
-        <option value="Halqah Ilmiyah|Kelas 1 Putra">Kelas 1 Putra</option>
-        <option value="Halqah Ilmiyah|Kelas 2 Putra">Kelas 2 Putra</option>
-        <option value="Halqah Ilmiyah|Kelas 3 Putra">Kelas 3 Putra</option>
-        <option value="Halqah Ilmiyah|Kelas 4 Benih Ulama">Kelas 4 Benih Ulama</option>
-        <option value="Halqah Ilmiyah|Kelas 4 Benih Pengusaha">Kelas 4 Benih Pengusaha</option>
-        <option value="Halqah Ilmiyah|Kelas 1 Putri">Kelas 1 Putri</option>
-        <option value="Halqah Ilmiyah|Kelas 2 Putri">Kelas 2 Putri</option>
-        <option value="Halqah Ilmiyah|Kelas 3 Putri">Kelas 3 Putri</option>
-      </optgroup>
-      <optgroup label="Halqah Lughowiyah">
-        <option value="Halqah Lughowiyah|Kelas Abah">Kelas Lughowiyah Abah</option>
-        <option value="Halqah Lughowiyah|Kelas Rahiel">Kelas Lughowiyah Rahiel</option>
-        <option value="Halqah Lughowiyah|Kelas Alvin">Kelas Lughowiyah Alvin</option>
-        <option value="Halqah Lughowiyah|Kelas Falah">Kelas Lughowiyah Falah</option>
-        <option value="Halqah Lughowiyah|Kelas Meilisa">Kelas Lughowiyah Meilisa</option>
-        <option value="Halqah Lughowiyah|Kelas Fatimah">Kelas Lughowiyah Fatimah</option>
-        <option value="Halqah Lughowiyah|Kelas Evita">Kelas Lughowiyah Evita</option>
-      </optgroup>
-      <optgroup label="Halqah Quraniyah">
-        <option value="Halqah Quraniyah|Tahfiz Abah">Tahfiz Abah</option>
-        <option value="Halqah Quraniyah|Tahfiz Alvin">Tahfiz Alvin</option>
-        <option value="Halqah Quraniyah|Tahsin Faiq">Tahsin Faiq</option>
-        <option value="Halqah Quraniyah|Tahsin Khaizuran">Tahsin Khaizuran</option>
-        <option value="Halqah Quraniyah|Tahsin Fahmi">Tahsin Fahmi</option>
-        <option value="Halqah Quraniyah|Tahfiz Fatimah">Tahfiz Fatimah</option>
-        <option value="Halqah Quraniyah|Tahsin Meilisa">Tahsin Meilisa</option>
-      </optgroup>
-    </select>
-  </div>
-  <div class="filter-group">
-    <label>Nama Santri</label>
-    <select id="fSantri">
-      <option value="">-- Pilih Santri --</option>
-    </select>
-  </div>
-  
-  <button class="btn-action btn-generate" onclick="generateRaport()">🔄 Integrasikan Data</button>
-  <button class="btn-action btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
-</div>
+</header>
 
-<div class="paper-wrapper">
-  <div class="a4-page" id="raportContent">
-    <div class="content-wrapper">
-      
-      <div class="kop-surat">
-        <div class="kop-title">PESANTREN CAHAYA FAJRUL ISLAM</div>
-        <div class="kop-subtitle">Membangun Generasi Rabbani, Cerdas & Berakhlak Mulia</div>
-        <div class="kop-address">Jl. Pangeran Senopati No. 1, Tanjung Pandan | Telp: (0721) 123456 | Web: www.cahayafajrulislam.com</div>
-      </div>
+<main>
+  <div class="card">
+    <h2 class="card-title">📖 Input Setoran Individu</h2>
 
-      <div class="doc-title">RAPORT EVALUASI TRIWULAN TERPADU</div>
-
-      <div class="biodata-grid">
-        <div>
-          <div class="bio-item"><div class="bio-label">Nama Santri</div><div class="bio-value" id="rNama">NAMA SANTRI</div></div>
-          <div class="bio-item"><div class="bio-label">Kelas</div><div class="bio-value" id="rRumpun">Nama Kelas</div></div>
-          <div class="bio-item"><div class="bio-label">Usrah / Naqib</div><div class="bio-value" id="rUsrah">Nama Naqib</div></div>
-        </div>
-        <div>
-          <div class="bio-item"><div class="bio-label">Tahun Akademik</div><div class="bio-value" id="rTahun">202X/202X</div></div>
-          <div class="bio-item"><div class="bio-label">Semester</div><div class="bio-value" id="rSmt">Ganjil</div></div>
-          <div class="bio-item"><div class="bio-label">Triwulan Ke</div><div class="bio-value" id="rTrw">1</div></div>
-        </div>
-      </div>
-
-      <div class="section-title">A. Pencapaian Akademik</div>
-      <table>
-        <thead>
-          <tr>
-            <th width="5%">No</th>
-            <th width="35%">Mata Pelajaran</th>
-            <th width="15%">Syafawi (70%)</th>
-            <th width="15%">Tahriri (30%)</th>
-            <th width="15%">Total Nilai</th>
-            <th width="15%">Predikat</th>
-          </tr>
-        </thead>
-        <tbody id="tabelNilai">
-          <tr><td colspan="6" class="td-center" style="color:var(--text-muted); font-weight:normal; padding:15px;">Silakan klik 'Integrasikan Data' terlebih dahulu.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="split-grid">
-        <div class="tahfiz-box" id="boxTahfiz">
-          <div class="box-header">📖 Syahadah Tahfizhul Qur'an</div>
-          <div class="stats-row">
-            <div class="stat-item"><span class="stat-lbl">Juz</span><span class="stat-val" id="tJuz">0</span></div>
-            <div class="stat-item"><span class="stat-lbl">Halaman</span><span class="stat-val" id="tHal">0</span></div>
-            <div class="stat-item"><span class="stat-lbl">Ayat</span><span class="stat-val" id="tAyat">0</span></div>
-          </div>
-          <div class="tahfiz-badge" id="badgeTahfizCahaya">✨ Program Khusus Tahfiz Cahaya</div>
-        </div>
-        
-        <div class="discipline-box">
-          <div class="box-header">⚖️ Indeks Kedisiplinan Asrama</div>
-          <div class="disc-score-wrapper">
-            <div class="disc-circle" id="dPersen">0%</div>
-            <div class="disc-info">
-              <div class="disc-pred" id="dPredikat">MENUNGGU</div>
-              <div class="disc-poin" id="dPoin">Total Poin: 0</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-title">B. Evaluasi Karakter (5 Dimensi)</div>
-      <div class="narasi-container">
-        <div class="narasi-box">
-          <div class="narasi-header">🌙 Dimensi Spiritual (Ibadah)</div>
-          <div class="narasi-text" id="nSpiritual">Data asesmen belum tersedia.</div>
-        </div>
-        <div class="narasi-box">
-          <div class="narasi-header">🤝 Dimensi Relasional (Adab & Sosial)</div>
-          <div class="narasi-text" id="nRelasional">Data asesmen belum tersedia.</div>
-        </div>
-        <div class="narasi-box">
-          <div class="narasi-header">💛 Dimensi Emosional (Kontrol Diri)</div>
-          <div class="narasi-text" id="nEmosional">Data asesmen belum tersedia.</div>
-        </div>
-        <div class="narasi-box">
-          <div class="narasi-header">🧠 Dimensi Intelektual (Akademik)</div>
-          <div class="narasi-text" id="nIntelektual">Data asesmen belum tersedia.</div>
-        </div>
-        <div class="narasi-box">
-          <div class="narasi-header">💪 Dimensi Fisik (Kesehatan & Kebersihan)</div>
-          <div class="narasi-text" id="nFisik">Data asesmen belum tersedia.</div>
-        </div>
-      </div>
-
-      <div class="section-title">C. Rencana Tindak Lanjut</div>
-      <div class="rtl-box">
-        <div class="rtl-item">
-          <div class="rtl-label">📊 Hasil Perbaikan Triwulan Ini:</div>
-          <div class="rtl-value" id="rHasil">Menunggu data...</div>
-        </div>
-        <div class="rtl-item">
-          <div class="rtl-label">🎯 Fokus Perbaikan Triwulan Depan:</div>
-          <div class="rtl-value" id="rFokus">Menunggu data...</div>
-        </div>
-        <div class="rtl-item">
-          <div class="rtl-label">💡 Saran Khusus Wali Kelas / Naqib:</div>
-          <div class="rtl-value" id="rSaran" style="font-style: italic;">Menunggu data...</div>
-        </div>
-      </div>
-
-      <div class="signature-container">
-        <div class="sign-box">
-          <div class="sign-date">Mengetahui,</div>
-          <div class="sign-role">Orang Tua / Wali Santri</div>
-          <div class="sign-space"></div>
-          <div class="sign-name">( ........................................ )</div>
-        </div>
-        
-        <div class="sign-box">
-          <div class="sign-date" id="tglTtd">Tanjung Pandan, ...</div>
-          <div class="sign-role">Wali Kelas / Naqib</div>
-          <div class="sign-space"></div>
-          <div class="sign-name" id="namaGuru">Naqib</div>
-        </div>
-      </div>
-      
-      <div class="signature-container" style="justify-content: center; margin-top: 10px;">
-        <div class="sign-box">
-          <div class="sign-role">Direktur Pesantren</div>
-          <div class="sign-space"></div>
-          <div class="sign-name">Abah Multazam Zakaria, M.Pd</div>
-        </div>
-      </div>
-
+    <div class="form-group">
+      <label>📅 Tanggal Setoran</label>
+      <input type="date" id="tfzTanggal">
     </div>
-  </div>
-</div>
 
-<div class="print-footer-container">
-  Raport Evaluasi Triwulan - Pesantren Cahaya Fajrul Islam
-</div>
+    <div class="input-row">
+      <div class="form-group">
+        <label>📚 Program</label>
+        <select id="tfzProgram" onchange="updateKelompok()">
+          <option value="">-- Pilih Program --</option>
+          <option value="Tahsin">Tahsin</option>
+          <option value="Tahfiz">Tahfiz</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>👥 Halaqah</label>
+        <select id="tfzKelompok" onchange="updateSantri()">
+          <option value="">-- Menunggu Program --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>👤 Nama Santri</label>
+      <select id="tfzNamaSantri" onchange="siapkanForm()">
+        <option value="">-- Pilih Halaqah Dulu --</option>
+      </select>
+    </div>
+
+    <div id="sectionInputData">
+      
+      <div id="wadahListSurat">
+        </div>
+      
+      <button class="btn-tambah-surat" onclick="tambahBarisSurat()">➕ Tambah Surat Lain</button>
+
+      <div class="box-total">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>∑ TOTAL KESELURUHAN AYAT</label>
+          <input type="number" id="inputJumlahAyat" readonly placeholder="Otomatis dihitung dari atas..." style="font-size: 1.2rem; text-align: center;">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label>❌ Kesalahan Lahn Jali</label>
+          <input type="number" id="inputKesalahan" min="0" placeholder="Ketik angka 0 jika lancar..." oninput="hitungPredikat()">
+        </div>
+
+        <div class="form-group">
+          <label>🏆 Predikat Penilaian</label>
+          <input type="text" id="inputPredikat" class="input-predikat" readonly placeholder="-">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>📝 Catatan / Tajwid (Opsional)</label>
+        <textarea id="inputCatatan" placeholder="Tuliskan catatan perbaikan makhraj atau tajwid di sini..."></textarea>
+      </div>
+
+      <button class="btn-save" id="btnSimpanSetoran" onclick="simpanSetoranPerAnak()">💾 SIMPAN DATA SANTRI INI</button>
+    </div>
+
+  </div>
+</main>
+
+<script src="dataSantri.js"></script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
@@ -409,297 +247,346 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || 'null');
 
-  // DATA SANTRI MASTER UPDATE
-  const dataSantri = {
-    "Halqah Ilmiyah": {
-      "Kelas 1 Putra": ["JUANDA NUR ILHAM","M. ABIL IRWANSYAH","ALIF SAMUDRA","FAHRY AKBAR RAMDHANI","M. USAMAH","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","ANUGRAH PRATAMA","AHMAD FARHAAN","DEDI SETIADI","MOHAMMAD IKHSAN HAIRULI","ALVIN HERFIANTINO","IHZA TRINANDI","ILHAM","RAKA SEPTIAN","CAHYIS ISZAM","DIKKI KURNIAWAN","M. ARYA MAHDI WAFI EL-FAUZANI","EZA FEBRI AL FADZRI","M. DIRGATAMA","VERY SYACH","RADEN AZAA PANCA PUTRA","FAUZAN IBNI JABAR","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA"],
-      "Kelas 2 Putra": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","CANZA RYANDA HUTASUHUT","DAFFA AL MUSYARI","DANANG PRASDITYA SANTOSO","FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","FALIZH DAFFA QATRUNNADA","FEBRI GHALIH AL FAROBI","HAFIDZ AL ROZI","HAFIDZ ALRIZKY","ILHAM MUKMIN AL FARABI","LUTHFAN ADZAKI","MAHESA AULIA GIFFARI","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","M. FIRAAS AL INSYIROH","M. XAVI NF","NABIL NAJMI","NAJMIHADI SYAUQII TAMAAM","NAUFAL AKBAR ALKHATIRI","NIZAM KABISAT","QHEIZAN ALQIZA ARISDA","RENAL MARTIN","REYFAS RAMADHAN","ROHADIN FIRDAUS AL QAUSAR","SATRIO ABIMAYU","TEGAR HIDAYAT","WAHYU REYDINATA","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN","HABIB RAMADHAN"],
-      "Kelas 3 Putra": ["AHMAD MAULANA","ALIF MUHAMMAD YUSUF","ARYA DIFA ALSYA","FARAZH SAYYID PUTRA KENEGA","GHOZY FATURRAHMAN","M. FAQIH HAFIDZALLAH","M. RIJALUL KAMIL","M. AL FALAH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","NAFIS","RAFI RAMADHAN","REYNALDI MALIK IBRAHIM ALFARIDZI","WAFII FADHLURROHMAN"],
-      "Kelas 4 Benih Ulama": ["ANGGA PRATAMA PUTRA","MIKA RAHIEL YUSUF","MELDI NOVRIANSYAH","MARFEL SAPUTRA","PRAWIRO PUJO TUNGGAL JATI"],
-      "Kelas 4 Benih Pengusaha": ["KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI"],
-      "Kelas 1 Putri": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI","ASHIFA FITRI RAMADHONI"],
-      "Kelas 2 Putri": ["EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY"],
-      "Kelas 3 Putri": ["AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"]
-    },
-    "Halqah Lughowiyah": {
-      "Kelas Abah": ["AHMAD MAULANA","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ANDES AFENDRA","ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","BASRI AL HAZIQ ZULFAHMI","DANANG PRASDITYA SANTOSO","M. FAQIH HAFIDZALLAH","FEBRI GHALIH AL FAROBI","FALIZH DAFFA QATRUNNADA","HABIB RAMADHAN","MUHAMMAD ALLAM NUR HUSHAIN","M. AL FALAH","MARFEL SAPUTRA","MELDI NOVRIANSYAH","MIKA RAHIEL YUSUF","NAFIS","RAFI RAMADHAN","M. RAID MAHRUS","REYFAS RAMADHAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","M. XAVI NF","PRAWIRO PUJO TUNGGAL JATI"],
-      "Kelas Rahiel": ["NAUFAL AKBAR ALKHATIRI","NIZAM KABISAT","M. RIJALUL KAMIL","DAFFA AL MUSYARI","ALIF SAMUDRA","WAFII FADHLURROHMAN","EZA FEBRI AL FADZRI","M. ABIL IRWANSYAH","SYAHRUL RAMADHAN","HAFIDZ AL ROZI","HAFIDZ ALRIZKY","NAJMIHADI SYAUQII TAMAAM","IHZA TRINANDI","CAHYIS ISZAM","AHMAD FARHAAN","ARYA DIFA ALSYA","M. FADHIL BUANA","WAHYU REYDINATA","FAHRY AKBAR RAMDHANI","ALVIN HERFIANTINO","M. ARYA MAHDI WAFI EL-FAUZANI","RADEN AZAA PANCA PUTRA","FAUZAN IBNI JABAR","REZFY FAKHRYAZKA","M. FAISAL FIKRIANSYAH","QHEIZAN ALQIZA ARISDA"],
-      "Kelas Alvin": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA"],
-      "Kelas Falah": ["FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","CANZA RYANDA HUTASUHUT","M. DIRGATAMA","LUTHFAN ADZAKI","FARAZH SAYYID PUTRA KENEGA","ZULFAKIH HAERUNNASIHIN","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","MOHAMMAD IKHSAN HAIRULI","ZAHIR ZIBRAN","NABIL NAJMI","DEDI SETIADI","ANUGRAH PRATAMA","SATRIO ABIMAYU","TEGAR HIDAYAT","ABDULLAH MUKTI HAFIDZALLAH","ILHAM","ILHAM MUKMIN AL FARABI","JUANDA NUR ILHAM","RAKA SEPTIAN","M. FIRAAS AL INSYIROH","GHOZY FATURRAHMAN","REYNALDI MALIK IBRAHIM ALFARIDZI","M. USAMAH","MAHESA AULIA GIFFARI","DIKKI KURNIAWAN","VERY SYACH"],
-      "Kelas Meilisa": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI"],
-      "Kelas Fatimah": ["ASHIFA FITRI RAMADHONI","EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"],
-      "Kelas Evita": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI","ASHIFA FITRI RAMADHONI","EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"]
-    },
-    "Halqah Quraniyah": {
-      "Tahfiz Abah": ["M. AL FALAH", "MIKA RAHIEL YUSUF", "ANGGA PRATAMA PUTRA", "NIZAM KABISAT", "PRAWIRO PUJO TUNGGAL JATI", "MAHESA AULIA GIFFARI", "NAJMIHADI SYAUQII TAMAAM", "MARFEL SAPUTRA", "MELDI NOVRIANSYAH", "RENAL MARTIN", "AHMAD RIYADI", "ABDULLAH MUKTI HAFIDZALLAH", "AKBAR PRAYOGA", "ANDES AFENDRA", "BASRI AL HAZIQ ZULFAHMI", "CANZA RYANDA HUTASUHUT", "DAFFA AL MUSYARI", "DANANG PRASDITYA SANTOSO", "FAKHRI AL MUZAKKI", "FALIZH DAFFA QATRUNNADA", "FEBRI GHALIH AL FAROBI", "HAFIDZ AL ROZI", "HAFIDZ ALRIZKY", "ILHAM MUKMIN AL FARABI", "LUTHFAN ADZAKI", "DIKKI KURNIAWAN", "ROID AFDAL", "IHZA TRINANDI", "ILHAM", "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI", "FAHRIE OKTAVIRANO FITRIS"],
-      "Tahfiz Alvin": ["AHMAD MAULANA", "ALIF MUHAMMAD YUSUF", "ARYA DIFA ALSYA", "FARAZH SAYYID PUTRA KENEGA", "GHOZY FATURRAHMAN", "M. FAQIH HAFIDZALLAH", "M. RIJALUL KAMIL", "MUHAMMAD ALLAM NUR HUSHAIN", "M. RAID MAHRUS", "NAFIS", "RAFI RAMADHAN", "REYNALDI MALIK IBRAHIM ALFARIDZI", "WAFII FADHLURROHMAN", "M. FADHIL BUANA", "M. FIRAAS AL INSYIROH", "M. XAVI NF", "NABIL NAJMI", "NAUFAL AKBAR ALKHATIRI", "QHEIZAN ALQIZA ARISDA", "REYFAS RAMADHAN", "ROHADIN FIRDAUS AL QAUSAR", "SATRIO ABIMAYU", "WAHYU REYDINATA", "ZAHIR ZIBRAN", "ZULFAKIH HAERUNNASIHIN", "HABIB RAMADHAN", "MUHAMAD YUSUF ARROSIYD", "VERY SYACH", "M. FAISAL FIKRIANSYAH", "TEGAR HIDAYAT"],
-      "Tahsin Faiq": ["DARREN ATHAYA", "M. AQIL RIDHO", "ALIF SAMUDRA", "M. ABIL IRWANSYAH", "FAUZAN IBNI JABAR", "M. IZAM SAPUTRA", "BRILLY HANDRIAN", "M. SYAKIR HUTABARAT", "DZIKRI MUDHOFFAR", "FADIL NURHALIM", "RAFA", "AIRLANGGA AZKA ABQORI", "M. YASIR AL FAZAR JHIRA", "AQIELA MARSYAH", "ADITYA PUTRA IBRAHIM"],
-      "Tahsin Khaizuran": ["REZFY FAKHRYAZKA", "ALVIN HERFIANTINO", "AHMAD FARHAAN", "DEDI SETIADI", "SYAHRUL RAMADHAN", "M. USAMAH", "ANUGRAH PRATAMA", "RAKA SEPTIAN", "CAHYIS ISZAM", "GABRIEL AL FATIH", "M. ZIYAD ZHAZHA", "ELLENO QUTHBIE HERMAWAN", "MOHAMMAD IKHSAN HAIRULI", "FAHRY AKBAR RAMDHANI"],
-      "Tahsin Fahmi": ["EZA FEBRI AL FADZRI", "M. ARYA MAHDI WAFI EL-FAUZANI", "RADEN AZAA PANCA PUTRA", "M. DIRGATAMA", "MIKO VAJAR", "M. ALMISKY PRATAMA", "HADINATA SAPUTRA", "JUANDA NUR ILHAM"],
-      "Tahfiz Fatimah": ["WILDA", "NESSYA RAMADHANY", "GHENIS ANDIENTIAZ", "JESSICA PUTRY AYRA", "NYAYU MARLITSA ARDHANI", "GRINNETA NALANI PUTRI", "AMIRAH BALQIS RAHADATUL A'ISYAH", "BILQIS NUR ANISAH", "QELZA RAMADHANI ATH THAHIRAH"],
-      "Tahsin Meilisa": ["PITRI RAMADANI", "ADIBA AILA KHANZA", "AISYAH NUR KHALIFAH", "AISYAH NURUL AULIA", "ANISYA SEPTIANI", "DAFIA NAFLA SYAKIRA", "DINA RUHAYAH", "FITRAH KIRANA", "INAYAH NOURAH ANINDYA", "SHELENA", "WINDY WINDARI", "ASHIFA FITRI RAMADHONI", "EARLYTA ARSYFA SALSABILA"]
+  // DATA DAFTAR SURAT AL-QUR'AN
+  window.daftarSurat = [
+    { nama: "Al-Fatihah", ayat: 7 }, { nama: "Al-Baqarah", ayat: 286 }, { nama: "Ali 'Imran", ayat: 200 },
+    { nama: "An-Nisa'", ayat: 176 }, { nama: "Al-Ma'idah", ayat: 120 }, { nama: "Al-An'am", ayat: 165 },
+    { nama: "Al-A'raf", ayat: 206 }, { nama: "Al-Anfal", ayat: 75 }, { nama: "At-Taubah", ayat: 129 },
+    { nama: "Yunus", ayat: 109 }, { nama: "Hud", ayat: 123 }, { nama: "Yusuf", ayat: 111 },
+    { nama: "Ar-Ra'd", ayat: 43 }, { nama: "Ibrahim", ayat: 52 }, { nama: "Al-Hijr", ayat: 99 },
+    { nama: "An-Nahl", ayat: 128 }, { nama: "Al-Isra'", ayat: 111 }, { nama: "Al-Kahf", ayat: 110 },
+    { nama: "Maryam", ayat: 98 }, { nama: "Taha", ayat: 135 }, { nama: "Al-Anbiya'", ayat: 112 },
+    { nama: "Al-Hajj", ayat: 78 }, { nama: "Al-Mu'minun", ayat: 118 }, { nama: "An-Nur", ayat: 64 },
+    { nama: "Al-Furqan", ayat: 77 }, { nama: "Asy-Syu'ara'", ayat: 227 }, { nama: "An-Naml", ayat: 93 },
+    { nama: "Al-Qasas", ayat: 88 }, { nama: "Al-'Ankabut", ayat: 69 }, { nama: "Ar-Rum", ayat: 60 },
+    { nama: "Luqman", ayat: 34 }, { nama: "As-Sajdah", ayat: 30 }, { nama: "Al-Ahzab", ayat: 73 },
+    { nama: "Saba'", ayat: 54 }, { nama: "Fatir", ayat: 45 }, { nama: "Ya Sin", ayat: 83 },
+    { nama: "As-Saffat", ayat: 182 }, { nama: "Sad", ayat: 88 }, { nama: "Az-Zumar", ayat: 75 },
+    { nama: "Ghafir", ayat: 85 }, { nama: "Fussilat", ayat: 54 }, { nama: "Asy-Syura", ayat: 53 },
+    { nama: "Az-Zukhruf", ayat: 89 }, { nama: "Ad-Dukhan", ayat: 59 }, { nama: "Al-Jasiyah", ayat: 37 },
+    { nama: "Al-Ahqaf", ayat: 35 }, { nama: "Muhammad", ayat: 38 }, { nama: "Al-Fath", ayat: 29 },
+    { nama: "Al-Hujurat", ayat: 18 }, { nama: "Qaf", ayat: 45 }, { nama: "Az-Zariyat", ayat: 60 },
+    { nama: "At-Tur", ayat: 49 }, { nama: "An-Najm", ayat: 62 }, { nama: "Al-Qamar", ayat: 55 },
+    { nama: "Ar-Rahman", ayat: 78 }, { nama: "Al-Waqi'ah", ayat: 96 }, { nama: "Al-Hadid", ayat: 29 },
+    { nama: "Al-Mujadilah", ayat: 22 }, { nama: "Al-Hasyr", ayat: 24 }, { nama: "Al-Mumtahanah", ayat: 13 },
+    { nama: "As-Saff", ayat: 14 }, { nama: "Al-Jumu'ah", ayat: 11 }, { nama: "Al-Munafiqun", ayat: 11 },
+    { nama: "At-Tagabun", ayat: 18 }, { nama: "At-Talaq", ayat: 12 }, { nama: "At-Tahrim", ayat: 12 },
+    { nama: "Al-Mulk", ayat: 30 }, { nama: "Al-Qalam", ayat: 52 }, { nama: "Al-Haqqah", ayat: 52 },
+    { nama: "Al-Ma'arij", ayat: 44 }, { nama: "Nuh", ayat: 28 }, { nama: "Al-Jinn", ayat: 28 },
+    { nama: "Al-Muzzammil", ayat: 20 }, { nama: "Al-Muddassir", ayat: 56 }, { nama: "Al-Qiyamah", ayat: 40 },
+    { nama: "Al-Insan", ayat: 31 }, { nama: "Al-Mursalat", ayat: 50 }, { nama: "An-Naba'", ayat: 40 },
+    { nama: "An-Nazi'at", ayat: 46 }, { nama: "'Abasa", ayat: 42 }, { nama: "At-Takwir", ayat: 29 },
+    { nama: "Al-Infitar", ayat: 19 }, { nama: "Al-Mutaffifin", ayat: 36 }, { nama: "Al-Insyiqaq", ayat: 25 },
+    { nama: "Al-Buruj", ayat: 22 }, { nama: "At-Tariq", ayat: 17 }, { nama: "Al-A'la", ayat: 19 },
+    { nama: "Al-Gasyiyah", ayat: 26 }, { nama: "Al-Fajr", ayat: 30 }, { nama: "Al-Balad", ayat: 20 },
+    { nama: "Asy-Syams", ayat: 15 }, { nama: "Al-Lail", ayat: 21 }, { nama: "Ad-Duha", ayat: 11 },
+    { nama: "Asy-Syarh", ayat: 8 }, { nama: "At-Tin", ayat: 8 }, { nama: "Al-'Alaq", ayat: 19 },
+    { nama: "Al-Qadr", ayat: 5 }, { nama: "Al-Bayyinah", ayat: 8 }, { nama: "Az-Zalzalah", ayat: 8 },
+    { nama: "Al-'Adiyat", ayat: 11 }, { nama: "Al-Qari'ah", ayat: 11 }, { nama: "At-Takasur", ayat: 8 },
+    { nama: "Al-'Asr", ayat: 3 }, { nama: "Al-Humazah", ayat: 9 }, { nama: "Al-Fil", ayat: 5 },
+    { nama: "Quraisy", ayat: 4 }, { nama: "Al-Ma'un", ayat: 7 }, { nama: "Al-Kausar", ayat: 3 },
+    { nama: "Al-Kafirun", ayat: 6 }, { nama: "An-Nasr", ayat: 3 }, { nama: "Al-Lahab", ayat: 5 },
+    { nama: "Al-Ikhlas", ayat: 4 }, { nama: "Al-Falaq", ayat: 5 }, { nama: "An-Nas", ayat: 6 }
+  ];
+
+  let opsiSuratHTML = '<option value="">-- Pilih Surat --</option>';
+  window.daftarSurat.forEach((surat, index) => {
+    opsiSuratHTML += `<option value="${index}">${index + 1}. ${surat.nama}</option>`;
+  });
+
+  window.init = function() {
+    if (!user || user.role !== 'guru') {
+      alert('Sesi habis. Silakan login sebagai Guru.');
+      window.location.href = '../index.html';
+      return;
     }
+    document.getElementById('tfzTanggal').value = new Date().toISOString().split('T')[0];
   };
 
-  // DATA USRAH / NAQIB
-  const dataUsrah = {
-    "Kamal": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA","WAHYU REYDINATA","NIZAM KABISAT","JUANDA NUR ILHAM","M. DIRGATAMA","DAFFA AL MUSYARI","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","FALIZH DAFFA QATRUNNADA","HAFIDZ AL ROZI","CANZA RYANDA HUTASUHUT","NAJMIHADI SYAUQII TAMAAM","EZA FEBRI AL FADZRI"],
-    "Favian": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ALVIN HERFIANTINO","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","AHMAD MAULANA","DANANG PRASDITYA SANTOSO","DEDI SETIADI","DIKKI KURNIAWAN","FAKHRI AL MUZAKKI","FEBRI GHALIH AL FAROBI","GHOZY FATURRAHMAN","ILHAM MUKMIN AL FARABI","M. AL FALAH","M. FAQIH HAFIDZALLAH","M. FIRAAS AL INSYIROH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","M. RIJALUL KAMIL","NABIL NAJMI","RADEN AZAA PANCA PUTRA","RAFI RAMADHAN","SATRIO ABIMAYU","TEGAR HIDAYAT","VERY SYACH","WAFII FADHLURROHMAN","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN"],
-    "Regen": ["ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","MIKA RAHIEL YUSUF","PRAWIRO PUJO TUNGGAL JATI","M. XAVI NF","REYNALDI MALIK IBRAHIM ALFARIDZI","FAHRIE OKTAVIRANO FITRIS","FARAZH SAYYID PUTRA KENEGA","LUTHFAN ADZAKI","MARFEL SAPUTRA","MELDI NOVRIANSYAH","ALIF SAMUDRA","ARYA DIFA ALSYA","FAUZAN IBNI JABAR","HAFIDZ ALRIZKY","M. ABIL IRWANSYAH","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","NAUFAL AKBAR ALKHATIRI","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ROID AFDAL","ROHADIN FIRDAUS AL QAUSAR","RENAL MARTIN","RAKA SEPTIAN","NAFIS","M. USAMAH","MUHAMAD YUSUF ARROSIYD","MAHESA AULIA GIFFARI","M. ARYA MAHDI WAFI EL-FAUZANI","ILHAM","IHZA TRINANDI","HABIB RAMADHAN","FAHRY AKBAR RAMDHANI","CAHYIS ISZAM","ANUGRAH PRATAMA","AHMAD FARHAAN"],
-    "Fatimah": ["QELZA RAMADHANI ATH THAHIRAH","ASHIFA FITRI RAMADHONI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","NYAYU MARLITSA ARDHANI","WILDA","WINDY WINDARI","AISYAH NURUL AULIA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","EARLYTA ARSYFA SALSABILA","DAFIA NAFLA SYAKIRA","ANISYA SEPTIANI"],
-    "Evita": ["BILQIS NUR ANISAH","JESSICA PUTRY AYRA","GHENIS ANDIENTIAZ","DINA RUHAYAH","PITRI RAMADANI","GRINNETA NALANI PUTRI","INAYAH NOURAH ANINDYA","SHELENA","FITRAH KIRANA"]
-  };
+  // 1. Mengisi Dropdown Halaqah
+  window.updateKelompok = function() {
+    const program = document.getElementById('tfzProgram').value;
+    const kelompokSelect = document.getElementById('tfzKelompok');
+    const namaSelect = document.getElementById('tfzNamaSantri');
+    const sectionForm = document.getElementById('sectionInputData');
 
-  // 1. Populate Dropdown Santri
-  window.loadSantriList = function() {
-    const filterCat = document.getElementById("fKategori").value;
-    const selectSantri = document.getElementById("fSantri");
-    selectSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+    namaSelect.innerHTML = '<option value="">-- Pilih Halaqah Dulu --</option>';
+    sectionForm.style.display = 'none';
 
-    if(filterCat) {
-      const parts = filterCat.split("|"); 
-      const rumpun = parts[0]; const kelas = parts[1];
-      if(dataSantri[rumpun] && dataSantri[rumpun][kelas]) {
-        let sorted = [...dataSantri[rumpun][kelas]].sort((a,b) => a.localeCompare(b));
-        sorted.forEach(nama => {
-          let opt = document.createElement("option");
-          opt.value = nama; opt.textContent = nama;
-          selectSantri.appendChild(opt);
-        });
-      }
-    }
-  };
-
-  // 2. Helper Predikat
-  function getPredikat(nilai) {
-    if(nilai >= 90) return { huruf: "A", ket: "Mumtaz", color: "#16a34a" };
-    if(nilai >= 80) return { huruf: "B", ket: "Jayyid Jiddan", color: "#2563eb" };
-    if(nilai >= 70) return { huruf: "C", ket: "Jayyid", color: "#d97706" };
-    if(nilai >= 60) return { huruf: "D", ket: "Maqbul", color: "#ea580c" };
-    return { huruf: "E", ket: "Rasib", color: "#dc2626" };
-  }
-
-  function getPredikatDisiplin(persen) {
-    if (persen >= 90) return { label: "MUMTAZ", color: "#16a34a" };
-    if (persen >= 75) return { label: "JAYYID JIDDAN", color: "#2563eb" };
-    if (persen >= 60) return { label: "JAYYID", color: "#d97706" };
-    if (persen >= 50) return { label: "MAQBUL", color: "#ea580c" };
-    return { label: "RASIB", color: "#dc2626" };
-  }
-
-  // 3. Cari Naqib Otomatis
-  function getNaqibBySantri(namaSantri) {
-    for (let naqib in dataUsrah) {
-      if (dataUsrah[naqib].includes(namaSantri)) {
-        return naqib;
-      }
-    }
-    return "-";
-  }
-
-  // 4. Fungsi Utama Generate Raport
-  window.generateRaport = async function() {
-    const btn = document.querySelector('.btn-generate');
-    const tAkademik = document.getElementById("fTahun").value;
-    const tSemester = document.getElementById("fSemester").value;
-    const tTriwulan = document.getElementById("fTriwulan").value;
-    const tKategori = document.getElementById("fKategori").value;
-    const tNama = document.getElementById("fSantri").value;
-
-    if(!tKategori || !tNama) { alert("Pilih Kategori Kelas dan Nama Santri terlebih dahulu."); return; }
-
-    btn.innerHTML = "⏳ Menyatukan Data..."; btn.disabled = true;
-
-    // Hapus kata 'Halqah', ambil array index ke 1 (Kelasnya saja)
-    const parts = tKategori.split("|");
-    const labelKelas = parts[1]; 
+    if (!program) return;
+    if (typeof dataSantri === 'undefined') { alert("Data Santri tidak ditemukan!"); return; }
     
-    // Cari otomatis nama Naqib & Asrama
-    let namaNaqib = getNaqibBySantri(tNama);
-    let labelUsrah = namaNaqib !== "-" ? `Asrama ${namaNaqib}` : "Asrama Reguler";
+    const kategori = dataSantri["Halqah Quraniyah"];
+    if (!kategori) return;
 
-    // Update Header Text
-    document.getElementById("rNama").textContent = tNama;
-    document.getElementById("rRumpun").textContent = labelKelas;
-    document.getElementById("rUsrah").textContent = labelUsrah;
-    document.getElementById("rTahun").textContent = tAkademik;
-    document.getElementById("rSmt").textContent = tSemester;
-    document.getElementById("rTrw").textContent = tTriwulan;
+    const kelompokList = Object.keys(kategori)
+      .filter(k => k.startsWith(program + ' '))
+      .map(k => k.replace(program + ' ', ''));
 
-    // Set Tanggal TTD
-    const tgl = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric'});
-    document.getElementById("tglTtd").textContent = `Tanjung Pandan, ${tgl}`;
+    kelompokList.forEach(k => {
+      const opt = document.createElement('option');
+      opt.textContent = k;
+      kelompokSelect.appendChild(opt);
+    });
+  };
 
-    try {
-      // Fetch All Data Concurrent for Speed
-      const [nilaiSnap, assesSnap, tahfizSnap, ibadahSnap, kbmSnap, manualSnap] = await Promise.all([
-        get(ref(db, 'cahaya_app/nilai_ujian_triwulan')),
-        get(ref(db, 'cahaya_app/assesment_triwulan_naqib')),
-        get(ref(db, 'rekap_hafalan')),
-        get(ref(db, 'cahaya_app/absensi_program_harian')),
-        get(ref(db, 'cahaya_app/absensi_pembelajaran')),
-        get(ref(db, 'cahaya_app/poin_manual'))
-      ]);
+  // 2. Mengisi Dropdown Nama Santri
+  window.updateSantri = function() {
+    const program = document.getElementById('tfzProgram').value;
+    const kelompok = document.getElementById('tfzKelompok').value;
+    const namaSelect = document.getElementById('tfzNamaSantri');
+    const sectionForm = document.getElementById('sectionInputData');
+    
+    namaSelect.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    sectionForm.style.display = 'none';
 
-      let targetGuru = namaNaqib !== "-" ? `Naqib ${namaNaqib}` : "Wali Kelas";
+    if (!program || !kelompok) return;
 
-      // ================= A. NILAI AKADEMIK =================
-      const tbody = document.getElementById("tabelNilai");
-      tbody.innerHTML = '';
-      let sumTotal = 0; let countMapel = 0;
+    const key = `${program} ${kelompok}`;
+    const list = dataSantri["Halqah Quraniyah"][key] || [];
 
-      if(nilaiSnap.exists()) {
-        const data = nilaiSnap.val();
-        let no = 1;
-        for (let key in data) {
-          let n = data[key];
-          if(n.nama_santri === tNama && n.tahun_akademik === tAkademik && 
-             n.semester === tSemester && n.triwulan === tTriwulan) {
-             
-             const pred = getPredikat(n.nilai_total);
-             let tr = `<tr>
-                <td class="td-center">${no++}</td>
-                <td class="td-mapel">${n.mata_pelajaran} <br><span style="font-size:7pt;color:var(--text-muted);font-weight:normal">${n.materi_ujian || '-'}</span></td>
-                <td class="td-center">${n.nilai_syafawi}</td>
-                <td class="td-center">${n.nilai_tahriri}</td>
-                <td class="td-center" style="font-size:10pt; color:var(--primary-dark)">${n.nilai_total}</td>
-                <td class="td-center" style="color:${pred.color}">${pred.huruf} (${pred.ket})</td>
-             </tr>`;
-             tbody.innerHTML += tr;
-             sumTotal += n.nilai_total;
-             countMapel++;
-          }
-        }
-      }
+    list.forEach(nama => {
+      const opt = document.createElement('option');
+      opt.value = nama;
+      opt.textContent = nama;
+      namaSelect.appendChild(opt);
+    });
+  };
 
-      if(countMapel === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="td-center" style="color:#ef4444; font-weight:normal; padding:15px;">Data Nilai Akademik tidak ditemukan untuk periode ini.</td></tr>';
-      } else {
-        let avg = (sumTotal / countMapel).toFixed(1);
-        let predAvg = getPredikat(avg);
-        tbody.innerHTML += `
-          <tr class="table-footer">
-            <td colspan="4" style="text-align:right; padding-right:15px;">NILAI RATA-RATA</td>
-            <td class="td-center" style="font-size:10pt; color:var(--primary-dark)">${avg}</td>
-            <td class="td-center" style="color:${predAvg.color}">${predAvg.huruf}</td>
-          </tr>`;
-      }
-
-      // ================= B. SYAHADAH TAHFIZ =================
-      let sumAyat = 0, sumHal = 0, sumJuz = 0;
-      let isCahaya = false;
-      
-      if(tahfizSnap.exists()){
-        const dataT = tahfizSnap.val();
-        for(let key in dataT){
-           if(dataT[key].nama === tNama){
-              sumAyat += dataT[key].ayat || 0;
-              sumHal += dataT[key].halaman || 0;
-              sumJuz += dataT[key].setaraJuz || 0;
-              if(dataT[key].isTahfizCahaya) isCahaya = true;
-           }
-        }
-      }
-
-      // Selalu tampil dengan angka 0 jika kosong
-      document.getElementById("tJuz").textContent = sumJuz.toFixed(2);
-      document.getElementById("tHal").textContent = sumHal;
-      document.getElementById("tAyat").textContent = sumAyat;
-      document.getElementById("badgeTahfizCahaya").style.display = isCahaya ? "block" : "none";
-
-      // ================= C. INDEKS KEDISIPLINAN =================
-      const allStudents = {};
-      const addPoint = (nama, poin, isManual=false) => {
-        if(!allStudents[nama]) allStudents[nama] = { totalMurni: 0, totalAkhir: 0 };
-        if(!isManual) allStudents[nama].totalMurni += poin;
-        allStudents[nama].totalAkhir += poin;
-      };
-
-      const TANGGAL_MULAI = "2024-05-01"; 
-      
-      if(ibadahSnap.exists()) {
-        Object.values(ibadahSnap.val()).forEach(sess => {
-          if(sess.tanggal >= TANGGAL_MULAI && sess.data) {
-            sess.data.forEach(s => addPoint(s.nama, parseInt(s.poin)||0));
-          }
-        });
-      }
-      if(kbmSnap.exists()) {
-        Object.values(kbmSnap.val()).forEach(sess => {
-          if(sess.tanggal >= TANGGAL_MULAI && sess.data) {
-            sess.data.forEach(s => addPoint(s.nama, parseInt(s.poin)||0));
-          }
-        });
-      }
-      
-      let targetDinamis = 0;
-      Object.values(allStudents).forEach(s => { if(s.totalMurni > targetDinamis) targetDinamis = s.totalMurni; });
-      if(targetDinamis === 0) targetDinamis = 1; 
-
-      if(manualSnap.exists()) {
-        Object.values(manualSnap.val()).forEach(log => {
-           addPoint(log.namaSantri, parseInt(log.poin)||0, true);
-        });
-      }
-
-      const mhs = allStudents[tNama] || { totalMurni:0, totalAkhir:0 };
-      let persentase = Math.round((mhs.totalAkhir / targetDinamis) * 100);
-      let predDisiplin = getPredikatDisiplin(persentase);
-      
-      document.getElementById("dPersen").textContent = persentase + "%";
-      document.getElementById("dPredikat").textContent = predDisiplin.label;
-      document.getElementById("dPredikat").style.color = predDisiplin.color;
-      document.getElementById("dPoin").textContent = `Total Poin: ${mhs.totalAkhir}`;
-      document.getElementById("dPersen").style.borderColor = predDisiplin.color;
-      document.getElementById("dPersen").style.color = predDisiplin.color;
-
-      // ================= D. EVALUASI 5 DIMENSI & RTL =================
-      const el = {
-        sp: document.getElementById("nSpiritual"),
-        re: document.getElementById("nRelasional"),
-        em: document.getElementById("nEmosional"),
-        in: document.getElementById("nIntelektual"),
-        fi: document.getElementById("nFisik"),
-        hasil: document.getElementById("rHasil"),
-        fokus: document.getElementById("rFokus"),
-        saran: document.getElementById("rSaran")
-      };
-      
-      for(let key in el) el[key].textContent = "Data asesmen belum diinput oleh Naqib.";
-
-      if(assesSnap.exists()) {
-        const dataA = assesSnap.val();
-        let arrayAsses = Object.values(dataA).filter(a => a.namaSantri === tNama);
-        if(arrayAsses.length > 0) {
-           arrayAsses.sort((a,b) => new Date(b.waktuSimpan) - new Date(a.waktuSimpan));
-           let assesData = arrayAsses[0];
-
-           el.sp.textContent = assesData.narasiSpiritual || "-";
-           el.re.textContent = assesData.narasiRelasional || "-";
-           el.em.textContent = assesData.narasiEmosional || "-";
-           el.in.textContent = assesData.narasiIntelektual || "-";
-           el.fi.textContent = assesData.narasiFisik || "-";
-          
-           let hP = assesData.hasilPerbaikan ? `[${assesData.hasilPerbaikan}] ` : "";
-           el.hasil.textContent = hP + (assesData.evaluasiTriwulanIni || "-");
-          
-           let fokusList = assesData.fokusTriwulanDepan ? assesData.fokusTriwulanDepan.join(", ") : "-";
-           el.fokus.textContent = fokusList;
-          
-           el.saran.textContent = assesData.saranTriwulanDepan || assesData.spesifikTriwulanDepan || "-";
-        }
-      }
-
-      document.getElementById("namaGuru").textContent = targetGuru;
-
-    } catch (error) {
-      console.error(error);
-      alert("Terjadi kesalahan saat memproses integrasi data.");
-    } finally {
-      btn.innerHTML = "🔄 Integrasikan Data"; btn.disabled = false;
+  // 3. Persiapan Form (Reset)
+  window.siapkanForm = function() {
+    const nama = document.getElementById('tfzNamaSantri').value;
+    const sectionForm = document.getElementById('sectionInputData');
+    
+    if (nama) {
+        sectionForm.style.display = 'block';
+        document.getElementById('wadahListSurat').innerHTML = '';
+        tambahBarisSurat(); // Tambah otomatis 1 baris kosong
+        
+        document.getElementById('inputJumlahAyat').value = '';
+        document.getElementById('inputKesalahan').value = '';
+        document.getElementById('inputPredikat').value = '';
+        document.getElementById('inputPredikat').className = 'input-predikat';
+        document.getElementById('inputCatatan').value = '';
+    } else {
+        sectionForm.style.display = 'none';
     }
   };
+
+  // === FITUR MULTI SURAT ===
+  window.tambahBarisSurat = function() {
+    const wadah = document.getElementById('wadahListSurat');
+    const rowId = 'row_' + Date.now();
+    
+    const htmlBaris = `
+      <div class="surat-row" id="${rowId}">
+        <div class="col-surat">
+          <label>📖 Nama Surat</label>
+          <select class="pilih-surat" onchange="setInfoSurat(this)">
+            ${opsiSuratHTML}
+          </select>
+          <span class="ayat-info"></span>
+        </div>
+        <div class="col-ayat">
+          <label>Mulai</label>
+          <input type="number" class="input-mulai" min="1" placeholder="Ayat" oninput="hitungTotalAyat()">
+        </div>
+        <div class="col-ayat">
+          <label>Sampai</label>
+          <input type="number" class="input-sampai" min="1" placeholder="Ayat" oninput="hitungTotalAyat()">
+        </div>
+        <div class="col-hapus">
+          <button type="button" class="btn-hapus" title="Hapus Surat" onclick="hapusBaris('${rowId}')">🗑️</button>
+        </div>
+      </div>
+    `;
+    wadah.insertAdjacentHTML('beforeend', htmlBaris);
+  };
+
+  window.hapusBaris = function(rowId) {
+    const baris = document.getElementById(rowId);
+    const wadah = document.getElementById('wadahListSurat');
+    
+    // Jangan izinkan hapus jika ini adalah satu-satunya baris tersisa
+    if (wadah.children.length > 1) {
+        baris.remove();
+        hitungTotalAyat(); // Hitung ulang setelah dihapus
+    } else {
+        alert("Minimal harus ada 1 surat untuk disetorkan.");
+    }
+  };
+
+  window.setInfoSurat = function(elemenSelect) {
+    const row = elemenSelect.closest('.surat-row');
+    const infoSpan = row.querySelector('.ayat-info');
+    const inputMulai = row.querySelector('.input-mulai');
+    const inputSampai = row.querySelector('.input-sampai');
+    
+    const indexSurat = elemenSelect.value;
+    
+    if (indexSurat === "") {
+        infoSpan.textContent = "";
+        inputMulai.max = ""; inputSampai.max = "";
+    } else {
+        const maxAyat = window.daftarSurat[indexSurat].ayat;
+        infoSpan.textContent = `*Maks: ${maxAyat} ayat`;
+        inputMulai.max = maxAyat;
+        inputSampai.max = maxAyat;
+    }
+    hitungTotalAyat();
+  };
+
+  window.hitungTotalAyat = function() {
+    let grandTotal = 0;
+    const barisSemua = document.querySelectorAll('.surat-row');
+    
+    barisSemua.forEach(row => {
+        const indexSurat = row.querySelector('.pilih-surat').value;
+        const mulaiStr = row.querySelector('.input-mulai').value;
+        const sampaiStr = row.querySelector('.input-sampai').value;
+        
+        if (indexSurat !== "" && mulaiStr !== "" && sampaiStr !== "") {
+            let mulai = parseInt(mulaiStr, 10);
+            let sampai = parseInt(sampaiStr, 10);
+            const maxAyat = window.daftarSurat[indexSurat].ayat;
+
+            // Pastikan tidak melebihi batas ayat surat tersebut
+            if (mulai > maxAyat) mulai = maxAyat;
+            if (sampai > maxAyat) sampai = maxAyat;
+            
+            // Tambahkan ke total jika valid
+            if (sampai >= mulai) {
+                grandTotal += (sampai - mulai) + 1;
+            }
+        }
+    });
+
+    const outputTotal = document.getElementById('inputJumlahAyat');
+    outputTotal.value = grandTotal > 0 ? grandTotal : "";
+  };
+
+  // 4. Logika Hitung Predikat Otomatis
+  window.hitungPredikat = function() {
+    const inputKesalahan = document.getElementById('inputKesalahan');
+    const nilaiInput = document.getElementById('inputPredikat');
+    let salah = parseInt(inputKesalahan.value, 10);
+    
+    if (isNaN(salah) || salah < 0) {
+        salah = 0;
+        inputKesalahan.value = ""; 
+        nilaiInput.value = "";
+        nilaiInput.className = "input-predikat"; 
+        return;
+    }
+
+    nilaiInput.className = "input-predikat";
+
+    let predikat = '';
+    if (salah === 0) {
+        predikat = 'MUMTAZ';
+        nilaiInput.classList.add('pred-mumtaz');
+    } else if (salah >= 1 && salah <= 2) {
+        predikat = 'JAYYID JIDDAN';
+        nilaiInput.classList.add('pred-jayyid');
+    } else if (salah >= 3 && salah <= 4) {
+        predikat = 'JAYYID';
+        nilaiInput.classList.add('pred-jayyid');
+    } else if (salah >= 5 && salah <= 6) {
+        predikat = 'MAQBUL';
+        nilaiInput.classList.add('pred-maqbul');
+    } else {
+        predikat = 'BIMBINGAN';
+        nilaiInput.classList.add('pred-bimbingan');
+    }
+
+    nilaiInput.value = predikat;
+  };
+
+  // 5. Menyimpan Data ke Firebase
+  window.simpanSetoranPerAnak = function() {
+    const tanggal = document.getElementById('tfzTanggal').value;
+    const program = document.getElementById('tfzProgram').value;
+    const kelompok = document.getElementById('tfzKelompok').value;
+    const nama = document.getElementById('tfzNamaSantri').value;
+    
+    const grandTotalAyat = document.getElementById('inputJumlahAyat').value;
+    const kesalahan = document.getElementById('inputKesalahan').value;
+    const predikat = document.getElementById('inputPredikat').value;
+    const catatan = document.getElementById('inputCatatan').value.trim();
+
+    if (!tanggal || !program || !kelompok || !nama) {
+      alert('⚠️ Identitas santri belum lengkap.');
+      return;
+    }
+
+    // --- MENGUMPULKAN SEMUA DATA SURAT ---
+    let arraySetoranString = [];
+    const barisSemua = document.querySelectorAll('.surat-row');
+    
+    for (let i = 0; i < barisSemua.length; i++) {
+        const row = barisSemua[i];
+        const indexSurat = row.querySelector('.pilih-surat').value;
+        const mulai = row.querySelector('.input-mulai').value;
+        const sampai = row.querySelector('.input-sampai').value;
+
+        if (indexSurat === "" || !mulai || !sampai) {
+            alert(`⚠️ Mohon lengkapi isian Surat ke-${i+1} dengan benar.`);
+            return;
+        }
+
+        const namaSuratAsli = window.daftarSurat[indexSurat].nama;
+        arraySetoranString.push(`Surat ${namaSuratAsli} (${mulai}-${sampai})`);
+    }
+
+    if (!grandTotalAyat || grandTotalAyat == 0) {
+        alert('⚠️ Jumlah ayat belum terhitung dengan benar.'); return;
+    }
+    if (predikat === "") {
+        alert('⚠️ Mohon isi jumlah kesalahan.'); return;
+    }
+
+    // Gabungkan array menjadi 1 string: "Surat Al-Fatihah (1-7), Surat Al-Baqarah (1-5)"
+    const formatSetoranLengkap = arraySetoranString.join(", ");
+
+    const btn = document.getElementById('btnSimpanSetoran');
+    btn.innerHTML = "⏳ MENYIMPAN..."; btn.disabled = true;
+
+    const log = {
+      tanggal, program, kelompok, guru: user.username,
+      data: [{ 
+          nama, 
+          setoran: formatSetoranLengkap, 
+          ayat: grandTotalAyat, 
+          kesalahan, 
+          nilai: predikat, 
+          keterangan: catatan 
+      }],
+      waktuSimpan: new Date().toISOString()
+    };
+
+    const setoranRef = ref(db, 'cahaya_app/setoran_tahfiz');
+    push(setoranRef, log)
+      .then(() => {
+        alert(`✅ BERHASIL!\nData setoran atas nama ${nama} telah tersimpan.\n[${formatSetoranLengkap}]`);
+        btn.innerHTML = "💾 SIMPAN DATA SANTRI INI"; btn.disabled = false;
+        
+        document.getElementById('tfzNamaSantri').value = "";
+        siapkanForm();
+      })
+      .catch(err => {
+        console.error(err);
+        alert('❌ Terjadi kesalahan: ' + err.message);
+        btn.innerHTML = "💾 SIMPAN DATA SANTRI INI"; btn.disabled = false;
+      });
+  };
+
+  window.goBack = function() { window.location.href = 'fitur.html'; }; 
+  window.logout = function() { localStorage.removeItem('cahayaCurrentUser'); window.location.href = '../index.html'; };
+  
+  document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
