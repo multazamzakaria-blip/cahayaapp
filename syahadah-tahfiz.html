@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Syahadah Tahfiz - CAHAYA APP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #0f172a;
+      --accent-gold: #b8860b;
+      --bg-color: #f8fafc;
+      --text-main: #1e293b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-main); padding: 20px; }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--accent-gold);
+    }
+
+    h2 { text-align: center; color: var(--primary-dark); margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+    .form-group label { font-weight: 600; }
+    .form-group select {
+      padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;
+      font-family: inherit; font-size: 1rem; outline: none; min-width: 250px;
+    }
+    .form-group select:focus { border-color: var(--accent-gold); }
+
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #e2e8f0; padding: 12px; text-align: center;
+    }
+    th {
+      background-color: var(--primary-dark); color: white; font-weight: 500; font-size: 0.9rem;
+    }
+    .th-reguler { background-color: #1e293b; }
+    .th-cahaya { background-color: #b8860b; }
+    
+    .santri-name { text-align: left; font-weight: 600; }
+    
+    input[type="number"] {
+      width: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-family: inherit;
+    }
+    input[type="number"]:focus { outline: none; border-color: var(--accent-gold); }
+    
+    .juz-auto {
+      font-weight: 700; color: var(--accent-gold); background: #fefce8; padding: 5px 10px; border-radius: 6px; display: inline-block; min-width: 60px;
+    }
+
+    .btn-save {
+      display: block; width: 100%; margin-top: 25px; padding: 15px; background: var(--accent-gold);
+      color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+    }
+    .btn-save:hover { background: #9a7009; }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>📖 Input Syahadah Tahfiz</h2>
+
+  <div class="form-group">
+    <label for="halqah">Pilih Halqah Tahfiz:</label>
+    <select id="halqah" onchange="loadSantri()">
+      <option value="">-- Pilih Halqah --</option>
+      <option value="Tahfiz Abah">Tahfiz Abah</option>
+      <option value="Tahfiz Alvin">Tahfiz Alvin</option>
+      <option value="Tahfiz Fatimah">Tahfiz Fatimah</option>
+    </select>
+  </div>
+
+  <table id="tabelTahfiz">
+    <thead>
+      <tr>
+        <th rowspan="2" width="5%">No</th>
+        <th rowspan="2" width="30%">Nama Santri</th>
+        <th colspan="2" class="th-reguler">Tahfiz Reguler</th>
+        <th colspan="1" class="th-cahaya">Tahfiz Cahaya</th>
+      </tr>
+      <tr>
+        <th class="th-reguler">Jml Halaman</th>
+        <th class="th-reguler">Jml Juz (Auto)</th>
+        <th class="th-cahaya">Jml Ayat</th>
+      </tr>
+    </thead>
+    <tbody id="bodyTahfiz">
+      <tr>
+        <td colspan="5" style="color: #64748b; font-style: italic;">Silakan pilih halqah terlebih dahulu.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button class="btn-save" id="btnSimpan" onclick="simpanData()">💾 Simpan Syahadah</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  // Konfigurasi Firebase Abah
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com",
+    messagingSenderId: "739928369926",
+    appId: "1:739928369926:web:7e95375c3ddba0f584cdd07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ======================
+  // 🕌 DATA SANTRI MASTER
+  // ======================
+  window.dataSantri = {
+    "Halqah Ilmiyah": {
+      "Kelas 1 Putra": ["JUANDA NUR ILHAM","M. ABIL IRWANSYAH","ALIF SAMUDRA","FAHRY AKBAR RAMDHANI","M. USAMAH","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","ANUGRAH PRATAMA","AHMAD FARHAAN","DEDI SETIADI","MOHAMMAD IKHSAN HAIRULI","ALVIN HERFIANTINO","IHZA TRINANDI","ILHAM","RAKA SEPTIAN","CAHYIS ISZAM","DIKKI KURNIAWAN","M. ARYA MAHDI WAFI EL-FAUZANI","EZA FEBRI AL FADZRI","M. DIRGATAMA","VERY SYACH","RADEN AZAA PANCA PUTRA","FAUZAN IBNI JABAR","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA"],
+      "Kelas 2 Putra": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","CANZA RYANDA HUTASUHUT","DAFFA AL MUSYARI","DANANG PRASDITYA SANTOSO","FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","FALIZH DAFFA QATRUNNADA","FEBRI GHALIH AL FAROBI","HAFIDZ AL ROZI","HAFIDZ ALRIZKY","ILHAM MUKMIN AL FARABI","LUTHFAN ADZAKI","MAHESA AULIA GIFFARI","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","M. FIRAAS AL INSYIROH","M. XAVI NF","NABIL NAJMI","NAJMIHADI SYAUQII TAMAAM","NAUFAL AKBAR ALKHATIRI","NIZAM KABISAT","QHEIZAN ALQIZA ARISDA","RENAL MARTIN","REYFAS RAMADHAN","ROHADIN FIRDAUS AL QAUSAR","SATRIO ABIMAYU","TEGAR HIDAYAT","WAHYU REYDINATA","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN","HABIB RAMADHAN"],
+      "Kelas 3 Putra": ["AHMAD MAULANA","ALIF MUHAMMAD YUSUF","ARYA DIFA ALSYA","FARAZH SAYYID PUTRA KENEGA","GHOZY FATURRAHMAN","M. FAQIH HAFIDZALLAH","M. RIJALUL KAMIL","M. AL FALAH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","NAFIS","RAFI RAMADHAN","REYNALDI MALIK IBRAHIM ALFARIDZI","WAFII FADHLURROHMAN"],
+      "Kelas 4 Benih Ulama": ["ANGGA PRATAMA PUTRA","MIKA RAHIEL YUSUF","MELDI NOVRIANSYAH","MARFEL SAPUTRA","PRAWIRO PUJO TUNGGAL JATI"],
+      "Kelas 4 Benih Pengusaha": ["KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI"],
+      "Kelas 1 Putri": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI","ASHIFA FITRI RAMADHONI"],
+      "Kelas 2 Putri": ["EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY"],
+      "Kelas 3 Putri": ["AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"]
+    },
+    "Halqah Lughowiyah": {
+      "Kelas Abah": ["AHMAD MAULANA","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ANDES AFENDRA","ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","BASRI AL HAZIQ ZULFAHMI","DANANG PRASDITYA SANTOSO","M. FAQIH HAFIDZALLAH","FEBRI GHALIH AL FAROBI","FALIZH DAFFA QATRUNNADA","HABIB RAMADHAN","MUHAMMAD ALLAM NUR HUSHAIN","M. AL FALAH","MARFEL SAPUTRA","MELDI NOVRIANSYAH","MIKA RAHIEL YUSUF","NAFIS","RAFI RAMADHAN","M. RAID MAHRUS","REYFAS RAMADHAN","RENAL MARTIN","ROHADIN FIRDAUS AL QAUSAR","M. XAVI NF","PRAWIRO PUJO TUNGGAL JATI"],
+      "Kelas Rahiel": ["NAUFAL AKBAR ALKHATIRI","NIZAM KABISAT","M. RIJALUL KAMIL","DAFFA AL MUSYARI","ALIF SAMUDRA","WAFII FADHLURROHMAN","EZA FEBRI AL FADZRI","M. ABIL IRWANSYAH","SYAHRUL RAMADHAN","HAFIDZ AL ROZI","HAFIDZ ALRIZKY","NAJMIHADI SYAUQII TAMAAM","IHZA TRINANDI","CAHYIS ISZAM","AHMAD FARHAAN","ARYA DIFA ALSYA","M. FADHIL BUANA","WAHYU REYDINATA","FAHRY AKBAR RAMDHANI","ALVIN HERFIANTINO","M. ARYA MAHDI WAFI EL-FAUZANI","RADEN AZAA PANCA PUTRA","FAUZAN IBNI JABAR","REZFY FAKHRYAZKA","M. FAISAL FIKRIANSYAH","QHEIZAN ALQIZA ARISDA"],
+      "Kelas Alvin": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA"],
+      "Kelas Falah": ["FAHRIE OKTAVIRANO FITRIS","FAKHRI AL MUZAKKI","CANZA RYANDA HUTASUHUT","M. DIRGATAMA","LUTHFAN ADZAKI","FARAZH SAYYID PUTRA KENEGA","ZULFAKIH HAERUNNASIHIN","MUHAMAD YUSUF ARROSIYD","ROID AFDAL","MOHAMMAD IKHSAN HAIRULI","ZAHIR ZIBRAN","NABIL NAJMI","DEDI SETIADI","ANUGRAH PRATAMA","SATRIO ABIMAYU","TEGAR HIDAYAT","ABDULLAH MUKTI HAFIDZALLAH","ILHAM","ILHAM MUKMIN AL FARABI","JUANDA NUR ILHAM","RAKA SEPTIAN","M. FIRAAS AL INSYIROH","GHOZY FATURRAHMAN","REYNALDI MALIK IBRAHIM ALFARIDZI","M. USAMAH","MAHESA AULIA GIFFARI","DIKKI KURNIAWAN","VERY SYACH"],
+      "Kelas Meilisa": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI"],
+      "Kelas Fatimah": ["ASHIFA FITRI RAMADHONI","EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"],
+      "Kelas Evita": ["PITRI RAMADANI","ADIBA AILA KHANZA","AISYAH NUR KHALIFAH","AISYAH NURUL AULIA","ANISYA SEPTIANI","DAFIA NAFLA SYAKIRA","DINA RUHAYAH","FITRAH KIRANA","INAYAH NOURAH ANINDYA","SHELENA","WINDY WINDARI","ASHIFA FITRI RAMADHONI","EARLYTA ARSYFA SALSABILA","GHENIS ANDIENTIAZ","GRINNETA NALANI PUTRI","JESSICA PUTRY AYRA","QELZA RAMADHANI ATH THAHIRAH","WILDA","NESSYA RAMADHANY","AMIRAH BALQIS RAHADATUL A'ISYAH","BILQIS NUR ANISAH","NYAYU MARLITSA ARDHANI"]
+    },
+    "Halqah Quraniyah": {
+      "Tahfiz Abah": ["M. AL FALAH", "MIKA RAHIEL YUSUF", "ANGGA PRATAMA PUTRA", "NIZAM KABISAT", "PRAWIRO PUJO TUNGGAL JATI", "MAHESA AULIA GIFFARI", "NAJMIHADI SYAUQII TAMAAM", "MARFEL SAPUTRA", "MELDI NOVRIANSYAH", "RENAL MARTIN", "AHMAD RIYADI", "ABDULLAH MUKTI HAFIDZALLAH", "AKBAR PRAYOGA", "ANDES AFENDRA", "BASRI AL HAZIQ ZULFAHMI", "CANZA RYANDA HUTASUHUT", "DAFFA AL MUSYARI", "DANANG PRASDITYA SANTOSO", "FAKHRI AL MUZAKKI", "FALIZH DAFFA QATRUNNADA", "FEBRI GHALIH AL FAROBI", "HAFIDZ AL ROZI", "HAFIDZ ALRIZKY", "ILHAM MUKMIN AL FARABI", "LUTHFAN ADZAKI", "DIKKI KURNIAWAN", "ROID AFDAL", "IHZA TRINANDI", "ILHAM", "KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI", "FAHRIE OKTAVIRANO FITRIS"],
+      "Tahfiz Alvin": ["AHMAD MAULANA", "ALIF MUHAMMAD YUSUF", "ARYA DIFA ALSYA", "FARAZH SAYYID PUTRA KENEGA", "GHOZY FATURRAHMAN", "M. FAQIH HAFIDZALLAH", "M. RIJALUL KAMIL", "MUHAMMAD ALLAM NUR HUSHAIN", "M. RAID MAHRUS", "NAFIS", "RAFI RAMADHAN", "REYNALDI MALIK IBRAHIM ALFARIDZI", "WAFII FADHLURROHMAN", "M. FADHIL BUANA", "M. FIRAAS AL INSYIROH", "M. XAVI NF", "NABIL NAJMI", "NAUFAL AKBAR ALKHATIRI", "QHEIZAN ALQIZA ARISDA", "REYFAS RAMADHAN", "ROHADIN FIRDAUS AL QAUSAR", "SATRIO ABIMAYU", "WAHYU REYDINATA", "ZAHIR ZIBRAN", "ZULFAKIH HAERUNNASIHIN", "HABIB RAMADHAN", "MUHAMAD YUSUF ARROSIYD", "VERY SYACH", "M. FAISAL FIKRIANSYAH", "TEGAR HIDAYAT"],
+      "Tahsin Faiq": ["DARREN ATHAYA", "M. AQIL RIDHO", "ALIF SAMUDRA", "M. ABIL IRWANSYAH", "FAUZAN IBNI JABAR", "M. IZAM SAPUTRA", "BRILLY HANDRIAN", "M. SYAKIR HUTABARAT", "DZIKRI MUDHOFFAR", "FADIL NURHALIM", "RAFA", "AIRLANGGA AZKA ABQORI", "M. YASIR AL FAZAR JHIRA", "AQIELA MARSYAH", "ADITYA PUTRA IBRAHIM"],
+      "Tahsin Khaizuran": ["REZFY FAKHRYAZKA", "ALVIN HERFIANTINO", "AHMAD FARHAAN", "DEDI SETIADI", "SYAHRUL RAMADHAN", "M. USAMAH", "ANUGRAH PRATAMA", "RAKA SEPTIAN", "CAHYIS ISZAM", "GABRIEL AL FATIH", "M. ZIYAD ZHAZHA", "ELLENO QUTHBIE HERMAWAN", "MOHAMMAD IKHSAN HAIRULI", "FAHRY AKBAR RAMDHANI"],
+      "Tahsin Fahmi": ["EZA FEBRI AL FADZRI", "M. ARYA MAHDI WAFI EL-FAUZANI", "RADEN AZAA PANCA PUTRA", "M. DIRGATAMA", "MIKO VAJAR", "M. ALMISKY PRATAMA", "HADINATA SAPUTRA", "JUANDA NUR ILHAM"],
+      "Tahfiz Fatimah": ["WILDA", "NESSYA RAMADHANY", "GHENIS ANDIENTIAZ", "JESSICA PUTRY AYRA", "NYAYU MARLITSA ARDHANI", "GRINNETA NALANI PUTRI", "AMIRAH BALQIS RAHADATUL A'ISYAH", "BILQIS NUR ANISAH", "QELZA RAMADHANI ATH THAHIRAH"],
+      "Tahsin Meilisa": ["PITRI RAMADANI", "ADIBA AILA KHANZA", "AISYAH NUR KHALIFAH", "AISYAH NURUL AULIA", "ANISYA SEPTIANI", "DAFIA NAFLA SYAKIRA", "DINA RUHAYAH", "FITRAH KIRANA", "INAYAH NOURAH ANINDYA", "SHELENA", "WINDY WINDARI", "ASHIFA FITRI RAMADHONI", "EARLYTA ARSYFA SALSABILA"]
+    }
+  };
+
+  // Fungsi memuat tabel santri
+  window.loadSantri = function() {
+    const halqah = document.getElementById('halqah').value;
+    const tbody = document.getElementById('bodyTahfiz');
+    tbody.innerHTML = ''; 
+
+    if (!halqah || !window.dataSantri["Halqah Quraniyah"][halqah]) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color: #64748b; font-style: italic;">Silakan pilih halqah terlebih dahulu.</td></tr>';
+      return;
+    }
+
+    // Sortir nama santri sesuai abjad agar rapi
+    const listSantri = [...window.dataSantri["Halqah Quraniyah"][halqah]].sort((a, b) => a.localeCompare(b));
+    
+    listSantri.forEach((nama, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td class="santri-name">${nama}</td>
+        
+        <td>
+          <input type="number" min="0" placeholder="0" class="input-hal" oninput="hitungJuz(this)">
+        </td>
+        <td>
+          <span class="juz-auto">0.00</span>
+        </td>
+
+        <td>
+          <input type="number" min="0" placeholder="0" class="input-ayat">
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  };
+
+  // Fungsi otomatis hitung Juz
+  window.hitungJuz = function(element) {
+    const tr = element.closest('tr');
+    const halaman = parseFloat(element.value) || 0;
+    const juzText = tr.querySelector('.juz-auto');
+    
+    const hitung = halaman / 20;
+    juzText.textContent = hitung.toFixed(2);
+  };
+
+  // Fungsi Simpan ke Firebase (Deduplikasi)
+  window.simpanData = async function() {
+    const halqah = document.getElementById('halqah').value;
+    if(!halqah) {
+      alert("Pilih halqah terlebih dahulu!");
+      return;
+    }
+
+    const rows = document.querySelectorAll('#bodyTahfiz tr');
+    if(rows.length === 0 || rows[0].cells.length === 1) return;
+
+    const btnSimpan = document.getElementById('btnSimpan');
+    btnSimpan.innerHTML = "⏳ Menyimpan Data...";
+    btnSimpan.disabled = true;
+
+    try {
+      const syahadahRef = ref(db, 'cahaya_app/syahadah_tahfiz');
+      const snapshot = await get(syahadahRef);
+      const dataLama = snapshot.exists() ? snapshot.val() : {};
+
+      let count = 0;
+      let promises = [];
+
+      rows.forEach(tr => {
+        const nama = tr.querySelector('.santri-name').innerText;
+        const hal = tr.querySelector('.input-hal').value;
+        const juz = tr.querySelector('.juz-auto').innerText;
+        const ayat = tr.querySelector('.input-ayat').value;
+
+        // Hanya simpan jika ada isian (halaman ATAU ayat tidak kosong)
+        if (hal !== "" || ayat !== "") {
+          
+          // 1. CEK DATA LAMA, JIKA ADA SANTRI YANG SAMA, HAPUS DULU (REPLACE)
+          for (let key in dataLama) {
+            if (dataLama[key].nama_santri === nama) {
+               promises.push(remove(ref(db, `cahaya_app/syahadah_tahfiz/${key}`)));
+            }
+          }
+
+          // 2. SIAPKAN DATA BARU
+          const dataToSave = {
+            nama_santri: nama,
+            kategori_halqah: halqah,
+            reguler_halaman: hal ? parseFloat(hal) : 0,
+            reguler_juz: parseFloat(juz) || 0,
+            cahaya_ayat: ayat ? parseFloat(ayat) : 0,
+            timestamp: new Date().toISOString()
+          };
+          
+          // Push simpan data baru
+          promises.push(push(syahadahRef, dataToSave));
+          count++;
+        }
+      });
+
+      if (count > 0) {
+        // TUNGGU SEMUA PROSES HAPUS DAN SIMPAN SELESAI
+        await Promise.all(promises);
+        
+        alert(`✅ Alhamdulillah, ${count} data Syahadah untuk Halqah ${halqah} berhasil disimpan ke database!`);
+        document.getElementById('halqah').value = "";
+        window.loadSantri();
+      } else {
+        alert("⚠️ Belum ada nilai halaman atau ayat yang diisi.");
+      }
+
+    } catch (error) {
+      alert("⚠️ Terjadi kesalahan saat menyimpan: " + error.message);
+    } finally {
+      btnSimpan.innerHTML = "💾 Simpan Syahadah";
+      btnSimpan.disabled = false;
+    }
+  };
+</script>
+
+</body>
+</html>
