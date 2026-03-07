@@ -208,7 +208,7 @@
         <div class="menu-desc">Input nilai Syafawi dan Tahriri ujian triwulan.</div>
       </div>
 
-      <div class="menu-item" onclick="window.location.href='inputTotalHafalan.html'">
+      <div class="menu-item" onclick="window.location.href='../syahadah-tahfiz.html'">
         <div class="menu-icon">📜</div>
         <div class="menu-title">Input Total Hafalan</div>
         <div class="menu-desc">Input total capaian hafalan juz dan ayat santri.</div>
@@ -234,25 +234,28 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 getAuth(app);
 
-// === Set Info User Header ===
-document.addEventListener('DOMContentLoaded', () => {
-    const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{}');
-    if(!user || user.role !== 'guru') {
-        alert("Sesi habis. Silakan login kembali.");
-        window.location.href = '../index.html';
-        return;
+// Menjalankan script langsung tanpa menunggu DOMContentLoaded
+const user = JSON.parse(localStorage.getItem('cahayaCurrentUser') || '{}');
+if(!user || user.role !== 'guru') {
+    alert("Sesi habis. Silakan login kembali.");
+    window.location.href = '../index.html';
+} else {
+    let namaGuru = "";
+    
+    // Prioritaskan mengambil Label Lengkap
+    if (user.label) { 
+        namaGuru = user.label.replace(/^Mu'?allim(ah)?\s+|^Naqib(ah)?\s+|^Mrs\s+/i, "").trim(); 
+    } 
+    else if (user.username) { 
+        namaGuru = user.username.charAt(0).toUpperCase() + user.username.slice(1);
     }
 
-    let namaGuru = "";
-    if (user.username) { namaGuru = user.username; } 
-    else if (user.label) { namaGuru = user.label.replace(/^Mu'?allim(ah)?\s+|^Naqib(ah)?\s+|^Mrs\s+/i, "").trim(); }
-
-    namaGuru = namaGuru.charAt(0).toUpperCase() + namaGuru.slice(1);
-    
-    // Ganti sapaan berdasarkan nama
     let sapaan = `Ahlan, Mu'allim ${namaGuru}`;
-    if(namaGuru === 'Fatimah' || namaGuru === 'Evita' || namaGuru === 'Meilisa') {
+    
+    if(/Fatimah|Evita|Meilisa/i.test(namaGuru)) {
         sapaan = `Ahlan, Mu'allimah ${namaGuru}`;
+    } else if (/Abah/i.test(namaGuru)) {
+        sapaan = `Ahlan, ${namaGuru}`;
     }
 
     document.getElementById("guruTitle").textContent = sapaan;
@@ -261,11 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("userInfoDesk").style.display = 'block';
         document.getElementById("headerUser").textContent = namaGuru;
     }
-});
+}
 
 /* ================= NAVIGASI ================= */
 window.goBack = function(){
-  window.location.href = '../index.html'; // atau sesuaikan dengan halaman beranda utama Abah
+  window.location.href = '../index.html';
 }
 
 window.logout = function(){
