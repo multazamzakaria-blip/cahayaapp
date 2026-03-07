@@ -99,10 +99,10 @@
     .stat-num { font-size: 2.5rem; font-weight: 700; color: var(--accent-gold-light); line-height: 1; margin-bottom: 5px; font-family: 'Playfair Display'; }
     .stat-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* MENU GRID (1 Baris 4 Kolom untuk Laptop) */
+    /* MENU GRID */
     .menu-grid { 
       display: grid; 
-      grid-template-columns: repeat(4, 1fr); 
+      grid-template-columns: repeat(3, 1fr); 
       gap: 25px; 
     }
     
@@ -132,56 +132,6 @@
     .menu-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
     .menu-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
-    .card-form {
-      background: var(--glass-bg); backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 24px;
-      padding: 40px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
-    }
-    .card-form h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--accent-gold); margin-bottom: 5px; }
-    .card-form p { color: var(--text-muted); margin-bottom: 30px; font-size: 0.95rem; }
-
-    label { display: block; font-weight: 600; margin-top: 20px; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-    
-    select, input[type="text"], input[type="date"] {
-      width: 100%; padding: 14px 20px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4);
-      color: white; font-family: inherit; font-size: 1rem;
-      transition: all 0.3s; outline: none;
-    }
-    select:focus, input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); background: rgba(0,0,0,0.6); }
-    select option { background: var(--primary-blue); color: white; }
-    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
-
-    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
-    th { background: rgba(255,255,255,0.02); color: var(--text-muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; padding: 12px 15px; text-align: left; }
-    td { background: rgba(255,255,255,0.03); color: var(--text-main); padding: 15px; border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
-    tr td:first-child { border-radius: 12px 0 0 12px; border-left: 1px solid transparent; }
-    tr td:last-child { border-radius: 0 12px 12px 0; border-right: 1px solid transparent; }
-    tr:hover td { background: rgba(255,255,255,0.06); }
-
-    td input[type="number"] {
-      width: 80px; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(0,0,0,0.3); color: var(--accent-gold-light); font-weight: bold; text-align: center;
-      font-size: 1.1rem; font-family: inherit; outline: none; transition: 0.3s;
-    }
-    td input[type="number"]:focus { border-color: var(--accent-gold); box-shadow: 0 0 10px rgba(212,175,55,0.3); background: rgba(0,0,0,0.6); }
-
-    .btn-action-group { display: flex; gap: 15px; margin-top: 40px; }
-    .btn-primary {
-      flex: 2; background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
-      color: var(--primary-dark); font-family: 'Playfair Display', serif; font-weight: 700;
-      font-size: 1.1rem; letter-spacing: 1px; border: none; border-radius: 12px; padding: 16px;
-      cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-    }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5); filter: brightness(1.1); }
-    
-    .btn-secondary {
-      flex: 1; background: rgba(255,255,255,0.05); color: var(--text-main);
-      border: 1px solid rgba(255,255,255,0.2); font-family: inherit; font-weight: 600;
-      border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.3s;
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
-
     .hidden { display: none !important; }
 
     @media (max-width: 768px) {
@@ -195,9 +145,6 @@
       .menu-icon { font-size: 2.5rem; margin-bottom: 12px; }
       .menu-title { font-size: 1.05rem; margin-bottom: 6px; }
       .menu-desc { font-size: 0.75rem; line-height: 1.3; }
-
-      .card-form { padding: 30px 20px; }
-      .btn-action-group { flex-direction: column; }
     }
   </style>
 </head>
@@ -232,7 +179,7 @@
         <div class="stat-label">Rumpun Kelas</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num" id="jmlMenuAktif">4</div> <div class="stat-label">Akses Menu Aktif</div>
+        <div class="stat-num" id="jmlMenuAktif">5</div> <div class="stat-label">Akses Menu Aktif</div>
       </div>
     </div>
 
@@ -255,86 +202,23 @@
         <div class="menu-desc">Pantau capaian setoran harian & grafik tren.</div>
       </div>
 
-      <div class="menu-item" onclick="showSection('inputNilaiPage')">
-        <div class="menu-icon">🧾</div>
-        <div class="menu-title">Nilai Ujian</div>
-        <div class="menu-desc">Input nilai ujian dan evaluasi akademik.</div>
+      <div class="menu-item" onclick="window.location.href='nilai-triwulan.html'">
+        <div class="menu-icon">🏆</div>
+        <div class="menu-title">Input Nilai Triwulan</div>
+        <div class="menu-desc">Input nilai Syafawi dan Tahriri ujian triwulan.</div>
       </div>
-    </div>
-  </div>
 
-  <div id="inputNilaiPage" class="card-form hidden">
-    <h3>🧾 Input Nilai Ujian</h3>
-    <p>Isi nilai ujian santri berdasarkan klasifikasi kelas dan mata pelajaran.</p>
-
-    <label>Rumpun Kelas</label>
-    <select id="nilaiKelas" onchange="updateKelompokNilai()">
-      <option value="">-- Pilih Rumpun --</option>
-      <option value="Keilmuan Islam & Umum">Keilmuan Islam & Umum</option>
-      <option value="Bahasa Internasional">Bahasa Internasional</option>
-      <option value="Tahsin & Tahfiz Al-Qur'an">Tahsin & Tahfiz Al-Qur'an</option>
-    </select>
-
-    <div id="subProgramWrapper" class="hidden">
-      <label>Sub Program Spesifik</label>
-      <select id="nilaiSubProgram" onchange="updateKelompokNilai(); loadSantriUjian();">
-        <option value="">-- Pilih Program --</option>
-        <option value="Tahsin">Tahsin</option>
-        <option value="Tahfiz">Tahfiz</option>
-      </select>
-    </div>
-
-    <label>Kelompok / Kelas</label>
-    <select id="nilaiKelompok" onchange="loadSantriUjian()">
-      <option value="">-- Menunggu Rumpun --</option>
-    </select>
-
-    <label>Mata Pelajaran</label>
-    <select id="nilaiMapel">
-      <option value="">-- Menunggu Rumpun --</option>
-    </select>
-
-    <div style="display:flex; gap:15px; flex-wrap:wrap;">
-      <div style="flex:1; min-width:200px;">
-        <label>Bulan Evaluasi</label>
-        <select id="nilaiBulan">
-          <option value="">-- Pilih Bulan --</option>
-          <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
-          <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
-          <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
-          <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
-        </select>
+      <div class="menu-item" onclick="window.location.href='inputTotalHafalan.html'">
+        <div class="menu-icon">📜</div>
+        <div class="menu-title">Input Total Hafalan</div>
+        <div class="menu-desc">Input total capaian hafalan juz dan ayat santri.</div>
       </div>
-      <div style="flex:1; min-width:200px;">
-        <label>Tanggal Pelaksanaan</label>
-        <input type="date" id="nilaiTanggal">
-      </div>
-    </div>
-
-    <label>Materi / Topik Ujian</label>
-    <input type="text" id="nilaiMateri" placeholder="Contoh: Bab Shalat / Ujian Tengah Semester">
-
-    <h4 style="margin-top: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom:10px;">Daftar Santri & Penilaian</h4>
-    <table id="tabelNilaiSantri">
-      <thead>
-        <tr><th width="10%">No</th><th width="60%">Nama Lengkap</th><th width="30%" style="text-align:center;">Skor Nilai</th></tr>
-      </thead>
-      <tbody id="nilaiSantriBody">
-        <tr><td colspan="3" style="text-align:center;color:#64748b;font-style:italic;padding:30px;">Pilih kelas & kelompok untuk menampilkan daftar santri.</td></tr>
-      </tbody>
-    </table>
-
-    <div class="btn-action-group">
-      <button class="btn-secondary" onclick="goBack()">Batalkan</button>
-      <button class="btn-primary" onclick="simpanNilaiUjian()">💾 Simpan Ke Database</button>
     </div>
   </div>
 </main>
 
-<script src="./dataSantri.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -348,7 +232,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 getAuth(app);
 
 // === Set Info User Header ===
@@ -378,157 +261,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("userInfoDesk").style.display = 'block';
         document.getElementById("headerUser").textContent = namaGuru;
     }
-    
-    document.getElementById('nilaiTanggal').value = new Date().toISOString().split('T')[0];
 });
 
 /* ================= NAVIGASI ================= */
-window.showSection = function(id){
-  document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-}
-
 window.goBack = function(){
-  document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
-  document.getElementById('dashboard').classList.remove('hidden');
+  window.location.href = '../index.html'; // atau sesuaikan dengan halaman beranda utama Abah
 }
 
 window.logout = function(){
   localStorage.removeItem('cahayaCurrentUser');
   window.location.href = '../index.html';
-}
-
-/* ================= UPDATE KELOMPOK ================= */
-window.updateKelompokNilai = function(){
-  const kelas = document.getElementById('nilaiKelas').value;
-  const subProgram = document.getElementById('nilaiSubProgram').value;
-  const kelompokSelect = document.getElementById('nilaiKelompok');
-  const subProgramWrapper = document.getElementById('subProgramWrapper');
-  const mapelSelect = document.getElementById('nilaiMapel');
-
-  kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-  mapelSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
-  subProgramWrapper.classList.add('hidden');
-
-  if(!kelas) return;
-
-  if(kelas === "Keilmuan Islam & Umum"){
-    const kategori = dataSantri[kelas];
-    Object.keys(kategori).forEach(k=>{
-      const opt = document.createElement('option');
-      opt.value = k; opt.textContent = k;
-      kelompokSelect.appendChild(opt);
-    });
-    ['Fiqih','Akidah','Adab','Nahwu','Sirah','Sharaf','Balaghah','Kewirausahaan','Metode Pengajaran'].forEach(m=>{
-      const opt=document.createElement('option'); opt.value=m; opt.textContent=m; mapelSelect.appendChild(opt);
-    });
-  }
-  else if(kelas === "Bahasa Internasional"){
-    const kategori = dataSantri[kelas];
-    Object.keys(kategori).forEach(k=>{
-      const opt = document.createElement('option');
-      opt.value = k; opt.textContent = k;
-      kelompokSelect.appendChild(opt);
-    });
-    ['Bahasa Arab','Bahasa Inggris'].forEach(m=>{
-      const opt=document.createElement('option'); opt.value=m; opt.textContent=m; mapelSelect.appendChild(opt);
-    });
-  }
-  else if(kelas === "Tahsin & Tahfiz Al-Qur'an"){
-    subProgramWrapper.classList.remove('hidden');
-    if(!subProgram) return;
-    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
-    Object.keys(kategori).forEach(key => {
-      if(key.startsWith(subProgram)){
-        const opt = document.createElement('option');
-        opt.value = key; opt.textContent = key;
-        kelompokSelect.appendChild(opt);
-      }
-    });
-    ['Tahsin','Tahfiz'].forEach(m=>{
-      const opt=document.createElement('option'); opt.value=m; opt.textContent=m; mapelSelect.appendChild(opt);
-    });
-  }
-}
-
-/* ================= LOAD SANTRI ================= */
-window.loadSantriUjian = function(){
-  const kelas = document.getElementById('nilaiKelas').value;
-  const kelompok = document.getElementById('nilaiKelompok').value;
-  const tbody = document.getElementById('nilaiSantriBody');
-  tbody.innerHTML = '';
-
-  if(!kelas || !kelompok){
-    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#64748b;font-style:italic;">Silakan lengkapi pilihan di atas.</td></tr>';
-    return;
-  }
-
-  let list = [];
-  if(kelas === "Tahsin & Tahfiz Al-Qur'an"){
-    const kategori = dataSantri["Tahsin & Tahfiz Al-Qur'an"];
-    list = kategori[kelompok] || [];
-  } else {
-    const kategori = dataSantri[kelas];
-    list = kategori[kelompok] || [];
-  }
-
-  if(list.length === 0){
-    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#f87171;">Tidak ada santri di kelompok ini.</td></tr>';
-    return;
-  }
-
-  list.forEach((nama,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td>${i+1}</td>
-      <td style="font-weight:500;">${nama}</td>
-      <td style="text-align:center;"><input type="number" min="0" max="100" value="0" data-nama="${nama}"></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-/* ================= SIMPAN NILAI ================= */
-window.simpanNilaiUjian = async function(){
-  const kelas=document.getElementById('nilaiKelas').value;
-  const subProgram=document.getElementById('nilaiSubProgram').value || '-';
-  const kelompok=document.getElementById('nilaiKelompok').value;
-  const mapel=document.getElementById('nilaiMapel').value.trim();
-  const bulan=parseInt(document.getElementById('nilaiBulan').value,10);
-  const materi=document.getElementById('nilaiMateri').value.trim();
-  const tanggal=document.getElementById('nilaiTanggal').value;
-
-  if(!kelas || !kelompok || !mapel || isNaN(bulan) || !materi || !tanggal){
-    alert("⚠️ Mohon lengkapi semua isian terlebih dahulu!");
-    return;
-  }
-
-  const inputs = document.querySelectorAll('#tabelNilaiSantri input[type=number]');
-  if(inputs.length === 0) { alert("Tidak ada data santri untuk disimpan."); return;}
-
-  const btn = document.querySelector('.btn-primary');
-  btn.innerHTML = "⏳ MENYIMPAN..."; btn.disabled = true;
-
-  const nilaiRef=ref(db,'cahaya_app/nilai_ujian');
-  let count=0;
-
-  try {
-    for(const inp of inputs){
-      const nama=inp.dataset.nama;
-      const nilai=parseInt(inp.value||"0");
-
-      await push(nilaiRef,{
-        santri:nama, kelas, subProgram, kelompok, mapel, bulan, materi, tanggal, nilai, timestamp:Date.now()
-      });
-      count++;
-    }
-    alert(`✅ BERHASIL!\n${count} data nilai ujian telah tersimpan di sistem.`);
-    goBack();
-  } catch(e) {
-    alert("Terjadi kesalahan: " + e.message);
-  } finally {
-    btn.innerHTML = "💾 Simpan Ke Database"; btn.disabled = false;
-  }
 }
 </script>
 
