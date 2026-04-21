@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAHAYA APP – Slideshow Putra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #020617;
+      --primary-blue: #0f172a;
+      --accent-gold: #d4af37;
+      --accent-gold-light: #fef08a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue), #1e293b);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23d4af37' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: -1;
+    }
+
+    header {
+      padding: 30px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .app-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent-gold); letter-spacing: 2px; }
+    .header-right { text-align: right; }
+    .date-display { font-size: 1.2rem; color: var(--text-muted); font-weight: 300; margin-bottom: 5px;}
+    
+    .benchmark-global {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 5px 15px;
+      border-radius: 50px;
+      display: inline-block;
+      font-weight: 600;
+      color: var(--accent-gold-light);
+      font-size: 1.1rem;
+    }
+
+    main { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+
+    #statusMessage { font-size: 2rem; color: var(--text-muted); font-style: italic; animation: pulse 2s infinite; text-align: center; padding: 0 20px; }
+    @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+    .slide-container {
+      width: 95%; max-width: 1300px; display: flex; gap: 50px;
+      opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); position: absolute;
+    }
+    .slide-container.active { opacity: 1; transform: translateY(0); }
+
+    .profile-side {
+      flex: 1; background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05));
+      border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 30px;
+      padding: 50px 40px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;
+    }
+    .profile-side::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    }
+    
+    .santri-usrah { color: var(--accent-gold); font-size: 1.5rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; font-weight: 600; }
+    .santri-name { font-family: 'Playfair Display', serif; font-size: 3.5rem; line-height: 1.2; margin-bottom: 10px; color: white; }
+    
+    .predikat-badge {
+      display: inline-block; padding: 8px 25px; border-radius: 50px; font-weight: 700; letter-spacing: 2px;
+      font-size: 1.2rem; margin-bottom: 20px; border: 1px solid; text-transform: uppercase;
+    }
+
+    .point-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
+    .point-label { font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;}
+    .total-point { font-size: 7rem; font-weight: 800; line-height: 1; margin: 10px 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    
+    .progress-wrapper { margin-top: 20px; text-align: left; }
+    .progress-header { display: flex; justify-content: space-between; font-size: 0.95rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 600;}
+    .progress-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.6); border-radius: 20px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+    .progress-bar-fill { height: 100%; border-radius: 20px; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    .point-plus { color: #34d399; } .point-minus { color: #f87171; } .point-netral { color: #94a3b8; } .point-zero { color: #64748b; }
+
+    .detail-side { flex: 1.2; display: flex; flex-direction: column; justify-content: center; }
+    .detail-title { font-size: 1.8rem; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .detail-subtitle { font-size: 1rem; color: var(--text-muted); font-weight: 400; font-family: 'Poppins', sans-serif;}
+    
+    .rincian-list { display: flex; flex-direction: column; gap: 15px; max-height: 65vh; overflow-y: auto; padding-right: 15px; }
+    .rincian-list::-webkit-scrollbar { width: 6px; }
+    .rincian-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+    .rincian-list::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
+
+    .rincian-item {
+      background: rgba(0,0,0,0.4); border-left: 4px solid; padding: 18px 25px; border-radius: 0 15px 15px 0;
+      display: flex; justify-content: space-between; align-items: center; animation: slideInLeft 0.5s ease backwards;
+      border-top: 1px solid rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+    @keyframes slideInLeft { from { opacity:0; transform: translateX(-30px); } to { opacity:1; transform: translateX(0); } }
+    
+    .rincian-kegiatan { font-size: 1.4rem; font-weight: 600; color: white; }
+    .rincian-status { font-size: 1rem; margin-top: 5px; font-weight: 500; }
+    .rincian-nilai { font-size: 2.2rem; font-weight: 800; font-family: 'Playfair Display', serif;}
+
+    .item-plus { border-left-color: #34d399; } .item-minus { border-left-color: #f87171; } .item-zero { border-left-color: #64748b; opacity: 0.8; }
+    .status-badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.85rem; margin-top: 6px; background: rgba(255,255,255,0.05); color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="app-title">CAHAYA MONITORING (PUTRA)</div>
+  <div class="header-right">
+    <div class="date-display" id="dateDisplay">Memuat Tanggal...</div>
+    <div class="benchmark-global" id="benchmarkDisplay">🏆 Benchmark: Menunggu Data</div>
+  </div>
+</header>
+
+<main id="mainScreen">
+  <div id="statusMessage">Menyinkronkan Data Terkini...</div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Ez2a85ZwQLR28U-yHpVmM3o8NMxZoLI",
+    authDomain: "absensi-santri-fajrul-islam.firebaseapp.com",
+    databaseURL: "https://absensi-santri-fajrul-islam-default-rtdb.firebaseio.com",
+    projectId: "absensi-santri-fajrul-islam",
+    storageBucket: "absensi-santri-fajrul-islam.appspot.com"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // KHUSUS PUTRA
+  const MASTER_SANTRI = {
+    "Kamal": ["ADITYA PUTRA IBRAHIM","AIRLANGGA AZKA ABQORI","AQIELA MARSYAH","BRILLY HANDRIAN","DARREN ATHAYA","DZIKRI MUDHOFFAR","ELLENO QUTHBIE HERMAWAN","FADIL NURHALIM","GABRIEL AL FATIH","HADINATA SAPUTRA","MIKO VAJAR","M. ALMISKY PRATAMA","M. AQIL RIDHO","M. IZAM SAPUTRA","M. SYAKIR HUTABARAT","M. YASIR AL FAZAR JHIRA","M. ZIYAD ZHAZHA","RAFA","WAHYU REYDINATA","NIZAM KABISAT","JUANDA NUR ILHAM","M. DIRGATAMA","DAFFA AL MUSYARI","MOHAMMAD IKHSAN HAIRULI","REYFAS RAMADHAN","FALIZH DAFFA QATRUNNADA","HAFIDZ AL ROZI","CANZA RYANDA HUTASUHUT","NAJMIHADI SYAUQII TAMAAM","EZA FEBRI AL FADZRI"],
+    "Favian": ["ABDULLAH MUKTI HAFIDZALLAH","AHMAD RIYADI","AKBAR PRAYOGA","ALIF MUHAMMAD YUSUF","ALVIN HERFIANTINO","ANDES AFENDRA","BASRI AL HAZIQ ZULFAHMI","AHMAD MAULANA","DANANG PRASDITYA SANTOSO","DEDI SETIADI","DIKKI KURNIAWAN","FAKHRI AL MUZAKKI","FEBRI GHALIH AL FAROBI","GHOZY FATURRAHMAN","ILHAM MUKMIN AL FARABI","M. AL FALAH","M. FAQIH HAFIDZALLAH","M. FIRAAS AL INSYIROH","MUHAMMAD ALLAM NUR HUSHAIN","M. RAID MAHRUS","M. RIJALUL KAMIL","NABIL NAJMI","RADEN AZAA PANCA PUTRA","RAFI RAMADHAN","SATRIO ABIMAYU","TEGAR HIDAYAT","VERY SYACH","WAFII FADHLURROHMAN","ZAHIR ZIBRAN","ZULFAKIH HAERUNNASIHIN"],
+    "Regen": ["ANGGA PRATAMA PUTRA","KI AGUS MUHAMMAD ABDULLAH SHIDDIQ AGTSALI","MIKA RAHIEL YUSUF","PRAWIRO PUJO TUNGGAL JATI","M. XAVI NF","REYNALDI MALIK IBRAHIM ALFARIDZI","FAHRIE OKTAVIRANO FITRIS","FARAZH SAYYID PUTRA KENEGA","LUTHFAN ADZAKI","MARFEL SAPUTRA","MELDI NOVRIANSYAH","ALIF SAMUDRA","ARYA DIFA ALSYA","FAUZAN IBNI JABAR","HAFIDZ ALRIZKY","M. ABIL IRWANSYAH","M. FADHIL BUANA","M. FAISAL FIKRIANSYAH","NAUFAL AKBAR ALKHATIRI","QHEIZAN ALQIZA ARISDA","REZFY FAKHRYAZKA","SYAHRUL RAMADHAN","ROID AFDAL","ROHADIN FIRDAUS AL QAUSAR","RENAL MARTIN","RAKA SEPTIAN","NAFIS","M. USAMAH","MUHAMAD YUSUF ARROSIYD","MAHESA AULIA GIFFARI","M. ARYA MAHDI WAFI EL-FAUZANI","ILHAM","IHZA TRINANDI","HABIB RAMADHAN","FAHRY AKBAR RAMDHANI","CAHYIS ISZAM","ANUGRAH PRATAMA","AHMAD FARHAAN"]
+  };
+
+  const NAMA_USRAH = {
+    "Kamal": "Usrah Al-Fajr",
+    "Favian": "Usrah An-Najah",
+    "Regen": "Usrah An-Nurain"
+  };
+
+  let mapSantriUsrah = {};
+  for (const [usrah, list] of Object.entries(MASTER_SANTRI)) {
+    list.forEach(nama => mapSantriUsrah[nama] = usrah);
+  }
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const TANGGAL_HARI_INI = `${yyyy}-${mm}-${dd}`;
+
+  const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('dateDisplay').textContent = today.toLocaleDateString('id-ID', optionsDate);
+
+  let slideData = [];
+  let currentIndex = 0;
+  let targetBenchmark = 0;
+  const SLIDE_DURATION = 10000;
+
+  function getPredikat(persen) {
+    if (persen >= 90) return { label: "MUMTAZ", color: "#34d399", bg: "rgba(52, 211, 153, 0.15)" };
+    if (persen >= 75) return { label: "JAYYID", color: "#38bdf8", bg: "rgba(56, 189, 248, 0.15)" };
+    if (persen >= 50) return { label: "MAQBUL", color: "#fbbf24", bg: "rgba(251, 191, 36, 0.15)" };
+    return { label: "RASIB", color: "#f87171", bg: "rgba(248, 113, 113, 0.15)" };
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchTodayData);
+
+  async function fetchTodayData() {
+    try {
+      const refs = [
+        get(ref(db, 'cahaya_app/absensi_program_harian')),
+        get(ref(db, 'cahaya_app/absensi_pembelajaran')),
+        get(ref(db, 'cahaya_app/poin_manual'))
+      ];
+      const snapshots = await Promise.all(refs);
+      processData(snapshots[0].val() || {}, snapshots[1].val() || {}, snapshots[2].val() || {});
+    } catch (error) {
+      document.getElementById('statusMessage').textContent = "Kesalahan Sinkronisasi: " + error.message;
+    }
+  }
+
+  function processData(ibadahLog, akademikLog, manualLog) {
+    const todayStudents = {};
+
+    const getStudent = (nama) => {
+      let usrah = mapSantriUsrah[nama];
+      if (!usrah) return null; // Jika bukan putra (tidak ada di map), lewati
+      if (!todayStudents[nama]) todayStudents[nama] = { name: nama, usrah: usrah, totalPoinHariIni: 0, rincian: [] };
+      return todayStudents[nama];
+    };
+
+    [ibadahLog, akademikLog].forEach(log => {
+      Object.values(log).forEach(session => {
+        if (session.tanggal === TANGGAL_HARI_INI && session.data) {
+          session.data.forEach(s => {
+            const entry = getStudent(s.nama);
+            if(entry) {
+              let p = parseInt(s.poin) || 0;
+              entry.totalPoinHariIni += p;
+              entry.rincian.push({ kegiatan: session.program || session.mapel, status: s.status, poin: p });
+            }
+          });
+        }
+      });
+    });
+
+    Object.values(manualLog).forEach(log => {
+      const logDate = log.waktu.split('T')[0];
+      if (logDate === TANGGAL_HARI_INI) {
+        const entry = getStudent(log.namaSantri);
+        if(entry) {
+          let p = parseInt(log.poin) || 0;
+          entry.totalPoinHariIni += p;
+          
+          let displayStatus = log.keterangan;
+          let displayKegiatan = "Poin Tambahan (Bonus)";
+          if (p < 0) {
+              displayKegiatan = "Pengurangan Poin";
+              displayStatus = "Catatan Kedisiplinan (Privasi Terjaga)"; 
+          }
+          entry.rincian.push({ kegiatan: displayKegiatan, status: displayStatus, poin: p });
+        }
+      }
+    });
+
+    targetBenchmark = 0;
+    Object.values(todayStudents).forEach(s => {
+        if (s.totalPoinHariIni > targetBenchmark) targetBenchmark = s.totalPoinHariIni;
+    });
+
+    document.getElementById('benchmarkDisplay').innerHTML = `🏆 Top Score Hari Ini: <strong>${targetBenchmark} Poin</strong>`;
+
+    slideData = Object.values(todayStudents).map(s => {
+        let pembagi = targetBenchmark > 0 ? targetBenchmark : 1;
+        s.persen = Math.round((s.totalPoinHariIni / pembagi) * 100);
+        return s;
+    });
+    
+    slideData = slideData.filter(s => s.rincian.length > 0);
+    slideData.forEach(s => s.rincian.sort((a, b) => a.poin - b.poin));
+
+    if (slideData.length === 0) {
+      document.getElementById('statusMessage').textContent = "Belum Ada Aktivitas Putra Hari Ini.";
+      setTimeout(() => location.reload(), 60000); 
+    } else {
+      document.getElementById('statusMessage').style.display = 'none';
+      startSlideshow();
+    }
+  }
+
+  function startSlideshow() {
+    renderCurrentSlide();
+    setInterval(nextSlide, SLIDE_DURATION);
+    setTimeout(() => location.reload(), 15 * 60 * 1000); 
+  }
+
+  function nextSlide() {
+    const currentContainer = document.querySelector('.slide-container');
+    if (currentContainer) currentContainer.classList.remove('active');
+    currentIndex = (currentIndex + 1) % slideData.length;
+    setTimeout(renderCurrentSlide, 600);
+  }
+
+  function renderCurrentSlide() {
+    const mainScreen = document.getElementById('mainScreen');
+    const santri = slideData[currentIndex];
+    
+    const predikat = getPredikat(santri.persen);
+    const namaUsrahTampil = NAMA_USRAH[santri.usrah] || `Asrama ${santri.usrah}`;
+
+    let colorClass = "point-zero"; let sign = "";
+    if (santri.totalPoinHariIni > 0) { colorClass = "point-plus"; sign = "+"; }
+    else if (santri.totalPoinHariIni < 0) { colorClass = "point-minus"; }
+
+    let percentDisplay = Math.min(Math.max(santri.persen, 0), 100);
+    let colorProgress = santri.persen < 50 ? "#f87171" : (santri.persen < 75 ? "#fbbf24" : "#d4af37");
+
+    let rincianHTML = '';
+    santri.rincian.forEach((item, idx) => {
+      let rCls = "point-zero"; let boxCls = "item-zero"; let rSign = "";
+      if (item.poin > 0) { rCls = "point-plus"; boxCls = "item-plus"; rSign = "+"; }
+      else if (item.poin < 0) { rCls = "point-minus"; boxCls = "item-minus"; }
+
+      rincianHTML += `
+        <div class="rincian-item ${boxCls}" style="animation-delay: ${idx * 0.12}s">
+          <div>
+            <div class="rincian-kegiatan">${item.kegiatan}</div>
+            <div class="status-badge">${item.status}</div>
+          </div>
+          <div class="rincian-nilai ${rCls}">${rSign}${item.poin}</div>
+        </div>`;
+    });
+
+    mainScreen.innerHTML = `
+      <div class="slide-container active">
+        <div class="profile-side">
+          <div class="santri-usrah">${namaUsrahTampil}</div>
+          <div class="santri-name">${santri.name}</div>
+          <div class="predikat-badge" style="color:${predikat.color}; background:${predikat.bg}; border-color:${predikat.color}">
+            ${predikat.label}
+          </div>
+          
+          <div class="point-box">
+            <div class="point-label">Akumulasi Poin</div>
+            <div class="total-point ${colorClass}">${sign}${santri.totalPoinHariIni}</div>
+            
+            <div class="progress-wrapper">
+              <div class="progress-header">
+                <span>Posisi dari Top Score</span>
+                <span style="color: ${colorProgress}">${santri.persen}%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: ${percentDisplay}%; background: ${colorProgress}; box-shadow: 0 0 10px ${colorProgress}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-side">
+          <div class="detail-title">
+            <span>Rekap Aktivitas Hari Ini</span>
+            <span class="detail-subtitle">Hadir, Izin, Alpha & Evaluasi</span>
+          </div>
+          <div class="rincian-list">${rincianHTML}</div>
+        </div>
+      </div>`;
+  }
+</script>
+</body>
+</html>
